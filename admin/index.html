@@ -1,0 +1,665 @@
+<html>
+
+<!-- these 4 files always have to be included -->
+<link rel="stylesheet" type="text/css" href="../../lib/css/themes/jquery-ui/redmond/jquery-ui.min.css"/>
+
+
+<script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../../lib/js/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+
+<link rel="stylesheet" type="text/css" href="./lib/css/jsgrid.css"/>
+<link rel="stylesheet" type="text/css" href="./lib/css/jsgrid-theme.css"/>
+<script type="text/javascript" src="./lib/js/jsgrid.js"></script>
+<script type="text/javascript" src="./lib/js/grid.locale-de.js"></script>
+<script type="text/javascript" src="./lib/js/grid.locale-ru.js"></script>
+
+
+<!-- these two file always have to be included -->
+<link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
+<script type="text/javascript" src="../../js/translate.js"></script>
+<script type="text/javascript" src="../../js/adapter-settings.js"></script>
+<style>
+    .dialog-config {
+        overflow: hidden !important;
+    }
+
+    .ui-tabs-panel {
+        height: calc(100% - 70px);
+        padding: 0px !important;
+    }
+
+    .table_header {
+        background-color: blue;
+        color: white;
+    }
+
+    .bind {
+        width: 150px;
+        text-align: right;
+    }
+
+    .ui-jqgrid-titlebar {
+        display: none;
+    }
+
+    .ui-jqgrid-bdiv {
+        overflow-x: hidden !important;
+    }
+
+    .ui-button-text-only .ui-button-text {
+        padding: .3em !important;
+    }
+
+    .modbus_tab {
+        /*overflow: hidden;*/
+        position: relative;
+        height: calc(100% - 20px);
+        width: 100%;
+    }
+
+    .modbus_grid {
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    .jsgrid-grid-body {
+        height: calc(100% - 58px) !important;
+    }
+
+    .jsgrid-table {
+        width: 100% !important;
+        font-size: 1em;
+    }
+
+    .jsgrid-insert-mode-button {
+        display: none;
+    }
+
+    /*.jsgrid-edit-row input {
+        padding: 0;
+    }*/
+    .jsgrid-table td {
+        padding: 0.2em 0.2em !important;
+    }
+
+    .table_head_btn {
+        text-align: center;
+        font-size: 1.1em;
+        position: absolute;
+        z-index: 99;
+        right: 5px;
+        top: -27px;
+    }
+
+    .back_image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 0;
+        opacity: 0.3;
+    }
+
+    .logo {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        color: rgb(0, 153, 153);
+        font-weight: bolder;
+        font-size: 39px;
+        padding: 9px;
+        font-family: sans-serif;
+    }
+
+    #adapter-container {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-drag: none;
+        user-select: none;
+    }
+</style>
+
+<!-- you have to define 2 functions in the global scope: -->
+<script type="text/javascript">
+
+    // Dictionary (systemDictionary is global variable from adapter-settings.js)
+    systemDictionary = {
+        "General":          {"en": "General",           "de": "Allgemein",          "ru": "Основное"},
+        "Inputs":           {"en": "Discrete Inputs",   "de": "Diskrete Eingänge",  "ru": "Дискретные входы"},
+        "Coils":            {"en": "Coils",             "de": "Diskrete Ausgänge",  "ru": "Регистры флагов"},
+        "Input Registers":  {"en": "Input Registers",   "de": "Eingangsregister",   "ru": "Регистры входа"},
+        "Holding Registers": {"en": "Holding Registers",   "de": "Eingangsregister",   "ru": "Регистры хранения"},
+        "PLC Connection:":  {"en": "PLC Connection:",   "de": "SPS Verbindung:",    "ru": "PLC соединение:"},
+        "PLC IP Address:":  {"en": "PLC IP Address:",   "de": "SPS IP Adresse:",    "ru": "PLC IP адрес:"},
+        "PLC Rack:":        {"en": "PLC Rack:",         "de": "SPS Rack:",          "ru": "PLC Rack:"},
+        "PLC Slot:":        {"en": "PLC Slot:",         "de": "SPS Slot:",          "ru": "PLC слот:"},
+        "Round Real to:":   {"en": "Round real to:",    "de": "Aufrunden Real auf:", "ru": "Округлять real до:"},
+        "Poll delay:":      {"en": "Poll delay:",       "de": "Poll delay:",        "ru": "Интервал опроса:"},
+        "Reconnect time:":  {"en": "Reconnect time:",   "de": "Reconnectzeit:",     "ru": "Reconnect time:"},
+        "Pulse time:":      {"en": "Pulse time:",       "de": "Pulsetime:",         "ru": "Pulse time:"},
+        "Import symbols file:": {"en": "Import symbols file:", "de": "Symboldatei Importieren:", "ru": "Ипморт символьных файлов:"},
+        "Import DB file:":  {"en": "Import DB file:",   "de": "DB-Datei importieren:", "ru": "Ипморт DB файлов:"},
+        "Load Symbols":     {"en": "Load symbols",      "de": "Lade Symbole",       "ru": "Загрузить символы"},
+        "Add DB":           {"en": "Add DB",            "de": "DB einfügen",        "ru": "Добавить DB"},
+        "Toggle poll":      {"en": "Toggle poll",       "de": "Poll umschalten",    "ru": "Изменить poll"},
+        "Toggle RW":        {"en": "Toggle RW",         "de": "RW umschalten",      "ru": "Изменить RW"},
+        "Toggle WP":        {"en": "Toggle WP",         "de": "WP umschalten",      "ru": "Изменить WP"},
+        "Address":          {"en": "Address",           "de": "Adresse",            "ru": "Адрес"},
+        "Name":             {"en": "Name",              "de": "Name",               "ru": "Имя"},
+        "Description":      {"en": "Description",       "de": "Beschreibung",       "ru": "Описание"},
+        "Type":             {"en": "Type",              "de": "Typ",                "ru": "Тип"},
+        "Unit":             {"en": "Unit",              "de": "Einheit",            "ru": "Единицы"},
+        "poll":             {"en": "poll",              "de": "poll",               "ru": "poll"},
+        "RW":               {"en": "RW",                "de": "RW",                 "ru": "RW"},
+        "WP":               {"en": "WP",                "de": "WP",                 "ru": "WP"},
+        "Role":             {"en": "Role",              "de": "Rolle",              "ru": "Роль"},
+        "Room":             {"en": "Room",              "de": "Raum",               "ru": "Комната"},
+        "sec":              {"en": "sec.",              "de": "Sek.",               "ru": "сек."},
+        "S7 LOGO!:":        {"en": "S7 LOGO!:",         "de": "S7 LOGO!:",          "ru": "S7 LOGO!:"},
+        "Local TSAP:":      {"en": "Local TSAP:",       "de": "Local TSAP:",        "ru": "Local TSAP:"},
+        "Remote TSAP:":     {"en": "Remote TSAP:",      "de": "Remote TSAP:",       "ru": "Remote TSAP:"},
+        "Enable polling of data point": {
+            "en": "Enable polling of data point",
+            "de": "Zyklische Abfrage vom Datenpunkt",
+            "ru": "Постоянный опрос переменной в каждом цикле"
+        },
+        "Write access allowed": {
+            "en": "Write access allowed",
+            "de": "Schreiben erlaubt",
+            "ru": "Разрешить запись в переменную"
+        },
+        "Write pulses (true=>false edge)": {
+            "en": "Write pulses (true=>false edge)",
+            "de": "Schreibe Pulse (Ja=>Nein Kante)",
+            "ru": "Генерировать импульсы (1 => 0)"
+        }
+    };
+
+    var onChange = null;
+    var activePage = '';
+
+    $(document).ready(function () {
+        $("#btn_loadsymbole").button().click(function () {
+            $("#symol_import").trigger("click")
+        });
+        $("#btn_loaddb").button().click(function () {
+            $("#db_import").trigger("click")
+        });
+
+        $(".btn_toggle_pool").button().click(function (e, ui) {
+            var grid = $(this).parent().data("grid");
+
+            var data = $("#" + grid).jsGrid("option", "data");
+            $.each(data, function () {
+                this.poll = !this.poll;
+            });
+
+            $("#" + grid).jsGrid("option", "data", data);
+            onChange();
+        });
+
+        $(".btn_toggle_rw").button().click(function () {
+            var grid = $(this).parent().data("grid");
+
+            var data = $("#" + grid).jsGrid("option", "data");
+            $.each(data, function () {
+                this.RW = !this.RW;
+            });
+
+            $("#" + grid).jsGrid("option", "data", data);
+            onChange();
+
+        });
+
+        $(".btn_toggle_wp").button().click(function () {
+            var grid = $(this).parent().data("grid");
+
+            var data = $("#" + grid).jsGrid("option", "data");
+
+            $.each(data, function () {
+                this.WP = !this.WP;
+            });
+
+            $("#" + grid).jsGrid("option", "data", data);
+            onChange();
+
+        });
+
+        $("#adapter-container").tabs({
+            activate: function (event, ui) {
+                switch(ui.newPanel.selector) {
+                    case '#modbus_tab_g':
+                        activePage = 0;
+                        break;
+                    case '#modbus_tab_holding_regsis_inputs':
+                        activePage = 1;
+                        break;
+                    case '#modbus_tab_coils':
+                        activePage = 2;
+                        break;
+                    case '#modbus_tab_input_regs':
+                        activePage = 3;
+                        break;
+                    case '#modbus_tab_holding_regs':
+                        activePage = 4;
+                        break;
+                    default:
+                        activePage = 0;
+                        break;
+                }
+                if (typeof localStorage != 'undefined') {
+                    localStorage['modbuspage'] = activePage.toString();
+                }
+            }
+        });
+    });
+
+    function load(settings, onchange) {
+        if (systemLang == 'de') translate_de();
+        if (systemLang == 'ru') translate_ru();
+
+        if (typeof localStorage != 'undefined') {
+            activePage = localStorage['modbuspage'];
+            $("#adapter-container").tabs({active: parseInt(activePage || 0, 10)});
+        }
+
+        var data = {
+            disInputs:   settings.disInputs   || [],
+            coils:       settings.coils       || [],
+            inputRegs:   settings.inputRegs   || [],
+            holdingRegs: settings.holdingRegs || [],
+            params:  settings.params   || {
+                bind:       '192.168.0.1',
+                port:       502,
+                slave:      false,
+                recon:      60000
+            }
+        };
+
+        onChange = onchange;
+
+        $.each($(".modbus_params"), function () {
+            var id = $(this).attr("id");
+            if ($(this).hasClass("check")) {
+                if (data.params[id.split("_")[1]]) {
+                    document.getElementById(id).checked = data.params[id.split("_")[1]];
+                }
+            } else {
+                $(this).val(data.params[id.split("_")[1]]);
+            }
+
+            $(this).change(function () {
+                onchange();
+            }).keyup(function () {
+                $(this).trigger('change');
+            });
+        });
+
+        getEnums('rooms', function (err, rooms) {
+            $.each($('.modbus_grid'), function () {
+                var _id = $(this).attr('id');
+
+                var type_items = [
+                    {value: "BOOL",   text: "BOOL",   roleRO: 'state', roleRW: 'switch'},
+                    {value: "BYTE",   text: "BYTE",   roleRO: 'value', roleRW: 'level'},
+                    {value: "WORD",   text: "WORD",   roleRO: 'value', roleRW: 'level'},
+                    {value: "DWORD",  text: "DWORD",  roleRO: 'value', roleRW: 'level'},
+                    {value: "INT",    text: "INT",    roleRO: 'value', roleRW: 'level'},
+                    {value: "DINT",   text: "DINT",   roleRO: 'value', roleRW: 'level'},
+                    {value: "REAL",   text: "REAL",   roleRO: 'value', roleRW: 'level'},
+                    {value: "S5TIME", text: "S5TIME", roleRO: 'value.interval', roleRW: 'level.interval'},
+                    {value: "S7TIME", text: "S7TIME", roleRO: 'value.time', roleRW: 'value.time'}
+                ];
+
+                var role_items = [
+                    {value: '',                     text: ''},
+                    {value: 'value',                text: 'value'},
+                    {value: 'level',                text: 'level'},
+                    {value: 'state',                text: 'state'},
+                    {value: 'switch',               text: 'switch'},
+                    {value: 'value.temperature',    text: 'value.temperature'},
+                    {value: 'value.humidity',       text: 'value.humidity'},
+                    {value: 'value.brightness',     text: 'value.brightness'},
+                    {value: 'value.battery',        text: 'value.battery'},
+                    {value: 'value.valve',          text: 'value.valve'},
+                    {value: 'value.time',           text: 'value.time'},
+                    {value: 'value.interval',       text: 'value.interval'},
+                    {value: 'button',               text: 'button'},
+                    {value: 'indicator',            text: 'indicator'},
+                    {value: 'level.dimmer',         text: 'level.dimmer'},
+                    {value: 'level.valve',          text: 'level.valve'},
+                    {value: 'level.blind',          text: 'level.blind'},
+                    {value: 'level.temperature',    text: 'level.temperature'},
+                    {value: 'level.interval',       text: 'level.interval'}
+                ];
+
+                var room_items = [{value: '', text: ''}];
+                for (var room in rooms) {
+                    room_items.push({value: room, text: rooms[room].common.name || room.substring('enum.rooms.'.length)});
+                }
+
+                $("#" + _id).jsGrid({
+                    width:      'auto',
+                    height:     'auto',
+                    inserting:  true,
+                    editing:    true,
+                    sorting:    true,
+                    heading:    true,
+                    paging:     false,
+                    data:       data[_id.split('_')[1]],
+                    fields: [
+                        {name: 'address'    , title:  _('Address'),       type: 'text',       width: '110px'},
+                        {name: 'name'       , title:  _('Name'),          type: 'text',       width: '150px'},
+                        {name: 'description', title:  _('Description'),   type: 'text',       width: '250px'},
+                        {name: 'unit'       , title:  _('Unit'),          type: 'text',       width: '50px'},
+                        {name: 'role'       , title:  _('Role'),          type: 'select',     width: '100px', items: role_items, valueField: 'value', textField: 'text'},
+                        {name: 'room'       , title:  _('Room'),          type: 'select',     width: '100px', items: room_items, valueField: 'value', textField: 'text'},
+                        {name: 'poll'       , title:  _('poll'),          type: 'checkbox',   width: '35px'},
+                        {name: 'wp'         , title:  _('WP'),            type: 'checkbox',   width: '35px'},
+                        {                                                 type: 'control',    width: '80px'}
+                    ],
+                    onItemUpdated: function (obj) {
+                        /* {grid, row, item, itemIndex, previousItem}*/
+                        var changed = false;
+                        if ((obj.item.RW || obj.item.WP) && !obj.item.poll) {
+                            obj.item.poll = true;
+                            changed = true;
+                        }
+                        if (!obj.item.Role) {
+                            for (var t = 0; t < type_items.length; t++) {
+                                if (type_items[t].value == obj.item.Type) {
+                                    obj.item.Role = !obj.item.RW ? type_items[t].roleRO : type_items[t].roleRW;
+                                    changed = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (changed) this.render();
+
+                        onchange();
+                    },
+                    onItemInserting: function (obj) {
+                        obj.item.poll = true;
+                        onchange();
+                    }
+                });
+                // add custom titles
+                $('.jsgrid-header-sortable').each(function () {
+                    if ($(this).text() == _('poll')) {
+                        $(this).attr('title', _('Enable polling of data point'));
+                    }
+                    if ($(this).text() == _('RW')) {
+                        $(this).attr('title', _('Write access allowed'));
+                    }
+                    if ($(this).text() == _('WP')) {
+                        $(this).attr('title', _('Write pulses (true=>false edge)'));
+                    }
+                });
+            });
+        });
+        onchange(false);
+    }
+
+    function save(callback) {
+
+        var obj = {
+            params: {}
+        };
+
+        $.each($('.modbus_grid'), function () {
+            var id = $(this).attr("id");
+            var key = id.split("_")[1];
+
+            obj[key] = $(this).jsGrid("option", "data");
+        });
+
+        $.each($(".modbus_params"), function () {
+            var id = $(this).attr("id").split("_")[1];
+            if ($(this).hasClass("check")) {
+                obj.params[id] = document.getElementById($(this).attr("id")).checked;
+            } else {
+                obj.params[id] = $(this).val();
+            }
+        });
+        callback(obj);
+    }
+/*
+    function symbol_import(e) {
+        $("#btn_loadsymbole").button("option", "disabled", true);
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            var data = {
+                disInputs:  [],
+                coils: [],
+                inputRegs: []
+//                counter: [],
+//                timer: [],
+//                holdingRegs: []
+
+            };
+            var text = reader.result;
+            text = text.split("126,");
+            $.each(text, function () {
+                var typ = this.slice(23, 29).replace(/( )/g, "");
+
+                var d = {
+                    Name:         this.slice(0, 23).replace(/( ){2,}/g, ""),
+                    Address:      this.slice(29, 36).replace(/( )/g, ""),
+                    Type:         this.slice(36, 41).replace(/( )/g, ""),
+                    Description:  this.slice(46, 126).replace(/( ){2,}/, ""),
+                    Unit:         "",
+//                    Role:         "",
+//                    Room:         "",
+                    poll:         true,
+                    RW:           false,
+                    WP:           false
+                };
+
+//                    if (typ == "E" || typ == "EB" ||typ == "EW" ||typ == "ED"||typ == "PEB"||typ == "PEW"||typ == "PED")data.disInputs.push(d);
+//                    if (typ == "A" || typ == "AB" ||typ == "AW" ||typ == "AD"||typ == "PAB"||typ == "PAW"||typ == "PAD")data.coils.push(d);
+                if (typ == "E" || typ == "EB" || typ == "EW" || typ == "ED") data.disInputs.push(d);
+                if (typ == "A" || typ == "AB" || typ == "AW" || typ == "AD") data.coils.push(d);
+                if (typ == "M" || typ == "MB" || typ == "MW" || typ == "MD") data.inputRegs.push(d);
+//                if (typ == "C")data.counter.push(d);
+//                if (typ == "T")data.timer.push(d);
+//                if (typ == "DB")data.holdingRegs.push(d);
+            });
+
+
+            $.each($('.modbus_grid'), function () {
+
+                if ($(this).attr("id") != "modbus_holdingRegs") {
+                    var id = $(this).attr("id");
+                    $("#" + id).jsGrid("option", "data", data[id.split("_")[1]]);
+                }
+            });
+
+            onChange();
+
+            $("#symol_import").replaceWith($("#symol_import").clone());
+            $("#btn_loadsymbole").button("option", "disabled", false);
+        };
+
+        reader.readAsText(e[0], "ISO-8859-1");
+    }
+
+
+    function db_import(e) {
+        $("#btn_loaddb").button("option", "disabled", true);
+
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            var db;
+            var data  = {};
+            var _data = [];
+            var text  = reader.result;
+            db = text.match(/(DB)[0-9]+\s-\s/g)[0].replace(" - ", "");
+
+            var old_data = $("#modbus_holdingRegs").jsGrid("option", "data");
+            var new_data = [];
+
+            $.each(old_data, function () {
+                data[this.Address] = this
+            });
+            var struck = text.split('STRUCT')[1].split("=")[0].split("\n");
+
+            $.each(struck, function () {
+                if (this.length > 10) {
+
+                    var x = this.split(/\s+/g);
+                    x.shift();
+
+
+                    var data = {
+                        Address:      db + ' ' + x.shift(),
+                        Name:         x.shift(),
+                        Type:         x.shift(),
+                        dec:          x.shift(),
+                        Description:  x.join(' '),
+                        Unit:         '',
+                        Role:         '',
+                        Room:         '',
+                        poll:         true,
+                        RW:           false,
+                        WP:           false
+                    };
+
+                    _data.push(data)
+                }
+            });
+
+            $.each(_data, function () {
+                data[this.Address] = this;
+            });
+
+            $.each(data, function () {
+                new_data.push(this);
+            });
+
+
+            $("#modbus_holdingRegs").jsGrid("option", "data", new_data);
+
+            $("#db_import").replaceWith($("#db_import").clone());
+            $("#btn_loaddb").button("option", "disabled", false);
+            onChange();
+        };
+
+        reader.readAsText(e[0], "ISO-8859-1");
+
+    }
+    */
+</script>
+
+<!-- you have to put your config page in a div with id adapter-container -->
+<div id="adapter-container" style="height: calc(100% - 40px);width: calc(100% - 10px); overflow: hidden;">
+
+    <ul>
+        <li><a href="#modbus_tab_g" class="translate">General</a></li>
+        <li><a href="#modbus_tab_holding_regsis_inputs" class="translate">Inputs</a></li>
+        <li><a href="#modbus_tab_coils" class="translate">Coils</a></li>
+        <li><a href="#modbus_tab_input_regs" class="translate">Input Registers</a></li>
+        <!--<li><a href="#modbus_tab_c">Counter</a></li>-->
+        <!--<li><a href="#modbus_tab_t">Timer</a></li>-->
+        <li><a href="#modbus_tab_holding_regs">DBs</a></li>
+    </ul>
+    <div id="modbus_tab_g" style="display: flex;  align-items: center; flex-direction: column;overflow: auto" class="modbus_tab">
+        <div class="logo">ModBus</div>
+        <img src="img/plc_back.png" class="back_image">
+
+        <table class="ui-widget-content" style="z-index: 2;margin-top: 60px; border: 1px solid black; border-collapse: collapse; ">
+            <tr style="border-bottom: 1px solid black;text-align: center " class="ui-widget-header">
+                <td colspan="2" class="translate">Connection parameters:</td>
+            </tr>
+            <tr>
+                <td style="width: 200px" class="translate">Partner IP Address:</td>
+                <td style="width: 200px"><input class="modbus_params" id="modbusparams_bind"/></td>
+            </tr>
+            <tr>
+                <td class="translate">Port:</td>
+                <td><input class="modbus_params" id="modbus_port" type="checkbox"/></td>
+            </tr>
+        </table>
+
+        <table class="ui-widget-content" style="z-index: 2;margin-top: 20px;border-collapse: collapse; display: inline; border: 1px solid black;height: 130px;">
+            <tr>
+                <td style="text-align: center" colspan="3" class="ui-widget-header" class="translate">General</td>
+            </tr>
+
+            <tr>
+                <td style="width: 184px" class="translate">Round Real to:</td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus_params" id="modbusparams_round"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="translate">Poll delay:</td>
+                <td  style="text-align: center"><input style="margin-right: 5px;text-align: right" class="modbus_params" id="modbusparams_poll"/></td>
+                <td style="padding-right: 20px">ms</td>
+            </tr>
+            <tr>
+                <td class="translate">Reconnect time:</td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus_params" id="modbusparams_recon"></td>
+                <td>ms</td>
+            </tr>
+            <tr>
+                <td class="translate">Pulse time:</td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus_params" id="modbusparams_pulsetime"></td>
+                <td>ms</td>
+            </tr>
+        </table>
+
+        <!--table class="ui-widget-content" style="z-index: 2;margin-top: 20px;  margin-bottom: 20px; border: 1px solid black; border-collapse: collapse; ">
+            <tr class="ui-widget-header">
+                <td style="width: 200px; text-align: center" class="translate">Import symbols file:</td>
+                <td style="width: 200px; text-align: center" class="translate">Import DB file:</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px;width: 180px; text-align: center">
+                    <button id="btn_loadsymbole" class="translateB">Load Symbols</button>
+                    <input style="display: none" onchange="symbol_import(this.files)" type="file" accept=".asc" id="symol_import"/></td>
+                <td style="padding: 10px;width: 180px; text-align: center">
+                    <button id="btn_loaddb" class="translateB">Add DB</button>
+                    <input style="display: none" onchange="db_import(this.files)" type="file" accept=".prn" id="db_import"/></td>
+            </tr>
+        </table-->
+    </div>
+    <div id="modbus_tab_holding_regsis_inputs" class="modbus_tab">
+        <div class="table_head_btn" data-grid="modbus_disInputs">
+            <button class="btn_toggle_pool translateB translateT" title="Polling">Toggle poll</button>
+            <button class="btn_toggle_wp translateB translateT"   title="write as Pulse">Toggle WP</button>
+        </div>
+        <div id="modbus_disInputs" class="modbus_grid"></div>
+    </div>
+    <div id="modbus_tab_coils" class="modbus_tab">
+        <div class="table_head_btn" data-grid="modbus_coils">
+            <button class="btn_toggle_pool translateB" title="Polling">Toggle poll</button>
+            <button class="btn_toggle_wp translateB" title="write as Pulse">Toggle WP</button>
+        </div>
+        <div id="modbus_coils" class="modbus_grid"></div>
+    </div>
+    <div id="modbus_tab_input_regs" class="modbus_tab">
+        <div class="table_head_btn" data-grid="modbus_inputRegs">
+            <button class="btn_toggle_pool translateB" title="Polling">Toggle poll</button>
+            <button class="btn_toggle_wp translateB" title="write as Pulse">Toggle WP</button>
+        </div>
+        <div id="modbus_inputRegs" class="modbus_grid"></div>
+    </div>
+    <div id="modbus_tab_holding_regs" class="modbus_tab">
+        <div class="table_head_btn" data-grid="modbus_holdingRegs">
+            <button class="btn_toggle_pool translateB" title="Polling">Toggle poll</button>
+            <button class="btn_toggle_wp translateB"   title="write as Pulse">Toggle WP</button>
+        </div>
+        <div id="modbus_holdingRegs" class="modbus_grid"></div>
+    </div>
+</div>
+
+</html>

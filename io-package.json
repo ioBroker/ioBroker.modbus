@@ -1,0 +1,46 @@
+{
+  "common": {
+    "name":         "modbus",
+    "version":      "0.2.1",
+    "title":        "ModBus Adapter",
+    "desc": {
+      "en":         "ModBus connection Slave or Master",
+      "de":         "ModBus Verbindung Slave oder Master",
+      "ru":         "ModBus соединение Slave или Master"
+    },
+    "authors": [
+      "bluefox <dogafox@gmail.com>"
+    ],
+    "license":      "MIT",
+    "platform":     "Javascript/Node.js",
+    "mode":         "daemon",
+    "loglevel":     "info",
+    "icon":         "modbus.png",
+    "keywords": [
+      "ModBus"
+    ],
+    "enabled":      false,
+    "extIcon":      "https://raw.githubusercontent.com/ioBroker/ioBroker.modbus/master/admin/modbus.png",
+    "readme":       "https://github.com/ioBroker/ioBroker.modbus/blob/master/README.md",
+    "type":         "hardware",
+    "config":{
+      "minWidth":   1024,
+      "width ":     1224
+    }
+  },
+  "native": {
+    "params": {
+      "bind":       "192.168.0.1",
+      "port":       502,
+      "slave":      false,
+      "round":      2,
+      "poll":       1000,
+      "recon":      60000,
+      "pulsetime":  1000
+    },
+    "disInputs":    [],
+    "coils":        [],
+    "inputRegs":    [],
+    "holdingRegs":  []
+  }
+}
