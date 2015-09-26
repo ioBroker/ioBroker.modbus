@@ -4,3 +4,4 @@ node_modules
 .idea
 .git
 /node_modules
+test
