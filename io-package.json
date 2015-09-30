@@ -36,7 +36,11 @@
       "round":      2,
       "poll":       1000,
       "recon":      60000,
-      "pulsetime":  1000
+      "pulsetime":  1000,
+      "disInputsOffset":    10001,
+      "coilsOffset":        1,
+      "inputRegsOffset":    30001,
+      "holdingRegsOffset":  40001
     },
     "disInputs":    [],
     "coils":        [],
