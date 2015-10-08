@@ -59,41 +59,72 @@ function writeHelper(id, state) {
 }
 
 function prepareWrite(id, state) {
-    if (objects[id].native.type == 'coils' || objects[id].native.type == 'holdingRegs') {
+    if (main.acp.slave) {
+        var t = typeof state.val;
+        if (objects[id].native.type == 'disInputs') {
+            if (t === 'boolean' || t === 'number') {
+                main.disInputs[objects[id].native.address - main.disInputsLowAddress] = state.val ? 1 : 0;
+            } else {
+                main.disInputs[objects[id].native.address - main.disInputsLowAddress] = parseInt(state.val, 10) ? 1 : 0
+            }
+        } else if (objects[id].native.type == 'coils') {
+            if (t === 'boolean' || t === 'number') {
+                main.coils[objects[id].native.address - main.coilsLowAddress] = state.val ? 1 : 0;
+            } else {
+                main.coils[objects[id].native.address - main.coilsLowAddress] = parseInt(state.val, 10) ? 1 : 0
+            }
+        } else if (objects[id].native.type == 'inputRegs') {
+            if (t === 'boolean' || t === 'number') {
+                main.inputRegs[objects[id].native.address - main.inputRegsLowAddress] = state.val ? 1 : 0;
+            } else {
+                main.inputRegs[objects[id].native.address - main.inputRegsLowAddress] = parseInt(state.val, 10) ? 1 : 0
+            }
+        } else if (objects[id].native.type == 'holdingRegs') {
+            if (t === 'boolean' || t === 'number') {
+                main.holdingRegs[objects[id].native.address - main.holdingRegsLowAddress] = state.val ? 1 : 0;
+            } else {
+                main.holdingRegs[objects[id].native.address - main.holdingRegsLowAddress] = parseInt(state.val, 10) ? 1 : 0
+            }
+        } else {
+            adapter.log.error('Unknown state "' + id + '" type: ' + objects[id].native.type);
+        }
+    } else {
+        if (objects[id].native.type == 'coils' || objects[id].native.type == 'holdingRegs') {
 
-        if (!objects[id].native.wp) {
+            if (!objects[id].native.wp) {
 
-            writeHelper(id, state);
+                writeHelper(id, state);
+                setTimeout(function () {
+                    var _id = id.substring(adapter.namespace.length + 1);
+                    adapter.setState(id, ackObjects[_id] ? ackObjects[_id].val : null, true);
+                }, main.acp.poll * 1.5);
+
+            } else {
+                if (pulseList[id] === undefined) {
+                    var _id = id.substring(adapter.namespace.length + 1);
+                    pulseList[id] = ackObjects[_id] ? ackObjects[_id].val : !state.val;
+
+                    setTimeout(function () {
+                        writeHelper(id, {val: pulseList[id]});
+
+                        setTimeout(function () {
+                            if (ackObjects[_id]) {
+                                adapter.setState(id, ackObjects[_id].val, true);
+                            }
+                            delete pulseList[id];
+                        }, main.acp.poll * 1.5);
+
+                    }, adapter.config.params.pulsetime);
+
+                    writeHelper(id, state);
+                }
+            }
+        } else {
             setTimeout(function () {
                 var _id = id.substring(adapter.namespace.length + 1);
                 adapter.setState(id, ackObjects[_id] ? ackObjects[_id].val : null, true);
-            }, main.acp.poll * 1.5);
-
-        } else {
-            if (pulseList[id] === undefined) {
-                var _id = id.substring(adapter.namespace.length + 1);
-                pulseList[id] = ackObjects[_id] ? ackObjects[_id].val : !state.val;
-
-                setTimeout(function () {
-                    writeHelper(id, {val: pulseList[id]});
-
-                    setTimeout(function () {
-                        if (ackObjects[_id]) {
-                            adapter.setState(id, ackObjects[_id].val, true);
-                        }
-                        delete pulseList[id];
-                    }, main.acp.poll * 1.5);
-
-                }, adapter.config.params.pulsetime);
-
-                writeHelper(id, state);
-            }
+            }, 0);
         }
-    } else {
-        setTimeout(function () {
-            var _id = id.substring(adapter.namespace.length + 1);
-            adapter.setState(id, ackObjects[_id] ? ackObjects[_id].val : null, true);
-        }, 0);
     }
 }
 
@@ -228,6 +259,7 @@ var main = {
         main.acp.coilsOffset        = parseInt(main.acp.coilsOffset, 10)        || 0;
         main.acp.inputRegsOffset    = parseInt(main.acp.inputRegsOffset, 10)    || 0;
         main.acp.holdingRegsOffset  = parseInt(main.acp.holdingRegsOffset, 10)  || 0;
+        main.acp.slave              = parseInt(main.acp.slave, 10)  || 0;
 
         if (main.acp.round) {
             main.round = parseInt(main.acp.round) || 2;
@@ -607,43 +639,91 @@ var main = {
                 }
             } else {
                 // read all states
-                adapter.getStates(function (err, states) {
+                adapter.getStates('*', function (err, states) {
                     var id;
                     // build ready arrays
                     for (i = 0; main.ac.disInputs.length > i; i++) {
-                        id = main.ac.disInputs[i].id;
-                        if (states[id].val === 'true')  states[id].val = 1;
-                        if (states[id].val === '1')     states[id].val = 1;
-                        if (states[id].val === '0')     states[id].val = 0;
-                        if (states[id].val === 'false') states[id].val = false;
-                        states[id].val = !!states[id].val;
-                        main.disInputs[main.ac.disInputs[i].address - main.disInputsLowAddress] = states[id].val;
+                        id = adapter.namespace + '.' + main.ac.disInputs[i].id;
+                        if (states[id]) {
+                            if (states[id].val === 'true')  states[id].val = 1;
+                            if (states[id].val === '1')     states[id].val = 1;
+                            if (states[id].val === '0')     states[id].val = 0;
+                            if (states[id].val === 'false') states[id].val = false;
+                            states[id].val = !!states[id].val;
+                            main.disInputs[main.ac.disInputs[i].address - main.disInputsLowAddress] = states[id].val;
+                        }
+                    }
+                    // fill with 0 empty values
+                    for (i = 0; i < main.disInputs.length; i++) {
+                        if (main.disInputs[i] === undefined || main.disInputs[i] === null) {
+                            main.disInputs[i] = 0;
+                        } else if (typeof main.disInputs[i] === 'boolean') {
+                            main.disInputs[i] = main.disInputs[i] ? 1 : 0;
+                        } else if (typeof main.disInputs[i] !== 'number') {
+                            main.disInputs[i] = parseInt(main.disInputs[i], 10) ? 1 : 0;
+                        }
                     }
 
                     for (i = 0; main.ac.coils.length > i; i++) {
-                        id = main.ac.coils[i].id;
-                        if (states[id].val === 'true')  states[id].val = 1;
-                        if (states[id].val === '1')     states[id].val = 1;
-                        if (states[id].val === '0')     states[id].val = 0;
-                        if (states[id].val === 'false') states[id].val = false;
-                        states[id].val = !!states[id].val;
-                        main.coils[main.ac.coils[i].address - main.coilsLowAddress] = states[id].val;
+                        id = adapter.namespace + '.' + main.ac.coils[i].id;
+                        if (states[id]) {
+                            if (states[id].val === 'true')  states[id].val = 1;
+                            if (states[id].val === '1')     states[id].val = 1;
+                            if (states[id].val === '0')     states[id].val = 0;
+                            if (states[id].val === 'false') states[id].val = false;
+                            states[id].val = !!states[id].val;
+                            main.coils[main.ac.coils[i].address - main.coilsLowAddress] = states[id].val;
+                        }
+                    }
+                    // fill with 0 empty values
+                    for (i = 0; i < main.coils.length; i++) {
+                        if (main.coils[i] === undefined || main.coils[i] === null) {
+                            main.coils[i] = 0;
+                        } else if (typeof main.coils[i] === 'boolean') {
+                            main.coils[i] = main.coils[i] ? 1 : 0;
+                        } else if (typeof main.coils[i] !== 'number') {
+                            main.coils[i] = parseInt(main.coils[i], 10) ? 1 : 0;
+                        }
                     }
 
                     for (i = 0; main.ac.inputRegs.length > i; i++) {
-                        id = main.ac.inputRegs[i].id;
-                        if (states[id].val === 'true')  states[id].val = 1;
-                        if (states[id].val === 'false') states[id].val = false;
-                        states[id].val = parseInt(states[id].val, 10);
-                        main.inputRegs[main.ac.inputRegs[i].address - main.inputRegsLowAddress] = states[id].val;
+                        id = adapter.namespace + '.' + main.ac.inputRegs[i].id;
+                        if (states[id]) {
+                            if (states[id].val === 'true')  states[id].val = 1;
+                            if (states[id].val === 'false') states[id].val = false;
+                            states[id].val = parseInt(states[id].val, 10);
+                            main.inputRegs[main.ac.inputRegs[i].address - main.inputRegsLowAddress] = states[id].val;
+                        }
+                    }
+                    // fill with 0 empty values
+                    for (i = 0; i < main.inputRegs.length; i++) {
+                        if (main.inputRegs[i] === undefined || main.inputRegs[i] === null) {
+                            main.inputRegs[i] = 0;
+                        } else if (typeof main.inputRegs[i] === 'boolean') {
+                            main.inputRegs[i] = main.inputRegs[i] ? 1 : 0;
+                        } else if (typeof main.inputRegs[i] !== 'number') {
+                            main.inputRegs[i] = parseInt(main.inputRegs[i], 10);
+                        }
                     }
 
                     for (i = 0; main.ac.holdingRegs.length > i; i++) {
-                        id = main.ac.holdingRegs[i].id;
-                        if (states[id].val === 'true')  states[id].val = 1;
-                        if (states[id].val === 'false') states[id].val = false;
-                        states[id].val = parseInt(states[id].val, 10);
-                        main.holdingRegs[main.ac.holdingRegs[i].address - main.holdingRegsLowAddress] = states[id].val;
+                        id = adapter.namespace + '.' + main.ac.holdingRegs[i].id;
+                        if (states[id]) {
+                            if (states[id].val === 'true')  states[id].val = 1;
+                            if (states[id].val === 'false') states[id].val = false;
+                            states[id].val = parseInt(states[id].val, 10);
+                            main.holdingRegs[main.ac.holdingRegs[i].address - main.holdingRegsLowAddress] = states[id].val;
+                        }
+                    }
+                    // fill with 0 empty values
+                    for (i = 0; i < main.holdingRegs.length; i++) {
+                        if (main.holdingRegs[i] === undefined || main.holdingRegs[i] === null) {
+                            main.holdingRegs[i] = 0;
+                        } else if (typeof main.holdingRegs[i] === 'boolean') {
+                            main.holdingRegs[i] = main.holdingRegs[i] ? 1 : 0;
+                        } else if (typeof main.holdingRegs[i] !== 'number') {
+                            main.holdingRegs[i] = parseInt(main.holdingRegs[i], 10);
+                        }
                     }
                 });
             }
@@ -713,6 +793,9 @@ var main = {
 
         if (main.acp.slave) {
             var handlers = {};
+
+            // read all states first time
+
 
             handlers[FC.READ_DISCRETE_INPUTS] = function(request, response) {
                 var start  = request.startAddress;

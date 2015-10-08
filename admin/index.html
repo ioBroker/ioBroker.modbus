@@ -282,7 +282,7 @@
             params:  {
                 bind:       settings.params.bind  || '192.168.0.1',
                 port:       settings.params.port  || 502,
-                slave:      settings.params.slave || false,
+                slave:      settings.params.slave || 0,
                 recon:      settings.params.recon || 60000,
                 disInputsOffset:    settings.params.disInputsOffset   || 10001,
                 coilsOffset:        settings.params.coilsOffset       || 1,
@@ -485,6 +485,14 @@
             <tr>
                 <td class="translate">Port:</td>
                 <td><input class="modbus_params" id="modbus_port" type="text"/></td>
+            </tr>
+            <tr>
+                <td class="translate">Type:</td>
+                <td><select class="modbus_params" id="modbus_slave" >
+                    <option value="0" class="translate">Master</option>
+                    <option value="1"  class="translate">Slave</option>
+                </select>
+                </td>
             </tr>
         </table>
 
