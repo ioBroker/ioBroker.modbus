@@ -71,17 +71,21 @@ function prepareWrite(id, state) {
             if (t === 'boolean' || t === 'number') {
                 main.coils[objects[id].native.address - main.coilsLowAddress] = state.val ? 1 : 0;
             } else {
-                main.coils[objects[id].native.address - main.coilsLowAddress] = parseInt(state.val, 10) ? 1 : 0
+                main.coils[objects[id].native.address - main.coilsLowAddress] = parseInt(state.val, 10) ? 1 : 0;
             }
         } else if (objects[id].native.type == 'inputRegs') {
-            if (t === 'boolean' || t === 'number') {
+            if (t === 'boolean') {
                 main.inputRegs[objects[id].native.address - main.inputRegsLowAddress] = state.val ? 1 : 0;
+            } else if (t === 'number') {
+                main.inputRegs[objects[id].native.address - main.inputRegsLowAddress] = state.val;
             } else {
                 main.inputRegs[objects[id].native.address - main.inputRegsLowAddress] = parseInt(state.val, 10) ? 1 : 0
             }
         } else if (objects[id].native.type == 'holdingRegs') {
-            if (t === 'boolean' || t === 'number') {
+            if (t === 'boolean') {
                 main.holdingRegs[objects[id].native.address - main.holdingRegsLowAddress] = state.val ? 1 : 0;
+            } if (t === 'number') {
+                main.holdingRegs[objects[id].native.address - main.holdingRegsLowAddress] = state.val;
             } else {
                 main.holdingRegs[objects[id].native.address - main.holdingRegsLowAddress] = parseInt(state.val, 10) ? 1 : 0
             }
@@ -299,7 +303,7 @@ var main = {
                 13: 10,
                 14: 9,
                 15: 8
-            }
+            };
 
             if (main.ac.disInputs.length) {
                 for (i = main.ac.disInputs.length - 1; i >= 0; i--) {
@@ -311,7 +315,7 @@ var main = {
                         continue;
                     }
                     // calculate reference to address
-                    main.ac.disInputs[i].address = Math.floor(main.ac.disInputs[i].address / 16) * 16 + _map[main.ac.disInputs[i].address % 16];
+                    if (!main.acp.slave) main.ac.disInputs[i].address = Math.floor(main.ac.disInputs[i].address / 16) * 16 + _map[main.ac.disInputs[i].address % 16];
 
                     main.ac.disInputs[i].id = 'discreteInputs.' + address + (main.ac.disInputs[i].name ? '_' + (main.ac.disInputs[i].name.replace('.', '_').replace(' ', '_')) : '');
                 }
@@ -339,7 +343,7 @@ var main = {
                         continue;
                     }
                     // calculate reference to address
-                    main.ac.coils[i].address = Math.floor(main.ac.coils[i].address / 16) * 16 + _map[main.ac.coils[i].address % 16];
+                    if (!main.acp.slave) main.ac.coils[i].address = Math.floor(main.ac.coils[i].address / 16) * 16 + _map[main.ac.coils[i].address % 16];
 
                     main.ac.coils[i].id = 'coils.' + address + (main.ac.coils[i].name ? '_' + (main.ac.coils[i].name.replace('.', '_').replace(' ', '_')) : '');
                     if (main.acp.slave || main.ac.coils[i].poll) {
@@ -651,6 +655,8 @@ var main = {
                             if (states[id].val === 'false') states[id].val = false;
                             states[id].val = !!states[id].val;
                             main.disInputs[main.ac.disInputs[i].address - main.disInputsLowAddress] = states[id].val;
+                        } else {
+                            adapter.setState(id, 0, true);
                         }
                     }
                     // fill with 0 empty values
@@ -673,6 +679,8 @@ var main = {
                             if (states[id].val === 'false') states[id].val = false;
                             states[id].val = !!states[id].val;
                             main.coils[main.ac.coils[i].address - main.coilsLowAddress] = states[id].val;
+                        } else {
+                            adapter.setState(id, 0, true);
                         }
                     }
                     // fill with 0 empty values
@@ -692,7 +700,14 @@ var main = {
                             if (states[id].val === 'true')  states[id].val = 1;
                             if (states[id].val === 'false') states[id].val = false;
                             states[id].val = parseInt(states[id].val, 10);
+                        id = adapter.namespace + '.' + main.ac.inputRegs[i].id;
+                        if (states[id]) {
+                            if (states[id].val === 'true'  || states[id].val === true)  states[id].val = 1;
+                            if (states[id].val === 'false' || states[id].val === false) states[id].val = 0;
+                            states[id].val = parseInt(states[id].val, 10) || 0;
                             main.inputRegs[main.ac.inputRegs[i].address - main.inputRegsLowAddress] = states[id].val;
+                        } else {
+                            adapter.setState(id, 0, true);
                         }
                     }
                     // fill with 0 empty values
@@ -710,9 +725,11 @@ var main = {
                         id = adapter.namespace + '.' + main.ac.holdingRegs[i].id;
                         if (states[id]) {
                             if (states[id].val === 'true')  states[id].val = 1;
-                            if (states[id].val === 'false') states[id].val = false;
-                            states[id].val = parseInt(states[id].val, 10);
+                            if (states[id].val === 'false') states[id].val = 0;
+                            states[id].val = parseInt(states[id].val, 10) || 0;
                             main.holdingRegs[main.ac.holdingRegs[i].address - main.holdingRegsLowAddress] = states[id].val;
+                        } else {
+                            adapter.setState(id, 0, true);
                         }
                     }
                     // fill with 0 empty values
@@ -793,30 +810,59 @@ var main = {
 
         if (main.acp.slave) {
             var handlers = {};
+            var _map = {
+                0: 7,
+                1: 6,
+                2: 5,
+                3: 4,
+                4: 3,
+                5: 2,
+                6: 1,
+                7: 0,
+                8: 15,
+                9: 14,
+                10: 13,
+                11: 12,
+                12: 11,
+                13: 10,
+                14: 9,
+                15: 8
+            };
 
             // read all states first time
+            var Server = require('modbus-stack/server');
 
+            Server.RESPONSES[FC.READ_HOLDING_REGISTERS] = function(registers) {
+                var put = Put().word8(registers.length * 2);
+
+                for (var i = 0, l = registers.length; i < l; i++) {
+                    put.word16be(registers[i]);
+                }
+                return put.buffer();
+            };
+            Server.RESPONSES[FC.READ_INPUT_REGISTERS] = Server.RESPONSES[FC.READ_HOLDING_REGISTERS];
+            Server.RESPONSES[FC.READ_DISCRETE_INPUTS] = function(registers) {
+                var put = Put().word8(registers.length * 2);
+
+                for (var i = 0, l = registers.length; i < l; i++) {
+                    put.word16be(registers[i]);
+                }
+                return put.buffer();
+            };
+            Server.RESPONSES[FC.READ_COILS] = Server.RESPONSES[FC.READ_DISCRETE_INPUTS];
 
             handlers[FC.READ_DISCRETE_INPUTS] = function(request, response) {
                 var start  = request.startAddress;
                 var length = request.quantity;
 
-                var resp = new Array(length);
+                var resp = new Array(Math.ceil(length / 16));
                 var i = 0;
-                while (i < length && i + start < main.disInputsLowAddress) {
-                    resp[i] = 0;
-                    i++;
-                }
                 while (i < length && i + start <= main.disInputsHighAddress) {
-                    resp[i] = main.disInputs[i + start - main.disInputsLowAddress];
-                    i++;
+                    if (main.disInputs[i + start - main.disInputsLowAddress]) {
+                        resp[Math.floor(i / 16)] |= 1 << (i % 16);
                 }
-                if (i > main.disInputsHighAddress) {
-                    while (i < length) {
-                        resp[i] = 0;
                         i++;
                     }
-                }
 
                 response.writeResponse(resp);
             };
@@ -941,7 +987,20 @@ var main = {
                 response.writeResponse(resp);
             };
 
-            modbusserver = require('modbus-stack/server').createServer(handlers).listen(main.acp.port);
+            modbusserver = Server.createServer(handlers).listen(main.acp.port);
+            modbusserver.on('connect', function (client) {
+                connected++;
+                adapter.log.info('Client connected');
+                adapter.setState('info.connection', connected, true);
+            }).on('disconnect', function (client) {
+                if (connected > 0) {
+                    connected--;
+                    adapter.setState('info.connection', connected, true);
+                }
+            }).on('error', function (err) {
+                adapter.log.warn(err);
+            });
+
         } else {
             var Client = require('modbus-stack/client');
             Client.RESPONSES[FC.READ_DISCRETE_INPUTS] = function(bufferlist) {
@@ -992,14 +1051,11 @@ var main = {
 
             modbusclient = Client.createClient(main.acp.port, main.acp.bind);
 
-
             modbusclient.on('connect', function () {
                 if (!connected) {
                     connected = 1;
                     adapter.setState('info.connection', connected, true);
                 }
-                adapter.setState("info.connection", true, true);
-
                 main.poll();
             }).on('disconnect', function () {
                 if (connected) {

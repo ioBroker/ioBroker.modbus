@@ -357,7 +357,8 @@
                 if (_id == 'modbus_coils' || _id == 'modbus_disInputs') {
                     fields.splice(3, 1);
                 }
-                $("#" + _id).jsGrid({
+
+                var g = $("#" + _id).jsGrid({
                     width:      'auto',
                     height:     'auto',
                     inserting:  true,
@@ -365,8 +366,26 @@
                     sorting:    true,
                     heading:    true,
                     paging:     false,
+                    deleteConfirm: _('Are you sure?'),
                     data:       data[_id.split('_')[1]],
                     fields:     fields,
+
+                    editRowRenderer: function(item) {
+                        var $result = $("<tr>").addClass(this.editRowClass);
+
+                        this._eachField(function(field) {
+                            $("<td>").addClass(field.css)
+                                    .appendTo($result)
+                                    .append(field.editTemplate ? field.editTemplate(item[field.name], item) : "")
+                                    .width(field.width || "auto").keypress(function (e) {
+                                        if (e.which == 13) {
+                                            $("#" + _id).jsGrid("updateItem");
+                                        }
+                                        onchange();
+                                    });
+                        });
+                        return $result;
+                    },
                     onItemUpdated: function (obj) {
                         /* {grid, row, item, itemIndex, previousItem}*/
                         var changed = false;
@@ -421,6 +440,20 @@
                         onchange();
                     }
                 });
+                g.data('JSGrid')._editRow = function($row) {
+                    if(this._editingRow) {
+                        this.updateItem();
+                    }
+
+                    var item = $row.data('JSGridItem');
+                    var $editRow = this._createEditRow(item);
+
+                    this._editingRow = $row;
+                    $row.hide();
+                    $editRow.insertAfter($row);
+                    $row.data('JSGridEditRow', $editRow);
+                };
+
                 // add custom titles
                 $('.jsgrid-header-sortable').each(function () {
                     if ($(this).text() == _('poll')) {
@@ -440,10 +473,15 @@
         var obj = {
             params: {}
         };
+        // finish editing
 
         $.each($('.modbus_grid'), function () {
             var id = $(this).attr("id");
             var key = id.split('_')[1];
+
+            if ($(this).data('JSGrid')._editingRow) {
+                $(this).jsGrid('updateItem');
+            }
 
             obj[key] = $(this).jsGrid("option", "data");
         });
