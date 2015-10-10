@@ -179,7 +179,22 @@
             "en": "Write pulses (true=>false edge)",
             "de": "Schreibe Pulse (Ja=>Nein Kante)",
             "ru": "Генерировать импульсы (1 => 0)"
-        }
+        },
+        "Connection parameters:": {
+            "en": "Connection parameters:",
+            "de": "Verbindungsparameter:",
+            "ru": "Параметры соединения:"
+        },
+        "Partner IP Address:": {
+            "en": "Partner IP Address:",
+            "de": "Partner IP Adresse:",
+            "ru": "IP адрес партнёра:"
+        },
+        "Port:":            {"en": "Port:",                 "de": "Port:",          "ru": "Порт:"},
+        "Type:":            {"en": "Type:",                 "de": "Typ:",           "ru": "Тип:"},
+        "Master":           {"en": "Master",                "de": "Master",         "ru": "Master"},
+        "Slave":            {"en": "Slave",                 "de": "Slave",          "ru": "Slave"},
+        "Are you sure?":    {"en": "Are you sure?",         "de": "Sind Sie sicher?", "ru": "Вы уверенны?"}
     };
 
     var onChange = null;
@@ -196,24 +211,24 @@
         $(".btn_toggle_pool").button().click(function (e, ui) {
             var grid = $(this).parent().data("grid");
 
-            var data = $("#" + grid).jsGrid("option", "data");
+            var data = $('#' + grid).jsGrid("option", "data");
             $.each(data, function () {
                 this.poll = !this.poll;
             });
 
-            $("#" + grid).jsGrid("option", "data", data);
+            $('#' + grid).jsGrid("option", "data", data);
             onChange();
         });
 
         $(".btn_toggle_rw").button().click(function () {
             var grid = $(this).parent().data("grid");
 
-            var data = $("#" + grid).jsGrid("option", "data");
+            var data = $('#' + grid).jsGrid("option", "data");
             $.each(data, function () {
                 this.RW = !this.RW;
             });
 
-            $("#" + grid).jsGrid("option", "data", data);
+            $('#' + grid).jsGrid("option", "data", data);
             onChange();
 
         });
@@ -221,13 +236,13 @@
         $(".btn_toggle_wp").button().click(function () {
             var grid = $(this).parent().data("grid");
 
-            var data = $("#" + grid).jsGrid("option", "data");
+            var data = $('#' + grid).jsGrid("option", "data");
 
             $.each(data, function () {
                 this.wp = !this.wp;
             });
 
-            $("#" + grid).jsGrid("option", "data", data);
+            $('#' + grid).jsGrid("option", "data", data);
             onChange();
 
         });
@@ -341,7 +356,7 @@
                     room_items.push({value: room, text: rooms[room].common.name || room.substring('enum.rooms.'.length)});
                 }
                 var fields = [
-                    {name: 'address'    , title:  _('Address'),       type: 'text',       width: '110px'},
+                    {name: 'address'    , title:  _('Address'),       type: 'text',       width: '110px', sorter: 'number'},
                     {name: 'name'       , title:  _('Name'),          type: 'text',       width: '150px'},
                     {name: 'description', title:  _('Description'),   type: 'text',       width: '250px'},
                     {name: 'unit'       , title:  _('Unit'),          type: 'text',       width: '50px'},
@@ -358,7 +373,7 @@
                     fields.splice(3, 1);
                 }
 
-                var g = $("#" + _id).jsGrid({
+                var g = $('#' + _id).jsGrid({
                     width:      'auto',
                     height:     'auto',
                     inserting:  true,
@@ -376,10 +391,10 @@
                         this._eachField(function(field) {
                             $("<td>").addClass(field.css)
                                     .appendTo($result)
-                                    .append(field.editTemplate ? field.editTemplate(item[field.name], item) : "")
+                                    .append(field.editTemplate ? field.editTemplate(item ? item[field.name] : '', item) : "")
                                     .width(field.width || "auto").keypress(function (e) {
                                         if (e.which == 13) {
-                                            $("#" + _id).jsGrid("updateItem");
+                                            $('#' + _id).jsGrid("updateItem");
                                         }
                                         onchange();
                                     });
@@ -446,6 +461,7 @@
                     }
 
                     var item = $row.data('JSGridItem');
+                    if (!item) return;
                     var $editRow = this._createEditRow(item);
 
                     this._editingRow = $row;
