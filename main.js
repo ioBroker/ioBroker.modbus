@@ -226,7 +226,6 @@ function syncEnums(enumGroup, id, newEnumName, callback) {
 var main = {
     oldObjects:             [],
     newObjects:             [],
-    round:                  2,
 
     disInputs:              [],
     disInputsLowAddress:    0,
@@ -236,7 +235,8 @@ var main = {
     coils:                  [],
     coilsLowAddress:        0,
     coilsHighAddress:       0,
-    coilsLenght:            0,
+    coilsLength:            0,
+    coilsMapping:           [],
 
     inputRegs:              [],
     inputRegsLowAddress:    0,
@@ -247,6 +247,7 @@ var main = {
     holdingRegsLowAddress:  0,
     holdingRegsHighAddress: 0,
     holdingRegsLength:      0,
+    holdingRegsMapping:     [],
 
     history:     "",
     unit:        "",
@@ -264,14 +265,6 @@ var main = {
         main.acp.inputRegsOffset    = parseInt(main.acp.inputRegsOffset, 10)    || 0;
         main.acp.holdingRegsOffset  = parseInt(main.acp.holdingRegsOffset, 10)  || 0;
         main.acp.slave              = parseInt(main.acp.slave, 10)  || 0;
-
-        if (main.acp.round) {
-            main.round = parseInt(main.acp.round) || 2;
-        } else {
-            main.round = 2;
-        }
-
-        main.round = Math.pow(10, main.round);
 
         adapter.config.params.pulsetime = parseInt(adapter.config.params.pulsetime || 1000);
 
@@ -359,6 +352,9 @@ var main = {
                 } else {
                     main.coilsLength = 0;
                 }
+                for (i = 0; i <  main.ac.coils.length; i++) {
+                    main.coilsMapping[main.ac.coils[i].address - main.coilsLowAddress] = adapter.namespace + '.' + main.ac.coils[i].id;
+                }
             }
             
             if (main.ac.inputRegs.length) {
@@ -402,6 +398,9 @@ var main = {
                     main.holdingRegsLength = main.holdingRegsHighAddress - main.holdingRegsLowAddress + 1;
                 } else {
                     main.holdingRegsLength = 0;
+                }
+                for (i = 0; i <  main.ac.holdingRegs.length; i++) {
+                    main.holdingRegsMapping[main.ac.holdingRegs[i].address - main.holdingRegsLowAddress] = adapter.namespace + '.' + main.ac.holdingRegs[i].id;
                 }
             }
 
@@ -697,11 +696,6 @@ var main = {
                     for (i = 0; main.ac.inputRegs.length > i; i++) {
                         id = adapter.namespace + '.' + main.ac.inputRegs[i].id;
                         if (states[id]) {
-                            if (states[id].val === 'true')  states[id].val = 1;
-                            if (states[id].val === 'false') states[id].val = false;
-                            states[id].val = parseInt(states[id].val, 10);
-                        id = adapter.namespace + '.' + main.ac.inputRegs[i].id;
-                        if (states[id]) {
                             if (states[id].val === 'true'  || states[id].val === true)  states[id].val = 1;
                             if (states[id].val === 'false' || states[id].val === false) states[id].val = 0;
                             states[id].val = parseInt(states[id].val, 10) || 0;
@@ -850,6 +844,16 @@ var main = {
                 return put.buffer();
             };
             Server.RESPONSES[FC.READ_COILS] = Server.RESPONSES[FC.READ_DISCRETE_INPUTS];
+            Server.RESPONSES[FC.WRITE_SINGLE_COIL] = function(registers) {
+                var put = Put().word16be(registers.address);
+                put.word16be(registers.value ? 0xFF00 : 0);
+                return put.buffer();
+            };
+            Server.RESPONSES[FC.WRITE_SINGLE_REGISTER] = function(registers) {
+                var put = Put().word16be(registers.address);
+                put.word16be(registers.value);
+                return put.buffer();
+            };
 
             handlers[FC.READ_DISCRETE_INPUTS] = function(request, response) {
                 var start  = request.startAddress;
@@ -860,9 +864,9 @@ var main = {
                 while (i < length && i + start <= main.disInputsHighAddress) {
                     if (main.disInputs[i + start - main.disInputsLowAddress]) {
                         resp[Math.floor(i / 16)] |= 1 << (i % 16);
-                }
-                        i++;
                     }
+                    i++;
+                }
 
                 response.writeResponse(resp);
             };
@@ -936,29 +940,22 @@ var main = {
                 response.writeResponse(resp);
             };
             handlers[FC.WRITE_SINGLE_COIL] = function(request, response) {
-                var start  = request.startAddress;
-                var length = 1;
-
-                var i = 0;
-                while (i < length && i + start <= main.coilsHighAddress) {
-                    main.coils[i + start - main.coilsLowAddress] = request[0];
-                    //adapter.setState();
-                    i++;
+                var a = request.address - main.coilsLowAddress;
+                if (main.coilsMapping[a]) {
+                    adapter.setState(main.coilsMapping[a], request.value, true);
+                    main.coils[a] = request.value;
                 }
 
-                response.writeResponse(resp);
+                response.writeResponse(response);
             };
             handlers[FC.WRITE_SINGLE_REGISTER] = function(request, response) {
-                var start  = request.startAddress;
-                var length = 1;
-
-                var i = 0;
-                while (i < length && i + start <= main.holdingRegsLowAddress) {
-                    main.holdingRegs[i + start - main.holdingRegsLowAddress] = request[0];
-                    i++;
+                var a = request.address - main.holdingRegsLowAddress;
+                if (main.holdingRegsMapping[a]) {
+                    adapter.setState(main.holdingRegsMapping[a], request.value, true);
+                    main.holdingRegs[a] = request.value;
                 }
 
-                response.writeResponse(resp);
+                response.writeResponse(request);
             };
             handlers[FC.WRITE_MULTIPLE_COILS] = function(request, response) {
                 var start  = request.startAddress;
@@ -967,7 +964,11 @@ var main = {
                 var resp = new Array(length);
                 var i = 0;
                 while (i < length && i + start <= main.coilsLowAddress) {
-                    main.coils[i + start - main.coilsLowAddress] = request[0];
+                    var a = i + start - main.coilsLowAddress;
+                    if (main.coilsMapping[a]) {
+                        adapter.setState(main.coilsMapping[a], request.value, true);
+                        main.coils[a] = request.value;
+                    }
                     i++;
                 }
 
@@ -980,7 +981,11 @@ var main = {
                 var resp = new Array(length);
                 var i = 0;
                 while (i < length && i + start <= main.holdingRegsLowAddress) {
-                    main.holdingRegs[i + start - main.holdingRegsLowAddress] = request[0];
+                    var a = i + start - main.holdingRegsLowAddress;
+                    if (main.holdingRegsMapping[a]) {
+                        adapter.setState(main.holdingRegsMapping[a], request.value, true);
+                        main.holdingRegs[a] = request.value;
+                    }
                     i++;
                 }
 

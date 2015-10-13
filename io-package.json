@@ -33,7 +33,6 @@
       "bind":       "192.168.0.1",
       "port":       502,
       "slave":      0,
-      "round":      2,
       "poll":       1000,
       "recon":      60000,
       "pulsetime":  1000,

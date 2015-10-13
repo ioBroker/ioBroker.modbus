@@ -299,6 +299,8 @@
                 port:       settings.params.port  || 502,
                 slave:      settings.params.slave || 0,
                 recon:      settings.params.recon || 60000,
+                poll:       settings.params.poll  || 1000,
+                pulsetime:  settings.params.pulsetime || 1000,
                 disInputsOffset:    settings.params.disInputsOffset   || 10001,
                 coilsOffset:        settings.params.coilsOffset       || 1,
                 inputRegsOffset:    settings.params.inputRegsOffset   || 30001,
@@ -555,11 +557,6 @@
                 <td style="text-align: center" colspan="3" class="ui-widget-header" class="translate">General</td>
             </tr>
 
-            <tr>
-                <td style="width: 184px" class="translate">Round Real to:</td>
-                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus_params" id="modbusparams_round"></td>
-                <td></td>
-            </tr>
             <tr>
                 <td class="translate">Poll delay:</td>
                 <td  style="text-align: center"><input style="margin-right: 5px;text-align: right" class="modbus_params" id="modbusparams_poll"/></td>
