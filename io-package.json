@@ -1,7 +1,7 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.2.1",
+    "version":      "0.2.2",
     "title":        "ModBus Adapter",
     "desc": {
       "en":         "ModBus connection Slave or Master",
@@ -39,7 +39,8 @@
       "disInputsOffset":    10001,
       "coilsOffset":        1,
       "inputRegsOffset":    30001,
-      "holdingRegsOffset":  40001
+      "holdingRegsOffset":  40001,
+      "showAliases": true
     },
     "disInputs":    [],
     "coils":        [],

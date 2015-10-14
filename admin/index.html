@@ -85,6 +85,7 @@
     }
 
     .table_head_btn {
+        display: inline-flex;
         text-align: center;
         font-size: 1.1em;
         position: absolute;
@@ -165,6 +166,7 @@
         "S7 LOGO!:":        {"en": "S7 LOGO!:",         "de": "S7 LOGO!:",          "ru": "S7 LOGO!:"},
         "Local TSAP:":      {"en": "Local TSAP:",       "de": "Local TSAP:",        "ru": "Local TSAP:"},
         "Remote TSAP:":     {"en": "Remote TSAP:",      "de": "Remote TSAP:",       "ru": "Remote TSAP:"},
+        "Use aliases as address:": {"en": "Use aliases:", "de": "Aliases benutzen:", "ru": "Использовать alias:"},
         "Enable polling of data point": {
             "en": "Enable polling of data point",
             "de": "Zyklische Abfrage vom Datenpunkt",
@@ -194,11 +196,33 @@
         "Type:":            {"en": "Type:",                 "de": "Typ:",           "ru": "Тип:"},
         "Master":           {"en": "Master",                "de": "Master",         "ru": "Master"},
         "Slave":            {"en": "Slave",                 "de": "Slave",          "ru": "Slave"},
-        "Are you sure?":    {"en": "Are you sure?",         "de": "Sind Sie sicher?", "ru": "Вы уверенны?"}
+        "Are you sure?":    {"en": "Are you sure?",         "de": "Sind Sie sicher?", "ru": "Вы уверенны?"},
+        "Start address:":   {"en": "Start address:",        "de": "Start-Adresse:", "ru": "Начальный адрес:"},
+        "Text copied to clipboard. Click to close the window": {
+            "en": "Text copied to clipboard. Click to close the window",
+            "de": "Text wurde in der Zwischenablage kopiert. Klick um Fenster zu zumachen.",
+            "ru": "Текст скопирован в буфер обмена. Щелкните мышкой здесь, чтобы закрыть окно"},
+        "Export":           {"en": "Export",            "de": "Export",             "ru": "Экспорт"},
+        "Close":            {"en": "Close",             "de": "Zumachen",           "ru": "Закрыть"},
+        "Export to CSV":    {"en": "Export to CSV",     "de": "Export in CSV",      "ru": "Экспорт в CSV"},
+        "Import from CSV":  {"en": "Import from CSV",   "de": "Import aus CSV",     "ru": "Импорт из CSV"},
+        "Delete all entries": {"en": "Delete all entries", "de": "Alle Einträge löschen", "ru": "Удалить все элементы"},
+        "Length":           {"en": "Length",            "de": "Länge", "ru": "Length"},
+        "All entries will be deleted. Are you sure?": {
+            "en": "All entries will be deleted. Are you sure?",
+            "de": "Alle Einträge werden gelöscht. Sind sie sicher?",
+            "ru": "Все элементы будут удалены. Вы уверенны?"
+        }
     };
 
     var onChange = null;
     var activePage = '';
+    var offsets = {
+        disInputs:      10001,
+        coils:          1,
+        inputRegs:      30001,
+        holdingRegs:    40001
+    };
 
     $(document).ready(function () {
         $("#btn_loadsymbole").button().click(function () {
@@ -211,24 +235,24 @@
         $(".btn_toggle_pool").button().click(function (e, ui) {
             var grid = $(this).parent().data("grid");
 
-            var data = $('#' + grid).jsGrid("option", "data");
+            var data = $('#' + grid).jsGrid('option', "data");
             $.each(data, function () {
                 this.poll = !this.poll;
             });
 
-            $('#' + grid).jsGrid("option", "data", data);
+            $('#' + grid).jsGrid('option', "data", data);
             onChange();
         });
 
         $(".btn_toggle_rw").button().click(function () {
             var grid = $(this).parent().data("grid");
 
-            var data = $('#' + grid).jsGrid("option", "data");
+            var data = $('#' + grid).jsGrid('option', "data");
             $.each(data, function () {
                 this.RW = !this.RW;
             });
 
-            $('#' + grid).jsGrid("option", "data", data);
+            $('#' + grid).jsGrid('option', "data", data);
             onChange();
 
         });
@@ -236,13 +260,13 @@
         $(".btn_toggle_wp").button().click(function () {
             var grid = $(this).parent().data("grid");
 
-            var data = $('#' + grid).jsGrid("option", "data");
+            var data = $('#' + grid).jsGrid('option', "data");
 
             $.each(data, function () {
                 this.wp = !this.wp;
             });
 
-            $('#' + grid).jsGrid("option", "data", data);
+            $('#' + grid).jsGrid('option', "data", data);
             onChange();
 
         });
@@ -276,6 +300,124 @@
         });
     });
 
+    function getExport(data, id, delimiter) {
+        delimiter = delimiter || '\t';
+        var text = '';
+
+        text += 'address' + delimiter +
+                'name' + delimiter +
+                'description' + delimiter;
+        if (id != 'coils' && id != 'disInputs') {
+            'unit' + delimiter;
+        }
+        text += 'role' + delimiter +
+                'room' + delimiter;
+
+        if (id == 'coils' || id == 'holdingRegs') {
+            text += 'poll' + delimiter +
+                    'wp' + '\n';
+        }
+
+        for (var i = 0; i < data[id].length; i++) {
+            text += data[id][i]._address + delimiter;
+            text += (data[id][i].name || '') + delimiter;
+            text += (data[id][i].description || '') + delimiter;
+            if (id != 'coils' && id != 'disInputs') {
+                text += (data[id][i].unit || '') + delimiter;
+            }
+            text += (data[id][i].role || '') + delimiter;
+            text += (data[id][i].room || '') + delimiter;
+            if (id == 'coils' || id == 'holdingRegs') {
+                text += (data[id][i].poll ? 'true' : 'false') + delimiter;
+                text += (data[id][i].wp   ? 'true' : 'false') + delimiter;
+            }
+            text += '\n';
+        }
+        return text;
+    }
+
+    function getImport(data, id, text) {
+        var delimiter;
+        if (text.indexOf('\t') != -1) {
+            delimiter = '\t';
+        } else if (text.indexOf(';') != -1) {
+            delimiter = ';';
+        } else {
+            delimiter = ' ';
+        }
+        var lines = text.split('\r\n');
+        if (lines.length === 1) {
+            lines = text.split('\n');
+            if (lines.length === 1) {
+                lines = text.split('\r');
+            }
+        }
+        var isAliases = $('#modbusparams_showAliases').prop('checked');
+        for (var i = 0; i < lines.length; i++) {
+            var parts = lines[i].split(delimiter);
+            if (parts.length === 1) {
+                continue;
+            }
+            if (parseInt(parts[0].trim(), 10).toString() != parts[0]) continue;
+            var obj = {};
+            var j = 0;
+            obj._address = parts[j++].trim();
+            if (isAliases) {
+                obj.address = alias2address(id, obj._address);
+            } else {
+                obj.address = obj._address;
+            }
+            obj.name = parts[j++].trim() || '';
+            obj.description = parts[j++].trim() || '';
+            if (id != 'coils' && id != 'disInputs') {
+                obj.unit = parts[j++].trim() || '';
+            }
+            obj.role = parts[j++].trim() || '';
+            obj.room = parts[j++].trim() || '';
+            if (id == 'coils' || id == 'holdingRegs') {
+                obj.poll = parts[j++].trim() || '';
+                obj.wp   = parts[j++].trim() || '';
+                obj.poll = (obj.poll.toLowerCase() === 'true' || obj.poll === '1' || obj.poll === '+');
+                obj.wp   = (obj.wp.toLowerCase() === 'true' || obj.wp === '1' || obj.wp === '+');
+            }
+            data[id].push(obj);
+        }
+        $('#modbus_' + id).jsGrid('render');
+    }
+
+    function switchOneType(data, id) {
+        if ($('#modbusparams_showAliases').prop('checked')) {
+            for (var i = 0; i < data[id].length; i++) {
+                data[id][i]._address = address2alias(id, data[id][i].address);
+            }
+        } else {
+            for (var i = 0; i < data[id].length; i++) {
+                data[id][i]._address = data[id][i].address;
+            }
+        }
+        $('#modbus_' + id).jsGrid('render');
+    }
+
+    function switchAll(data) {
+        switchOneType(data, 'disInputs');
+        switchOneType(data, 'coils');
+        switchOneType(data, 'inputRegs');
+        switchOneType(data, 'holdingRegs');
+        if ($('#modbusparams_showAliases').prop('checked')) {
+            $('.offsets').show();
+        } else {
+            $('.offsets').hide();
+        }
+    }
+
+    function recalculate(data, id, oldOffset, newOffset) {
+        if ($('#modbusparams_showAliases').prop('checked')) {
+            for (var i = 0; i < data[id].length; i++) {
+                data[id][i].address += (oldOffset - newOffset);
+            }
+        }
+    }
+
     function load(settings, onchange) {
         if (systemLang == 'de') {
             translate_de();
@@ -304,23 +446,45 @@
                 disInputsOffset:    settings.params.disInputsOffset   || 10001,
                 coilsOffset:        settings.params.coilsOffset       || 1,
                 inputRegsOffset:    settings.params.inputRegsOffset   || 30001,
-                holdingRegsOffset:  settings.params.holdingRegsOffset || 40001
+                holdingRegsOffset:  settings.params.holdingRegsOffset || 40001,
+                showAliases: (settings.params.showAliases === undefined) ? true : settings.params.showAliases
             }
         };
+        data.params.showAliases = (data.params.showAliases === 'true' || data.params.showAliases === true);
 
         onChange = onchange;
 
         $.each($(".modbus_params"), function () {
-            var id = $(this).attr("id");
-            if ($(this).hasClass("check")) {
-                if (data.params[id.split('_')[1]]) {
-                    document.getElementById(id).checked = data.params[id.split('_')[1]];
-                }
+            var id = $(this).attr('id');
+            if ($(this).attr('type') === 'checkbox') {
+                $(this).prop('checked', !!data.params[id.split('_')[1]]);
             } else {
                 $(this).val(data.params[id.split('_')[1]]);
             }
 
             $(this).change(function () {
+                var id = $(this).attr('id').split('_')[1];
+                if (id == 'disInputsOffset')    {
+                    recalculate(data, 'disInputs', offsets.disInputs, parseInt($(this).val(), 10));
+                    offsets.disInputs   = parseInt($(this).val(), 10);
+                }
+                if (id == 'coilsOffset') {
+                    recalculate(data, 'coils', offsets.coils, parseInt($(this).val(), 10));
+                    offsets.coils       = parseInt($(this).val(), 10);
+                }
+                if (id == 'inputRegsOffset') {
+                    recalculate(data, 'inputRegs', offsets.inputRegs, parseInt($(this).val(), 10));
+                    offsets.inputRegs   = parseInt($(this).val(), 10);
+                }
+                if (id == 'holdingRegsOffset') {
+                    recalculate(data, 'holdingRegs', offsets.holdingRegs, parseInt($(this).val(), 10));
+                    offsets.holdingRegs = parseInt($(this).val(), 10);
+                }
+
+                if (id == 'showAliases') {
+                    switchAll(data);
+                }
+
                 onchange();
             }).keyup(function () {
                 $(this).trigger('change');
@@ -328,6 +492,7 @@
         });
 
         getEnums('rooms', function (err, rooms) {
+
             $.each($('.modbus_grid'), function () {
                 var _id = $(this).attr('id');
 
@@ -358,7 +523,7 @@
                     room_items.push({value: room, text: rooms[room].common.name || room.substring('enum.rooms.'.length)});
                 }
                 var fields = [
-                    {name: 'address'    , title:  _('Address'),       type: 'text',       width: '110px', sorter: 'number'},
+                    {name: '_address'   , title:  _('Address'),       type: 'text',       width: '110px', sorter: 'number'},
                     {name: 'name'       , title:  _('Name'),          type: 'text',       width: '150px'},
                     {name: 'description', title:  _('Description'),   type: 'text',       width: '250px'},
                     {name: 'unit'       , title:  _('Unit'),          type: 'text',       width: '50px'},
@@ -405,16 +570,22 @@
                     },
                     onItemUpdated: function (obj) {
                         /* {grid, row, item, itemIndex, previousItem}*/
+                        var id = obj.grid._body.parent().attr('id');
                         var changed = false;
                         if (obj.item.wp && !obj.item.poll) {
                             obj.item.poll = true;
                             changed = true;
                         }
                         if (parseInt(obj.item.address, 10).toString() != obj.item.address) changed = true;
-                        obj.item.address = parseInt(obj.item.address, 10);
+                        obj.item._address = parseInt(obj.item._address, 10);
+
+                        if ($('#modbusparams_showAliases').prop('checked')) {
+                            obj.item.address = alias2address(id.split('_').pop(), obj.item._address);
+                        } else {
+                            obj.item.address = obj.item._address;
+                        }
 
                         if (!obj.item.role) {
-                            var id = obj.grid._body.parent().attr('id');
                             if (id == 'modbus_disInputs') {
                                 obj.item.role = 'status';
                             } else if (id == 'modbus_coils') {
@@ -439,6 +610,9 @@
                         var id = obj.grid._body.parent().attr('id').split('_')[1];
                         if (data[id].length) {
                             var max = 0;
+                            obj.item.address.role = data[id][data[id].length - 1].role;
+                            obj.item.address.poll = data[id][data[id].length - 1].poll;
+                            obj.item.address.wp   = data[id][data[id].length - 1].wp;
                             for (var a = 0; a < data[id].length; a++) {
                                 if (data[id][a].address > max) max = data[id][a].address;
                             }
@@ -482,7 +656,73 @@
                     }
                 });
             });
+
+            switchAll(data);
         });
+
+        $('.btn_export').button({
+            icons: {primary: 'ui-icon-circle-minus'},
+            text: false
+        })
+                .attr('title', _('Export to CSV'))
+                .css({width: 24, height: 24})
+                .click(function () {
+                    var id = $(this).data('table');
+                    // build text
+                    var text = getExport(data, id);
+                    $('#export-dlg').show();
+                    $('#export_textarea').val(text).focus().select();
+                    document.execCommand('copy');
+                });
+
+        $('#export-dlg').click(function () {
+            $(this).hide();
+        });
+
+        $('.btn_import').button({
+            icons: {primary: 'ui-icon-circle-plus'},
+            text: false
+        })
+                .attr('title', _('Import from CSV'))
+                .css({width: 24, height: 24})
+                .click(function () {
+                    $('#import-dlg').show();
+                    $('#import_textarea').val('').focus();
+                    $('#import-dlg').data('table', $(this).data('table'));
+                });
+
+        $('#import_button_ok').button({
+            icons: {primary: 'ui-icon-check'},
+            text: _('Export')
+        }).click(function () {
+            getImport(data, $('#import-dlg').data('table'), $('#import_textarea').val());
+            $('#import-dlg').hide();
+            onchange();
+        });
+        $('#import_button_cancel').button({
+            icons: {primary: 'ui-icon-close'},
+            text: _('Close')
+        }).click(function () {
+            $('#import-dlg').hide();
+        });
+
+        $('.btn_delete_all').button({
+            icons: {primary: 'ui-icon-trash'},
+            text: false
+        })
+                .attr('title', _('Delete all entries'))
+                .css({width: 24, height: 24})
+                .click(function () {
+                    if (window.confirm(_('All entries will be deleted. Are you sure?'))) {
+                        var id = $(this).data('table');
+                        if (data[id].length) {
+                            data[id].splice(0, data[id].length);
+                            $('#modbus_' + id).jsGrid('render');
+                            onchange();
+                        }
+                    }
+                });
+
         onchange(false);
     }
 
@@ -494,26 +734,81 @@
         // finish editing
 
         $.each($('.modbus_grid'), function () {
-            var id = $(this).attr("id");
+            var id = $(this).attr('id');
             var key = id.split('_')[1];
 
             if ($(this).data('JSGrid')._editingRow) {
                 $(this).jsGrid('updateItem');
             }
 
-            obj[key] = $(this).jsGrid("option", "data");
+            obj[key] = $(this).jsGrid('option', "data");
         });
 
         $.each($(".modbus_params"), function () {
-            var id = $(this).attr("id").split('_')[1];
-            if ($(this).hasClass("check")) {
-                obj.params[id] = document.getElementById($(this).attr("id")).checked;
+            var id = $(this).attr('id').split('_')[1];
+            if ($(this).attr('type') == 'checkbox') {
+                obj.params[id] = $(this).prop('checked');
             } else {
                 obj.params[id] = $(this).val();
             }
         });
         callback(obj);
     }
+
+    var _map  = {
+        0: 7,
+        1: 6,
+        2: 5,
+        3: 4,
+        4: 3,
+        5: 2,
+        6: 1,
+        7: 0,
+        8: 15,
+        9: 14,
+        10: 13,
+        11: 12,
+        12: 11,
+        13: 10,
+        14: 9,
+        15: 8
+    };
+    var _rmap = {
+        0: 15,
+        1: 14,
+        2: 13,
+        3: 12,
+        4: 11,
+        5: 10,
+        6: 9,
+        7: 8,
+        8: 7,
+        9: 6,
+        10: 5,
+        11: 4,
+        12: 3,
+        13: 2,
+        14: 1,
+        15: 0
+    };
+    function address2alias(id, address) {
+        if (id == 'disInputs' || id == 'coils') {
+            address += offsets[id];
+            return Math.floor(address / 16) * 16 + _rmap[address % 16];
+        } else {
+            return address + offsets[id];
+        }
+    }
+
+    function alias2address(id, alias) {
+        if (id == 'disInputs' || id == 'coils') {
+            alias = Math.floor(alias / 16) * 16 + _map[alias % 16];
+            return alias - offsets[id];
+        } else {
+            return alias - offsets[id];
+        }
+    }
+
 </script>
 
 <!-- you have to put your config page in a div with id adapter-container -->
@@ -558,6 +853,11 @@
             </tr>
 
             <tr>
+                <td class="translate">Use aliases as address:</td>
+                <td><input style="margin-right: 5px;text-align: right" class="modbus_params" type="checkbox" id="modbusparams_showAliases"/></td>
+                <td></td>
+            </tr>
+            <tr>
                 <td class="translate">Poll delay:</td>
                 <td  style="text-align: center"><input style="margin-right: 5px;text-align: right" class="modbus_params" id="modbusparams_poll"/></td>
                 <td style="padding-right: 20px">ms</td>
@@ -573,31 +873,22 @@
                 <td>ms</td>
             </tr>
         </table>
-
-        <!--table class="ui-widget-content" style="z-index: 2;margin-top: 20px;  margin-bottom: 20px; border: 1px solid black; border-collapse: collapse; ">
-            <tr class="ui-widget-header">
-                <td style="width: 200px; text-align: center" class="translate">Import symbols file:</td>
-                <td style="width: 200px; text-align: center" class="translate">Import DB file:</td>
-            </tr>
-            <tr>
-                <td style="padding: 10px;width: 180px; text-align: center">
-                    <button id="btn_loadsymbole" class="translateB">Load Symbols</button>
-                    <input style="display: none" onchange="symbol_import(this.files)" type="file" accept=".asc" id="symol_import"/></td>
-                <td style="padding: 10px;width: 180px; text-align: center">
-                    <button id="btn_loaddb" class="translateB">Add DB</button>
-                    <input style="display: none" onchange="db_import(this.files)" type="file" accept=".prn" id="db_import"/></td>
-            </tr>
-        </table-->
     </div>
     <div id="modbus_tab_dis_inputs" class="modbus_tab">
         <div class="table_head_btn" data-grid="modbus_disInputs">
-            <span>Start address:</span><input type="text" maxsize="6" class="modbus_params" id="modbusparams_disInputsOffset" size="6"/>
+            <div class="offsets"><span class="translate">Start address:</span><input type="text" maxsize="6" class="modbus_params" id="modbusparams_disInputsOffset" size="6"/></div>
+            <button class="btn_delete_all translateB" data-table="disInputs"></button>
+            <button class="btn_export translateB" data-table="disInputs"></button>
+            <button class="btn_import translateB" data-table="disInputs"></button>
         </div>
         <div id="modbus_disInputs" class="modbus_grid"></div>
     </div>
     <div id="modbus_tab_coils" class="modbus_tab">
         <div class="table_head_btn" data-grid="modbus_coils">
-            <span>Start address:</span><input type="text" maxsize="6" class="modbus_params" id="modbusparams_coilsOffset" size="6"/>
+            <div class="offsets"><span class="translate">Start address:</span><input type="text" maxsize="6" class="modbus_params" id="modbusparams_coilsOffset" size="6"/></div>
+            <button class="btn_delete_all translateB" data-table="coils"></button>
+            <button class="btn_export translateB" data-table="coils"></button>
+            <button class="btn_import translateB" data-table="coils"></button>
             <button class="btn_toggle_pool translateB" title="Polling">Toggle poll</button>
             <button class="btn_toggle_wp translateB" title="write as Pulse">Toggle WP</button>
         </div>
@@ -605,17 +896,32 @@
     </div>
     <div id="modbus_tab_input_regs" class="modbus_tab">
         <div class="table_head_btn" data-grid="modbus_inputRegs">
-            <span>Start address:</span><input type="text" maxsize="6" class="modbus_params" id="modbusparams_inputRegsOffset" size="6"/>
+            <div class="offsets"><span class="translate">Start address:</span><input type="text" maxsize="6" class="modbus_params" id="modbusparams_inputRegsOffset" size="6"/></div>
+            <button class="btn_delete_all translateB" data-table="inputRegs"></button>
+            <button class="btn_export translateB" data-table="inputRegs"></button>
+            <button class="btn_import translateB" data-table="inputRegs"></button>
         </div>
         <div id="modbus_inputRegs" class="modbus_grid"></div>
     </div>
     <div id="modbus_tab_holding_regs" class="modbus_tab">
         <div class="table_head_btn" data-grid="modbus_holdingRegs">
-            <span>Start address:</span><input type="text" maxsize="6" class="modbus_params" id="modbusparams_holdingRegsOffset" size="6"/>
+            <div class="offsets"><span class="translate">Start address:</span><input type="text" maxsize="6" class="modbus_params" id="modbusparams_holdingRegsOffset" size="6"/></div>
+            <button class="btn_delete_all translateB" data-table="holdingRegs"></button>
+            <button class="btn_export translateB" data-table="holdingRegs"></button>
+            <button class="btn_import translateB" data-table="holdingRegs"></button>
             <button class="btn_toggle_pool translateB" title="Polling">Toggle poll</button>
             <!--button class="btn_toggle_wp translateB"   title="write as Pulse">Toggle WP</button-->
         </div>
         <div id="modbus_holdingRegs" class="modbus_grid"></div>
+    </div>
+    <div id="export-dlg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;display: none; z-index: 100">
+        <div id="export_help" class="translate" style="position: absolute; top: 10px; right: 10px; font-size: 24px; font-weight: bold; color: blue">Text copied to clipboard. Click to close the window</div>
+        <textarea id="export_textarea" readonly style="width: 100%; height: 100%"></textarea>
+    </div>
+    <div id="import-dlg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;display: none; z-index: 100">
+        <textarea id="import_textarea" style="width: 100%; height: calc(100% - 40px)"></textarea>
+        <button id="import_button_ok"    style="position: absolute; bottom: 10px; right: 120px;" class="translateB">Export</button>
+        <button id="import_button_cancel" style="position: absolute; bottom: 10px; right: 10px;" class="translateB">Close</button>
     </div>
 </div>
 
