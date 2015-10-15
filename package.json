@@ -1,6 +1,6 @@
 {
   "name": "iobroker.modbus",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Siemens S7 over Snap7",
   "author": {
     "name": "bluefox",
@@ -25,7 +25,6 @@
     "url": "https://github.com/ioBroker/ioBroker.modbus"
   },
   "dependencies": {
-    "async": "^1.4.2",
     "modbus-stack": "https://github.com/TooTallNate/node-modbus-stack/tarball/master"
   },
   "devDependencies": {

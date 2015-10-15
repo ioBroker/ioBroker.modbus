@@ -4,9 +4,12 @@
 Implementation of ModBus Slave and Master for ioBroker. Actually only Modbus over TCP is supported.
 
 # Changelog 
-#0.2.2
+#V 0.2.3 (2015-10-15)
+* (bluefox) fix error with master
+
+#V 0.2.2 (2015-10-14)
 * (bluefox) implement slave
 * (bluefox) change addressing model
 
-#0.0.1
+#V 0.0.1
 * (bluefox) initial commit
