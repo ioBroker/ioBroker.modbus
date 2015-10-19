@@ -610,24 +610,37 @@
                         var id = obj.grid._body.parent().attr('id').split('_')[1];
                         if (data[id].length) {
                             var max = 0;
-                            obj.item.address.role = data[id][data[id].length - 1].role;
-                            obj.item.address.poll = data[id][data[id].length - 1].poll;
-                            obj.item.address.wp   = data[id][data[id].length - 1].wp;
+                            obj.item.role = data[id][data[id].length - 1].role;
+                            obj.item.poll = data[id][data[id].length - 1].poll;
+                            obj.item.wp   = data[id][data[id].length - 1].wp;
                             for (var a = 0; a < data[id].length; a++) {
-                                if (data[id][a].address > max) max = data[id][a].address;
+                                if (data[id][a]._address > max) max = data[id][a]._address;
                             }
-                            obj.item.address = max + 1;
+                            obj.item._address = max + 1;
+                            if ($('#modbusparams_showAliases').prop('checked')) {
+                                obj.item.address = alias2address(id, obj.item._address);
+                            } else {
+                                obj.item.address = obj.item._address;
+                            }
+
                         } else {
-                            if (id == 'disInputs') {
-                                obj.item.address = data.params.disInputsOffset;
-                            } else if (id == 'coils') {
-                                obj.item.address = data.params.coilsOffset;
-                            } else if (id == 'inputRegs') {
-                                obj.item.address = data.params.inputRegsOffset;
-                            } else if (id == 'holdingRegs') {
-                                obj.item.address = data.params.holdingRegsOffset;
+                            if ($('#modbusparams_showAliases').prop('checked')) {
+                                if (id == 'disInputs') {
+                                    obj.item._address = data.params.disInputsOffset;
+                                } else if (id == 'coils') {
+                                    obj.item._address = data.params.coilsOffset;
+                                } else if (id == 'inputRegs') {
+                                    obj.item._address = data.params.inputRegsOffset;
+                                } else if (id == 'holdingRegs') {
+                                    obj.item._address = data.params.holdingRegsOffset;
+                                }
+                                obj.item.address = alias2address(id, obj.item._address);
+                            } else {
+                                obj.item.address  = 0;
+                                obj.item._address = 0;
                             }
                         }
+
                         onchange();
                     }
                 });
@@ -802,7 +815,7 @@
 
     function alias2address(id, alias) {
         if (id == 'disInputs' || id == 'coils') {
-            alias = Math.floor(alias / 16) * 16 + _map[alias % 16];
+            alias = Math.floor(alias / 16) * 16 + _rmap[alias % 16];
             return alias - offsets[id];
         } else {
             return alias - offsets[id];
