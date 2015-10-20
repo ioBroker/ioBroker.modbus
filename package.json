@@ -1,7 +1,7 @@
 {
   "name": "iobroker.modbus",
-  "version": "0.2.4",
-  "description": "Siemens S7 over Snap7",
+  "version": "0.2.5",
+  "description": "Connect devices oder Modbus protocol to ioBroker",
   "author": {
     "name": "bluefox",
     "email": "dogafox@gmail.com"

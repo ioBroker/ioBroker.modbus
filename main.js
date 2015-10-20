@@ -227,6 +227,34 @@ function syncEnums(enumGroup, id, newEnumName, callback) {
     }
 }
 
+var _rmap = {
+    0: 15,
+    1: 14,
+    2: 13,
+    3: 12,
+    4: 11,
+    5: 10,
+    6: 9,
+    7: 8,
+    8: 7,
+    9: 6,
+    10: 5,
+    11: 4,
+    12: 3,
+    13: 2,
+    14: 1,
+    15: 0
+};
+
+function address2alias(id, address) {
+    if (id == 'disInputs' || id == 'coils') {
+        address += main.acp[id + 'Offset'];
+        return Math.floor(address / 16) * 16 + _rmap[address % 16];
+    } else {
+        return address + main.acp[id + 'Offset'];
+    }
+}
+
 var main = {
     oldObjects:             [],
     newObjects:             [],
@@ -262,12 +290,18 @@ var main = {
         main.acp       = adapter.config.params;
         main.acp.poll  = parseInt(main.acp.poll,  10) || 1000; // default is 1 second
         main.acp.recon = parseInt(main.acp.recon, 10) || 60000;
-        main.acp.port  = parseInt(main.acp.port, 10)  || 502;
-        main.acp.slave              = parseInt(main.acp.slave, 10)  || 0;
+        main.acp.port  = parseInt(main.acp.port,  10) || 502;
+        main.acp.slave = parseInt(main.acp.slave, 10) || 0;
+        main.acp.disInputsOffset   = parseInt(main.acp.disInputsOffset,   10) || 10001;
+        main.acp.coilsOffset       = parseInt(main.acp.coilsOffset,       10) || 1;
+        main.acp.inputRegsOffset   = parseInt(main.acp.inputRegsOffset,   10) || 30001;
+        main.acp.holdingRegsOffset = parseInt(main.acp.holdingRegsOffset, 10) || 40001;
 
-        adapter.config.params.pulsetime = parseInt(adapter.config.params.pulsetime || 1000);
+        main.acp.showAliases       = (main.acp.showAliases === true || main.acp.showAliases === 'true');
 
-        adapter.getForeignObjects(adapter.namespace + ".*", function (err, list) {
+        main.acp.pulsetime         = parseInt(main.acp.pulsetime || 1000);
+
+        adapter.getForeignObjects(adapter.namespace + '.*', function (err, list) {
 
             main.oldObjects = list;
 
@@ -287,7 +321,13 @@ var main = {
                         main.ac.disInputs.splice(i, 1);
                         continue;
                     }
-                    main.ac.disInputs[i].id = 'discreteInputs.' + address + (main.ac.disInputs[i].name ? '_' + (main.ac.disInputs[i].name.replace('.', '_').replace(' ', '_')) : '');
+                    main.ac.disInputs[i].id = 'discreteInputs.';
+                    if (main.acp.showAliases) {
+                        main.ac.disInputs[i].id += address2alias('disInputs', address);
+                    } else {
+                        main.ac.disInputs[i].id += address;
+                    }
+                    main.ac.disInputs[i].id += (main.ac.disInputs[i].name ? '_' + (main.ac.disInputs[i].name.replace('.', '_').replace(' ', '_')) : '');
                 }
                 if (main.ac.disInputs.length) {
                     main.ac.disInputs.sort(sortByAddress);
@@ -311,7 +351,15 @@ var main = {
                         main.ac.coils.splice(i, 1);
                         continue;
                     }
-                    main.ac.coils[i].id = 'coils.' + address + (main.ac.coils[i].name ? '_' + (main.ac.coils[i].name.replace('.', '_').replace(' ', '_')) : '');
+
+                    main.ac.coils[i].id = 'coils.';
+                    if (main.acp.showAliases) {
+                        main.ac.coils[i].id += address2alias('coils', address);
+                    } else {
+                        main.ac.coils[i].id += address;
+                    }
+                    main.ac.coils[i].id += (main.ac.coils[i].name ? '_' + (main.ac.coils[i].name.replace('.', '_').replace(' ', '_')) : '');
+
                     if (main.acp.slave || main.ac.coils[i].poll) {
                         if (address < main.coilsLowAddress)  main.coilsLowAddress  = address;
                         if (address > main.coilsHighAddress) main.coilsHighAddress = address;
@@ -338,7 +386,14 @@ var main = {
                         main.ac.inputRegs.splice(i, 1);
                         continue;
                     }
-                    main.ac.inputRegs[i].id = 'inputRegisters.' + address + (main.ac.inputRegs[i].name ? '_' + (main.ac.inputRegs[i].name.replace('.', '_').replace(' ', '_')) : '');
+                    main.ac.inputRegs[i].id = 'inputRegisters.';
+                    if (main.acp.showAliases) {
+                        main.ac.inputRegs[i].id += address2alias('inputRegs', address);
+                    } else {
+                        main.ac.inputRegs[i].id += address;
+                    }
+
+                    main.ac.inputRegs[i].id += (main.ac.inputRegs[i].name ? '_' + (main.ac.inputRegs[i].name.replace('.', '_').replace(' ', '_')) : '');
                 }
                 if (main.ac.inputRegs.length) {
                     main.inputRegsLowAddress = main.ac.inputRegs[0].address;
@@ -359,7 +414,15 @@ var main = {
                         main.ac.holdingRegs.splice(i, 1);
                         continue;
                     }
-                    main.ac.holdingRegs[i].id = 'holdingRegisters.' + address + (main.ac.holdingRegs[i].name ? '_' + (main.ac.holdingRegs[i].name.replace('.', '_').replace(' ', '_')) : '');
+
+                    main.ac.holdingRegs[i].id = 'holdingRegisters.';
+                    if (main.acp.showAliases) {
+                        main.ac.holdingRegs[i].id += address2alias('holdingRegs', address);
+                    } else {
+                        main.ac.holdingRegs[i].id += address;
+                    }
+                    main.ac.holdingRegs[i].id += (main.ac.holdingRegs[i].name ? '_' + (main.ac.holdingRegs[i].name.replace('.', '_').replace(' ', '_')) : '');
+
                     if (main.acp.slave || main.ac.holdingRegs[i].poll) {
                         if (address < main.holdingRegsLowAddress)  main.holdingRegsLowAddress  = address;
                         if (address > main.holdingRegsHighAddress) main.holdingRegsHighAddress = address;
