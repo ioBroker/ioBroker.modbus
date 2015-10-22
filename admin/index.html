@@ -207,12 +207,14 @@
         "Export to CSV":    {"en": "Export to CSV",     "de": "Export in CSV",      "ru": "Экспорт в CSV"},
         "Import from CSV":  {"en": "Import from CSV",   "de": "Import aus CSV",     "ru": "Импорт из CSV"},
         "Delete all entries": {"en": "Delete all entries", "de": "Alle Einträge löschen", "ru": "Удалить все элементы"},
-        "Length":           {"en": "Length",            "de": "Länge", "ru": "Length"},
+        "Length":           {"en": "Length",            "de": "Länge",              "ru": "Длина"},
         "All entries will be deleted. Are you sure?": {
             "en": "All entries will be deleted. Are you sure?",
             "de": "Alle Einträge werden gelöscht. Sind sie sicher?",
             "ru": "Все элементы будут удалены. Вы уверенны?"
-        }
+        },
+        "Factor":           {"en": "Factor",            "de": "Faktor",             "ru": "Множитель"},
+        "Offset":           {"en": "Offset",            "de": "Offset",             "ru": "Сдвиг"}
     };
 
     var onChange = null;
@@ -492,10 +494,10 @@
         });
 
         getEnums('rooms', function (err, rooms) {
-
             $.each($('.modbus_grid'), function () {
                 var _id = $(this).attr('id');
 
+                // todo read roles and expand this list
                 var role_items = [
                     {value: '',                     text: ''},
                     {value: 'value',                text: 'value'},
@@ -518,15 +520,58 @@
                     {value: 'level.interval',       text: 'level.interval'}
                 ];
 
+                var type_items = [
+                    {value: '',               text: ''},
+                    {value: 'uint16be',       text: 'Unsigned 16 bit (Big Endian)'},
+                    {value: 'uint16le',       text: 'Unsigned 16 bit (Little Endian)'},
+                    {value: 'int16be',        text: 'Signed 16 bit (Big Endian)'},
+                    {value: 'int16le',        text: 'Signed 16 bit (Little Endian)'},
+                    {value: 'uint32be',       text: 'Unsigned 32 bit (Big Endian)'},
+                    {value: 'uint32le',       text: 'Unsigned 32 bit (Little Endian)'},
+                    {value: 'int32be',        text: 'Signed 32 bit (Big Endian)'},
+                    {value: 'int32le',        text: 'Signed 32 bit (Little Endian)'},
+                    {value: 'uint64be',       text: 'Unsigned 64 bit (Big Endian)'},
+                    {value: 'uint64le',       text: 'Unsigned 64 bit (Little Endian)'},
+                    {value: 'int64be',        text: 'Signed 64 bit (Big Endian)'},
+                    {value: 'int64le',        text: 'Signed 64 bit (Little Endian)'},
+                    {value: 'floatbe',        text: 'Float (Big Endian)'},
+                    {value: 'floatle',        text: 'Float (Little Endian)'},
+                    {value: 'string',         text: 'String (Zero-end)'}
+                ];
+
+                var type_items_len = {
+                    'uint16be':   1,
+                    'uint16le':   1,
+                    'int16be':    1,
+                    'int16le':    1,
+                    'int16be1':   1,
+                    'int16le1':   1,
+                    'uint32be':   2,
+                    'uint32le':   2,
+                    'int32be':    2,
+                    'int32le':    2,
+                    'uint64be':   4,
+                    'uint64le':   4,
+                    'int64be':    4,
+                    'int64le':    4,
+                    'floatbe':    2,
+                    'floatle':    2,
+                    'string':     0
+                };
+
                 var room_items = [{value: '', text: ''}];
                 for (var room in rooms) {
                     room_items.push({value: room, text: rooms[room].common.name || room.substring('enum.rooms.'.length)});
                 }
                 var fields = [
                     {name: '_address'   , title:  _('Address'),       type: 'text',       width: '110px', sorter: 'number'},
-                    {name: 'name'       , title:  _('Name'),          type: 'text',       width: '150px'},
-                    {name: 'description', title:  _('Description'),   type: 'text',       width: '250px'},
+                    {name: 'name'       , title:  _('Name'),          type: 'text',       width: '*'},
+                    {name: 'description', title:  _('Description'),   type: 'text',       width: '*'},
                     {name: 'unit'       , title:  _('Unit'),          type: 'text',       width: '50px'},
+                    {name: 'type'       , title:  _('Type'),          type: 'select',     width: '200px', items: type_items, valueField: 'value', textField: 'text'},
+                    {name: 'len'        , title:  _('Length'),        type: 'text',       width: '50px'},
+                    {name: 'factor'     , title:  _('Factor'),        type: 'text',       width: '50px'},
+                    {name: 'offset'     , title:  _('Offset'),        type: 'text',       width: '50px'},
                     {name: 'role'       , title:  _('Role'),          type: 'select',     width: '100px', items: role_items, valueField: 'value', textField: 'text'},
                     {name: 'room'       , title:  _('Room'),          type: 'select',     width: '100px', items: room_items, valueField: 'value', textField: 'text'},
                     {name: 'poll'       , title:  _('poll'),          type: 'checkbox',   width: '35px'},
@@ -534,10 +579,10 @@
                     {                                                 type: 'control',    width: '80px'}
                 ];
                 if (_id == 'modbus_disInputs' || _id == 'modbus_inputRegs') {
-                    fields.splice(6, 2);
+                    fields.splice(10, 2);
                 }
                 if (_id == 'modbus_coils' || _id == 'modbus_disInputs') {
-                    fields.splice(3, 1);
+                    fields.splice(3, 5);
                 }
 
                 var g = $('#' + _id).jsGrid({
@@ -558,10 +603,10 @@
                         this._eachField(function(field) {
                             $("<td>").addClass(field.css)
                                     .appendTo($result)
-                                    .append(field.editTemplate ? field.editTemplate(item ? item[field.name] : '', item) : "")
-                                    .width(field.width || "auto").keypress(function (e) {
+                                    .append(field.editTemplate ? field.editTemplate(item ? item[field.name] : '', item) : '')
+                                    .width(field.width || 'auto').keypress(function (e) {
                                         if (e.which == 13) {
-                                            $('#' + _id).jsGrid("updateItem");
+                                            $('#' + _id).jsGrid('updateItem');
                                         }
                                         onchange();
                                     });
@@ -585,7 +630,44 @@
                             obj.item.address = obj.item._address;
                         }
 
-                        if (!obj.item.role) {
+                        if (obj.item.type === '') {
+                            obj.item.type = type_items[1].value;
+                            changed = true;
+                        }
+
+                        // update length
+                        if (obj.item.type === 'string') {
+                            if (obj.item.factor !== '') {
+                                obj.item.factor = '';
+                                changed = true;
+                            }
+                            if (obj.item.offset !== '') {
+                                obj.item.offset = '';
+                                changed = true;
+                            }
+
+                            obj.item.len = parseInt(obj.item.len, 10) || 0;
+                            if (!obj.item.len) {
+                                obj.item.len = 2;
+                                changed = true;
+                            }
+                        } else if (type_items_len[obj.item.type]) {
+                            if (obj.item.len != type_items_len[obj.item.type]) {
+                                obj.item.len = type_items_len[obj.item.type];
+                                changed = true;
+                            }
+
+                            if (parseFloat(obj.item.factor).toString() != obj.item.factor) {
+                                obj.item.factor = parseFloat(obj.item.factor) || 1;
+                                changed = true;
+                            }
+                            if (parseFloat(obj.item.offset).toString() != obj.item.offset) {
+                                obj.item.offset = parseFloat(obj.item.offset) || 0;
+                                changed = true;
+                            }
+                        }
+
+                        if (!obj.item.role && obj.item.type !== 'string') {
                             if (id == 'modbus_disInputs') {
                                 obj.item.role = 'status';
                             } else if (id == 'modbus_coils') {
@@ -610,13 +692,29 @@
                         var id = obj.grid._body.parent().attr('id').split('_')[1];
                         if (data[id].length) {
                             var max = 0;
-                            obj.item.role = data[id][data[id].length - 1].role;
-                            obj.item.poll = data[id][data[id].length - 1].poll;
-                            obj.item.wp   = data[id][data[id].length - 1].wp;
+                            obj.item.role   = data[id][data[id].length - 1].role;
+                            obj.item.poll   = data[id][data[id].length - 1].poll;
+                            obj.item.wp     = data[id][data[id].length - 1].wp;
+                            obj.item.type   = data[id][data[id].length - 1].type;
+                            obj.item.len    = data[id][data[id].length - 1].len;
+                            obj.item.factor = data[id][data[id].length - 1].factor;
+                            obj.item.offset = data[id][data[id].length - 1].offset;
+
+                            var len;
                             for (var a = 0; a < data[id].length; a++) {
-                                if (data[id][a]._address > max) max = data[id][a]._address;
+
+                                if (!obj.item.type) {
+                                    len = 1;
+                                } else if (obj.item.type != 'string') {
+                                    len = type_items_len[obj.item.type];
+                                } else {
+                                    len = obj.item.len;
+                                }
+
+                                if (data[id][a]._address + len > max) max = data[id][a]._address + len;
                             }
-                            obj.item._address = max + 1;
+                            obj.item._address = max;
+
                             if ($('#modbusparams_showAliases').prop('checked')) {
                                 obj.item.address = alias2address(id, obj.item._address);
                             } else {
@@ -639,8 +737,18 @@
                                 obj.item.address  = 0;
                                 obj.item._address = 0;
                             }
+
+                            if (id == 'inputRegs' || 'holdingRegs') {
+                                obj.item.factor = 1;
+                                obj.item.offset = 0;
+                                obj.item.type   = 'uint16be';
+                                obj.item.len    = '';
+                            }
                         }
 
+                        onchange();
+                    },
+                    onItemDeleted: function (obj) {
                         onchange();
                     }
                 });

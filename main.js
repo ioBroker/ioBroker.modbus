@@ -59,19 +59,19 @@ function writeHelper(id, state) {
 function prepareWrite(id, state) {
     if (main.acp.slave) {
         var t = typeof state.val;
-        if (objects[id].native.type == 'disInputs') {
+        if (objects[id].native.regType == 'disInputs') {
             if (t === 'boolean' || t === 'number') {
                 main.disInputs[objects[id].native.address - main.disInputsLowAddress] = state.val ? 1 : 0;
             } else {
                 main.disInputs[objects[id].native.address - main.disInputsLowAddress] = parseInt(state.val, 10) ? 1 : 0;
             }
-        } else if (objects[id].native.type == 'coils') {
+        } else if (objects[id].native.regType == 'coils') {
             if (t === 'boolean' || t === 'number') {
                 main.coils[objects[id].native.address - main.coilsLowAddress] = state.val ? 1 : 0;
             } else {
                 main.coils[objects[id].native.address - main.coilsLowAddress] = parseInt(state.val, 10) ? 1 : 0;
             }
-        } else if (objects[id].native.type == 'inputRegs') {
+        } else if (objects[id].native.regType == 'inputRegs') {
             if (t === 'boolean') {
                 main.inputRegs[objects[id].native.address - main.inputRegsLowAddress] = state.val ? 1 : 0;
             } else if (t === 'number') {
@@ -79,7 +79,7 @@ function prepareWrite(id, state) {
             } else {
                 main.inputRegs[objects[id].native.address - main.inputRegsLowAddress] = parseInt(state.val, 10) ? 1 : 0;
             }
-        } else if (objects[id].native.type == 'holdingRegs') {
+        } else if (objects[id].native.regType == 'holdingRegs') {
             if (t === 'boolean') {
                 main.holdingRegs[objects[id].native.address - main.holdingRegsLowAddress] = state.val ? 1 : 0;
             } if (t === 'number') {
@@ -88,10 +88,10 @@ function prepareWrite(id, state) {
                 main.holdingRegs[objects[id].native.address - main.holdingRegsLowAddress] = parseInt(state.val, 10) ? 1 : 0;
             }
         } else {
-            adapter.log.error('Unknown state "' + id + '" type: ' + objects[id].native.type);
+            adapter.log.error('Unknown state "' + id + '" type: ' + objects[id].native.regType);
         }
     } else {
-        if (objects[id].native.type == 'coils' || objects[id].native.type == 'holdingRegs') {
+        if (objects[id].native.regType == 'coils' || objects[id].native.regType == 'holdingRegs') {
 
             if (!objects[id].native.wp) {
 
@@ -133,7 +133,7 @@ function prepareWrite(id, state) {
 function send() {
     var id = Object.keys(sendBuffer)[0];
 
-    var type = objects[id].native.type;
+    var type = objects[id].native.regType;
     var val  = sendBuffer[id];
 
     if (type == 'coils') {
@@ -149,14 +149,31 @@ function send() {
             }
         });
     } else if (type == 'holdingRegs') {
-        val = parseInt(val, 10);
-        modbusClient.request(modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER, objects[id].native.address, val, function (err, response) {
-            if (err) {
-                adapter.log.error(err);
-            } else {
-                adapter.log.debug('Write successfully [' + objects[id].native.address + ': ' + val);
+        if (objects[id].native.type !== 'string') {
+            val = parseFloat(val);
+            val = (val - objects[id].native.offset) / objects[id].native.factor;
+            if (objects[id].native.type !== 'floatle' && objects[id].native.type !== 'floatbe') {
+                val = Math.round(val);
             }
-        });
+        }
+        if (objects[id].native.len > 1) {
+            var buffer = writeValue(objects[id].native.type, val, objects[id].native.len);
+            modbusClient.request(modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS, objects[id].native.address, buffer, function (err, response) {
+                if (err) {
+                    adapter.log.error('Cannot write: ' + err);
+                } else {
+                    adapter.log.debug('Write successfully [' + objects[id].native.address + ': ' + val);
+                }
+            });
+        } else {
+            modbusClient.request(modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER, objects[id].native.address, val, function (err, response) {
+                if (err) {
+                    adapter.log.error(err);
+                } else {
+                    adapter.log.debug('Write successfully [' + objects[id].native.address + ': ' + val);
+                }
+            });
+        }
     }
 
     delete(sendBuffer[id]);
@@ -226,6 +243,141 @@ function syncEnums(enumGroup, id, newEnumName, callback) {
         addToEnum(newEnumName, id);
     }
 }
+
+function extractValue (type, len, buffer, offset) {
+    switch (type) {
+        case 'uint16be':
+            return buffer.readUInt16BE(offset * 2);
+        case 'uint16le':
+            return buffer.readUInt16LE(offset * 2);
+        case 'int16be':
+            return buffer.readInt16BE(offset * 2);
+        case 'int16le':
+            return buffer.readInt16LE(offset * 2);
+        case 'uint32be':
+            return buffer.readUInt32BE(offset * 2);
+        case 'uint32le':
+            return buffer.readUInt32LE(offset * 2);
+        case 'int32be':
+            return buffer.readInt32BE(offset * 2);
+        case 'int32le':
+            return buffer.readInt32LE(offset * 2);
+        case 'uint64be':
+            return buffer.readUInt32BE(offset * 2) << 32 + buffer.readUInt32BE(offset * 2 + 4);
+        case 'uint64le':
+            return buffer.readUInt32LE(offset * 2) + buffer.readUInt32LE(offset * 2 + 4) << 32;
+        case 'int64be':
+            return buffer.readInt32BE(offset * 2) << 32 + buffer.readUInt32BE(offset * 2 + 4);
+        case 'int64le':
+            return buffer.readUInt32LE(offset * 2) + buffer.readUInt32LE(offset * 2 + 4) << 32;
+        case 'floatbe':
+            return buffer.readFloatBE(offset * 2);
+        case 'floatle':
+            return buffer.readFloatLE(offset * 2);
+        case 'string':
+            // find lenght
+            var _len = 0;
+            while (buffer[offset * 2 + _len] && _len < len * 2) _len++;
+
+            return buffer.toString('ascii', offset * 2, offset * 2 + _len);
+        default:
+            adapter.log.error('Invalid type: ' + type);
+            return 0;
+    }
+}
+
+function writeValue (type, value, len) {
+    var buffer;
+    switch (type) {
+        case 'uint16be':
+            buffer = new Buffer(2);
+            buffer.writeUInt16BE(value, 0);
+            break;
+        case 'uint16le':
+            buffer = new Buffer(2);
+            buffer.writeUInt16LE(value, 0);
+            break;
+        case 'int16be':
+            buffer = new Buffer(2);
+            buffer.writeInt16BE(value, 0);
+            break;
+        case 'int16le':
+            buffer = new Buffer(2);
+            buffer.writeInt16LE(value, 0);
+            break;
+        case 'uint32be':
+            buffer = new Buffer(4);
+            buffer.writeUInt32BE(value, 0);
+            break;
+        case 'uint32le':
+            buffer = new Buffer(4);
+            buffer.writeUInt32LE(value, 0);
+            break;
+        case 'int32be':
+            buffer = new Buffer(4);
+            buffer.writeInt32BE(value, 0);
+            break;
+        case 'int32le':
+            buffer = new Buffer(4);
+            buffer.writeInt32LE(value, 0);
+            break;
+        case 'uint64be':
+            buffer = new Buffer(8);
+            buffer.writeUInt32BE(value >> 32, 0) + buffer.writeUInt32BE(value & 0xFFFFFFFF, 4);
+            break;
+        case 'uint64le':
+            buffer = new Buffer(8);
+            buffer.writeUInt32LE(value & 0xFFFFFFFF, 0) + buffer.writeUInt32LE(value >> 32, 4);
+            break;
+        case 'int64be':
+            buffer = new Buffer(8);
+            buffer.writeInt32BE(value >> 32, 0) + buffer.writeUInt32BE(value & 0xFFFFFFFF, 4);
+            break;
+        case 'int64le':
+            buffer = new Buffer(8);
+            buffer.writeUInt32LE(value & 0xFFFFFFFF, 0) + buffer.writeInt32LE(value >> 32, 4);
+            break;
+        case 'floatbe':
+            buffer = new Buffer(4);
+            buffer.writeFloatBE(value, 0);
+            break;
+        case 'floatle':
+            buffer = new Buffer(4);
+            buffer.writeFloatLE(value, 0);
+            break;
+        case 'string':
+            var _len = value.length + (value.length % 2);
+            buffer = new Buffer(len);
+            buffer.write(value, 0, value.length > _len ? _len : value.length, 'ascii');
+            break;
+        default:
+            adapter.log.error('Invalid type: ' + type);
+            buffer = new Buffer(2);
+            break;
+    }
+    return buffer;
+}
+
+
+var type_items_len = {
+    'uint16be':   1,
+    'uint16le':   1,
+    'int16be':    1,
+    'int16le':    1,
+    'int16be1':   1,
+    'int16le1':   1,
+    'uint32be':   2,
+    'uint32le':   2,
+    'int32be':    2,
+    'int32le':    2,
+    'uint64be':   4,
+    'uint64le':   4,
+    'int64be':    4,
+    'int64le':    4,
+    'floatbe':    2,
+    'floatle':    2,
+    'string':     0
+};
 
 var _rmap = {
     0: 15,
@@ -312,6 +464,7 @@ var main = {
 
             var i;
             var address;
+            var len;
 
             if (main.ac.disInputs.length) {
                 for (i = main.ac.disInputs.length - 1; i >= 0; i--) {
@@ -386,6 +539,19 @@ var main = {
                         main.ac.inputRegs.splice(i, 1);
                         continue;
                     }
+
+                    main.ac.inputRegs[i].type   = main.ac.inputRegs[i].type || 'uint16be';
+                    main.ac.inputRegs[i].offset = parseFloat(main.ac.inputRegs[i].offset) || 0;
+                    main.ac.inputRegs[i].factor = parseFloat(main.ac.inputRegs[i].factor) || 1;
+                    if (main.ac.inputRegs[i].type === 'string') {
+                        main.ac.inputRegs[i].len = parseInt(main.ac.inputRegs[i].len) || 1;
+                    } else {
+                        main.ac.inputRegs[i].len = type_items_len[main.ac.inputRegs[i].type];
+                    }
+                    main.ac.inputRegs[i].len = main.ac.inputRegs[i].len || 1;
+
+                    if (!main.ac.inputRegs[i].len) main.ac.inputRegs[i].len = parseInt(main.ac.inputRegs[i].len) || 1;
+
                     main.ac.inputRegs[i].id = 'inputRegisters.';
                     if (main.acp.showAliases) {
                         main.ac.inputRegs[i].id += address2alias('inputRegs', address);
@@ -397,7 +563,7 @@ var main = {
                 }
                 if (main.ac.inputRegs.length) {
                     main.inputRegsLowAddress = main.ac.inputRegs[0].address;
-                    main.inputRegsHighAddress = main.ac.inputRegs[main.ac.inputRegs.length - 1].address;
+                    main.inputRegsHighAddress = main.ac.inputRegs[main.ac.inputRegs.length - 1].address + main.ac.inputRegs[main.ac.inputRegs.length - 1].len;
                     main.inputRegsLength = main.inputRegsHighAddress - main.inputRegsLowAddress + 1;
                 } else {
                     main.ac.inputRegs.length = 0;
@@ -414,6 +580,15 @@ var main = {
                         main.ac.holdingRegs.splice(i, 1);
                         continue;
                     }
+                    main.ac.holdingRegs[i].type   = main.ac.holdingRegs[i].type || 'uint16be';
+                    main.ac.holdingRegs[i].offset = parseFloat(main.ac.holdingRegs[i].offset) || 0;
+                    main.ac.holdingRegs[i].factor = parseFloat(main.ac.holdingRegs[i].factor) || 1;
+                    if (main.ac.holdingRegs[i].type === 'string') {
+                        main.ac.holdingRegs[i].len = parseInt(main.ac.holdingRegs[i].len) || 1;
+                    } else {
+                        main.ac.holdingRegs[i].len = type_items_len[main.ac.holdingRegs[i].type];
+                    }
+                    main.ac.holdingRegs[i].len = main.ac.holdingRegs[i].len || 1;
 
                     main.ac.holdingRegs[i].id = 'holdingRegisters.';
                     if (main.acp.showAliases) {
@@ -425,7 +600,7 @@ var main = {
 
                     if (main.acp.slave || main.ac.holdingRegs[i].poll) {
                         if (address < main.holdingRegsLowAddress)  main.holdingRegsLowAddress  = address;
-                        if (address > main.holdingRegsHighAddress) main.holdingRegsHighAddress = address;
+                        if (address + main.ac.holdingRegs[i].len > main.holdingRegsHighAddress) main.holdingRegsHighAddress = address + main.ac.holdingRegs[i].len;
                     }
                 }
                 if (main.ac.holdingRegs.length) {
@@ -513,7 +688,7 @@ var main = {
                         history: main.history
                     },
                     native: {
-                        type:     'disInputs',
+                        regType:  'disInputs',
                         address:   main.ac.disInputs[i].address
                     }
                 });
@@ -555,7 +730,7 @@ var main = {
                         history: main.history
                     },
                     native: {
-                        type:      'coils',
+                        regType:   'coils',
                         address:   main.ac.coils[i].address,
                         poll:      main.ac.coils[i].poll,
                         wp:        main.ac.coils[i].wp
@@ -598,8 +773,12 @@ var main = {
                         history: main.history
                     },
                     native: {
-                        type:     'inputRegs',
-                        address:   main.ac.inputRegs[i].address
+                        regType:  'inputRegs',
+                        address:   main.ac.inputRegs[i].address,
+                        type:      main.ac.inputRegs[i].type,
+                        len:       main.ac.inputRegs[i].len,
+                        offset:    main.ac.inputRegs[i].offset,
+                        factor:    main.ac.inputRegs[i].factor
                     }
                 });
 
@@ -641,10 +820,14 @@ var main = {
                         history: main.history
                     },
                     native: {
-                        type:     'holdingRegs',
+                        regType:   'holdingRegs',
                         address:   main.ac.holdingRegs[i].address,
-                        poll:      main.ac.holdingRegs[i].poll/*,
+                        poll:      main.ac.holdingRegs[i].poll,/*,
                         wp:        main.ac.coils[i].wp*/
+                        type:      main.ac.holdingRegs[i].type,
+                        len:       main.ac.holdingRegs[i].len,
+                        offset:    main.ac.holdingRegs[i].offset,
+                        factor:    main.ac.holdingRegs[i].factor
                     }
                 });
 
@@ -870,7 +1053,7 @@ var main = {
             Server.RESPONSES[modbus.FUNCTION_CODES.READ_DISCRETE_INPUTS] = function (registers) {
                 var put = new Put().word8(registers.length);
 
-                for (var i = 0, l = registers.length; i < l; i+=2) {
+                for (var i = 0, l = registers.length; i < l; i += 2) {
                     put.word16be((registers[i] << 8) + registers[i + 1]);
                 }
                 return put.buffer();
@@ -1073,25 +1256,41 @@ var main = {
             };
             Client.RESPONSES[modbus.FUNCTION_CODES.READ_COILS] = Client.RESPONSES[modbus.FUNCTION_CODES.READ_DISCRETE_INPUTS];
             Client.RESPONSES[modbus.FUNCTION_CODES.READ_INPUT_REGISTERS] = function (bufferlist) {
-                var rtn = [];
                 var binary = new Binary(bufferlist).getWord8('byteLength').end();
-                rtn.byteLength = binary.vars.byteLength;
-                for (var i = 0, l = binary.vars.byteLength / 2; i < l; i++) {
-                    binary.getWord16be('val');
-                    rtn.push(binary.end().vars.val);
+                var rtn = new Buffer(binary.vars.byteLength);
+                //rtn.byteLength = binary.vars.byteLength;
+                for (var i = 0, l = binary.vars.byteLength; i < l; i++) {
+                    binary.getWord8('val');
+                    rtn[i] = binary.end().vars.val;
                 }
                 return rtn;
             };
             Client.RESPONSES[modbus.FUNCTION_CODES.READ_HOLDING_REGISTERS] = Client.RESPONSES[modbus.FUNCTION_CODES.READ_INPUT_REGISTERS];
-            Client.RESPONSES[modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER] = Client.RESPONSES[modbus.FUNCTION_CODES.READ_INPUT_REGISTERS];
-            Client.RESPONSES[modbus.FUNCTION_CODES.WRITE_SINGLE_COIL] = Client.RESPONSES[modbus.FUNCTION_CODES.READ_DISCRETE_INPUTS];
+            Client.RESPONSES[modbus.FUNCTION_CODES.WRITE_SINGLE_COIL] = function (address, value) {
+                return new Put()
+                    .word16be(address)
+                    .word16be(value ? 0xFF00 : 0)
+                    .buffer();
+            };
             Client.REQUESTS[modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER] = function (address, value) {
                 return new Put()
                     .word16be(address)
                     .word16be(value)
                     .buffer();
             };
-
+            Client.REQUESTS[modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS] = function (address, buffer) {
+                var p = new Put().word16be(address).word16be(Math.ceil(buffer.length / 2)).word8(buffer.length);
+                for (var i = 0; i < buffer.length; i++) {
+                    p.word8(buffer[i]);
+                }
+                return p.buffer();
+            };
+            Client.RESPONSES[modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS] = function (bufferlist) {
+                return {};
+            };
+            Client.RESPONSES[modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER] = function (bufferlist) {
+                return {};
+            };
             modbusClient = Client.createClient(main.acp.port, main.acp.bind);
 
             modbusClient.on('connect', function () {
@@ -1152,7 +1351,7 @@ var main = {
         if (main.coilsLength) {
             modbusClient.request(modbus.FUNCTION_CODES.READ_COILS, main.coilsLowAddress, main.coilsLength, function (err, registers) {
                 if (err) {
-                    if (!cbCalled.coils) callback(err);
+                    callback(err);
                 } else {
                     for (var n = 0; main.coils.length > n; n++) {
                         var id = main.coils[n].id;
@@ -1172,14 +1371,14 @@ var main = {
     },
     pollInputRegs: function (callback) {
         if (main.inputRegsLength) {
-            modbusClient.request(modbus.FUNCTION_CODES.READ_INPUT_REGISTERS, main.inputRegsLowAddress, main.inputRegsLength, function (err, registers) {
+            modbusClient.request(modbus.FUNCTION_CODES.READ_INPUT_REGISTERS, main.inputRegsLowAddress, main.inputRegsLength, function (err, buffer) {
                 if (err) {
                     callback(err);
                 } else {
                     for (var n = 0; main.inputRegs.length > n; n++) {
                         var id = main.inputRegs[n].id;
-                        var val = registers[main.inputRegs[n].address - main.inputRegsLowAddress];
-
+                        var val = extractValue(main.inputRegs[n].type, main.inputRegs[n].len, buffer, main.inputRegs[n].address - main.inputRegsLowAddress);
+                        if (main.inputRegs[n].type !== 'string') val = val * main.inputRegs[n].factor + main.inputRegs[n].offset;
                         if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
                             ackObjects[id] = {val: val};
                             adapter.setState(id, val, true);
@@ -1194,13 +1393,14 @@ var main = {
     },
     pollHoldingRegs: function (callback) {
         if (main.holdingRegsLength) {
-            modbusClient.request(modbus.FUNCTION_CODES.READ_HOLDING_REGISTERS, main.holdingRegsLowAddress, main.holdingRegsLength, function (err, registers) {
+            modbusClient.request(modbus.FUNCTION_CODES.READ_HOLDING_REGISTERS, main.holdingRegsLowAddress, main.holdingRegsLength, function (err, buffer) {
                 if (err) {
                     callback(err);
                 } else {
                     for (var n = 0; main.holdingRegs.length > n; n++) {
                         var id = main.holdingRegs[n].id;
-                        var val = registers[main.holdingRegs[n].address - main.holdingRegsLowAddress];
+                        var val = extractValue(main.holdingRegs[n].type, main.holdingRegs[n].len, buffer, main.holdingRegs[n].address - main.holdingRegsLowAddress);
+                        if (main.holdingRegs[n].type !== 'string') val = val * main.holdingRegs[n].factor + main.holdingRegs[n].offset;
 
                         if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
                             ackObjects[id] = {val: val};

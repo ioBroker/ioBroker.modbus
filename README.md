@@ -4,6 +4,9 @@
 Implementation of ModBus Slave and Master for ioBroker. Actually only Modbus over TCP is supported.
 
 # Changelog 
+# 0.2.6 (2015-10-22)
+* (bluefox) add different types for inputRegisters and for holding registers ONLY FOR MASTER
+
 # 0.2.5 (2015-10-20)
 * (bluefox) fix names of objects if aliases used
 

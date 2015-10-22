@@ -1,7 +1,7 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.2.5",
+    "version":      "0.2.6",
     "title":        "ModBus Adapter",
     "desc": {
       "en":         "ModBus connection Slave or Master",
@@ -22,7 +22,7 @@
     "enabled":      false,
     "extIcon":      "https://raw.githubusercontent.com/ioBroker/ioBroker.modbus/master/admin/modbus.png",
     "readme":       "https://github.com/ioBroker/ioBroker.modbus/blob/master/README.md",
-    "type":         "hardware",
+    "type":         "communicate",
     "config":{
       "minWidth":   1024,
       "width ":     1224
