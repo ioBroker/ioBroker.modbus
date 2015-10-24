@@ -162,10 +162,7 @@
         "WP":               {"en": "WP",                "de": "WP",                 "ru": "WP"},
         "Role":             {"en": "Role",              "de": "Rolle",              "ru": "Роль"},
         "Room":             {"en": "Room",              "de": "Raum",               "ru": "Комната"},
-        "sec":              {"en": "sec.",              "de": "Sek.",               "ru": "сек."},
-        "S7 LOGO!:":        {"en": "S7 LOGO!:",         "de": "S7 LOGO!:",          "ru": "S7 LOGO!:"},
-        "Local TSAP:":      {"en": "Local TSAP:",       "de": "Local TSAP:",        "ru": "Local TSAP:"},
-        "Remote TSAP:":     {"en": "Remote TSAP:",      "de": "Remote TSAP:",       "ru": "Remote TSAP:"},
+        "Device ID":        {"en": "Device ID",         "de": "Gerät ID",           "ru": "ID устройства"},
         "Use aliases as address:": {"en": "Use aliases:", "de": "Aliases benutzen:", "ru": "Использовать alias:"},
         "Enable polling of data point": {
             "en": "Enable polling of data point",
@@ -441,10 +438,12 @@
             params:  {
                 bind:       settings.params.bind  || '192.168.0.1',
                 port:       settings.params.port  || 502,
+                deviceId:   settings.params.deviceId  || 0,
                 slave:      settings.params.slave || 0,
                 recon:      settings.params.recon || 60000,
                 poll:       settings.params.poll  || 1000,
                 pulsetime:  settings.params.pulsetime || 1000,
+                round:      settings.params.round || 2,
                 disInputsOffset:    settings.params.disInputsOffset   || 10001,
                 coilsOffset:        settings.params.coilsOffset       || 1,
                 inputRegsOffset:    settings.params.inputRegsOffset   || 30001,
@@ -959,6 +958,10 @@
                 <td><input class="modbus_params" id="modbus_port" type="text"/></td>
             </tr>
             <tr>
+                <td class="translate">Device ID:</td>
+                <td><input class="modbus_params" id="modbus_deviceId" type="text"/></td>
+            </tr>
+            <tr>
                 <td class="translate">Type:</td>
                 <td><select class="modbus_params" id="modbus_slave" >
                     <option value="0" class="translate">Master</option>
@@ -976,6 +979,11 @@
             <tr>
                 <td class="translate">Use aliases as address:</td>
                 <td><input style="margin-right: 5px;text-align: right" class="modbus_params" type="checkbox" id="modbusparams_showAliases"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style="width: 184px" class="translate">Round Real to:</td>
+                <td style="text-align: center"><input style="margin-right: 5px; text-align: right" type="text" class="modbus_params" id="modbusparams_round"></td>
                 <td></td>
             </tr>
             <tr>

@@ -1,7 +1,7 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.2.6",
+    "version":      "0.3.0",
     "title":        "ModBus Adapter",
     "desc": {
       "en":         "ModBus connection Slave or Master",
@@ -22,7 +22,7 @@
     "enabled":      false,
     "extIcon":      "https://raw.githubusercontent.com/ioBroker/ioBroker.modbus/master/admin/modbus.png",
     "readme":       "https://github.com/ioBroker/ioBroker.modbus/blob/master/README.md",
-    "type":         "communicate",
+    "type":         "communication",
     "config":{
       "minWidth":   1024,
       "width ":     1224
@@ -32,6 +32,7 @@
     "params": {
       "bind":       "192.168.0.1",
       "port":       502,
+      "deviceId":   1,
       "slave":      0,
       "poll":       1000,
       "recon":      60000,
@@ -40,7 +41,8 @@
       "coilsOffset":        1,
       "inputRegsOffset":    30001,
       "holdingRegsOffset":  40001,
-      "showAliases": true
+      "showAliases": true,
+      "round":       2
     },
     "disInputs":    [],
     "coils":        [],

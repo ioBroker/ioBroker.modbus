@@ -4,6 +4,11 @@
 Implementation of ModBus Slave and Master for ioBroker. Actually only Modbus over TCP is supported.
 
 # Changelog 
+# 0.3.0 (2015-10-24) 
+* (bluefox) add round settings
+* (bluefox) add deviceID
+* (bluefox) slave supports floats, integers and strings
+
 # 0.2.6 (2015-10-22)
 * (bluefox) add different types for inputRegisters and for holding registers ONLY FOR MASTER
 

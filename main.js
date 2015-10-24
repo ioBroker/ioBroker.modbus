@@ -3,20 +3,27 @@
 
 "use strict";
 
-var utils        = require(__dirname + '/lib/utils');
-var modbus       = require('modbus-stack');
-var adapter      = utils.adapter('modbus');
-var Binary       = require(__dirname + '/node_modules/modbus-stack/node_modules/bufferlist/binary').Binary;
-var Put          = require(__dirname + '/node_modules/modbus-stack/node_modules/put');
-var modbusClient = null; //Master
-var modbusServer = null; //Slave
-var connected    = 0;
+var utils         = require(__dirname + '/lib/utils');
+var modbus        = require('modbus-stack');
+var adapter       = utils.adapter('modbus');
+var Binary        = require(__dirname + '/node_modules/modbus-stack/node_modules/bufferlist/binary').Binary;
+var Put           = require(__dirname + '/node_modules/modbus-stack/node_modules/put');
+var modbusClient  = null; //Master
+var modbusServer  = null; //Slave
+var connected     = 0;
+var connectTimer  = null;
 
 var nextPoll;
-var ackObjects = {};
+var ackObjects    = {};
 
 process.on('SIGINT', function () {
     if (adapter && adapter.setState) {
+        if (modbusClient) {
+            modbusClient.destroy();
+        }
+        if (modbusServer) {
+            modbusServer.close();
+        }
         adapter.setState('info.connection', 0, true);
     }
     if (nextPoll)  {
@@ -72,20 +79,46 @@ function prepareWrite(id, state) {
                 main.coils[objects[id].native.address - main.coilsLowAddress] = parseInt(state.val, 10) ? 1 : 0;
             }
         } else if (objects[id].native.regType == 'inputRegs') {
-            if (t === 'boolean') {
-                main.inputRegs[objects[id].native.address - main.inputRegsLowAddress] = state.val ? 1 : 0;
-            } else if (t === 'number') {
-                main.inputRegs[objects[id].native.address - main.inputRegsLowAddress] = state.val;
+            var val;
+            if (objects[id].native.type !== 'string') {
+                if (t === 'boolean') {
+                    val = state.val ? 1 : 0;
+                } else if (t === 'number') {
+                    val = state.val;
+                } else {
+                    val = parseFloat(state.val);
+                }
+                val = (val - objects[id].native.offset) / objects[id].native.factor;
+                if (objects[id].native.type !== 'floatle' && objects[id].native.type !== 'floatbe') {
+                    val = Math.round(val * main.acp.round) / main.acp.round;
+                }
             } else {
-                main.inputRegs[objects[id].native.address - main.inputRegsLowAddress] = parseInt(state.val, 10) ? 1 : 0;
+                val = state.val;
+            }
+            var buffer = writeValue(objects[id].native.type, val, objects[id].native.len);
+            for (var b = 0; b < buffer.length; b++) {
+                main.inputRegs[(objects[id].native.address - main.inputRegsLowAddress) * 2 + b] = buffer[b];
             }
         } else if (objects[id].native.regType == 'holdingRegs') {
-            if (t === 'boolean') {
-                main.holdingRegs[objects[id].native.address - main.holdingRegsLowAddress] = state.val ? 1 : 0;
-            } if (t === 'number') {
-                main.holdingRegs[objects[id].native.address - main.holdingRegsLowAddress] = state.val;
+            var val;
+            if (objects[id].native.type !== 'string') {
+                if (t === 'boolean') {
+                    val = state.val ? 1 : 0;
+                } else if (t === 'number') {
+                    val = state.val;
+                } else {
+                    val = parseFloat(state.val);
+                }
+                val = (val - objects[id].native.offset) / objects[id].native.factor;
+                if (objects[id].native.type !== 'floatle' && objects[id].native.type !== 'floatbe') {
+                    val = Math.round(val * main.acp.round) / main.acp.round;
+                }
             } else {
-                main.holdingRegs[objects[id].native.address - main.holdingRegsLowAddress] = parseInt(state.val, 10) ? 1 : 0;
+                val = state.val;
+            }
+            var buffer = writeValue(objects[id].native.type, val, objects[id].native.len);
+            for (var b = 0; b < buffer.length; b++) {
+                main.holdingRegs[(objects[id].native.address - main.holdingRegsLowAddress) * 2 + b] = buffer[b];
             }
         } else {
             adapter.log.error('Unknown state "' + id + '" type: ' + objects[id].native.regType);
@@ -153,7 +186,7 @@ function send() {
             val = parseFloat(val);
             val = (val - objects[id].native.offset) / objects[id].native.factor;
             if (objects[id].native.type !== 'floatle' && objects[id].native.type !== 'floatbe') {
-                val = Math.round(val);
+                val = Math.round(val * main.acp.round) / main.acp.round;
             }
         }
         if (objects[id].native.len > 1) {
@@ -271,6 +304,9 @@ function extractValue (type, len, buffer, offset) {
         case 'int64le':
             return buffer.readUInt32LE(offset * 2) + buffer.readUInt32LE(offset * 2 + 4) << 32;
         case 'floatbe':
+            if (!buffer.readFloatBE) {
+                console.log('A');
+            }
             return buffer.readFloatBE(offset * 2);
         case 'floatle':
             return buffer.readFloatLE(offset * 2);
@@ -346,7 +382,10 @@ function writeValue (type, value, len) {
             buffer.writeFloatLE(value, 0);
             break;
         case 'string':
-            var _len = value.length + (value.length % 2);
+            if (value === null) value = 'null';
+            value = value.toString();
+            var _len = (value.length + 1);
+            if (_len % 2) _len++;
             buffer = new Buffer(len);
             buffer.write(value, 0, value.length > _len ? _len : value.length, 'ascii');
             break;
@@ -438,12 +477,14 @@ var main = {
     errorCount: 0,
 
     main: function () {
-        main.ac        = adapter.config;
-        main.acp       = adapter.config.params;
-        main.acp.poll  = parseInt(main.acp.poll,  10) || 1000; // default is 1 second
-        main.acp.recon = parseInt(main.acp.recon, 10) || 60000;
-        main.acp.port  = parseInt(main.acp.port,  10) || 502;
-        main.acp.slave = parseInt(main.acp.slave, 10) || 0;
+        main.ac           = adapter.config;
+        main.acp          = adapter.config.params;
+        main.acp.poll     = parseInt(main.acp.poll,  10) || 1000; // default is 1 second
+        main.acp.recon    = parseInt(main.acp.recon, 10) || 60000;
+        main.acp.port     = parseInt(main.acp.port,  10) || 502;
+        main.acp.slave    = parseInt(main.acp.slave, 10) || 0;
+        main.acp.round    = parseInt(main.acp.round, 10) || 0;
+        main.acp.deviceId = (main.acp.deviceId === undefined || main.acp.deviceId === null) ? 1 : (parseInt(main.acp.deviceId, 10) || 0);
         main.acp.disInputsOffset   = parseInt(main.acp.disInputsOffset,   10) || 10001;
         main.acp.coilsOffset       = parseInt(main.acp.coilsOffset,       10) || 1;
         main.acp.inputRegsOffset   = parseInt(main.acp.inputRegsOffset,   10) || 30001;
@@ -452,6 +493,7 @@ var main = {
         main.acp.showAliases       = (main.acp.showAliases === true || main.acp.showAliases === 'true');
 
         main.acp.pulsetime         = parseInt(main.acp.pulsetime || 1000);
+        main.acp.round             = Math.pow(10, main.acp.round);
 
         adapter.getForeignObjects(adapter.namespace + '.*', function (err, list) {
 
@@ -653,7 +695,7 @@ var main = {
                     native: {}
                 });
             }
-
+            var id;
             // ------------- create states and objects ----------------------------
             for (i = 0; main.ac.disInputs.length > i; i++) {
                 if (main.oldObjects[adapter.namespace + '.' + main.ac.disInputs[i].id]) {
@@ -676,7 +718,8 @@ var main = {
                     };
                 }
 
-                adapter.setObject(main.ac.disInputs[i].id, {
+                id = adapter.namespace + '.' + main.ac.disInputs[i].id;
+                objects[id] = {
                     type: 'state',
                     common: {
                         name:    main.ac.disInputs[i].description,
@@ -691,11 +734,12 @@ var main = {
                         regType:  'disInputs',
                         address:   main.ac.disInputs[i].address
                     }
-                });
+                };
+                adapter.setObject(main.ac.disInputs[i].id, objects[id]);
 
-                syncEnums('rooms', adapter.namespace + '.' + main.ac.disInputs[i].id, main.ac.disInputs[i].room);
+                syncEnums('rooms', id, main.ac.disInputs[i].room);
 
-                main.newObjects.push(adapter.namespace + '.' + main.ac.disInputs[i].id);
+                main.newObjects.push(id);
             }
 
             for (i = 0; main.ac.coils.length > i; i++) {
@@ -718,7 +762,8 @@ var main = {
                         "debounce":    10000
                     };
                 }
-                adapter.setObject(main.ac.coils[i].id, {
+                id = adapter.namespace + '.' + main.ac.coils[i].id;
+                objects[id] = {
                     type: 'state',
                     common: {
                         name:    main.ac.coils[i].description,
@@ -735,9 +780,10 @@ var main = {
                         poll:      main.ac.coils[i].poll,
                         wp:        main.ac.coils[i].wp
                     }
-                });
-                syncEnums('rooms', adapter.namespace + '.' + main.ac.coils[i].id, main.ac.coils[i].room);
-                main.newObjects.push(adapter.namespace + '.' + main.ac.coils[i].id);
+                };
+                adapter.setObject(main.ac.coils[i].id, objects[id]);
+                syncEnums('rooms', id, main.ac.coils[i].room);
+                main.newObjects.push(id);
             }
 
             for (i = 0; main.ac.inputRegs.length > i; i++) {
@@ -760,7 +806,8 @@ var main = {
                         debounce:    10000
                     };
                 }
-                adapter.setObject(main.ac.inputRegs[i].id, {
+                id = adapter.namespace + '.' + main.ac.inputRegs[i].id;
+                objects[id] = {
                     type: 'state',
                     common: {
                         name:    main.ac.inputRegs[i].description,
@@ -780,11 +827,12 @@ var main = {
                         offset:    main.ac.inputRegs[i].offset,
                         factor:    main.ac.inputRegs[i].factor
                     }
-                });
+                };
+                adapter.setObject(main.ac.inputRegs[i].id, objects[id]);
 
-                syncEnums('rooms', adapter.namespace + '.' + main.ac.inputRegs[i].id, main.ac.inputRegs[i].room);
+                syncEnums('rooms', id, main.ac.inputRegs[i].room);
 
-                main.newObjects.push(adapter.namespace + '.' + main.ac.inputRegs[i].id);
+                main.newObjects.push(id);
             }
 
             for (i = 0; main.ac.holdingRegs.length > i; i++) {
@@ -807,7 +855,8 @@ var main = {
                         debounce:    10000
                     };
                 }
-                adapter.setObject(main.ac.holdingRegs[i].id, {
+                id = adapter.namespace + '.' + main.ac.holdingRegs[i].id;
+                objects[id] = {
                     type: 'state',
                     common: {
                         name:    main.ac.holdingRegs[i].description,
@@ -823,17 +872,19 @@ var main = {
                         regType:   'holdingRegs',
                         address:   main.ac.holdingRegs[i].address,
                         poll:      main.ac.holdingRegs[i].poll,/*,
-                        wp:        main.ac.coils[i].wp*/
+                         wp:        main.ac.coils[i].wp*/
                         type:      main.ac.holdingRegs[i].type,
                         len:       main.ac.holdingRegs[i].len,
                         offset:    main.ac.holdingRegs[i].offset,
                         factor:    main.ac.holdingRegs[i].factor
                     }
-                });
+                };
 
-                syncEnums('rooms', adapter.namespace + '.' + main.ac.holdingRegs[i].id, main.ac.holdingRegs[i].room);
+                adapter.setObject(main.ac.holdingRegs[i].id, objects[id]);
 
-                main.newObjects.push(adapter.namespace + '.' + main.ac.holdingRegs[i].id);
+                syncEnums('rooms', id, main.ac.holdingRegs[i].room);
+
+                main.newObjects.push(id);
             }
 
             // ----------- remember poll values --------------------------
@@ -864,13 +915,9 @@ var main = {
                     // build ready arrays
                     for (i = 0; main.ac.disInputs.length > i; i++) {
                         id = adapter.namespace + '.' + main.ac.disInputs[i].id;
-                        if (states[id]) {
-                            if (states[id].val === 'true')  states[id].val = 1;
-                            if (states[id].val === '1')     states[id].val = 1;
-                            if (states[id].val === '0')     states[id].val = 0;
-                            if (states[id].val === 'false') states[id].val = false;
-                            states[id].val = !!states[id].val;
-                            main.disInputs[main.ac.disInputs[i].address - main.disInputsLowAddress] = states[id].val;
+                        if (states[id] && states[id].val !== undefined) {
+                            prepareWrite(id, states[id]);
+                            //main.disInputs[main.ac.disInputs[i].address - main.disInputsLowAddress] = states[id].val;
                         } else {
                             adapter.setState(id, 0, true);
                         }
@@ -888,13 +935,9 @@ var main = {
 
                     for (i = 0; main.ac.coils.length > i; i++) {
                         id = adapter.namespace + '.' + main.ac.coils[i].id;
-                        if (states[id]) {
-                            if (states[id].val === 'true')  states[id].val = 1;
-                            if (states[id].val === '1')     states[id].val = 1;
-                            if (states[id].val === '0')     states[id].val = 0;
-                            if (states[id].val === 'false') states[id].val = false;
-                            states[id].val = !!states[id].val;
-                            main.coils[main.ac.coils[i].address - main.coilsLowAddress] = states[id].val;
+                        if (states[id] && states[id].val !== undefined) {
+                            prepareWrite(id, states[id]);
+                            //main.coils[main.ac.coils[i].address - main.coilsLowAddress] = states[id].val;
                         } else {
                             adapter.setState(id, 0, true);
                         }
@@ -912,11 +955,9 @@ var main = {
 
                     for (i = 0; main.ac.inputRegs.length > i; i++) {
                         id = adapter.namespace + '.' + main.ac.inputRegs[i].id;
-                        if (states[id]) {
-                            if (states[id].val === 'true'  || states[id].val === true)  states[id].val = 1;
-                            if (states[id].val === 'false' || states[id].val === false) states[id].val = 0;
-                            states[id].val = parseInt(states[id].val, 10) || 0;
-                            main.inputRegs[main.ac.inputRegs[i].address - main.inputRegsLowAddress] = states[id].val;
+                        if (states[id] && states[id].val !== undefined) {
+                            //main.inputRegs[main.ac.inputRegs[i].address - main.inputRegsLowAddress] = states[id].val;
+                            prepareWrite(id, states[id]);
                         } else {
                             adapter.setState(id, 0, true);
                         }
@@ -934,11 +975,9 @@ var main = {
 
                     for (i = 0; main.ac.holdingRegs.length > i; i++) {
                         id = adapter.namespace + '.' + main.ac.holdingRegs[i].id;
-                        if (states[id]) {
-                            if (states[id].val === 'true')  states[id].val = 1;
-                            if (states[id].val === 'false') states[id].val = 0;
-                            states[id].val = parseInt(states[id].val, 10) || 0;
-                            main.holdingRegs[main.ac.holdingRegs[i].address - main.holdingRegsLowAddress] = states[id].val;
+                        if (states[id] && states[id].val !== undefined) {
+                            prepareWrite(id, states[id]);
+                            //main.holdingRegs[main.ac.holdingRegs[i].address - main.holdingRegsLowAddress] = states[id].val;
                         } else {
                             adapter.setState(id, 0, true);
                         }
@@ -1019,6 +1058,19 @@ var main = {
         });
     },
 
+    reconnect: function () {
+        if (connected) {
+            adapter.log.info('Disconnected from slave ' + main.acp.bind);
+            connected = 0;
+            adapter.setState('info.connection', 0, true);
+        }
+        if (!connectTimer) {
+            connectTimer = setTimeout(function () {
+                connectTimer = null;
+                modbusClient.connect(main.acp.port, main.acp.bind);
+            }, main.acp.recon);
+        }
+    },
     start: function () {
 
         if (main.acp.slave) {
@@ -1030,6 +1082,7 @@ var main = {
             // override on connect
             Server.prototype._setupConn = function (socket) {
                 var self = this;
+                modbus.ModbusRequestStack.prototype.unitIdentifier  = main.acp.deviceId;
                 var response = new modbus.ModbusResponseStack(socket);
                 response.on('request', function (request) {
                     self.emit('request', request, response);
@@ -1042,10 +1095,10 @@ var main = {
             };
             
             Server.RESPONSES[modbus.FUNCTION_CODES.READ_HOLDING_REGISTERS] = function (registers) {
-                var put = new Put().word8(registers.length * 2);
+                var put = new Put().word8(registers.length);
 
                 for (var i = 0, l = registers.length; i < l; i++) {
-                    put.word16be(registers[i]);
+                    put.word8(registers[i]);
                 }
                 return put.buffer();
             };
@@ -1065,9 +1118,29 @@ var main = {
                 return put.buffer();
             };
             Server.RESPONSES[modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER] = function (registers) {
+                var res = new Buffer(2);
+                res.startAddress = registers.address;
+                res[0] = (registers.value >> 8);
+                res[0] = (registers.value & 0xFF);
+                return res;
+            };
+            Server.RESPONSES[modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS] = function (registers) {
                 var put = new Put().word16be(registers.address);
-                put.word16be(registers.value);
+                put.word16be(registers.quantity);
                 return put.buffer();
+            };
+            Server.REQUESTS[modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS] = function (bufferlist) {
+                var binary = Binary(bufferlist);
+                var startAddress = binary.getWord16be('startAddress').end().vars.startAddress;
+                var quantity = binary.getWord16be('quantity').end().vars.quantity;
+                var bytes = binary.getWord8('bytes').end().vars.bytes;
+                var res = new Buffer(bytes);
+                res.startAddress = startAddress;
+                res.quantity = quantity;
+                for (var i = 0; i < bytes; i++) {
+                    res[i] = binary.getWord8('val').end().vars.val;
+                }
+                return res;
             };
 
             handlers[modbus.FUNCTION_CODES.READ_DISCRETE_INPUTS] = function (request, response) {
@@ -1113,19 +1186,24 @@ var main = {
                 var start  = request.startAddress;
                 var length = request.quantity;
 
-                var resp = new Array(length);
+                var resp = new Array(length * 2);
                 var i = 0;
                 while (i < length && i + start < main.holdingRegsLowAddress) {
-                    resp[i] = 0;
+                    resp[i * 2] = 0;
+                    resp[i * 2 + 1] = 0;
                     i++;
                 }
+                var a;
                 while (i < length && i + start <= main.holdingRegsHighAddress) {
-                    resp[i] = main.holdingRegs[i + start - main.holdingRegsLowAddress];
+                    a = i + start - main.holdingRegsLowAddress;
+                    resp[i * 2 + 0] = main.holdingRegs[a * 2 + 0];
+                    resp[i * 2 + 1] = main.holdingRegs[a * 2 + 1];
                     i++;
                 }
                 if (i > main.holdingRegsHighAddress) {
                     while (i < length) {
-                        resp[i] = 0;
+                        resp[i * 2] = 0;
+                        resp[i * 2 + 1] = 0;
                         i++;
                     }
                 }
@@ -1136,19 +1214,24 @@ var main = {
                 var start  = request.startAddress;
                 var length = request.quantity;
 
-                var resp = new Array(length);
+                var resp = new Array(length * 2);
                 var i = 0;
                 while (i < length && i + start < main.inputRegsLowAddress) {
-                    resp[i] = 0;
+                    resp[i * 2 + 0] = 0;
+                    resp[i * 2 + 1] = 0;
                     i++;
                 }
+                var a;
                 while (i < length && i + start <= main.inputRegsHighAddress) {
-                    resp[i] = main.inputRegs[i + start - main.inputRegsLowAddress];
+                    a = i + start - main.inputRegsLowAddress;
+                    resp[i * 2 + 0] = main.inputRegs[a * 2 + 0];
+                    resp[i * 2 + 1] = main.inputRegs[a * 2 + 1];
                     i++;
                 }
                 if (i > main.inputRegsHighAddress) {
                     while (i < length) {
-                        resp[i] = 0;
+                        resp[i * 2 + 0] = 0;
+                        resp[i * 2 + 1] = 0;
                         i++;
                     }
                 }
@@ -1166,11 +1249,17 @@ var main = {
                 response.writeResponse(response);
             };
             handlers[modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER] = function (request, response) {
-                var a = request.address - main.holdingRegsLowAddress;
-                adapter.log.debug('WRITE_SINGLE_REGISTER [' +  (main.holdingRegsMapping[a] ? main.holdingRegsMapping[a] : request.address) + ']: ' + request.value);
+                var a = request.startAddress - main.holdingRegsLowAddress;
+                adapter.log.debug('WRITE_SINGLE_REGISTER [' +  (main.holdingRegsMapping[a] ? main.holdingRegsMapping[a] : request.startAddress) + ']: ' + request.value);
                 if (main.holdingRegsMapping[a]) {
-                    adapter.setState(main.holdingRegsMapping[a], request.value, true);
-                    main.holdingRegs[a] = request.value;
+                    var native = objects[main.holdingRegsMapping[a]].native;
+                    var val = extractValue(native.type, native.len, request, 0);
+                    if (native.type !== 'string') {
+                        val = (val - native.offset) / native.factor;
+                        val = Math.round(val * main.acp.round) / main.acp.round;
+                    }
+                    adapter.setState(main.holdingRegsMapping[a], val, true);
+                    main.holdingRegs[a] = val;
                 }
 
                 response.writeResponse(request);
@@ -1190,7 +1279,7 @@ var main = {
                 }
 
                 response.writeResponse(request);
-            };
+            };*/
             handlers[modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS] = function (request, response) {
                 var start  = request.startAddress;
                 var length = request.quantity;
@@ -1199,14 +1288,24 @@ var main = {
                 while (i < length && i + start <= main.holdingRegsLowAddress) {
                     var a = i + start - main.holdingRegsLowAddress;
                     if (main.holdingRegsMapping[a]) {
-                        adapter.setState(main.holdingRegsMapping[a], request[i].value, true);
-                        main.holdingRegs[a] = request[i].value;
+                        var native = objects[main.holdingRegsMapping[a]].native;
+                        var val = extractValue(native.type, native.len, request, a * 2);
+                        if (native.type != 'string') {
+                            val = val * native.factor + native.offset;
+                            val = Math.round(val * main.acp.round) / main.acp.round;
+                        }
+                        adapter.setState(main.holdingRegsMapping[a], val, true);
+                        for (var i = 0; i < native.len * 2; i++) {
+                            main.holdingRegs[a * 2 + i] = request[i];
+                        }
+                        i += native.len;
+                    } else {
+                        i++;
                     }
-                    i++;
                 }
 
                 response.writeResponse(request);
-            };*/
+            };
 
             modbusServer = Server.createServer(handlers).listen(main.acp.port);
             modbusServer.on('connection', function (client) {
@@ -1291,6 +1390,13 @@ var main = {
             Client.RESPONSES[modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER] = function (bufferlist) {
                 return {};
             };
+            // override request
+            Client.prototype.request = function() {
+                var req = new modbus.ModbusRequestStack(this);
+                req.unitIdentifier  = main.acp.deviceId;
+                req.request.apply(req, arguments);
+                return req;
+            }
             modbusClient = Client.createClient(main.acp.port, main.acp.bind);
 
             modbusClient.on('connect', function () {
@@ -1301,26 +1407,12 @@ var main = {
                 }
                 main.poll();
             }).on('disconnect', function () {
-                if (connected) {
-                    adapter.log.info('Disconnected from slave ' + main.acp.bind);
-                    connected = 0;
-                    adapter.setState('info.connection', 0, true);
-                }
-                setTimeout(function () {
-                    main.start();
-                }, main.acp.recon);
+                main.reconnect();
             });
 
             modbusClient.on('error', function (err) {
                 adapter.log.warn(err);
-                if (connected) {
-                    adapter.log.info('Disconnected from slave ' + main.acp.bind);
-                    connected = 0;
-                    adapter.setState('info.connection', 0, true);
-                }
-                setTimeout(function () {
-                    main.start();
-                }, main.acp.recon);
+                main.reconnect();
             });
         }
     },
@@ -1378,7 +1470,10 @@ var main = {
                     for (var n = 0; main.inputRegs.length > n; n++) {
                         var id = main.inputRegs[n].id;
                         var val = extractValue(main.inputRegs[n].type, main.inputRegs[n].len, buffer, main.inputRegs[n].address - main.inputRegsLowAddress);
-                        if (main.inputRegs[n].type !== 'string') val = val * main.inputRegs[n].factor + main.inputRegs[n].offset;
+                        if (main.inputRegs[n].type !== 'string') {
+                            val = val * main.inputRegs[n].factor + main.inputRegs[n].offset;
+                            val = Math.round(val * main.acp.round) / main.acp.round;
+                        }
                         if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
                             ackObjects[id] = {val: val};
                             adapter.setState(id, val, true);
@@ -1400,7 +1495,10 @@ var main = {
                     for (var n = 0; main.holdingRegs.length > n; n++) {
                         var id = main.holdingRegs[n].id;
                         var val = extractValue(main.holdingRegs[n].type, main.holdingRegs[n].len, buffer, main.holdingRegs[n].address - main.holdingRegsLowAddress);
-                        if (main.holdingRegs[n].type !== 'string') val = val * main.holdingRegs[n].factor + main.holdingRegs[n].offset;
+                        if (main.holdingRegs[n].type !== 'string') {
+                            val = val * main.holdingRegs[n].factor + main.holdingRegs[n].offset;
+                            val = Math.round(val * main.acp.round) / main.acp.round;
+                        }
 
                         if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
                             ackObjects[id] = {val: val};
@@ -1425,15 +1523,7 @@ var main = {
             if (main.errorCount < 6 && connected) {
                 setTimeout(main.poll, main.acp.poll);
             } else {
-                if (connected) {
-                    adapter.log.info('Disconnected from slave ' + main.acp.bind);
-                    connected = 0;
-                    adapter.setState('info.connection', 0, true);
-                }
-                adapter.log.error('try reconnection');
-                setTimeout(function () {
-                    main.start();
-                }, main.acp.recon);
+                main.reconnect();
             }
         } else {
             var currentPollTime = (new Date()).valueOf() - startTime;
