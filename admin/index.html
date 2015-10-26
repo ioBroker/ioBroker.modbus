@@ -223,6 +223,26 @@
         holdingRegs:    40001
     };
 
+    var type_items_len = {
+        'uint16be':   1,
+        'uint16le':   1,
+        'int16be':    1,
+        'int16le':    1,
+        'int16be1':   1,
+        'int16le1':   1,
+        'uint32be':   2,
+        'uint32le':   2,
+        'int32be':    2,
+        'int32le':    2,
+        'uint64be':   4,
+        'uint64le':   4,
+        'int64be':    4,
+        'int64le':    4,
+        'floatbe':    2,
+        'floatle':    2,
+        'string':     0
+    };
+
     $(document).ready(function () {
         $("#btn_loadsymbole").button().click(function () {
             $("#symol_import").trigger("click")
@@ -307,22 +327,31 @@
                 'name' + delimiter +
                 'description' + delimiter;
         if (id != 'coils' && id != 'disInputs') {
-            'unit' + delimiter;
+            text += 'unit' + delimiter;
+            text += 'type' + delimiter;
+            text += 'len' + delimiter;
+            text += 'factor' + delimiter;
+            text += 'offset' + delimiter;
         }
         text += 'role' + delimiter +
                 'room' + delimiter;
 
         if (id == 'coils' || id == 'holdingRegs') {
             text += 'poll' + delimiter +
-                    'wp' + '\n';
+                    'wp';
         }
+        text += '\n';
 
         for (var i = 0; i < data[id].length; i++) {
             text += data[id][i]._address + delimiter;
             text += (data[id][i].name || '') + delimiter;
             text += (data[id][i].description || '') + delimiter;
             if (id != 'coils' && id != 'disInputs') {
-                text += (data[id][i].unit || '') + delimiter;
+                text += (data[id][i].unit   || '') + delimiter;
+                text += (data[id][i].type   || '') + delimiter;
+                text += (data[id][i].len    || 1)  + delimiter;
+                text += (data[id][i].factor || 1)  + delimiter;
+                text += (data[id][i].offset || 0)  + delimiter;
             }
             text += (data[id][i].role || '') + delimiter;
             text += (data[id][i].room || '') + delimiter;
@@ -352,33 +381,50 @@
             }
         }
         var isAliases = $('#modbusparams_showAliases').prop('checked');
+        var mapping;
+        if (id != 'coils' && id != 'disInputs') {
+            mapping = ["address", "name", "description", "unit", "type", "len", "factor", "offset", "role", "room"];
+        } else {
+            mapping = ["address", "name", "description", "role", "room"];
+        }
+
         for (var i = 0; i < lines.length; i++) {
             var parts = lines[i].split(delimiter);
-            if (parts.length === 1) {
+            if (parts.length === 1) continue;
+            if (parseInt(parts[0].trim(), 10).toString() != parts[0]) {
+                // may be it is fields description
+                mapping = parts;
                 continue;
             }
-            if (parseInt(parts[0].trim(), 10).toString() != parts[0]) continue;
             var obj = {};
             var j = 0;
-            obj._address = parts[j++].trim();
-            if (isAliases) {
-                obj.address = alias2address(id, obj._address);
-            } else {
-                obj.address = obj._address;
+            for (var m = 0; m < mapping.length; m++) {
+                var val = parts[m].trim();
+
+                if (mapping[m] == 'address') {
+                    obj._address = val;
+                    if (isAliases) {
+                        obj.address = alias2address(id, obj._address);
+                    } else {
+                        obj.address = obj._address;
+                    }
+                } else if (mapping[m] == 'factor') {
+                    obj.factor = parseFloat(val) || 1;
+                } else if (mapping[m] == 'offset') {
+                    obj.offset = parseFloat(val) || 0;
+                } else if (mapping[m] == 'len') {
+                    obj.len = parseInt(val, 10) || 1;
+                } else if (mapping[m] == 'poll') {
+                    obj[mapping[m]] = val || '';
+                    obj.poll = (obj.poll.toLowerCase() === 'true' || obj.poll === '1' || obj.poll === '+');
+                } else if (mapping[m] == 'wp') {
+                    obj[mapping[m]] = val || '';
+                    obj.wp = (obj.wp.toLowerCase() === 'true' || obj.wp === '1' || obj.wp === '+');
+                } else {
+                    obj[mapping[m]] = val || '';
+                }
             }
-            obj.name = parts[j++].trim() || '';
-            obj.description = parts[j++].trim() || '';
-            if (id != 'coils' && id != 'disInputs') {
-                obj.unit = parts[j++].trim() || '';
-            }
-            obj.role = parts[j++].trim() || '';
-            obj.room = parts[j++].trim() || '';
-            if (id == 'coils' || id == 'holdingRegs') {
-                obj.poll = parts[j++].trim() || '';
-                obj.wp   = parts[j++].trim() || '';
-                obj.poll = (obj.poll.toLowerCase() === 'true' || obj.poll === '1' || obj.poll === '+');
-                obj.wp   = (obj.wp.toLowerCase() === 'true' || obj.wp === '1' || obj.wp === '+');
-            }
+            if (type_items_len[obj.type]) obj.len = type_items_len[obj.type];
             data[id].push(obj);
         }
         $('#modbus_' + id).jsGrid('render');
@@ -538,25 +584,6 @@
                     {value: 'string',         text: 'String (Zero-end)'}
                 ];
 
-                var type_items_len = {
-                    'uint16be':   1,
-                    'uint16le':   1,
-                    'int16be':    1,
-                    'int16le':    1,
-                    'int16be1':   1,
-                    'int16le1':   1,
-                    'uint32be':   2,
-                    'uint32le':   2,
-                    'int32be':    2,
-                    'int32le':    2,
-                    'uint64be':   4,
-                    'uint64le':   4,
-                    'int64be':    4,
-                    'int64le':    4,
-                    'floatbe':    2,
-                    'floatle':    2,
-                    'string':     0
-                };
 
                 var room_items = [{value: '', text: ''}];
                 for (var room in rooms) {
@@ -1000,6 +1027,11 @@
                 <td class="translate">Pulse time:</td>
                 <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus_params" id="modbusparams_pulsetime"></td>
                 <td>ms</td>
+            </tr>
+            <tr>
+                <td class="translate">Max read request length:</td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus_params" id="modbusparams_maxBlock"></td>
+                <td></td>
             </tr>
         </table>
     </div>

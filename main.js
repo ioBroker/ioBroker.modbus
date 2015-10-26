@@ -465,12 +465,14 @@ var main = {
     inputRegsLowAddress:    0,
     inputRegsHighAddress:   0,
     inputRegsLength:        0,
+    inputRegsBlocks:        [],
 
     holdingRegs:            [],
     holdingRegsLowAddress:  0,
     holdingRegsHighAddress: 0,
     holdingRegsLength:      0,
     holdingRegsMapping:     [],
+    holdingRegsBlocks:      [],
 
     history:     "",
     unit:        "",
@@ -489,6 +491,7 @@ var main = {
         main.acp.coilsOffset       = parseInt(main.acp.coilsOffset,       10) || 1;
         main.acp.inputRegsOffset   = parseInt(main.acp.inputRegsOffset,   10) || 30001;
         main.acp.holdingRegsOffset = parseInt(main.acp.holdingRegsOffset, 10) || 40001;
+        main.acp.maxBlock          = parseInt(main.acp.maxBlock, 10) || 100;
 
         main.acp.showAliases       = (main.acp.showAliases === true || main.acp.showAliases === 'true');
 
@@ -507,10 +510,13 @@ var main = {
             var i;
             var address;
             var len;
+            var lastAddress = null;
+            var blockStart;
+            var startIndex;
 
             if (main.ac.disInputs.length) {
                 for (i = main.ac.disInputs.length - 1; i >= 0; i--) {
-                    address = main.ac.disInputs[i].address;
+                    address = parseInt(main.ac.disInputs[i].address, 10);
                     if (address < 0) {
                         adapter.log.error('Invalid discrete inputs address: ' + address);
                         main.ac.disInputs.splice(i, 1);
@@ -539,7 +545,7 @@ var main = {
                 main.coilsLowAddress  = 0xFFFFFFFF;
                 main.coilsHighAddress = 0;
                 for (i = main.ac.coils.length - 1; i >= 0; i--) {
-                    address = main.ac.coils[i].address;
+                    address = parseInt(main.ac.coils[i].address, 10);
 
                     if (address < 0) {
                         adapter.log.error('Invalid coils address: ' + address);
@@ -575,7 +581,7 @@ var main = {
             
             if (main.ac.inputRegs.length) {
                 for (i = main.ac.inputRegs.length - 1; i >= 0; i--) {
-                    address = main.ac.inputRegs[i].address;
+                    address = parseInt(main.ac.inputRegs[i].address, 10);
                     if (address < 0) {
                         adapter.log.error('Invalid input register address: ' + address);
                         main.ac.inputRegs.splice(i, 1);
@@ -602,11 +608,31 @@ var main = {
                     }
 
                     main.ac.inputRegs[i].id += (main.ac.inputRegs[i].name ? '_' + (main.ac.inputRegs[i].name.replace('.', '_').replace(' ', '_')) : '');
+
                 }
+                lastAddress = null;
+                startIndex = 0;
+                for (i = 0; i < main.ac.inputRegs.length; i++) {
+                    address = parseInt(main.ac.inputRegs[i].address, 10);
+                    if (address < 0) continue;
+                    if (lastAddress === null) {
+                        blockStart  = address;
+                        startIndex = i;
+                        lastAddress = address + main.ac.inputRegs[i].len;
+                    }
+                    // try to detect next block
+                    if ((address - lastAddress > 10 && main.ac.inputRegs[i].len < 10) || (lastAddress - blockStart >= main.acp.maxBlock)) {
+                        main.inputRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                        blockStart  = address;
+                        startIndex  = i;
+                    }
+                    lastAddress = address + main.ac.inputRegs[i].len;
+                }
+                main.inputRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
                 if (main.ac.inputRegs.length) {
-                    main.inputRegsLowAddress = main.ac.inputRegs[0].address;
+                    main.inputRegsLowAddress  = main.ac.inputRegs[0].address;
                     main.inputRegsHighAddress = main.ac.inputRegs[main.ac.inputRegs.length - 1].address + main.ac.inputRegs[main.ac.inputRegs.length - 1].len;
-                    main.inputRegsLength = main.inputRegsHighAddress - main.inputRegsLowAddress + 1;
+                    main.inputRegsLength      = main.inputRegsHighAddress - main.inputRegsLowAddress;
                 } else {
                     main.ac.inputRegs.length = 0;
                 }
@@ -616,12 +642,13 @@ var main = {
                 main.holdingRegsLowAddress  = 0xFFFFFFFF;
                 main.holdingRegsHighAddress = 0;
                 for (i = main.ac.holdingRegs.length - 1; i >= 0; i--) {
-                    address = main.ac.holdingRegs[i].address;
+                    address = parseInt(main.ac.holdingRegs[i].address, 10);
                     if (address < 0) {
                         adapter.log.error('Invalid holding register address: ' + address);
                         main.ac.holdingRegs.splice(i, 1);
                         continue;
                     }
+
                     main.ac.holdingRegs[i].type   = main.ac.holdingRegs[i].type || 'uint16be';
                     main.ac.holdingRegs[i].offset = parseFloat(main.ac.holdingRegs[i].offset) || 0;
                     main.ac.holdingRegs[i].factor = parseFloat(main.ac.holdingRegs[i].factor) || 1;
@@ -645,12 +672,34 @@ var main = {
                         if (address + main.ac.holdingRegs[i].len > main.holdingRegsHighAddress) main.holdingRegsHighAddress = address + main.ac.holdingRegs[i].len;
                     }
                 }
+                lastAddress = null;
+                startIndex = 0;
+                for (i = 0; i < main.ac.holdingRegs.length; i++) {
+                    address = parseInt(main.ac.holdingRegs[i].address, 10);
+                    if (address < 0) continue;
+                    if (lastAddress === null) {
+                        startIndex  = i;
+                        blockStart  = address;
+                        lastAddress = address + main.ac.holdingRegs[i].len;
+                    }
+                    // try to detect next block
+                    if ((address - lastAddress > 10 && main.ac.holdingRegs[i].len < 10) || (lastAddress - blockStart >= main.acp.maxBlock)) {
+                        main.holdingRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                        blockStart  = address;
+                        startIndex  = i;
+                    }
+                    lastAddress = address + main.ac.inputRegs[i].len;
+                }
+                main.holdingRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+
                 if (main.ac.holdingRegs.length) {
-                    main.holdingRegsLength = main.holdingRegsHighAddress - main.holdingRegsLowAddress + 1;
+                    main.holdingRegsLength = main.holdingRegsHighAddress - main.holdingRegsLowAddress;
                 } else {
                     main.holdingRegsLength = 0;
                 }
-                for (i = 0; i <  main.ac.holdingRegs.length; i++) {
+
+                lastAddress = null;
+                for (i = 0; i < main.ac.holdingRegs.length; i++) {
                     main.holdingRegsMapping[main.ac.holdingRegs[i].address - main.holdingRegsLowAddress] = adapter.namespace + '.' + main.ac.holdingRegs[i].id;
                 }
             }
@@ -1461,15 +1510,21 @@ var main = {
             callback(null);
         }
     },
-    pollInputRegs: function (callback) {
-        if (main.inputRegsLength) {
-            modbusClient.request(modbus.FUNCTION_CODES.READ_INPUT_REGISTERS, main.inputRegsLowAddress, main.inputRegsLength, function (err, buffer) {
+    pollInputRegsBlock: function (block, callback) {
+        if (block >= main.inputRegsBlocks.length) {
+            return callback(null);
+        }
+        modbusClient.request(
+            modbus.FUNCTION_CODES.READ_INPUT_REGISTERS,
+            main.inputRegsBlocks[block].start,
+            main.inputRegsBlocks[block].count,
+            function (err, buffer) {
                 if (err) {
                     callback(err);
                 } else {
-                    for (var n = 0; main.inputRegs.length > n; n++) {
+                    for (var n = main.inputRegsBlocks[block].startIndex; n < main.inputRegsBlocks[block].endIndex; n++) {
                         var id = main.inputRegs[n].id;
-                        var val = extractValue(main.inputRegs[n].type, main.inputRegs[n].len, buffer, main.inputRegs[n].address - main.inputRegsLowAddress);
+                        var val = extractValue(main.inputRegs[n].type, main.inputRegs[n].len, buffer, main.inputRegs[n].address - main.inputRegsBlocks[block].start);
                         if (main.inputRegs[n].type !== 'string') {
                             val = val * main.inputRegs[n].factor + main.inputRegs[n].offset;
                             val = Math.round(val * main.acp.round) / main.acp.round;
@@ -1479,34 +1534,56 @@ var main = {
                             adapter.setState(id, val, true);
                         }
                     }
-                    callback(null);
+                    setTimeout(function () {
+                        main.pollInputRegsBlock(block + 1, callback);
+                    }, 0);
                 }
+            }
+        );
+    },
+    pollInputRegsBlocks: function (callback) {
+        if (main.inputRegsLength) {
+            main.pollInputRegsBlock(0, function (err) {
+                callback(err);
             });
         } else {
             callback(null);
         }
     },
-    pollHoldingRegs: function (callback) {
-        if (main.holdingRegsLength) {
-            modbusClient.request(modbus.FUNCTION_CODES.READ_HOLDING_REGISTERS, main.holdingRegsLowAddress, main.holdingRegsLength, function (err, buffer) {
-                if (err) {
-                    callback(err);
-                } else {
-                    for (var n = 0; main.holdingRegs.length > n; n++) {
-                        var id = main.holdingRegs[n].id;
-                        var val = extractValue(main.holdingRegs[n].type, main.holdingRegs[n].len, buffer, main.holdingRegs[n].address - main.holdingRegsLowAddress);
-                        if (main.holdingRegs[n].type !== 'string') {
-                            val = val * main.holdingRegs[n].factor + main.holdingRegs[n].offset;
-                            val = Math.round(val * main.acp.round) / main.acp.round;
-                        }
-
-                        if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
-                            ackObjects[id] = {val: val};
-                            adapter.setState(id, val, true);
-                        }
+    pollHoldingRegsBlock: function (block, callback) {
+        if (block >= main.holdingRegsBlocks.length) {
+            return callback(null);
+        }
+        modbusClient.request(modbus.FUNCTION_CODES.READ_HOLDING_REGISTERS,
+            main.holdingRegsBlocks[block].start,
+            main.holdingRegsBlocks[block].count,
+            function (err, buffer) {
+            if (err) {
+                callback(err);
+            } else {
+                for (var n = main.holdingRegsBlocks[block].startIndex; n < main.holdingRegsBlocks[block].endIndex; n++) {
+                    var id = main.holdingRegs[n].id;
+                    var val = extractValue(main.holdingRegs[n].type, main.holdingRegs[n].len, buffer, main.holdingRegs[n].address - main.holdingRegsBlocks[block].start);
+                    if (main.holdingRegs[n].type !== 'string') {
+                        val = val * main.holdingRegs[n].factor + main.holdingRegs[n].offset;
+                        val = Math.round(val * main.acp.round) / main.acp.round;
                     }
-                    callback(null);
+
+                    if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
+                        ackObjects[id] = {val: val};
+                        adapter.setState(id, val, true);
+                    }
                 }
+                setTimeout(function () {
+                    main.pollHoldingRegsBlock(block + 1, callback);
+                }, 0);
+            }
+        });
+    },
+    pollHoldingRegsBlocks: function (callback) {
+        if (main.holdingRegsLength) {
+            main.pollHoldingRegsBlock(0, function (err) {
+                callback(err);
             });
         } else {
             callback(null);
@@ -1552,9 +1629,9 @@ var main = {
             if (err) return main.pollResult(startTime, err);
             main.pollCoils(function (err) {
                 if (err) return main.pollResult(startTime, err);
-                main.pollInputRegs(function (err) {
+                main.pollInputRegsBlocks(function (err) {
                     if (err) return main.pollResult(startTime, err);
-                    main.pollHoldingRegs(function (err) {
+                    main.pollHoldingRegsBlocks(function (err) {
                         main.pollResult(startTime, err);
                     });
                 });
