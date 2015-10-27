@@ -688,7 +688,7 @@ var main = {
                         blockStart  = address;
                         startIndex  = i;
                     }
-                    lastAddress = address + main.ac.inputRegs[i].len;
+                    lastAddress = address + main.ac.holdingRegs[i].len;
                 }
                 main.holdingRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
 
