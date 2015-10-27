@@ -200,6 +200,7 @@
             "de": "Text wurde in der Zwischenablage kopiert. Klick um Fenster zu zumachen.",
             "ru": "Текст скопирован в буфер обмена. Щелкните мышкой здесь, чтобы закрыть окно"},
         "Export":           {"en": "Export",            "de": "Export",             "ru": "Экспорт"},
+        "Import":           {"en": "Import",            "de": "Import",             "ru": "Импорт"},
         "Close":            {"en": "Close",             "de": "Zumachen",           "ru": "Закрыть"},
         "Export to CSV":    {"en": "Export to CSV",     "de": "Export in CSV",      "ru": "Экспорт в CSV"},
         "Import from CSV":  {"en": "Import from CSV",   "de": "Import aus CSV",     "ru": "Импорт из CSV"},
@@ -402,7 +403,7 @@
                 var val = parts[m].trim();
 
                 if (mapping[m] == 'address') {
-                    obj._address = val;
+                    obj._address = parseInt(val, 10) || 0;
                     if (isAliases) {
                         obj.address = alias2address(id, obj._address);
                     } else {
@@ -437,7 +438,7 @@
             }
         } else {
             for (var i = 0; i < data[id].length; i++) {
-                data[id][i]._address = data[id][i].address;
+                data[id][i]._address = parseInt(data[id][i].address, 10) || 0;
             }
         }
         $('#modbus_' + id).jsGrid('render');
@@ -458,6 +459,7 @@
     function recalculate(data, id, oldOffset, newOffset) {
         if ($('#modbusparams_showAliases').prop('checked')) {
             for (var i = 0; i < data[id].length; i++) {
+                data[id][i].address = parseInt(data[id][i].address, 10) || 0;
                 data[id][i].address += (oldOffset - newOffset);
             }
         }
@@ -490,6 +492,7 @@
                 poll:       settings.params.poll  || 1000,
                 pulsetime:  settings.params.pulsetime || 1000,
                 round:      settings.params.round || 2,
+                maxBlock:   settings.params.maxBlock || 100,
                 disInputsOffset:    settings.params.disInputsOffset   || 10001,
                 coilsOffset:        settings.params.coilsOffset       || 1,
                 inputRegsOffset:    settings.params.inputRegsOffset   || 30001,
@@ -939,6 +942,7 @@
         15: 0
     };
     function address2alias(id, address) {
+        address = parseInt(address, 10) || 0;
         if (id == 'disInputs' || id == 'coils') {
             address += offsets[id];
             return Math.floor(address / 16) * 16 + _rmap[address % 16];
@@ -948,6 +952,7 @@
     }
 
     function alias2address(id, alias) {
+        alias = parseInt(alias, 10) || 0;
         if (id == 'disInputs' || id == 'coils') {
             alias = Math.floor(alias / 16) * 16 + _rmap[alias % 16];
             return alias - offsets[id];
@@ -1076,12 +1081,12 @@
         <div id="modbus_holdingRegs" class="modbus_grid"></div>
     </div>
     <div id="export-dlg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;display: none; z-index: 100">
-        <div id="export_help" class="translate" style="position: absolute; top: 10px; right: 10px; font-size: 24px; font-weight: bold; color: blue">Text copied to clipboard. Click to close the window</div>
+        <div id="export_help" class="translate" style="position: absolute; opacity: 0.8; top: 10px; right: 10px; font-size: 24px; font-weight: bold; color: blue">Text copied to clipboard. Click to close the window</div>
         <textarea id="export_textarea" readonly style="width: 100%; height: 100%"></textarea>
     </div>
     <div id="import-dlg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;display: none; z-index: 100">
         <textarea id="import_textarea" style="width: 100%; height: calc(100% - 40px)"></textarea>
-        <button id="import_button_ok"    style="position: absolute; bottom: 10px; right: 120px;" class="translateB">Export</button>
+        <button id="import_button_ok"    style="position: absolute; bottom: 10px; right: 120px;" class="translateB">Import</button>
         <button id="import_button_cancel" style="position: absolute; bottom: 10px; right: 10px;" class="translateB">Close</button>
     </div>
 </div>

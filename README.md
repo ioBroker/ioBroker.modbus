@@ -4,6 +4,9 @@
 Implementation of ModBus Slave and Master for ioBroker. Actually only Modbus over TCP is supported.
 
 # Changelog 
+# 0.3.2 (2015-10-27) 
+* (bluefox) fix import from text file
+
 # 0.3.1 (2015-10-26) 
 * (bluefox) fix error with length of read block (master)
 * (bluefox) support of read blocks and maximal length of read request (master)
