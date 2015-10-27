@@ -116,6 +116,9 @@
         font-family: sans-serif;
     }
 
+    tr td {
+        padding-left: 10px;
+    }
     #adapter-container {
         -webkit-touch-callout: none;
         -webkit-user-select: none;
@@ -995,15 +998,19 @@
             </tr>
             <tr>
                 <td class="translate">Type:</td>
-                <td><select class="modbus_params" id="modbus_slave" >
-                    <option value="0" class="translate">Master</option>
-                    <option value="1"  class="translate">Slave</option>
-                </select>
+                <td>
+                    <select class="modbus_params" id="modbus_slave" >
+                        <option value="0" class="translate">Master</option>
+                        <option value="1"  class="translate">Slave</option>
+                    </select>
                 </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="height: 10px"></td>
             </tr>
         </table>
 
-        <table class="ui-widget-content" style="z-index: 2;margin-top: 20px;border-collapse: collapse; display: inline; border: 1px solid black;height: 130px;">
+        <table class="ui-widget-content" style="z-index: 2;margin-top: 20px; border-collapse: collapse; display: inline; border: 1px solid black;">
             <tr>
                 <td style="text-align: center" colspan="3" class="ui-widget-header" class="translate">General</td>
             </tr>
@@ -1037,6 +1044,9 @@
                 <td class="translate">Max read request length:</td>
                 <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus_params" id="modbusparams_maxBlock"></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height: 10px"></td>
             </tr>
         </table>
     </div>
