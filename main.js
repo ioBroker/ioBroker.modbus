@@ -64,6 +64,12 @@ function writeHelper(id, state) {
 }
 
 function prepareWrite(id, state) {
+    if (objects[id].native.float === undefined) {
+        objects[id].native.float =
+            objects[id].native.type === 'floatle'  || objects[id].native.type === 'floatbe' ||
+            objects[id].native.type === 'doublele' || objects[id].native.type === 'doublebe';
+    }
+
     if (main.acp.slave) {
         var t = typeof state.val;
         if (objects[id].native.regType == 'disInputs') {
@@ -89,9 +95,7 @@ function prepareWrite(id, state) {
                     val = parseFloat(state.val);
                 }
                 val = (val - objects[id].native.offset) / objects[id].native.factor;
-                if (objects[id].native.type !== 'floatle' && objects[id].native.type !== 'floatbe') {
-                    val = Math.round(val * main.acp.round) / main.acp.round;
-                }
+                if (!objects[id].native.float) val = Math.round(val);
             } else {
                 val = state.val;
             }
@@ -110,9 +114,7 @@ function prepareWrite(id, state) {
                     val = parseFloat(state.val);
                 }
                 val = (val - objects[id].native.offset) / objects[id].native.factor;
-                if (objects[id].native.type !== 'floatle' && objects[id].native.type !== 'floatbe') {
-                    val = Math.round(val * main.acp.round) / main.acp.round;
-                }
+                if (!objects[id].native.float) val = Math.round(val);
             } else {
                 val = state.val;
             }
@@ -182,12 +184,16 @@ function send() {
             }
         });
     } else if (type == 'holdingRegs') {
+        if (objects[id].native.float === undefined) {
+            objects[id].native.float =
+                objects[id].native.type === 'floatle'  || objects[id].native.type === 'floatbe' ||
+                objects[id].native.type === 'doublele' || objects[id].native.type === 'doublebe';
+        }
+
         if (objects[id].native.type !== 'string') {
             val = parseFloat(val);
             val = (val - objects[id].native.offset) / objects[id].native.factor;
-            if (objects[id].native.type !== 'floatle' && objects[id].native.type !== 'floatbe') {
-                val = Math.round(val * main.acp.round) / main.acp.round;
-            }
+            if (!objects[id].native.float) val = Math.round(val);
         }
         if (objects[id].native.len > 1) {
             var buffer = writeValue(objects[id].native.type, val, objects[id].native.len);
@@ -296,20 +302,33 @@ function extractValue (type, len, buffer, offset) {
         case 'int32le':
             return buffer.readInt32LE(offset * 2);
         case 'uint64be':
-            return buffer.readUInt32BE(offset * 2) << 32 + buffer.readUInt32BE(offset * 2 + 4);
+            return buffer.readUInt32BE(offset * 2) * 0x100000000 + buffer.readUInt32BE(offset * 2 + 4);
         case 'uint64le':
-            return buffer.readUInt32LE(offset * 2) + buffer.readUInt32LE(offset * 2 + 4) << 32;
+            return buffer.readUInt32LE(offset * 2) + buffer.readUInt32LE(offset * 2 + 4) * 0x100000000;
         case 'int64be':
-            return buffer.readInt32BE(offset * 2) << 32 + buffer.readUInt32BE(offset * 2 + 4);
-        case 'int64le':
-            return buffer.readUInt32LE(offset * 2) + buffer.readUInt32LE(offset * 2 + 4) << 32;
-        case 'floatbe':
-            if (!buffer.readFloatBE) {
-                console.log('A');
+            var i1 = buffer.readInt32BE(offset * 2);
+            var i2 = buffer.readUInt32BE(offset * 2 + 4);
+            if (i1 >= 0) {
+                return i1 * 0x100000000 + i2; // <<32 does not work
+            } else {
+                return i1 * 0x100000000 - i2; // I have no solution for that !
             }
+        case 'int64le':
+            var i2 = buffer.readUInt32LE(offset * 2);
+            var i1 = buffer.readInt32LE(offset * 2 + 4);
+            if (i1 >= 0) {
+                return i1 * 0x100000000 + i2; // <<32 does not work
+            } else {
+                return i1 * 0x100000000 - i2; // I have no solution for that !
+            }
+        case 'floatbe':
             return buffer.readFloatBE(offset * 2);
         case 'floatle':
             return buffer.readFloatLE(offset * 2);
+        case 'doublebe':
+            return buffer.readDoubleBE(offset * 2);
+        case 'doublele':
+            return buffer.readDoubleLE(offset * 2);
         case 'string':
             // find lenght
             var _len = 0;
@@ -381,6 +400,14 @@ function writeValue (type, value, len) {
             buffer = new Buffer(4);
             buffer.writeFloatLE(value, 0);
             break;
+        case 'doublebe':
+            buffer = new Buffer(8);
+            buffer.writeDoubleBE(value, 0);
+            break;
+        case 'doublele':
+            buffer = new Buffer(8);
+            buffer.writeDoubleLE(value, 0);
+            break;
         case 'string':
             if (value === null) value = 'null';
             value = value.toString();
@@ -415,6 +442,8 @@ var type_items_len = {
     'int64le':    4,
     'floatbe':    2,
     'floatle':    2,
+    'doublebe':   4,
+    'doublele':   4,
     'string':     0
 };
 
