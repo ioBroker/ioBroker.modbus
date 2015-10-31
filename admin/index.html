@@ -162,6 +162,7 @@
         "Unit":             {"en": "Unit",              "de": "Einheit",            "ru": "Единицы"},
         "poll":             {"en": "poll",              "de": "poll",               "ru": "poll"},
         "RW":               {"en": "RW",                "de": "RW",                 "ru": "RW"},
+        "CW":               {"en": "CW",                "de": "CW",                 "ru": "CW"},
         "WP":               {"en": "WP",                "de": "WP",                 "ru": "WP"},
         "Role":             {"en": "Role",              "de": "Rolle",              "ru": "Роль"},
         "Room":             {"en": "Room",              "de": "Raum",               "ru": "Комната"},
@@ -345,6 +346,9 @@
         if (id == 'coils' || id == 'holdingRegs') {
             text += 'poll' + delimiter +
                     'wp';
+            if (!data.params.slave) {
+                text += delimiter + 'cw';
+            }
         }
         text += '\n';
 
@@ -364,6 +368,9 @@
             if (id == 'coils' || id == 'holdingRegs') {
                 text += (data[id][i].poll ? 'true' : 'false') + delimiter;
                 text += (data[id][i].wp   ? 'true' : 'false') + delimiter;
+                if (!data.params.slave) {
+                    text += (data[id][i].cw   ? 'true' : 'false') + delimiter;
+                }
             }
             text += '\n';
         }
@@ -426,6 +433,9 @@
                 } else if (mapping[m] == 'wp') {
                     obj[mapping[m]] = val || '';
                     obj.wp = (obj.wp.toLowerCase() === 'true' || obj.wp === '1' || obj.wp === '+');
+                } else if (mapping[m] == 'cw') {
+                    obj[mapping[m]] = val || '';
+                    obj.cw = (obj.cw.toLowerCase() === 'true' || obj.cw === '1' || obj.cw === '+');
                 } else {
                     obj[mapping[m]] = val || '';
                 }
@@ -594,7 +604,6 @@
                     {value: 'string',         text: 'String (Zero-end)'}
                 ];
 
-
                 var room_items = [{value: '', text: ''}];
                 for (var room in rooms) {
                     room_items.push({value: room, text: rooms[room].common.name || room.substring('enum.rooms.'.length)});
@@ -612,13 +621,17 @@
                     {name: 'room'       , title:  _('Room'),          type: 'select',     width: '100px', items: room_items, valueField: 'value', textField: 'text'},
                     {name: 'poll'       , title:  _('poll'),          type: 'checkbox',   width: '35px'},
                     {name: 'wp'         , title:  _('WP'),            type: 'checkbox',   width: '35px'},
+                    {name: 'cw'         , title:  _('CW'),            type: 'checkbox',   width: '35px'},
                     {                                                 type: 'control',    width: '80px'}
                 ];
                 if (_id == 'modbus_disInputs' || _id == 'modbus_inputRegs') {
-                    fields.splice(10, 2);
+                    fields.splice(10, 3);
                 }
                 if (_id == 'modbus_coils' || _id == 'modbus_disInputs') {
                     fields.splice(3, 5);
+                }
+                if ($('#modbus_slave').val()) {
+                    fields.splice(12, 1);
                 }
 
                 var g = $('#' + _id).jsGrid({
@@ -731,6 +744,7 @@
                             obj.item.role   = data[id][data[id].length - 1].role;
                             obj.item.poll   = data[id][data[id].length - 1].poll;
                             obj.item.wp     = data[id][data[id].length - 1].wp;
+                            obj.item.cw     = data[id][data[id].length - 1].cw;
                             obj.item.type   = data[id][data[id].length - 1].type;
                             obj.item.len    = data[id][data[id].length - 1].len;
                             obj.item.factor = data[id][data[id].length - 1].factor;
@@ -803,15 +817,20 @@
                     $row.data('JSGridEditRow', $editRow);
                 };
 
-                // add custom titles
-                $('.jsgrid-header-sortable').each(function () {
-                    if ($(this).text() == _('poll')) {
-                        $(this).attr('title', _('Enable polling of data point'));
-                    }
-                    if ($(this).text() == _('WP')) {
-                        $(this).attr('title', _('Write pulses (true=>false edge)'));
-                    }
-                });
+                setTimeout(function () {
+                    // add custom titles
+                    $('.jsgrid-header-sortable').each(function () {
+                        if ($(this).text() == _('poll')) {
+                            $(this).attr('title', _('Enable polling of data point'));
+                        } else
+                        if ($(this).text() == _('WP')) {
+                            $(this).attr('title', _('Write pulses (true=>false edge)'));
+                        } else
+                        if ($(this).text() == _('CW')) {
+                            $(this).attr('title', _('Cyclic write'));
+                        }
+                    });
+                }, 1000);
             });
 
             switchAll(data);

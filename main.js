@@ -165,6 +165,8 @@ function prepareWrite(id, state) {
     }
 }
 
+
+
 function send() {
     var id = Object.keys(sendBuffer)[0];
 
@@ -502,6 +504,7 @@ var main = {
     holdingRegsLength:      0,
     holdingRegsMapping:     [],
     holdingRegsBlocks:      [],
+    holdingRegsCyclicWrite: [],
 
     history:     "",
     unit:        "",
@@ -670,6 +673,7 @@ var main = {
             if (main.ac.holdingRegs.length) {
                 main.holdingRegsLowAddress  = 0xFFFFFFFF;
                 main.holdingRegsHighAddress = 0;
+
                 for (i = main.ac.holdingRegs.length - 1; i >= 0; i--) {
                     address = parseInt(main.ac.holdingRegs[i].address, 10);
                     if (address < 0) {
@@ -688,6 +692,8 @@ var main = {
                     }
                     main.ac.holdingRegs[i].len = main.ac.holdingRegs[i].len || 1;
 
+
+
                     main.ac.holdingRegs[i].id = 'holdingRegisters.';
                     if (main.acp.showAliases) {
                         main.ac.holdingRegs[i].id += address2alias('holdingRegs', address);
@@ -696,11 +702,17 @@ var main = {
                     }
                     main.ac.holdingRegs[i].id += (main.ac.holdingRegs[i].name ? '_' + (main.ac.holdingRegs[i].name.replace('.', '_').replace(' ', '_')) : '');
 
+                    // collect cyclic write registers
+                    if (main.ac.holdingRegs[i].cw) {
+                        main.holdingRegsCyclicWrite.push(adapter.namespace + '.' + main.ac.holdingRegs[i].id);
+                    }
+
                     if (main.acp.slave || main.ac.holdingRegs[i].poll) {
                         if (address < main.holdingRegsLowAddress)  main.holdingRegsLowAddress  = address;
                         if (address + main.ac.holdingRegs[i].len > main.holdingRegsHighAddress) main.holdingRegsHighAddress = address + main.ac.holdingRegs[i].len;
                     }
                 }
+
                 lastAddress = null;
                 startIndex = 0;
                 for (i = 0; i < main.ac.holdingRegs.length; i++) {
@@ -773,29 +785,10 @@ var main = {
                     native: {}
                 });
             }
+
             var id;
             // ------------- create states and objects ----------------------------
             for (i = 0; main.ac.disInputs.length > i; i++) {
-                if (main.oldObjects[adapter.namespace + '.' + main.ac.disInputs[i].id]) {
-                    main.history = main.oldObjects[adapter.namespace + '.' + main.ac.disInputs[i].id].common.history || {
-                            enabled:     false,
-                            changesOnly: true,
-                            minLength:   480,
-                            maxLength:   960,
-                            retention:   604800,
-                            debounce:    10000
-                        };
-                } else {
-                    main.history = {
-                        enabled:      false,
-                        changesOnly:  true,
-                        minLength:    480,
-                        maxLength:    960,
-                        retention:    604800,
-                        debounc:      10000
-                    };
-                }
-
                 id = adapter.namespace + '.' + main.ac.disInputs[i].id;
                 objects[id] = {
                     type: 'state',
@@ -821,25 +814,6 @@ var main = {
             }
 
             for (i = 0; main.ac.coils.length > i; i++) {
-                if (main.oldObjects[adapter.namespace + '.' + main.ac.coils[i].id]) {
-                    main.history = main.oldObjects[adapter.namespace + '.' + main.ac.coils[i].id].common.history || {
-                            "enabled":     false,
-                            "changesOnly": true,
-                            "minLength":   480,
-                            "maxLength":   960,
-                            "retention":   604800,
-                            "debounce":    10000
-                        };
-                } else {
-                    main.history = {
-                        "enabled":     false,
-                        "changesOnly": true,
-                        "minLength":   480,
-                        "maxLength":   960,
-                        "retention":   604800,
-                        "debounce":    10000
-                    };
-                }
                 id = adapter.namespace + '.' + main.ac.coils[i].id;
                 objects[id] = {
                     type: 'state',
@@ -865,25 +839,6 @@ var main = {
             }
 
             for (i = 0; main.ac.inputRegs.length > i; i++) {
-                if (main.oldObjects[adapter.namespace + '.' + main.ac.inputRegs[i].id]) {
-                    main.history = main.oldObjects[adapter.namespace + '.' + main.ac.inputRegs[i].id].common.history || {
-                            enabled:     false,
-                            changesOnly: true,
-                            minLength:   480,
-                            maxLength:   960,
-                            retention:   604800,
-                            debounce:    10000
-                        };
-                } else {
-                    main.history = {
-                        enabled:     false,
-                        changesOnly: true,
-                        minLength:   480,
-                        maxLength:   960,
-                        retention:   604800,
-                        debounce:    10000
-                    };
-                }
                 id = adapter.namespace + '.' + main.ac.inputRegs[i].id;
                 objects[id] = {
                     type: 'state',
@@ -914,25 +869,6 @@ var main = {
             }
 
             for (i = 0; main.ac.holdingRegs.length > i; i++) {
-                if (main.oldObjects[adapter.namespace + '.' + main.ac.holdingRegs[i].id]) {
-                    main.history = main.oldObjects[adapter.namespace + '.' + main.ac.holdingRegs[i].id].common.history || {
-                        enabled:     false,
-                        changesOnly: true,
-                        minLength:   480,
-                        maxLength:   960,
-                        retention:   604800,
-                        debounce:    10000
-                    };
-                } else {
-                    main.history = {
-                        enabled:     false,
-                        changesOnly: true,
-                        minLength:   480,
-                        maxLength:   960,
-                        retention:   604800,
-                        debounce:    10000
-                    };
-                }
                 id = adapter.namespace + '.' + main.ac.holdingRegs[i].id;
                 objects[id] = {
                     type: 'state',
@@ -1539,7 +1475,7 @@ var main = {
             callback(null);
         }
     },
-    pollInputRegsBlock: function (block, callback) {
+    pollInputRegsBlock:    function (block, callback) {
         if (block >= main.inputRegsBlocks.length) {
             return callback(null);
         }
@@ -1570,7 +1506,7 @@ var main = {
             }
         );
     },
-    pollInputRegsBlocks: function (callback) {
+    pollInputRegsBlocks:   function (callback) {
         if (main.inputRegsLength) {
             main.pollInputRegsBlock(0, function (err) {
                 callback(err);
@@ -1579,7 +1515,7 @@ var main = {
             callback(null);
         }
     },
-    pollHoldingRegsBlock: function (block, callback) {
+    pollHoldingRegsBlock:  function (block, callback) {
         if (block >= main.holdingRegsBlocks.length) {
             return callback(null);
         }
@@ -1612,10 +1548,42 @@ var main = {
     pollHoldingRegsBlocks: function (callback) {
         if (main.holdingRegsLength) {
             main.pollHoldingRegsBlock(0, function (err) {
-                callback(err);
+                if (main.holdingRegsCyclicWrite.length) {
+                    main.writeCyclicHoldingRegs(0, callback);
+                } else {
+                    callback(err);
+                }
             });
         } else {
             callback(null);
+        }
+    },
+    writeCyclicHoldingRegs:      function (i, callback) {
+        if (i >= main.holdingRegsCyclicWrite.length) {
+            return callback(null);
+        }
+        var id = main.holdingRegsCyclicWrite[i];
+
+        if (objects[id].native.len > 1) {
+            var buffer = new Buffer(objects[id].native.len * 2);
+            for (var b = 0; b < buffer.length; b++) {
+                buffer[b] = main.holdingRegs[(objects[id].native.address - main.holdingRegsLowAddress) * 2 + b];
+            }
+            modbusClient.request(modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS, objects[id].native.address, buffer, function (err, response) {
+                if (err) {
+                    adapter.log.error('Cannot write: ' + err);
+                }
+                main.writeCyclicHoldingRegs(i + 1, callback);
+            });
+        } else {
+            var addr = (objects[id].native.address - main.holdingRegsLowAddress) * 2;
+            var val = (main.holdingRegs[addr] << 8) + main.holdingRegs[addr + 1];
+            modbusClient.request(modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER, objects[id].native.address, val, function (err, response) {
+                if (err) {
+                    adapter.log.error(err);
+                }
+                main.writeCyclicHoldingRegs(i + 1, callback);
+            });
         }
     },
 
