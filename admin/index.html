@@ -166,8 +166,10 @@
         "WP":               {"en": "WP",                "de": "WP",                 "ru": "WP"},
         "Role":             {"en": "Role",              "de": "Rolle",              "ru": "Роль"},
         "Room":             {"en": "Room",              "de": "Raum",               "ru": "Комната"},
-        "Device ID":        {"en": "Device ID",         "de": "Gerät ID",           "ru": "ID устройства"},
+        "registers":        {"en": "registers",         "de": "Register",           "ru": "регистров"},
+        "Device ID:":       {"en": "Device ID:",        "de": "Gerät ID:",          "ru": "ID устройства:"},
         "Use aliases as address:": {"en": "Use aliases:", "de": "Aliases benutzen:", "ru": "Использовать alias:"},
+        "Max read request length:": {"en": "Max read request length:", "de": "Maximale Lese-Requestl-Länge:", "ru": "Макс. кол-во регистров при чтении:"},
         "Enable polling of data point": {
             "en": "Enable polling of data point",
             "de": "Zyklische Abfrage vom Datenpunkt",
@@ -216,7 +218,8 @@
             "ru": "Все элементы будут удалены. Вы уверенны?"
         },
         "Factor":           {"en": "Factor",            "de": "Faktor",             "ru": "Множитель"},
-        "Offset":           {"en": "Offset",            "de": "Offset",             "ru": "Сдвиг"}
+        "Offset":           {"en": "Offset",            "de": "Offset",             "ru": "Сдвиг"},
+        "Cyclic write":     {"en": "Cyclic write",      "de": "Zyklisch schreiben", "ru": "Писать в каждом цикле"}
     };
 
     var onChange = null;
@@ -630,7 +633,7 @@
                 if (_id == 'modbus_coils' || _id == 'modbus_disInputs') {
                     fields.splice(3, 5);
                 }
-                if ($('#modbus_slave').val()) {
+                if (parseInt($('#modbus_slave').val())) {
                     fields.splice(12, 1);
                 }
 
@@ -1066,7 +1069,7 @@
             <tr>
                 <td class="translate">Max read request length:</td>
                 <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus_params" id="modbusparams_maxBlock"></td>
-                <td></td>
+                <td calss="translate">registers</td>
             </tr>
             <tr>
                 <td colspan="3" style="height: 10px"></td>

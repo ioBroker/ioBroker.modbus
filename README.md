@@ -4,6 +4,9 @@
 Implementation of ModBus Slave and Master for ioBroker. Actually only Modbus over TCP is supported.
 
 # Changelog
+# 0.3.6 (2015-11-01) 
+* (bluefox) add cyclic write for holding registers (fix)
+
 # 0.3.5 (2015-10-31) 
 * (bluefox) add cyclic write for holding registers
 
