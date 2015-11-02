@@ -40,8 +40,8 @@ if pulse used for coils, this define the interval how long is pulse.
 #### Max read request length
 Maximal length of command READ_MULTIPLE_REGISTERS as number of registers to read. 
 
-Some systems require first write request to deliver the data on read request.
-You can force this mode by setting of the  "Max read request length" to 1.
+Some systems require first "write request" to deliver the data on "read request".
+You can force this mode by setting of the "Max read request length" to 1.
 
 # Changelog
 # 0.3.7 (2015-11-02) 
