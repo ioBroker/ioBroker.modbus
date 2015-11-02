@@ -1,9 +1,52 @@
 ![Logo](admin/modbus.png)
-### iobroker.modbus
+## iobroker.modbus
 
 Implementation of ModBus Slave and Master for ioBroker. Actually only Modbus over TCP is supported.
 
+### Settings
+#### Partner IP Address
+IP address of modbus partner.
+
+#### Port
+TCP Port of modbus partner if configured as master (client) or own port if configured as slave(server).
+
+#### Device ID
+Modbus Device ID. Important if TCP/Modbus bridge is used.
+
+#### Type
+Slave(Server) or Master(Client).
+
+#### Use aliases as address
+Normally all registers can have address from 0 to 65535. By using of aliases you can define virtual address fields for every type of registers. Normally:
+- discrete inputs are from 10001 to 20000
+- coils are from 1 to 1000
+- input registers are from 30001 to 40000
+- holding registers are from 40001 to 60000
+
+Every alias will be mapped internally to address, e.g. 30011 will be mapped to input register 10. and so on.
+ 
+#### Round Real to
+How many digits after comma for float and doubles.
+
+#### Poll delay
+Cyclic poll interval (Only relevant for master)
+
+#### Reconnect time
+Reconnection interval (Only relevant for master)
+
+#### Pulse time
+if pulse used for coils, this define the interval how long is pulse.
+
+#### Max read request length
+Maximal length of command READ_MULTIPLE_REGISTERS as number of registers to read. 
+
+Some systems require first write request to deliver the data on read request.
+You can force this mode by setting of the  "Max read request length" to 1.
+
 # Changelog
+# 0.3.7 (2015-11-02) 
+* (bluefox) add special read/write mode if "Max read request length" is 1.
+
 # 0.3.6 (2015-11-01) 
 * (bluefox) add cyclic write for holding registers (fix)
 

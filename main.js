@@ -654,13 +654,17 @@ var main = {
                     }
                     // try to detect next block
                     if ((address - lastAddress > 10 && main.ac.inputRegs[i].len < 10) || (lastAddress - blockStart >= main.acp.maxBlock)) {
-                        main.inputRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                        if (main.inputRegsBlocks.map(function (obj) {return obj.start;}).indexOf(blockStart) == -1) {
+                            main.inputRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                        }
                         blockStart  = address;
                         startIndex  = i;
                     }
                     lastAddress = address + main.ac.inputRegs[i].len;
                 }
-                main.inputRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                if (main.inputRegsBlocks.map(function (obj) {return obj.start;}).indexOf(blockStart) == -1) {
+                    main.inputRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                }
                 if (main.ac.inputRegs.length) {
                     main.inputRegsLowAddress  = main.ac.inputRegs[0].address;
                     main.inputRegsHighAddress = main.ac.inputRegs[main.ac.inputRegs.length - 1].address + main.ac.inputRegs[main.ac.inputRegs.length - 1].len;
@@ -725,13 +729,17 @@ var main = {
                     }
                     // try to detect next block
                     if ((address - lastAddress > 10 && main.ac.holdingRegs[i].len < 10) || (lastAddress - blockStart >= main.acp.maxBlock)) {
-                        main.holdingRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                        if (main.holdingRegsBlocks.map(function (obj) {return obj.start;}).indexOf(blockStart) == -1) {
+                            main.holdingRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                        }
                         blockStart  = address;
                         startIndex  = i;
                     }
                     lastAddress = address + main.ac.holdingRegs[i].len;
                 }
-                main.holdingRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                if (main.holdingRegsBlocks.map(function (obj) {return obj.start;}).indexOf(blockStart) == -1) {
+                    main.holdingRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                }
 
                 if (main.ac.holdingRegs.length) {
                     main.holdingRegsLength = main.holdingRegsHighAddress - main.holdingRegsLowAddress;
@@ -790,6 +798,7 @@ var main = {
             // ------------- create states and objects ----------------------------
             for (i = 0; main.ac.disInputs.length > i; i++) {
                 id = adapter.namespace + '.' + main.ac.disInputs[i].id;
+                main.ac.disInputs[i].fullId = id;
                 objects[id] = {
                     type: 'state',
                     common: {
@@ -815,6 +824,7 @@ var main = {
 
             for (i = 0; main.ac.coils.length > i; i++) {
                 id = adapter.namespace + '.' + main.ac.coils[i].id;
+                main.ac.coils[i].fullId = id;
                 objects[id] = {
                     type: 'state',
                     common: {
@@ -840,6 +850,7 @@ var main = {
 
             for (i = 0; main.ac.inputRegs.length > i; i++) {
                 id = adapter.namespace + '.' + main.ac.inputRegs[i].id;
+                main.ac.inputRegs[i].fullId = id;
                 objects[id] = {
                     type: 'state',
                     common: {
@@ -870,6 +881,7 @@ var main = {
 
             for (i = 0; main.ac.holdingRegs.length > i; i++) {
                 id = adapter.namespace + '.' + main.ac.holdingRegs[i].id;
+                main.ac.holdingRegs[i].fullId = id;
                 objects[id] = {
                     type: 'state',
                     common: {
@@ -928,7 +940,7 @@ var main = {
                     var id;
                     // build ready arrays
                     for (i = 0; main.ac.disInputs.length > i; i++) {
-                        id = adapter.namespace + '.' + main.ac.disInputs[i].id;
+                        id = main.ac.disInputs[i].fullId;
                         if (states[id] && states[id].val !== undefined) {
                             prepareWrite(id, states[id]);
                             //main.disInputs[main.ac.disInputs[i].address - main.disInputsLowAddress] = states[id].val;
@@ -948,7 +960,7 @@ var main = {
                     }
 
                     for (i = 0; main.ac.coils.length > i; i++) {
-                        id = adapter.namespace + '.' + main.ac.coils[i].id;
+                        id = main.ac.coils[i].fullId;
                         if (states[id] && states[id].val !== undefined) {
                             prepareWrite(id, states[id]);
                             //main.coils[main.ac.coils[i].address - main.coilsLowAddress] = states[id].val;
@@ -968,7 +980,7 @@ var main = {
                     }
 
                     for (i = 0; main.ac.inputRegs.length > i; i++) {
-                        id = adapter.namespace + '.' + main.ac.inputRegs[i].id;
+                        id = main.ac.inputRegs[i].fullId;
                         if (states[id] && states[id].val !== undefined) {
                             //main.inputRegs[main.ac.inputRegs[i].address - main.inputRegsLowAddress] = states[id].val;
                             prepareWrite(id, states[id]);
@@ -988,7 +1000,7 @@ var main = {
                     }
 
                     for (i = 0; main.ac.holdingRegs.length > i; i++) {
-                        id = adapter.namespace + '.' + main.ac.holdingRegs[i].id;
+                        id = main.ac.holdingRegs[i].fullId;
                         if (states[id] && states[id].val !== undefined) {
                             prepareWrite(id, states[id]);
                             //main.holdingRegs[main.ac.holdingRegs[i].address - main.holdingRegsLowAddress] = states[id].val;
@@ -1539,16 +1551,25 @@ var main = {
                         adapter.setState(id, val, true);
                     }
                 }
-                setTimeout(function () {
-                    main.pollHoldingRegsBlock(block + 1, callback);
-                }, 0);
+
+                // special case
+                if (main.acp.maxBlock < 2 && main.holdingRegs[main.holdingRegsBlocks[block].startIndex].cw) {
+                    // write immediately the current value
+                    main.writeCyclicHoldingReg(objects[main.holdingRegs[main.holdingRegsBlocks[block].startIndex].fullId], function () {
+                        main.pollHoldingRegsBlock(block + 1, callback);
+                    });
+                } else {
+                    setTimeout(function () {
+                        main.pollHoldingRegsBlock(block + 1, callback);
+                    }, 0);
+                }
             }
         });
     },
     pollHoldingRegsBlocks: function (callback) {
         if (main.holdingRegsLength) {
             main.pollHoldingRegsBlock(0, function (err) {
-                if (main.holdingRegsCyclicWrite.length) {
+                if (main.holdingRegsCyclicWrite.length && main.acp.maxBlock >= 2) {
                     main.writeCyclicHoldingRegs(0, callback);
                 } else {
                     callback(err);
@@ -1558,33 +1579,38 @@ var main = {
             callback(null);
         }
     },
+    writeCyclicHoldingReg: function (obj, callback) {
+        if (obj.native.len > 1) {
+            var buffer = new Buffer(obj.native.len * 2);
+            for (var b = 0; b < buffer.length; b++) {
+                buffer[b] = main.holdingRegs[(obj.native.address - main.holdingRegsLowAddress) * 2 + b];
+            }
+            modbusClient.request(modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS, obj.native.address, buffer, function (err, response) {
+                if (err) {
+                    adapter.log.error('Cannot write: ' + err);
+                }
+                callback(err);
+            });
+        } else {
+            var addr = (obj.native.address - main.holdingRegsLowAddress) * 2;
+            var val = (main.holdingRegs[addr] << 8) + main.holdingRegs[addr + 1];
+            modbusClient.request(modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER, obj.native.address, val, function (err, response) {
+                if (err) {
+                    adapter.log.error(err);
+                }
+                callback(err);
+            });
+        }
+    },
     writeCyclicHoldingRegs:      function (i, callback) {
         if (i >= main.holdingRegsCyclicWrite.length) {
             return callback(null);
         }
         var id = main.holdingRegsCyclicWrite[i];
 
-        if (objects[id].native.len > 1) {
-            var buffer = new Buffer(objects[id].native.len * 2);
-            for (var b = 0; b < buffer.length; b++) {
-                buffer[b] = main.holdingRegs[(objects[id].native.address - main.holdingRegsLowAddress) * 2 + b];
-            }
-            modbusClient.request(modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS, objects[id].native.address, buffer, function (err, response) {
-                if (err) {
-                    adapter.log.error('Cannot write: ' + err);
-                }
-                main.writeCyclicHoldingRegs(i + 1, callback);
-            });
-        } else {
-            var addr = (objects[id].native.address - main.holdingRegsLowAddress) * 2;
-            var val = (main.holdingRegs[addr] << 8) + main.holdingRegs[addr + 1];
-            modbusClient.request(modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER, objects[id].native.address, val, function (err, response) {
-                if (err) {
-                    adapter.log.error(err);
-                }
-                main.writeCyclicHoldingRegs(i + 1, callback);
-            });
-        }
+        main.writeCyclicHoldingReg(objects[id], function () {
+            main.writeCyclicHoldingRegs(i + 1, callback);
+        });
     },
 
     pollResult: function (startTime, err) {
