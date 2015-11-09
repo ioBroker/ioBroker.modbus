@@ -69,6 +69,9 @@ function prepareWrite(id, state) {
             objects[id].native.type === 'floatle'  || objects[id].native.type === 'floatbe' ||
             objects[id].native.type === 'doublele' || objects[id].native.type === 'doublebe';
     }
+    var val;
+    var buffer;
+    var b;
 
     if (main.acp.slave) {
         var t = typeof state.val;
@@ -85,7 +88,6 @@ function prepareWrite(id, state) {
                 main.coils[objects[id].native.address - main.coilsLowAddress] = parseInt(state.val, 10) ? 1 : 0;
             }
         } else if (objects[id].native.regType == 'inputRegs') {
-            var val;
             if (objects[id].native.type !== 'string') {
                 if (t === 'boolean') {
                     val = state.val ? 1 : 0;
@@ -99,12 +101,11 @@ function prepareWrite(id, state) {
             } else {
                 val = state.val;
             }
-            var buffer = writeValue(objects[id].native.type, val, objects[id].native.len);
-            for (var b = 0; b < buffer.length; b++) {
+            buffer = writeValue(objects[id].native.type, val, objects[id].native.len);
+            for (b = 0; b < buffer.length; b++) {
                 main.inputRegs[(objects[id].native.address - main.inputRegsLowAddress) * 2 + b] = buffer[b];
             }
         } else if (objects[id].native.regType == 'holdingRegs') {
-            var val;
             if (objects[id].native.type !== 'string') {
                 if (t === 'boolean') {
                     val = state.val ? 1 : 0;
@@ -118,8 +119,8 @@ function prepareWrite(id, state) {
             } else {
                 val = state.val;
             }
-            var buffer = writeValue(objects[id].native.type, val, objects[id].native.len);
-            for (var b = 0; b < buffer.length; b++) {
+            buffer = writeValue(objects[id].native.type, val, objects[id].native.len);
+            for (b = 0; b < buffer.length; b++) {
                 main.holdingRegs[(objects[id].native.address - main.holdingRegsLowAddress) * 2 + b] = buffer[b];
             }
         } else {
@@ -285,7 +286,10 @@ function syncEnums(enumGroup, id, newEnumName, callback) {
     }
 }
 
-function extractValue (type, len, buffer, offset) {
+function extractValue(type, len, buffer, offset) {
+    var i1;
+    var i2;
+
     switch (type) {
         case 'uint16be':
             return buffer.readUInt16BE(offset * 2);
@@ -308,21 +312,23 @@ function extractValue (type, len, buffer, offset) {
         case 'uint64le':
             return buffer.readUInt32LE(offset * 2) + buffer.readUInt32LE(offset * 2 + 4) * 0x100000000;
         case 'int64be':
-            var i1 = buffer.readInt32BE(offset * 2);
-            var i2 = buffer.readUInt32BE(offset * 2 + 4);
+            i1 = buffer.readInt32BE(offset * 2);
+            i2 = buffer.readUInt32BE(offset * 2 + 4);
             if (i1 >= 0) {
                 return i1 * 0x100000000 + i2; // <<32 does not work
             } else {
                 return i1 * 0x100000000 - i2; // I have no solution for that !
             }
+            break;
         case 'int64le':
-            var i2 = buffer.readUInt32LE(offset * 2);
-            var i1 = buffer.readInt32LE(offset * 2 + 4);
+            i2 = buffer.readUInt32LE(offset * 2);
+            i1 = buffer.readInt32LE(offset * 2 + 4);
             if (i1 >= 0) {
                 return i1 * 0x100000000 + i2; // <<32 does not work
             } else {
                 return i1 * 0x100000000 - i2; // I have no solution for that !
             }
+            break;
         case 'floatbe':
             return buffer.readFloatBE(offset * 2);
         case 'floatle':
@@ -334,7 +340,9 @@ function extractValue (type, len, buffer, offset) {
         case 'string':
             // find lenght
             var _len = 0;
-            while (buffer[offset * 2 + _len] && _len < len * 2) _len++;
+            while (buffer[offset * 2 + _len] && _len < len * 2) {
+                _len++;
+            }
 
             return buffer.toString('ascii', offset * 2, offset * 2 + _len);
         default:
@@ -343,7 +351,7 @@ function extractValue (type, len, buffer, offset) {
     }
 }
 
-function writeValue (type, value, len) {
+function writeValue(type, value, len) {
     var buffer;
     switch (type) {
         case 'uint16be':
@@ -541,7 +549,6 @@ var main = {
 
             var i;
             var address;
-            var len;
             var lastAddress = null;
             var blockStart;
             var startIndex;
@@ -654,7 +661,9 @@ var main = {
                     }
                     // try to detect next block
                     if ((address - lastAddress > 10 && main.ac.inputRegs[i].len < 10) || (lastAddress - blockStart >= main.acp.maxBlock)) {
-                        if (main.inputRegsBlocks.map(function (obj) {return obj.start;}).indexOf(blockStart) == -1) {
+                        if (main.inputRegsBlocks.map(function (obj) {
+                                return obj.start;
+                            }).indexOf(blockStart) == -1) {
                             main.inputRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
                         }
                         blockStart  = address;
@@ -662,7 +671,9 @@ var main = {
                     }
                     lastAddress = address + main.ac.inputRegs[i].len;
                 }
-                if (main.inputRegsBlocks.map(function (obj) {return obj.start;}).indexOf(blockStart) == -1) {
+                if (main.inputRegsBlocks.map(function (obj) {
+                        return obj.start;
+                    }).indexOf(blockStart) == -1) {
                     main.inputRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
                 }
                 if (main.ac.inputRegs.length) {
@@ -729,7 +740,9 @@ var main = {
                     }
                     // try to detect next block
                     if ((address - lastAddress > 10 && main.ac.holdingRegs[i].len < 10) || (lastAddress - blockStart >= main.acp.maxBlock)) {
-                        if (main.holdingRegsBlocks.map(function (obj) {return obj.start;}).indexOf(blockStart) == -1) {
+                        if (main.holdingRegsBlocks.map(function (obj) {
+                                return obj.start;
+                            }).indexOf(blockStart) == -1) {
                             main.holdingRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
                         }
                         blockStart  = address;
@@ -737,7 +750,9 @@ var main = {
                     }
                     lastAddress = address + main.ac.holdingRegs[i].len;
                 }
-                if (main.holdingRegsBlocks.map(function (obj) {return obj.start;}).indexOf(blockStart) == -1) {
+                if (main.holdingRegsBlocks.map(function (obj) {
+                        return obj.start;
+                    }).indexOf(blockStart) == -1) {
                     main.holdingRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
                 }
 
@@ -1063,8 +1078,6 @@ var main = {
             adapter.setState('info.connection', 0, true);
 
             // clear unused states
-            var l = main.oldObjects.length;
-
             function clear() {
                 for (var id in main.oldObjects) {
                     if (main.newObjects.indexOf(id) == -1) {
@@ -1156,7 +1169,7 @@ var main = {
                 return put.buffer();
             };
             Server.REQUESTS[modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS] = function (bufferlist) {
-                var binary = Binary(bufferlist);
+                var binary = new Binary(bufferlist);
                 var startAddress = binary.getWord16be('startAddress').end().vars.startAddress;
                 var quantity = binary.getWord16be('quantity').end().vars.quantity;
                 var bytes = binary.getWord8('bytes').end().vars.bytes;
@@ -1321,8 +1334,8 @@ var main = {
                             val = Math.round(val * main.acp.round) / main.acp.round;
                         }
                         adapter.setState(main.holdingRegsMapping[a], val, true);
-                        for (var i = 0; i < native.len * 2; i++) {
-                            main.holdingRegs[a * 2 + i] = request[i];
+                        for (var k = 0; k < native.len * 2; k++) {
+                            main.holdingRegs[a * 2 + k] = request[k];
                         }
                         i += native.len;
                     } else {
@@ -1417,12 +1430,12 @@ var main = {
                 return {};
             };
             // override request
-            Client.prototype.request = function() {
+            Client.prototype.request = function () {
                 var req = new modbus.ModbusRequestStack(this);
                 req.unitIdentifier  = main.acp.deviceId;
                 req.request.apply(req, arguments);
                 return req;
-            }
+            };
             modbusClient = Client.createClient(main.acp.port, main.acp.bind);
 
             modbusClient.on('connect', function () {
@@ -1551,9 +1564,9 @@ var main = {
                 callback(err);
             } else {
                 if (buffer.length) {
-	                for (var n = main.holdingRegsBlocks[block].startIndex; n < main.holdingRegsBlocks[block].endIndex; n++) {
-    	                var id = main.holdingRegs[n].id;
-        	            var val = extractValue(main.holdingRegs[n].type, main.holdingRegs[n].len, buffer, main.holdingRegs[n].address - main.holdingRegsBlocks[block].start);
+                    for (var n = main.holdingRegsBlocks[block].startIndex; n < main.holdingRegsBlocks[block].endIndex; n++) {
+                        var id = main.holdingRegs[n].id;
+                        var val = extractValue(main.holdingRegs[n].type, main.holdingRegs[n].len, buffer, main.holdingRegs[n].address - main.holdingRegsBlocks[block].start);
                         if (main.holdingRegs[n].type !== 'string') {
                             val = val * main.holdingRegs[n].factor + main.holdingRegs[n].offset;
                             val = Math.round(val * main.acp.round) / main.acp.round;
@@ -1563,7 +1576,7 @@ var main = {
                             ackObjects[id] = {val: val};
                             adapter.setState(id, val, true);
                         }
- 	               }
+                    }
                 } else {
                     adapter.log.warn('Null buffer length READ_HOLDING_REGISTERS for register ' + main.holdingRegsBlocks[block].start);
                 }
