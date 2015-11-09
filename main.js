@@ -1021,7 +1021,7 @@ var main = {
                 });
             }
 
-            adapter.setObject("info", {
+            adapter.setObject('info', {
                 type: 'channel',
                 common: {
                     name:    "info"
@@ -1050,7 +1050,7 @@ var main = {
                 type: 'state',
                 common: {
                     name:  'Number of connected partners',
-                    role:  'indicator.connection',
+                    role:  'indicator.connected',
                     write: false,
                     read:  true,
                     def:   0,
@@ -1491,6 +1491,11 @@ var main = {
         if (block >= main.inputRegsBlocks.length) {
             return callback(null);
         }
+
+        if (main.inputRegsBlocks[block].startIndex == main.inputRegsBlocks[block].endIndex) {
+            main.inputRegsBlocks[block].endIndex++;
+        }
+
         modbusClient.request(
             modbus.FUNCTION_CODES.READ_INPUT_REGISTERS,
             main.inputRegsBlocks[block].start,
@@ -1498,7 +1503,7 @@ var main = {
             function (err, buffer) {
                 if (err) {
                     callback(err);
-                } else {
+                } else if (buffer.length) {
                     for (var n = main.inputRegsBlocks[block].startIndex; n < main.inputRegsBlocks[block].endIndex; n++) {
                         var id = main.inputRegs[n].id;
                         var val = extractValue(main.inputRegs[n].type, main.inputRegs[n].len, buffer, main.inputRegs[n].address - main.inputRegsBlocks[block].start);
@@ -1514,6 +1519,8 @@ var main = {
                     setTimeout(function () {
                         main.pollInputRegsBlock(block + 1, callback);
                     }, 0);
+                } else {
+                    adapter.log.warn('Null buffer length READ_INPUT_REGISTERS for register ' + main.inputRegsBlocks[block].start);
                 }
             }
         );
@@ -1531,6 +1538,11 @@ var main = {
         if (block >= main.holdingRegsBlocks.length) {
             return callback(null);
         }
+
+        if (main.holdingRegsBlocks[block].startIndex == main.holdingRegsBlocks[block].endIndex) {
+            main.holdingRegsBlocks[block].endIndex++;
+        }
+
         modbusClient.request(modbus.FUNCTION_CODES.READ_HOLDING_REGISTERS,
             main.holdingRegsBlocks[block].start,
             main.holdingRegsBlocks[block].count,
@@ -1538,20 +1550,23 @@ var main = {
             if (err) {
                 callback(err);
             } else {
-                for (var n = main.holdingRegsBlocks[block].startIndex; n < main.holdingRegsBlocks[block].endIndex; n++) {
-                    var id = main.holdingRegs[n].id;
-                    var val = extractValue(main.holdingRegs[n].type, main.holdingRegs[n].len, buffer, main.holdingRegs[n].address - main.holdingRegsBlocks[block].start);
-                    if (main.holdingRegs[n].type !== 'string') {
-                        val = val * main.holdingRegs[n].factor + main.holdingRegs[n].offset;
-                        val = Math.round(val * main.acp.round) / main.acp.round;
-                    }
+                if (buffer.length) {
+	                for (var n = main.holdingRegsBlocks[block].startIndex; n < main.holdingRegsBlocks[block].endIndex; n++) {
+    	                var id = main.holdingRegs[n].id;
+        	            var val = extractValue(main.holdingRegs[n].type, main.holdingRegs[n].len, buffer, main.holdingRegs[n].address - main.holdingRegsBlocks[block].start);
+                        if (main.holdingRegs[n].type !== 'string') {
+                            val = val * main.holdingRegs[n].factor + main.holdingRegs[n].offset;
+                            val = Math.round(val * main.acp.round) / main.acp.round;
+                        }
 
-                    if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
-                        ackObjects[id] = {val: val};
-                        adapter.setState(id, val, true);
-                    }
+                        if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
+                            ackObjects[id] = {val: val};
+                            adapter.setState(id, val, true);
+                        }
+ 	               }
+                } else {
+                    adapter.log.warn('Null buffer length READ_HOLDING_REGISTERS for register ' + main.holdingRegsBlocks[block].start);
                 }
-
                 // special case
                 if (main.acp.maxBlock < 2 && main.holdingRegs[main.holdingRegsBlocks[block].startIndex].cw) {
                     // write immediately the current value
@@ -1580,7 +1595,7 @@ var main = {
         }
     },
     writeCyclicHoldingReg: function (obj, callback) {
-        if (obj.native.len > 1) {
+        if (1 || obj.native.len > 1) {
             var buffer = new Buffer(obj.native.len * 2);
             for (var b = 0; b < buffer.length; b++) {
                 buffer[b] = main.holdingRegs[(obj.native.address - main.holdingRegsLowAddress) * 2 + b];

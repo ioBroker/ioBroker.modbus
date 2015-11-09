@@ -44,6 +44,9 @@ Some systems require first write request to deliver the data on read request.
 You can force this mode by setting of the  "Max read request length" to 1.
 
 # Changelog
+# 0.3.8 (2015-11-09) 
+* (bluefox) Use always write_multiple_registers by write of holding registers.
+
 # 0.3.7 (2015-11-02) 
 * (bluefox) add special read/write mode if "Max read request length" is 1.
 
