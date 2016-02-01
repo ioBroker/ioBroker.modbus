@@ -1,7 +1,7 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.3.9",
+    "version":      "0.3.10",
     "title":        "ModBus Adapter",
     "desc": {
       "en":         "ModBus connection Slave or Master",

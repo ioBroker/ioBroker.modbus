@@ -1,6 +1,6 @@
 {
   "name": "iobroker.modbus",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "description": "Connect devices oder Modbus protocol to ioBroker",
   "author": {
     "name": "bluefox",
@@ -32,11 +32,7 @@
       "grunt-replace": "^0.9.3",
       "grunt-contrib-jshint": "^0.11.2",
       "grunt-jscs": "^2.0.0",
-      "grunt-http": "^1.6.0",
-      "grunt-contrib-clean": "^0.6.0",
-      "grunt-contrib-compress": "^0.13.0",
-      "grunt-contrib-copy": "^0.8.0",
-      "grunt-exec": "^0.4.6"
+      "grunt-http": "^1.6.0"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.modbus/issues"

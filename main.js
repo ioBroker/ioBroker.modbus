@@ -514,7 +514,6 @@ var main = {
     holdingRegsBlocks:      [],
     holdingRegsCyclicWrite: [],
 
-    history:     "",
     unit:        "",
     errorCount: 0,
 
@@ -822,8 +821,7 @@ var main = {
                         type:    'boolean',
                         read:    true,
                         write:   false,
-                        def:     false,
-                        history: main.history
+                        def:     false
                     },
                     native: {
                         regType:  'disInputs',
@@ -848,8 +846,7 @@ var main = {
                         type:    'boolean',
                         read:    true,
                         write:   true,
-                        def:     false,
-                        history: main.history
+                        def:     false
                     },
                     native: {
                         regType:   'coils',
@@ -875,8 +872,7 @@ var main = {
                         write:   false,
                         def:     0,
                         role:    main.ac.inputRegs[i].role,
-                        unit:    main.ac.inputRegs[i].unit || '',
-                        history: main.history
+                        unit:    main.ac.inputRegs[i].unit || ''
                     },
                     native: {
                         regType:  'inputRegs',
@@ -906,8 +902,7 @@ var main = {
                         write:   true,
                         def:     0,
                         role:    main.ac.holdingRegs[i].role,
-                        unit:    main.ac.holdingRegs[i].unit || '',
-                        history: main.history
+                        unit:    main.ac.holdingRegs[i].unit || ''
                     },
                     native: {
                         regType:   'holdingRegs',

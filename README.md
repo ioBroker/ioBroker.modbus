@@ -1,5 +1,10 @@
 ![Logo](admin/modbus.png)
 ## iobroker.modbus
+=====================
+[![NPM version](http://img.shields.io/npm/v/iobroker.modbus.svg)](https://www.npmjs.com/package/iobroker.modbus)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.modbus.svg)](https://www.npmjs.com/package/iobroker.modbus)
+
+[![NPM](https://nodei.co/npm/iobroker.modbus.png?downloads=true)](https://nodei.co/npm/iobroker.modbus/)
 
 Implementation of ModBus Slave and Master for ioBroker. Actually only Modbus over TCP is supported.
 
@@ -43,7 +48,11 @@ Maximal length of command READ_MULTIPLE_REGISTERS as number of registers to read
 Some systems require first "write request" to deliver the data on "read request".
 You can force this mode by setting of the "Max read request length" to 1.
 
-# Changelog
+## Changelog
+
+# 0.3.10 (2016-02-01) 
+* (bluefox) fix lost of history settings.
+
 # 0.3.9 (2015-11-09) 
 * (bluefox) Use always write_multiple_registers by write of holding registers.
 
