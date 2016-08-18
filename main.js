@@ -1373,7 +1373,7 @@ var main = {
                         rtn[i * 16 + (7 - b)] = (((val1 >> b) & 1) ? true : false);
                     }
                     val1 = val >> 8;
-                    for (b = 0; b < 7; b++) {
+                    for (b = 0; b < 8; b++) {
                         rtn[i * 16 + 15 - b] = (((val1 >> b) & 1) ? true : false);
                     }
                 }
