@@ -1,7 +1,14 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.3.10",
+    "version":      "0.3.11",
+	"news": {
+		"0.3.11": {
+		  "en": "Fix wrong byte count in loop",
+		  "de": "Fix wrong byte count in loop",
+		  "ru": "Fix wrong byte count in loop"
+		}
+	},
     "title":        "ModBus Adapter",
     "desc": {
       "en":         "ModBus connection Slave or Master",

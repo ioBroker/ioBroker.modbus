@@ -49,6 +49,8 @@ Some systems require first "write request" to deliver the data on "read request"
 You can force this mode by setting of the "Max read request length" to 1.
 
 ## Changelog
+# 0.3.11 (2016-08-18) 
+* (Apollon77) Fix wrong byte count in loop
 
 # 0.3.10 (2016-02-01) 
 * (bluefox) fix lost of history settings.
