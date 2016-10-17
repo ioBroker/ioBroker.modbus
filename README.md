@@ -49,6 +49,9 @@ Some systems require first "write request" to deliver the data on "read request"
 You can force this mode by setting of the "Max read request length" to 1.
 
 ## Changelog
+# 0.4.0 (2016-08-18) 
+* (bluefox) Support of ModBus RTU over serial
+
 # 0.3.11 (2016-08-18) 
 * (Apollon77) Fix wrong byte count in loop
 

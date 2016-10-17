@@ -1,6 +1,6 @@
 {
   "name": "iobroker.modbus",
-  "version": "0.3.11",
+  "version": "0.4.0",
   "description": "Connect devices oder Modbus protocol to ioBroker",
   "author": {
     "name": "bluefox",
@@ -24,8 +24,16 @@
     "type": "git",
     "url": "https://github.com/ioBroker/ioBroker.modbus"
   },
+  "optionalDependencies": {
+    "serialport": "^2.1.2"
+  },
   "dependencies": {
-    "modbus-stack": "https://github.com/TooTallNate/node-modbus-stack/tarball/master"
+    "jsmodbus": "^1.2.4",
+    "stampit": "^2.1.2",
+    "put": "0.0.6",
+    "stampit-state-machine": "^0.2.1",
+    "stampit-event-bus": "^0.1.1",
+    "stampit-log": "^0.3.0"
   },
   "devDependencies": {
       "grunt": "^0.4.5",

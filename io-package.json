@@ -1,8 +1,13 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.3.11",
+    "version":      "0.4.0",
 	"news": {
+        "0.4.0": {
+          "en": "Support of ModBus RTU",
+          "de": "Unterstützung von ModBus RTU",
+          "ru": "Поддержка ModBus RTU"
+        },
 		"0.3.11": {
 		  "en": "Fix wrong byte count in loop",
 		  "de": "Fix wrong byte count in loop",
@@ -22,38 +27,67 @@
     "platform":     "Javascript/Node.js",
     "mode":         "daemon",
     "loglevel":     "info",
+    "messagebox":   true,
     "icon":         "modbus.png",
     "keywords": [
       "ModBus"
     ],
-    "enabled":      false,
+    "enabled":      true,
     "extIcon":      "https://raw.githubusercontent.com/ioBroker/ioBroker.modbus/master/admin/modbus.png",
     "readme":       "https://github.com/ioBroker/ioBroker.modbus/blob/master/README.md",
     "type":         "communication",
     "config":{
       "minWidth":   1024,
-      "width ":     1224
+      "width":      1224,
+      "height":     600
     }
   },
   "native": {
     "params": {
-      "bind":       "192.168.0.1",
-      "port":       502,
-      "deviceId":   1,
-      "slave":      0,
-      "poll":       1000,
-      "recon":      60000,
-      "pulsetime":  1000,
+      "type":               "tcp",
+      "bind":               "127.0.0.1",
+      "port":               502,
+      "comName":            "",
+      "baudRate":           115200,
+      "deviceId":           1,
+      "slave":              0,
+      "poll":               1000,
+      "recon":              60000,
+      "pulsetime":          1000,
       "disInputsOffset":    10001,
       "coilsOffset":        1,
       "inputRegsOffset":    30001,
       "holdingRegsOffset":  40001,
-      "showAliases": true,
-      "round":       2
+      "showAliases":        true,
+      "directAddresses":    false,
+      "round":              2
     },
     "disInputs":    [],
     "coils":        [],
     "inputRegs":    [],
     "holdingRegs":  []
-  }
+  },
+  "instanceObjects": [
+    {
+      "_id":  "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id":  "info.connection",
+      "type": "state",
+      "common": {
+        "role":  "indicator.connected",
+        "name":  "If master connected",
+        "type":  "boolean",
+        "read":  true,
+        "write": false,
+        "def":   false
+      },
+      "native": {}
+    }
+  ]
 }

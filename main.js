@@ -1,41 +1,72 @@
 /* jshint -W097 */// jshint strict:false
 /* jslint node: true */
 
-"use strict";
+'use strict';
 
 var utils         = require(__dirname + '/lib/utils');
-var modbus        = require('modbus-stack');
+var modbus        = require('jsmodbus');
 var adapter       = utils.adapter('modbus');
-var Binary        = require(__dirname + '/node_modules/modbus-stack/node_modules/bufferlist/binary').Binary;
-var Put           = require(__dirname + '/node_modules/modbus-stack/node_modules/put');
 var modbusClient  = null; //Master
 var modbusServer  = null; //Slave
-var connected     = 0;
+var connected     = false;
 var connectTimer  = null;
+var serialport    = null;
 
 var nextPoll;
 var ackObjects    = {};
+var isStop        = false;
 
-process.on('SIGINT', function () {
-    if (adapter && adapter.setState) {
-        if (modbusClient) {
-            modbusClient.destroy();
-        }
-        if (modbusServer) {
-            modbusServer.close();
-        }
-        adapter.setState('info.connection', 0, true);
-    }
-    if (nextPoll)  {
-        clearTimeout(nextPoll);
-    }
-});
+process.on('SIGINT', stop);
 
 adapter.on('ready', function () {
-    adapter.setState('info.connection', 0, true);
+    try {
+        serialport = require('serialport');
+    } catch (err) {
+        adapter.log.warn('Serial is not available');
+    }
+
+    adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
     main.main();
 });
 
+adapter.on('message', function (obj) {
+    if (obj) {
+        switch (obj.command) {
+            case 'listUart':
+                if (obj.callback) {
+                    if (serialport) {
+                        // read all found serial ports
+                        serialport.list(function (err, ports) {
+                            adapter.log.info('List of port: ' + JSON.stringify(ports));
+                            adapter.sendTo(obj.from, obj.command, ports, obj.callback);
+                        });
+                    } else {
+                        adapter.log.warn('Module serialport is not available');
+                        adapter.sendTo(obj.from, obj.command, [{comName: 'Not available'}], obj.callback);
+                    }
+                }
+                break;
+        }
+    }
+});
+
+adapter.on('unload', function (callback) {
+    stop(callback);
+});
+
+function stop(callback) {
+    isStop = true;
+    if (adapter && adapter.setState) {
+        if (modbusClient) modbusClient.close();
+        if (modbusServer) modbusServer.close();
+
+        if (adapter.config && adapter.config.params) {
+            adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
+        }
+    }
+    if (nextPoll)  clearTimeout(nextPoll);
+    if (callback) callback();
+}
 var pulseList  = {};
 var sendBuffer = {};
 var objects    = {};
@@ -60,7 +91,7 @@ adapter.on('stateChange', function (id, state) {
 function writeHelper(id, state) {
     sendBuffer[id] = state.val;
 
-    if (Object.keys(sendBuffer).length == 1) send();
+    if (Object.keys(sendBuffer).length === 1) send();
 }
 
 function prepareWrite(id, state) {
@@ -75,19 +106,22 @@ function prepareWrite(id, state) {
 
     if (main.acp.slave) {
         var t = typeof state.val;
-        if (objects[id].native.regType == 'disInputs') {
+        if (objects[id].native.regType === 'disInputs') {
+            main.disInputsChanged = true;
             if (t === 'boolean' || t === 'number') {
                 main.disInputs[objects[id].native.address - main.disInputsLowAddress] = state.val ? 1 : 0;
             } else {
                 main.disInputs[objects[id].native.address - main.disInputsLowAddress] = parseInt(state.val, 10) ? 1 : 0;
             }
-        } else if (objects[id].native.regType == 'coils') {
+        } else if (objects[id].native.regType === 'coils') {
+            main.coilsChanged = true;
             if (t === 'boolean' || t === 'number') {
                 main.coils[objects[id].native.address - main.coilsLowAddress] = state.val ? 1 : 0;
             } else {
                 main.coils[objects[id].native.address - main.coilsLowAddress] = parseInt(state.val, 10) ? 1 : 0;
             }
-        } else if (objects[id].native.regType == 'inputRegs') {
+        } else if (objects[id].native.regType === 'inputRegs') {
+            main.inputRegsChanged = true;
             if (objects[id].native.type !== 'string') {
                 if (t === 'boolean') {
                     val = state.val ? 1 : 0;
@@ -105,7 +139,8 @@ function prepareWrite(id, state) {
             for (b = 0; b < buffer.length; b++) {
                 main.inputRegs[(objects[id].native.address - main.inputRegsLowAddress) * 2 + b] = buffer[b];
             }
-        } else if (objects[id].native.regType == 'holdingRegs') {
+        } else if (objects[id].native.regType === 'holdingRegs') {
+            main.holdingRegsChanged = true;
             if (objects[id].native.type !== 'string') {
                 if (t === 'boolean') {
                     val = state.val ? 1 : 0;
@@ -127,10 +162,9 @@ function prepareWrite(id, state) {
             adapter.log.error('Unknown state "' + id + '" type: ' + objects[id].native.regType);
         }
     } else {
-        if (objects[id].native.regType == 'coils' || objects[id].native.regType == 'holdingRegs') {
+        if (objects[id].native.regType === 'coils' || objects[id].native.regType === 'holdingRegs') {
 
             if (!objects[id].native.wp) {
-
                 writeHelper(id, state);
                 setTimeout(function () {
                     var _id = id.substring(adapter.namespace.length + 1);
@@ -152,7 +186,7 @@ function prepareWrite(id, state) {
                             delete pulseList[id];
                         }, main.acp.poll * 1.5);
 
-                    }, adapter.config.params.pulsetime);
+                    }, main.acp.pulsetime);
 
                     writeHelper(id, state);
                 }
@@ -166,27 +200,23 @@ function prepareWrite(id, state) {
     }
 }
 
-
-
 function send() {
     var id = Object.keys(sendBuffer)[0];
 
     var type = objects[id].native.regType;
     var val  = sendBuffer[id];
 
-    if (type == 'coils') {
+    if (type === 'coils') {
         if (val === 'true'  || val === true)  val = 1;
         if (val === 'false' || val === false) val = 0;
         val = parseFloat(val);
 
-        modbusClient.request(modbus.FUNCTION_CODES.WRITE_SINGLE_COIL, objects[id].native.address, val ? true : false, function (err, response) {
-            if (err) {
-                adapter.log.error(err);
-            } else {
-                adapter.log.debug('Write successfully [' + objects[id].native.address + ': ' + val);
-            }
+        modbusClient.writeSingleCoil(objects[id].native.address, val ? true : false).then(function (response) {
+            adapter.log.debug('Write successfully [' + objects[id].native.address + ']: ' + val);
+        }).fail(function (err) {
+            adapter.log.error('Cannot write [' + objects[id].native.address + ']: ' + err);
         });
-    } else if (type == 'holdingRegs') {
+    } else if (type === 'holdingRegs') {
         if (objects[id].native.float === undefined) {
             objects[id].native.float =
                 objects[id].native.type === 'floatle'  || objects[id].native.type === 'floatbe' ||
@@ -200,20 +230,16 @@ function send() {
         }
         if (objects[id].native.len > 1) {
             var buffer = writeValue(objects[id].native.type, val, objects[id].native.len);
-            modbusClient.request(modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS, objects[id].native.address, buffer, function (err, response) {
-                if (err) {
-                    adapter.log.error('Cannot write: ' + err);
-                } else {
-                    adapter.log.debug('Write successfully [' + objects[id].native.address + ': ' + val);
-                }
+            modbusClient.writeMultipleRegisters(objects[id].native.address, buffer, function (err, response) {
+                adapter.log.debug('Write successfully [' + objects[id].native.address + ']: ' + val);
+            }).fail(function (err) {
+                adapter.log.error('Cannot write [' + objects[id].native.address + ']: ' + err);
             });
         } else {
-            modbusClient.request(modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER, objects[id].native.address, val, function (err, response) {
-                if (err) {
-                    adapter.log.error(err);
-                } else {
-                    adapter.log.debug('Write successfully [' + objects[id].native.address + ': ' + val);
-                }
+            modbusClient.writeSingleRegister(objects[id].native.address, val).then(function (response) {
+                adapter.log.debug('Write successfully [' + objects[id].native.address + ': ' + val);
+            }).fail(function (err) {
+                adapter.log.error('Cannot write [' + objects[id].native.address + ']: ' + err);
             });
         }
     }
@@ -228,7 +254,7 @@ function addToEnum(enumName, id, callback) {
     adapter.getForeignObject(enumName, function (err, obj) {
         if (!err && obj) {
             var pos = obj.common.members.indexOf(id);
-            if (pos == -1) {
+            if (pos === -1) {
                 obj.common.members.push(id);
                 adapter.setForeignObject(obj._id, obj, function (err) {
                     if (callback) callback(err);
@@ -246,7 +272,7 @@ function removeFromEnum(enumName, id, callback) {
     adapter.getForeignObject(enumName, function (err, obj) {
         if (!err && obj) {
             var pos = obj.common.members.indexOf(id);
-            if (pos != -1) {
+            if (pos !== -1) {
                 obj.common.members.splice(pos, 1);
                 adapter.setForeignObject(obj._id, obj, function (err) {
                     if (callback) callback(err);
@@ -273,8 +299,8 @@ function syncEnums(enumGroup, id, newEnumName, callback) {
     for (var e in enums[enumGroup]) {
         if (enums[enumGroup][e].common &&
             enums[enumGroup][e].common.members &&
-            enums[enumGroup][e].common.members.indexOf(id) != -1) {
-            if (enums[enumGroup][e]._id != newEnumName) {
+            enums[enumGroup][e].common.members.indexOf(id) !== -1) {
+            if (enums[enumGroup][e]._id !== newEnumName) {
                 removeFromEnum(enums[enumGroup][e]._id, id);
             } else {
                 found = true;
@@ -434,7 +460,6 @@ function writeValue(type, value, len) {
     return buffer;
 }
 
-
 var type_items_len = {
     'uint16be':   1,
     'uint16le':   1,
@@ -475,11 +500,32 @@ var _rmap = {
     14: 1,
     15: 0
 };
+var _dmap = {
+    0: 0,
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
+    7: 7,
+    8: 8,
+    9: 9,
+    10: 10,
+    11: 11,
+    12: 12,
+    13: 13,
+    14: 14,
+    15: 15
+};
+function address2alias(id, address, isDirect) {
+    if (typeof address                 === 'string') address                 = parseInt(address, 10);
+    if (typeof main.acp[id + 'Offset'] === 'string') main.acp[id + 'Offset'] = parseInt(main.acp[id + 'Offset'], 10);
 
-function address2alias(id, address) {
-    if (id == 'disInputs' || id == 'coils') {
+    if (id === 'disInputs' || id === 'coils') {
+        address = Math.floor(address / 16) * 16 + (isDirect ? _dmap[address % 16] : _rmap[address % 16]);
         address += main.acp[id + 'Offset'];
-        return Math.floor(address / 16) * 16 + _rmap[address % 16];
+        return address;
     } else {
         return address + main.acp[id + 'Offset'];
     }
@@ -514,18 +560,18 @@ var main = {
     holdingRegsBlocks:      [],
     holdingRegsCyclicWrite: [],
 
-    unit:        "",
-    errorCount: 0,
+    unit:                   '',
+    errorCount:             0,
 
     main: function () {
-        main.ac           = adapter.config;
-        main.acp          = adapter.config.params;
-        main.acp.poll     = parseInt(main.acp.poll,  10) || 1000; // default is 1 second
-        main.acp.recon    = parseInt(main.acp.recon, 10) || 60000;
-        main.acp.port     = parseInt(main.acp.port,  10) || 502;
-        main.acp.slave    = parseInt(main.acp.slave, 10) || 0;
-        main.acp.round    = parseInt(main.acp.round, 10) || 0;
-        main.acp.deviceId = (main.acp.deviceId === undefined || main.acp.deviceId === null) ? 1 : (parseInt(main.acp.deviceId, 10) || 0);
+        main.ac                    = adapter.config;
+        main.acp                   = adapter.config.params;
+        main.acp.poll              = parseInt(main.acp.poll,  10) || 1000; // default is 1 second
+        main.acp.recon             = parseInt(main.acp.recon, 10) || 60000;
+        main.acp.port              = parseInt(main.acp.port,  10) || 502;
+        main.acp.slave             = parseInt(main.acp.slave, 10) || 0;
+        main.acp.round             = parseInt(main.acp.round, 10) || 0;
+        main.acp.deviceId          = (main.acp.deviceId === undefined || main.acp.deviceId === null) ? 1 : (parseInt(main.acp.deviceId, 10) || 0);
         main.acp.disInputsOffset   = parseInt(main.acp.disInputsOffset,   10) || 10001;
         main.acp.coilsOffset       = parseInt(main.acp.coilsOffset,       10) || 1;
         main.acp.inputRegsOffset   = parseInt(main.acp.inputRegsOffset,   10) || 30001;
@@ -562,7 +608,7 @@ var main = {
                     }
                     main.ac.disInputs[i].id = 'discreteInputs.';
                     if (main.acp.showAliases) {
-                        main.ac.disInputs[i].id += address2alias('disInputs', address);
+                        main.ac.disInputs[i].id += address2alias('disInputs', address, main.acp.directAddresses);
                     } else {
                         main.ac.disInputs[i].id += address;
                     }
@@ -593,7 +639,7 @@ var main = {
 
                     main.ac.coils[i].id = 'coils.';
                     if (main.acp.showAliases) {
-                        main.ac.coils[i].id += address2alias('coils', address);
+                        main.ac.coils[i].id += address2alias('coils', address, main.acp.directAddresses);
                     } else {
                         main.ac.coils[i].id += address;
                     }
@@ -640,7 +686,7 @@ var main = {
 
                     main.ac.inputRegs[i].id = 'inputRegisters.';
                     if (main.acp.showAliases) {
-                        main.ac.inputRegs[i].id += address2alias('inputRegs', address);
+                        main.ac.inputRegs[i].id += address2alias('inputRegs', address, main.acp.directAddresses);
                     } else {
                         main.ac.inputRegs[i].id += address;
                     }
@@ -662,7 +708,7 @@ var main = {
                     if ((address - lastAddress > 10 && main.ac.inputRegs[i].len < 10) || (lastAddress - blockStart >= main.acp.maxBlock)) {
                         if (main.inputRegsBlocks.map(function (obj) {
                                 return obj.start;
-                            }).indexOf(blockStart) == -1) {
+                            }).indexOf(blockStart) === -1) {
                             main.inputRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
                         }
                         blockStart  = address;
@@ -672,7 +718,7 @@ var main = {
                 }
                 if (main.inputRegsBlocks.map(function (obj) {
                         return obj.start;
-                    }).indexOf(blockStart) == -1) {
+                    }).indexOf(blockStart) === -1) {
                     main.inputRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
                 }
                 if (main.ac.inputRegs.length) {
@@ -710,7 +756,7 @@ var main = {
 
                     main.ac.holdingRegs[i].id = 'holdingRegisters.';
                     if (main.acp.showAliases) {
-                        main.ac.holdingRegs[i].id += address2alias('holdingRegs', address);
+                        main.ac.holdingRegs[i].id += address2alias('holdingRegs', address, main.acp.directAddresses);
                     } else {
                         main.ac.holdingRegs[i].id += address;
                     }
@@ -741,7 +787,7 @@ var main = {
                     if ((address - lastAddress > 10 && main.ac.holdingRegs[i].len < 10) || (lastAddress - blockStart >= main.acp.maxBlock)) {
                         if (main.holdingRegsBlocks.map(function (obj) {
                                 return obj.start;
-                            }).indexOf(blockStart) == -1) {
+                            }).indexOf(blockStart) === -1) {
                             main.holdingRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
                         }
                         blockStart  = address;
@@ -751,7 +797,7 @@ var main = {
                 }
                 if (main.holdingRegsBlocks.map(function (obj) {
                         return obj.start;
-                    }).indexOf(blockStart) == -1) {
+                    }).indexOf(blockStart) === -1) {
                     main.holdingRegsBlocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
                 }
 
@@ -1034,7 +1080,7 @@ var main = {
             adapter.setObject('info', {
                 type: 'channel',
                 common: {
-                    name:    "info"
+                    name:    'info'
                 },
                 native: {}
             });
@@ -1043,7 +1089,7 @@ var main = {
                 adapter.setObject('info.pollTime', {
                     type: 'state',
                     common: {
-                        name: "Poll time",
+                        name: 'Poll time',
                         type: 'number',
                         role: '',
                         write: false,
@@ -1053,29 +1099,42 @@ var main = {
                     },
                     native: {}
                 });
-                main.newObjects.push(adapter.namespace + ".info.pollTime");
+                main.newObjects.push(adapter.namespace + '.info.pollTime');
             }
 
-            adapter.setObject('info.connection', {
-                type: 'state',
-                common: {
-                    name:  'Number of connected partners',
-                    role:  'indicator.connected',
-                    write: false,
-                    read:  true,
-                    def:   0,
-                    type:  'number'
-                },
-                native: {}
+            adapter.getObject('info.connection', function (err, obj) {
+                if (!obj) {
+                    obj = {
+                        type: 'state',
+                        common: {
+                            name:  'Number of connected partners',
+                            role:  'indicator.connected',
+                            write: false,
+                            read:  true,
+                            type:  main.acp.slave ? 'number' : 'boolean'
+                        },
+                        native: {}
+                    };
+                    adapter.setObject('info.connection', obj);
+                } else if (main.acp.slave && obj.common.type !== 'number') {
+                    obj.common.type = 'number';
+                    obj.common.name = 'Number of connected masters';
+                    adapter.setObject('info.connection', obj);
+                } else if (!main.acp.slave && obj.common.type !== 'boolean') {
+                    obj.common.type = 'boolean';
+                    obj.common.name = 'If master connected';
+                    adapter.setObject('info.connection', obj);
+                }
             });
+
             main.newObjects.push(adapter.namespace + '.info.connection');
 
-            adapter.setState('info.connection', 0, true);
+            adapter.setState('info.connection', main.acp.slave ? 0 : false, true);
 
             // clear unused states
             function clear() {
                 for (var id in main.oldObjects) {
-                    if (main.newObjects.indexOf(id) == -1) {
+                    if (main.newObjects.indexOf(id) === -1) {
                         adapter.delObject(id, function () {
 
                         });
@@ -1092,11 +1151,20 @@ var main = {
         });
     },
 
+    getListOfClients: function (clients) {
+        var list = [];
+        for (var c = 0; c < clients.length; c++) {
+            var address = clients[c].address().address;
+            if (address) list.push(address);
+        }
+        return list.join(',');
+    },
+
     reconnect: function () {
         if (connected) {
             adapter.log.info('Disconnected from slave ' + main.acp.bind);
-            connected = 0;
-            adapter.setState('info.connection', 0, true);
+            connected = false;
+            adapter.setState('info.connection', main.acp.slave ? 0 : false, true);
         }
         if (!connectTimer) {
             connectTimer = setTimeout(function () {
@@ -1106,15 +1174,10 @@ var main = {
         }
     },
     start: function () {
-
         if (main.acp.slave) {
             var handlers = {};
-
-            // read all states first time
-            var Server = require('modbus-stack/server');
-
             // override on connect
-            Server.prototype._setupConn = function (socket) {
+            /*Server.prototype._setupConn = function (socket) {
                 var self = this;
                 modbus.ModbusRequestStack.prototype.unitIdentifier  = main.acp.deviceId;
                 var response = new modbus.ModbusResponseStack(socket);
@@ -1175,9 +1238,9 @@ var main = {
                     res[i] = binary.getWord8('val').end().vars.val;
                 }
                 return res;
-            };
+            };*/
 
-            handlers[modbus.FUNCTION_CODES.READ_DISCRETE_INPUTS] = function (request, response) {
+            /*handlers[modbus.FUNCTION_CODES.READ_DISCRETE_INPUTS] = function (request, response) {
                 var start  = request.startAddress;
                 var length = request.quantity;
 
@@ -1297,7 +1360,7 @@ var main = {
                 }
 
                 response.writeResponse(request);
-            };
+            };*/
             /*handlers[modbus.FUNCTION_CODES.WRITE_MULTIPLE_COILS] = function (request, response) {
                 var start  = request.startAddress;
                 var length = request.quantity;
@@ -1314,7 +1377,7 @@ var main = {
 
                 response.writeResponse(request);
             };*/
-            handlers[modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS] = function (request, response) {
+            /*handlers[modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS] = function (request, response) {
                 var start  = request.startAddress;
                 var length = request.quantity;
 
@@ -1324,7 +1387,7 @@ var main = {
                     if (main.holdingRegsMapping[a]) {
                         var native = objects[main.holdingRegsMapping[a]].native;
                         var val = extractValue(native.type, native.len, request, a * 2);
-                        if (native.type != 'string') {
+                        if (native.type !== 'string') {
                             val = val * native.factor + native.offset;
                             val = Math.round(val * main.acp.round) / main.acp.round;
                         }
@@ -1339,199 +1402,336 @@ var main = {
                 }
 
                 response.writeResponse(request);
-            };
+            };*/
 
-            modbusServer = Server.createServer(handlers).listen(main.acp.port);
-            modbusServer.on('connection', function (client) {
-                connected++;
-                adapter.log.info('Clients connected: ' + modbusServer._connections);
-                adapter.setState('info.connection', modbusServer._connections, true);
-            }).on('close', function (client) {
-                adapter.setState('info.connection', modbusServer._connections, true);
-            }).on('error', function (err) {
-                adapter.log.info('Clients connected: ' + modbusServer._connections);
-                adapter.setState('info.connection', modbusServer._connections, true);
-                adapter.log.warn(err);
+            var stampit      = require('stampit');
+            var server = {
+                tcp         : {
+                    core        : require(__dirname + '/lib/modbus-tcp-server.js'),
+                    complete    : require(__dirname + '/lib/modbus-tcp-server.js')
+                },
+                handler     : { }
+            };
+            var fs = require('fs');
+            var path = __dirname + '/node_modules/jsmodbus';
+            if (!fs.existsSync(__dirname + '/node_modules/jsmodbus')) {
+                path = __dirname + '/../jsmodbus';
+            }
+
+            main.coilsChanged       = true;
+            main.inputRegsChanged   = true;
+            main.disInputsChanged   = true;
+            main.holdingRegsChanged = true;
+
+            fs.readdirSync(path + '/src/handler/server')
+                .filter(function (file) {
+
+                    return file.substr(-3) === '.js';
+
+                }).forEach(function (file) {
+
+                server.tcp.complete = server.tcp.complete.compose(require(path + '/src/handler/server/' + file));
+                server.handler[file.substr(0, file.length - 3)] = require(path + '/src/handler/server/' + file);
+
             });
 
+            var modbusServer = stampit()
+            .refs({
+                logEnabled:    true,
+                logLevel:      process.argv[3] === 'debug' ? 'verbose' : process.argv[3],
+                port:          parseInt(main.acp.port, 10) || 502,
+                responseDelay: 100,
+                coils:         new Buffer(main.coilsHighAddress),
+                input:         new Buffer(main.disInputsHighAddress),
+                holding:       new Buffer(main.holdingRegsHighAddress * 2)
+            }).compose(server.tcp.complete)
+            .init(function () {
+                var that = this;
+                this.on('readCoilsRequest', function (start, quantity) {
+                    if (main.coilsChanged) {
+                        main.coilsChanged = null;
+                        var resp = new Array(Math.ceil(quantity / 16) * 2);
+                        var i = 0;
+                        var data = this.getCoils();
+                        for (var j = 0; j < resp.length; j++) {
+                            resp[j] = data.readUInt8(start + j);
+                        }
+                        while (i < quantity && i + start <= main.coilsHighAddress) {
+                            if (main.coils[i + start - main.coilsLowAddress]) {
+                                resp[Math.floor(i / 8)] |= 1 << (i % 8);
+                            } else {
+                                resp[Math.floor(i / 8)] &= ~(1 << (i % 8));
+                            }
+                            i++;
+                        }
+                        for (i = 0; i < resp.length; i++) {
+                            data.writeUInt8(resp[i], start + i);
+                        }
+                    }
+                });
+
+                this.on('readDiscreteInputsRequest', function (start, quantity) {
+                    if (main.disInputsChanged) {
+                        main.disInputsChanged = false;
+                        var resp = new Array(Math.ceil(quantity / 16) * 2);
+                        var i = 0;
+                        var data = this.getInput();
+                        for (var j = 0; j < resp.length; j++) {
+                            resp[j] = data.readUInt8(start + j);
+                        }
+                        while (i < quantity && i + start <= main.disInputsHighAddress) {
+                            if (main.disInputs[i + start - main.disInputsLowAddress]) {
+                                resp[Math.floor(i / 8)] |= 1 << (i % 8);
+                            } else {
+                                resp[Math.floor(i / 8)] &= ~(1 << (i % 8));
+                            }
+                            i++;
+                        }
+                        for (i = 0; i < resp.length; i++) {
+                            data.writeUInt8(resp[i], start + i);
+                        }
+                    }
+                });
+
+                this.on('readInputRegistersRequest', function (start, quantity) {
+                    adapter.log.error('readInputRegisters not implemented', start, quantity);
+                });
+
+                this.on('readHoldingRegistersRequest', function (start, quantity) {
+                    if (main.holdingRegsChanged) {
+                        main.holdingRegsChanged = false;
+                        var data = this.getHolding();
+                        var end  = start + quantity * 2;
+                        var low  = main.holdingRegsLowAddress  * 2;
+                        var high = main.holdingRegsHighAddress * 2;
+                        for (var i = start; i < end; i++) {
+                            if (i >= data.length) break;
+                            if (i >= low && i < high) {
+                                data.writeUInt8(main.holdingRegs[i - low], i);
+                            } else {
+                                data.writeUInt8(0, i);
+                            }
+                        }
+                    }
+                });
+
+                this.on('postWriteSingleCoilRequest', function (start, value) {
+                    var a = start - main.coilsLowAddress;
+
+                    if (a >= 0 && main.coilsMapping[a]) {
+                        adapter.setState(main.coilsMapping[a], value, true);
+                        main.coils[a] = value;
+                    }
+                });
+                var mPow2 = [
+                    0x01,
+                    0x02,
+                    0x04,
+                    0x08,
+                    0x10,
+                    0x20,
+                    0x40,
+                    0x80
+                ];
+
+                this.on('postWriteMultipleCoilsRequest', function (start, length, byteLength) {
+                    var i = 0;
+                    var data = this.getCoils();
+                    if (start < main.coilsLowAddress) start = main.coilsLowAddress;
+
+                    while (i < length && i + start <= main.coilsHighAddress) {
+                        var a = i + start - main.coilsLowAddress;
+                        if (a >= 0 && main.coilsMapping[a]) {
+                            var value = data.readUInt8((i + start) >> 3);
+                            value = value & mPow2[(i + start) % 8];
+                            adapter.setState(main.coilsMapping[a], value ? true : false, true);
+                            main.coils[a] = value ? true : false;
+                        }
+                        i++;
+                    }
+                });
+
+                this.on('postWriteSingleRegisterRequest', function (start, value) {
+                    start = start >> 1;
+                    var a = start - main.holdingRegsLowAddress;
+
+                    if (a >= 0 && main.holdingRegsMapping[a]) {
+                        var native = objects[main.holdingRegsMapping[a]].native;
+                        var buf = new Buffer(2);
+                        buf.writeUInt16BE(value);
+                        var val = extractValue(native.type, native.len, buf, 0);
+
+                        if (native.type !== 'string') {
+                            val = (val - native.offset) / native.factor;
+                            val = Math.round(val * main.acp.round) / main.acp.round;
+                        }
+
+                        adapter.setState(main.holdingRegsMapping[a], val, true);
+
+                        main.holdingRegs[a]     = buf[0];
+                        main.holdingRegs[a + 1] = buf[1];
+                    }
+                });
+
+                this.on('postWriteMultipleRegistersRequest', function (start, length, byteLength) {
+                    var data = this.getHolding();
+                    var i = 0;
+                    start = start >> 1;
+
+                    if (start < main.holdingRegsLowAddress) start = main.holdingRegsLowAddress;
+
+                    while (i < length && i + start <= main.holdingRegsHighAddress) {
+                        var a = i + start - main.holdingRegsLowAddress;
+                        if (a >= 0 && main.holdingRegsMapping[a]) {
+                            var native = objects[main.holdingRegsMapping[a]].native;
+
+                            var val = extractValue(native.type, native.len, data, i + start);
+                            if (native.type !== 'string') {
+                                val = val * native.factor + native.offset;
+                                val = Math.round(val * main.acp.round) / main.acp.round;
+                            }
+                            adapter.setState(main.holdingRegsMapping[a], val, true);
+                            for (var k = 0; k < native.len * 2; k++) {
+                                main.holdingRegs[a * 2 + k] = data.readUInt8(start * 2 + k);
+                            }
+                            i += native.len;
+                        } else {
+                            i++;
+                        }
+                    }
+                });
+
+                this.on('connection', function (client) {
+                    var list = main.getListOfClients(that.getClients());
+                    adapter.log.info('+ Clients connected: ' + list);
+                    adapter.setState('info.connection', list, true);
+                }).on('close', function (client) {
+                    var list = main.getListOfClients(that.getClients());
+                    adapter.log.info('- Client connected: ' + list);
+                    adapter.setState('info.connection', list, true);
+                }).on('error', function (err) {
+                    var list = main.getListOfClients(that.getClients());
+                    adapter.log.info('- Clients connected: ' + list);
+                    adapter.setState('info.connection', list, true);
+                    adapter.log.warn(err);
+                });
+
+            });
+            modbusServer();
         } else {
-            var Client = require('modbus-stack/client');
-            Client.RESPONSES[modbus.FUNCTION_CODES.READ_DISCRETE_INPUTS] = function (bufferlist) {
-                var rtn = [];
-                var binary = new Binary(bufferlist).getWord8('byteLength').end();
-                rtn.byteLength = binary.vars.byteLength;
-                var i;
-                var l;
-                var val;
-                var val1;
-                var b;
-                for (i = 0, l = Math.floor(binary.vars.byteLength / 2); i < l; i++) {
-                    binary.getWord16be('val');
-                    val = binary.end().vars.val;
-                    val1 = val & 0xFF;
-                    for (b = 0; b < 8; b++) {
-                        rtn[i * 16 + (7 - b)] = (((val1 >> b) & 1) ? true : false);
-                    }
-                    val1 = val >> 8;
-                    for (b = 0; b < 8; b++) {
-                        rtn[i * 16 + 15 - b] = (((val1 >> b) & 1) ? true : false);
-                    }
-                }
-                // read last byte
-                if (i * 2 < binary.vars.byteLength) {
-                    binary.getWord8('val');
-                    val = binary.end().vars.val;
-                    for (b = 0; b < 8; b++) {
-                        rtn[i * 16 + (7 - b)] = (((val1 >> b) & 1) ? true : false);
-                    }
-                }
-                return rtn;
-            };
-            Client.RESPONSES[modbus.FUNCTION_CODES.READ_COILS] = Client.RESPONSES[modbus.FUNCTION_CODES.READ_DISCRETE_INPUTS];
-            Client.RESPONSES[modbus.FUNCTION_CODES.READ_INPUT_REGISTERS] = function (bufferlist) {
-                var binary = new Binary(bufferlist).getWord8('byteLength').end();
-                var rtn = new Buffer(binary.vars.byteLength);
-                //rtn.byteLength = binary.vars.byteLength;
-                for (var i = 0, l = binary.vars.byteLength; i < l; i++) {
-                    binary.getWord8('val');
-                    rtn[i] = binary.end().vars.val;
-                }
-                return rtn;
-            };
-            Client.RESPONSES[modbus.FUNCTION_CODES.READ_HOLDING_REGISTERS] = Client.RESPONSES[modbus.FUNCTION_CODES.READ_INPUT_REGISTERS];
-            Client.RESPONSES[modbus.FUNCTION_CODES.WRITE_SINGLE_COIL] = function (address, value) {
-                return new Put()
-                    .word16be(address)
-                    .word16be(value ? 0xFF00 : 0)
-                    .buffer();
-            };
-            Client.REQUESTS[modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER] = function (address, value) {
-                return new Put()
-                    .word16be(address)
-                    .word16be(value)
-                    .buffer();
-            };
-            Client.REQUESTS[modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS] = function (address, buffer) {
-                var p = new Put().word16be(address).word16be(Math.ceil(buffer.length / 2)).word8(buffer.length);
-                for (var i = 0; i < buffer.length; i++) {
-                    p.word8(buffer[i]);
-                }
-                return p.buffer();
-            };
-            Client.RESPONSES[modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS] = function (bufferlist) {
-                return {};
-            };
-            Client.RESPONSES[modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER] = function (bufferlist) {
-                return {};
-            };
-            // override request
-            Client.prototype.request = function () {
-                var req = new modbus.ModbusRequestStack(this);
-                req.unitIdentifier  = main.acp.deviceId;
-                req.request.apply(req, arguments);
-                return req;
-            };
-            modbusClient = Client.createClient(main.acp.port, main.acp.bind);
+            if (main.acp.type === 'tcp') {
+                modbusClient = modbus.client.tcp.complete({
+                    host:         main.acp.bind,
+                    port:         parseInt(main.acp.port, 10) || 502,
+                    logEnabled:   true,
+                    logLevel:      process.argv[3] === 'debug' ? 'verbose' : process.argv[3],
+                    logTimestamp: true
+                });
+            } else {
+                modbusClient = modbus.client.serial.complete({
+                    portName:     main.acp.comName,
+                    baudRate:     main.acp.baudRate,
+                    logEnabled:   true,
+                    logLevel:     process.argv[3] === 'debug' ? 'verbose' : process.argv[3],
+                    logTimestamp: true
+                });
+            }
 
             modbusClient.on('connect', function () {
                 if (!connected) {
-                    adapter.log.info('Connected to slave ' + main.acp.bind);
-                    connected = 1;
-                    adapter.setState('info.connection', 1, true);
+                    if (main.acp.type === 'tcp') {
+                        adapter.log.info('Connected to slave ' + main.acp.bind);
+                    } else {
+                        adapter.log.info('Connected to slave');
+                    }
+                    connected = true;
+                    adapter.setState('info.connection', true, true);
                 }
                 main.poll();
             }).on('disconnect', function () {
+                if (isStop) return;
                 main.reconnect();
             });
 
             modbusClient.on('error', function (err) {
+                if (isStop) return;
                 adapter.log.warn(err);
                 main.reconnect();
             });
+            modbusClient.connect();
         }
     },
 
-    pollDisInputs: function (callback) {
+    pollDisInputs:         function (callback) {
         if (main.disInputsLength) {
-            modbusClient.request(modbus.FUNCTION_CODES.READ_DISCRETE_INPUTS, main.disInputsLowAddress, main.disInputsLength, function (err, registers) {
-                if (err) {
-                    callback(err);
-                } else {
-                    for (var n = 0; main.disInputs.length > n; n++) {
-                        var id = main.disInputs[n].id;
-                        var val = registers[main.disInputs[n].address - main.disInputsLowAddress];
+            modbusClient.readDiscreteInputs(main.disInputsLowAddress, main.disInputsLength).then(function (registers) {
+                for (var n = 0; main.disInputs.length > n; n++) {
+                    var id = main.disInputs[n].id;
+                    var val = registers.coils[main.disInputs[n].address - main.disInputsLowAddress];
 
-                        if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
-                            ackObjects[id] = {val: val};
-                            adapter.setState(id, val ? true : false, true);
-                        }
+                    if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
+                        ackObjects[id] = {val: val};
+                        adapter.setState(id, val ? true : false, true);
                     }
-                    callback(null);
                 }
+                callback();
+            }).fail(function (err) {
+                callback(err);
             });
         } else {
-            callback(null);
+            callback();
         }
     },
-    pollCoils: function (callback) {
+    pollCoils:             function (callback) {
         if (main.coilsLength) {
-            modbusClient.request(modbus.FUNCTION_CODES.READ_COILS, main.coilsLowAddress, main.coilsLength, function (err, registers) {
-                if (err) {
-                    callback(err);
-                } else {
-                    for (var n = 0; main.coils.length > n; n++) {
-                        var id = main.coils[n].id;
-                        var val = registers[main.coils[n].address - main.coilsLowAddress];
+            modbusClient.readCoils(main.coilsLowAddress, main.coilsLength).then(function (registers) {
+                for (var n = 0; main.coils.length > n; n++) {
+                    var id = main.coils[n].id;
+                    var val = registers.coils[main.coils[n].address - main.coilsLowAddress];
 
-                        if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
-                            ackObjects[id] = {val: val};
-                            adapter.setState(id, val ? true : false, true);
-                        }
+                    if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
+                        ackObjects[id] = {val: val};
+                        adapter.setState(id, val ? true : false, true);
                     }
-                    callback(null);
                 }
+                callback();
+            }).fail(function (err) {
+                callback(err);
             });
         } else {
-            callback(null);
+            callback();
         }
     },
     pollInputRegsBlock:    function (block, callback) {
-        if (block >= main.inputRegsBlocks.length) {
-            return callback(null);
-        }
+        if (block >= main.inputRegsBlocks.length) return callback();
 
-        if (main.inputRegsBlocks[block].startIndex == main.inputRegsBlocks[block].endIndex) {
+        if (main.inputRegsBlocks[block].startIndex === main.inputRegsBlocks[block].endIndex) {
             main.inputRegsBlocks[block].endIndex++;
         }
 
-        modbusClient.request(
-            modbus.FUNCTION_CODES.READ_INPUT_REGISTERS,
-            main.inputRegsBlocks[block].start,
-            main.inputRegsBlocks[block].count,
-            function (err, buffer) {
-                if (err) {
-                    callback(err);
-                } else if (buffer.length) {
-                    for (var n = main.inputRegsBlocks[block].startIndex; n < main.inputRegsBlocks[block].endIndex; n++) {
-                        var id = main.inputRegs[n].id;
-                        var val = extractValue(main.inputRegs[n].type, main.inputRegs[n].len, buffer, main.inputRegs[n].address - main.inputRegsBlocks[block].start);
-                        if (main.inputRegs[n].type !== 'string') {
-                            val = val * main.inputRegs[n].factor + main.inputRegs[n].offset;
-                            val = Math.round(val * main.acp.round) / main.acp.round;
-                        }
-                        if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
-                            ackObjects[id] = {val: val};
-                            adapter.setState(id, val, true);
-                        }
+        modbusClient.readInputRegisters(main.inputRegsBlocks[block].start, main.inputRegsBlocks[block].count).then(function (buffer) {
+            if (buffer.payload && buffer.payload.length) {
+                for (var n = main.inputRegsBlocks[block].startIndex; n < main.inputRegsBlocks[block].endIndex; n++) {
+                    var id = main.inputRegs[n].id;
+                    var val = extractValue(main.inputRegs[n].type, main.inputRegs[n].len, buffer.payload, main.inputRegs[n].address - main.inputRegsBlocks[block].start);
+                    if (main.inputRegs[n].type !== 'string') {
+                        val = val * main.inputRegs[n].factor + main.inputRegs[n].offset;
+                        val = Math.round(val * main.acp.round) / main.acp.round;
                     }
-                    setTimeout(function () {
-                        main.pollInputRegsBlock(block + 1, callback);
-                    }, 0);
-                } else {
-                    adapter.log.warn('Null buffer length READ_INPUT_REGISTERS for register ' + main.inputRegsBlocks[block].start);
+                    if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
+                        ackObjects[id] = {val: val};
+                        adapter.setState(id, val, true);
+                    }
                 }
+            } else {
+                adapter.log.warn('Null buffer length READ_INPUT_REGISTERS for register ' + main.inputRegsBlocks[block].start);
             }
-        );
+            setTimeout(function () {
+                main.pollInputRegsBlock(block + 1, callback);
+            }, 0);
+        }).fail(function (err) {
+            callback(err);
+        });
     },
     pollInputRegsBlocks:   function (callback) {
         if (main.inputRegsLength) {
@@ -1539,54 +1739,47 @@ var main = {
                 callback(err);
             });
         } else {
-            callback(null);
+            callback();
         }
     },
     pollHoldingRegsBlock:  function (block, callback) {
-        if (block >= main.holdingRegsBlocks.length) {
-            return callback(null);
-        }
+        if (block >= main.holdingRegsBlocks.length) return callback();
 
-        if (main.holdingRegsBlocks[block].startIndex == main.holdingRegsBlocks[block].endIndex) {
+        if (main.holdingRegsBlocks[block].startIndex === main.holdingRegsBlocks[block].endIndex) {
             main.holdingRegsBlocks[block].endIndex++;
         }
 
-        modbusClient.request(modbus.FUNCTION_CODES.READ_HOLDING_REGISTERS,
-            main.holdingRegsBlocks[block].start,
-            main.holdingRegsBlocks[block].count,
-            function (err, buffer) {
-            if (err) {
-                callback(err);
-            } else {
-                if (buffer.length) {
-                    for (var n = main.holdingRegsBlocks[block].startIndex; n < main.holdingRegsBlocks[block].endIndex; n++) {
-                        var id = main.holdingRegs[n].id;
-                        var val = extractValue(main.holdingRegs[n].type, main.holdingRegs[n].len, buffer, main.holdingRegs[n].address - main.holdingRegsBlocks[block].start);
-                        if (main.holdingRegs[n].type !== 'string') {
-                            val = val * main.holdingRegs[n].factor + main.holdingRegs[n].offset;
-                            val = Math.round(val * main.acp.round) / main.acp.round;
-                        }
-
-                        if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
-                            ackObjects[id] = {val: val};
-                            adapter.setState(id, val, true);
-                        }
+        modbusClient.readHoldingRegisters(main.holdingRegsBlocks[block].start, main.holdingRegsBlocks[block].count).then(function (buffer) {
+            if (buffer.payload && buffer.payload.length) {
+                for (var n = main.holdingRegsBlocks[block].startIndex; n < main.holdingRegsBlocks[block].endIndex; n++) {
+                    var id = main.holdingRegs[n].id;
+                    var val = extractValue(main.holdingRegs[n].type, main.holdingRegs[n].len, buffer.payload, main.holdingRegs[n].address - main.holdingRegsBlocks[block].start);
+                    if (main.holdingRegs[n].type !== 'string') {
+                        val = val * main.holdingRegs[n].factor + main.holdingRegs[n].offset;
+                        val = Math.round(val * main.acp.round) / main.acp.round;
                     }
-                } else {
-                    adapter.log.warn('Null buffer length READ_HOLDING_REGISTERS for register ' + main.holdingRegsBlocks[block].start);
+
+                    if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
+                        ackObjects[id] = {val: val};
+                        adapter.setState(id, val, true);
+                    }
                 }
-                // special case
-                if (main.acp.maxBlock < 2 && main.holdingRegs[main.holdingRegsBlocks[block].startIndex].cw) {
-                    // write immediately the current value
-                    main.writeCyclicHoldingReg(objects[main.holdingRegs[main.holdingRegsBlocks[block].startIndex].fullId], function () {
-                        main.pollHoldingRegsBlock(block + 1, callback);
-                    });
-                } else {
-                    setTimeout(function () {
-                        main.pollHoldingRegsBlock(block + 1, callback);
-                    }, 0);
-                }
+            } else {
+                adapter.log.warn('Null buffer length READ_HOLDING_REGISTERS for register ' + main.holdingRegsBlocks[block].start);
             }
+            // special case
+            if (main.acp.maxBlock < 2 && main.holdingRegs[main.holdingRegsBlocks[block].startIndex].cw) {
+                // write immediately the current value
+                main.writeCyclicHoldingReg(objects[main.holdingRegs[main.holdingRegsBlocks[block].startIndex].fullId], function () {
+                    main.pollHoldingRegsBlock(block + 1, callback);
+                });
+            } else {
+                setTimeout(function () {
+                    main.pollHoldingRegsBlock(block + 1, callback);
+                }, 0);
+            }
+        }).fail(function (err) {
+            callback(err);
         });
     },
     pollHoldingRegsBlocks: function (callback) {
@@ -1599,36 +1792,29 @@ var main = {
                 }
             });
         } else {
-            callback(null);
+            callback();
         }
     },
+
     writeCyclicHoldingReg: function (obj, callback) {
-        if (1 || obj.native.len > 1) {
+        if (obj.native.len > 1) {
             var buffer = new Buffer(obj.native.len * 2);
             for (var b = 0; b < buffer.length; b++) {
                 buffer[b] = main.holdingRegs[(obj.native.address - main.holdingRegsLowAddress) * 2 + b];
             }
-            modbusClient.request(modbus.FUNCTION_CODES.WRITE_MULTIPLE_REGISTERS, obj.native.address, buffer, function (err, response) {
-                if (err) {
-                    adapter.log.error('Cannot write: ' + err);
-                }
+            modbusClient.writeMultipleRegisters(obj.native.address, buffer).then(function (response) {
+                callback();
+            }).fail(function (err) {
+                adapter.log.error('Cannot write: ' + err);
                 callback(err);
             });
         } else {
-            var addr = (obj.native.address - main.holdingRegsLowAddress) * 2;
-            var val = (main.holdingRegs[addr] << 8) + main.holdingRegs[addr + 1];
-            modbusClient.request(modbus.FUNCTION_CODES.WRITE_SINGLE_REGISTER, obj.native.address, val, function (err, response) {
-                if (err) {
-                    adapter.log.error(err);
-                }
-                callback(err);
-            });
+            callback();
         }
     },
-    writeCyclicHoldingRegs:      function (i, callback) {
-        if (i >= main.holdingRegsCyclicWrite.length) {
-            return callback(null);
-        }
+    writeCyclicHoldingRegs: function (i, callback) {
+        if (i >= main.holdingRegsCyclicWrite.length) return callback();
+
         var id = main.holdingRegsCyclicWrite[i];
 
         main.writeCyclicHoldingReg(objects[id], function () {
@@ -1641,7 +1827,7 @@ var main = {
             main.errorCount++;
 
             adapter.log.warn('Poll error count: ' + main.errorCount + ' code: ' + err);
-            adapter.setState('info.connection', 0, true);
+            adapter.setState('info.connection', false, true);
 
             if (main.errorCount < 6 && connected) {
                 setTimeout(main.poll, main.acp.poll);
@@ -1661,7 +1847,7 @@ var main = {
             }
 
             if (main.errorCount > 0) {
-                adapter.setState('info.connection', 1, true);
+                adapter.setState('info.connection', true, true);
                 main.errorCount = 0;
             }
             nextPoll = setTimeout(main.poll, main.acp.poll);
