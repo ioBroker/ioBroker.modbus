@@ -1427,7 +1427,7 @@ var main = {
                     adapter.log.error('Cannot connect to "' + main.acp.bind + ':' + parseInt(main.acp.port, 10) || 502 + '": ' + e);
                 }
             } else {
-                if (!main.acp.comName || main.acp.bind === '0.0.0.0') {
+                if (!main.acp.comName) {
                     adapter.log.error('IP address is not defined');
                     return;
                 }
@@ -1442,7 +1442,6 @@ var main = {
                 } catch (e) {
                     adapter.log.error('Cannot open port "' + main.acp.comName + '" [' + (parseInt(main.acp.baudRate, 10) || 9600) + ']: ' + e);
                 }
-
             }
 
             modbusClient.on('connect', function () {
