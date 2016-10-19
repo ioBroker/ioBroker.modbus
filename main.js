@@ -1630,7 +1630,7 @@ var main = {
                 adapter.log.warn(err);
                 main.reconnect();
             });
-            modbusClient.connect();
+            if (typeof modbusClient.connect === 'function') modbusClient.connect();
         }
     },
 
