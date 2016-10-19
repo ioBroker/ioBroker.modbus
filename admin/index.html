@@ -979,10 +979,14 @@
         settings.params.type = settings.params.type || 'tcp';
 
         $('#modbus_type').change(function () {
-            if ($(this).val() === 'tcp') {
+            if ($(this).val() === 'tcp' || $(this).val() === 'tcprtu') {
                 $('.tcp').show();
                 $('.serial').hide();
-                $('#modbus_slave').prop('disabled', false);
+                if ($(this).val() === 'tcprtu') {
+                    $('#modbus_slave').val(0).prop('disabled', true);
+                } else {
+                    $('#modbus_slave').prop('disabled', false);
+                }
             } else {
                 $('.tcp').hide();
                 $('.serial').show();
@@ -1138,14 +1142,15 @@
                     <select class="modbus-params" id="modbus_type"  style="width: 100%;">
                         <option value="tcp"    class="translate">TCP</option>
                         <option value="serial" class="translate">Serial</option>
+                        <option value="tcprtu" class="translate">RTU over TCP</option>
                     </select>
                 </td>
             </tr>
-            <tr class="tcp">
+            <tr class="tcp tcprtu">
                 <td style="width: 200px"><label class="translate" for="modbus_bind">Partner IP Address:</label></td>
                 <td style="width: 200px"><input class="modbus-params" id="modbus_bind"  style="width: 100%;"/></td>
             </tr>
-            <tr class="tcp">
+            <tr class="tcp tcprtu">
                 <td><label class="translate" for="modbus_port">Port:</label></td>
                 <td><input class="modbus-params" id="modbus_port" type="text"  style="width: 100%;"/></td>
             </tr>

@@ -1,12 +1,12 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.4.0",
+    "version":      "0.4.1",
 	"news": {
-        "0.4.0": {
-          "en": "Support of ModBus RTU",
-          "de": "Unterstützung von ModBus RTU",
-          "ru": "Поддержка ModBus RTU"
+        "0.4.1": {
+          "en": "Support of ModBus RTU over serial and over TCP (only slave)",
+          "de": "Unterstützung von ModBus RTU serial und over TCP (nur Slave)",
+          "ru": "Поддержка ModBus RTU по RS485 и по TCP (только slave)"
         },
 		"0.3.11": {
 		  "en": "Fix wrong byte count in loop",

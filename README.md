@@ -6,7 +6,10 @@
 
 [![NPM](https://nodei.co/npm/iobroker.modbus.png?downloads=true)](https://nodei.co/npm/iobroker.modbus/)
 
-Implementation of ModBus Slave and Master for ioBroker. Actually only Modbus over TCP is supported.
+Implementation of ModBus Slave and Master for ioBroker. Following types are supported:
+- Modbus RTU over serial (slave)
+- Modbus RTU over TCP (slave)
+- Modbus TCP (slave, master)
 
 ### Settings
 #### Partner IP Address
@@ -49,8 +52,8 @@ Some systems require first "write request" to deliver the data on "read request"
 You can force this mode by setting of the "Max read request length" to 1.
 
 ## Changelog
-# 0.4.0 (2016-08-18) 
-* (bluefox) Support of ModBus RTU over serial
+# 0.4.1 (2016-08-19) 
+* (bluefox) Support of ModBus RTU over serial and over TCP (only slave)
 
 # 0.3.11 (2016-08-18) 
 * (Apollon77) Fix wrong byte count in loop

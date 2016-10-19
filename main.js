@@ -1537,7 +1537,54 @@ var main = {
                 } catch (e) {
                     adapter.log.error('Cannot connect to "' + main.acp.bind + ':' + parseInt(main.acp.port, 10) || 502 + '": ' + e);
                 }
-            } else {
+            } else if (main.acp.type === 'tcprtu') {
+                if (!main.acp.bind || main.acp.bind === '0.0.0.0') {
+                    adapter.log.error('IP address is not defined');
+                    return;
+                }
+                try {
+                    var client = {
+                        tcp         : {
+                            core        : require(__dirname + '/lib/modbus-tcp-rtu-client.js'),
+                            complete    : require(__dirname + '/lib/modbus-tcp-rtu-client.js')
+                        },
+                        handler     : { }
+                    };
+                    var fs = require('fs');
+                    var path = __dirname + '/node_modules/jsmodbus';
+                    if (!fs.existsSync(__dirname + '/node_modules/jsmodbus')) {
+                        path = __dirname + '/../jsmodbus';
+                    }
+
+                    main.coilsChanged       = true;
+                    main.inputRegsChanged   = true;
+                    main.disInputsChanged   = true;
+                    main.holdingRegsChanged = true;
+
+                    fs.readdirSync(path + '/src/handler/server')
+                        .filter(function (file) {
+                            return file.substr(-3) === '.js';
+
+                        }).forEach(function (file) {
+
+                        client.tcp.complete = client.tcp.complete.compose(require(path + '/src/handler/client/' + file));
+                        client.handler[file.substr(0, file.length - 3)] = require(path + '/src/handler/client/' + file);
+                    });
+
+                    modbusClient = client.tcp.complete({
+                        host:           main.acp.bind,
+                        port:           parseInt(main.acp.port, 10) || 502,
+                        logEnabled:     true,
+                        logLevel:       process.argv[3] === 'debug' ? 'verbose' : process.argv[3],
+                        logTimestamp:   true,
+                        autoReconnect:  false,
+                        timeout:        parseInt(main.acp.timeout, 10) || 5000,
+                        unitId:         main.acp.deviceId
+                    });
+                } catch (e) {
+                    adapter.log.error('Cannot connect to "' + main.acp.bind + ':' + parseInt(main.acp.port, 10) || 502 + '": ' + e);
+                }
+            } else if (main.acp.type === 'serial') {
                 if (!main.acp.comName) {
                     adapter.log.error('IP address is not defined');
                     return;
@@ -1557,6 +1604,9 @@ var main = {
                 } catch (e) {
                     adapter.log.error('Cannot open port "' + main.acp.comName + '" [' + (parseInt(main.acp.baudRate, 10) || 9600) + ']: ' + e);
                 }
+            } else {
+                adapter.log.error('Unsupported type "' + main.acp.type + '"');
+                return;
             }
 
             modbusClient.on('connect', function () {
