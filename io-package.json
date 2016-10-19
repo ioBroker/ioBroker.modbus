@@ -48,7 +48,7 @@
       "bind":               "127.0.0.1",
       "port":               502,
       "comName":            "",
-      "baudRate":           115200,
+      "baudRate":           9600,
       "deviceId":           1,
       "slave":              0,
       "poll":               1000,
