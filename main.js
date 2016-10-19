@@ -1471,11 +1471,14 @@ var main = {
                 }
                 try {
                     modbusClient = modbus.client.tcp.complete({
-                        host:         main.acp.bind,
-                        port:         parseInt(main.acp.port, 10) || 502,
-                        logEnabled:   true,
-                        logLevel:      process.argv[3] === 'debug' ? 'verbose' : process.argv[3],
-                        logTimestamp: true
+                        host:           main.acp.bind,
+                        port:           parseInt(main.acp.port, 10) || 502,
+                        logEnabled:     true,
+                        logLevel:       process.argv[3] === 'debug' ? 'verbose' : process.argv[3],
+                        logTimestamp:   true,
+                        autoReconnect:  false,
+                        timeout:        parseInt(main.acp.timeout, 10) || 5000,
+                        unitId:         main.acp.deviceId
                     });
                 } catch (e) {
                     adapter.log.error('Cannot connect to "' + main.acp.bind + ':' + parseInt(main.acp.port, 10) || 502 + '": ' + e);
@@ -1487,11 +1490,15 @@ var main = {
                 }
                 try {
                     modbusClient = modbus.client.serial.complete({
-                        portName:     main.acp.comName,
-                        baudRate:     parseInt(main.acp.baudRate, 10) || 9600,
-                        logEnabled:   true,
-                        logLevel:     process.argv[3] === 'debug' ? 'verbose' : process.argv[3],
-                        logTimestamp: true
+                        portName:       main.acp.comName,
+                        baudRate:       parseInt(main.acp.baudRate, 10) || 9600,
+                        logEnabled:     true,
+                        logLevel:       process.argv[3] === 'debug' ? 'verbose' : process.argv[3],
+                        logTimestamp:   true,
+                        dataBits:       parseInt(main.acp.dataBits, 10) || 8,
+                        stopBits:       parseInt(main.acp.stopBits, 10) || 1,
+                        parity:         main.acp.parity || 'none',
+                        unitId:         main.acp.deviceId
                     });
                 } catch (e) {
                     adapter.log.error('Cannot open port "' + main.acp.comName + '" [' + (parseInt(main.acp.baudRate, 10) || 9600) + ']: ' + e);
