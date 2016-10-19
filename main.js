@@ -97,7 +97,7 @@ function writeHelper(id, state) {
 function prepareWrite(id, state) {
     if (objects[id].native.float === undefined) {
         objects[id].native.float =
-            objects[id].native.type === 'floatle'  || objects[id].native.type === 'floatbe' ||
+            objects[id].native.type === 'floatle'  || objects[id].native.type === 'floatbe' || objects[id].native.type === 'floatsw' ||
             objects[id].native.type === 'doublele' || objects[id].native.type === 'doublebe';
     }
     var val;
@@ -219,7 +219,7 @@ function send() {
     } else if (type === 'holdingRegs') {
         if (objects[id].native.float === undefined) {
             objects[id].native.float =
-                objects[id].native.type === 'floatle'  || objects[id].native.type === 'floatbe' ||
+                objects[id].native.type === 'floatle'  || objects[id].native.type === 'floatbe' || objects[id].native.type === 'floatsw' ||
                 objects[id].native.type === 'doublele' || objects[id].native.type === 'doublebe';
         }
 
@@ -329,10 +329,24 @@ function extractValue(type, len, buffer, offset) {
             return buffer.readUInt32BE(offset * 2);
         case 'uint32le':
             return buffer.readUInt32LE(offset * 2);
+        case 'uint32sw':
+            var buf = new Buffer(4);
+            buf[0] = buffer[offset * 2 + 2];
+            buf[1] = buffer[offset * 2 + 3];
+            buf[2] = buffer[offset * 2 + 0];
+            buf[3] = buffer[offset * 2 + 1];
+            return buf.readUInt32BE(0);
         case 'int32be':
             return buffer.readInt32BE(offset * 2);
         case 'int32le':
             return buffer.readInt32LE(offset * 2);
+        case 'int32sw':
+            var buf = new Buffer(4);
+            buf[0] = buffer[offset * 2 + 2];
+            buf[1] = buffer[offset * 2 + 3];
+            buf[2] = buffer[offset * 2 + 0];
+            buf[3] = buffer[offset * 2 + 1];
+            return buf.readInt32BE(0);
         case 'uint64be':
             return buffer.readUInt32BE(offset * 2) * 0x100000000 + buffer.readUInt32BE(offset * 2 + 4);
         case 'uint64le':
@@ -359,6 +373,13 @@ function extractValue(type, len, buffer, offset) {
             return buffer.readFloatBE(offset * 2);
         case 'floatle':
             return buffer.readFloatLE(offset * 2);
+        case 'floatsw':
+            var buf = new Buffer(4);
+            buf[0] = buffer[offset * 2 + 2];
+            buf[1] = buffer[offset * 2 + 3];
+            buf[2] = buffer[offset * 2 + 0];
+            buf[3] = buffer[offset * 2 + 1];
+            return buf.readFloatBE(0);
         case 'doublebe':
             return buffer.readDoubleBE(offset * 2);
         case 'doublele':
@@ -404,6 +425,16 @@ function writeValue(type, value, len) {
             buffer = new Buffer(4);
             buffer.writeUInt32LE(value, 0);
             break;
+        case 'uint32sw':
+            buffer = new Buffer(4);
+            buffer.writeUInt32BE(value, 0);
+            var a0 = buffer[0];
+            var a1 = buffer[1];
+            buffer[0] = buffer[2];
+            buffer[1] = buffer[3];
+            buffer[2] = a0;
+            buffer[3] = a1;
+            break;
         case 'int32be':
             buffer = new Buffer(4);
             buffer.writeInt32BE(value, 0);
@@ -411,6 +442,16 @@ function writeValue(type, value, len) {
         case 'int32le':
             buffer = new Buffer(4);
             buffer.writeInt32LE(value, 0);
+            break;
+        case 'int32sw':
+            buffer = new Buffer(4);
+            buffer.writeInt32BE(value, 0);
+            var a0 = buffer[0];
+            var a1 = buffer[1];
+            buffer[0] = buffer[2];
+            buffer[1] = buffer[3];
+            buffer[2] = a0;
+            buffer[3] = a1;
             break;
         case 'uint64be':
             buffer = new Buffer(8);
@@ -435,6 +476,16 @@ function writeValue(type, value, len) {
         case 'floatle':
             buffer = new Buffer(4);
             buffer.writeFloatLE(value, 0);
+            break;
+        case 'floatsw':
+            buffer = new Buffer(4);
+            buffer.writeFloatBE(value, 0);
+            var a0 = buffer[0];
+            var a1 = buffer[1];
+            buffer[0] = buffer[2];
+            buffer[1] = buffer[3];
+            buffer[2] = a0;
+            buffer[3] = a1;
             break;
         case 'doublebe':
             buffer = new Buffer(8);
@@ -468,8 +519,10 @@ var type_items_len = {
     'int16be1':   1,
     'int16le1':   1,
     'uint32be':   2,
+    'uint32sw':   2,
     'uint32le':   2,
     'int32be':    2,
+    'int32sw':    2,
     'int32le':    2,
     'uint64be':   4,
     'uint64le':   4,
@@ -477,6 +530,7 @@ var type_items_len = {
     'int64le':    4,
     'floatbe':    2,
     'floatle':    2,
+    'floatsw':    2,
     'doublebe':   4,
     'doublele':   4,
     'string':     0
