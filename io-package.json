@@ -1,8 +1,13 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.4.1",
+    "version":      "0.4.2",
 	"news": {
+        "0.4.2": {
+          "en": "Fix write of holding registers",
+          "de": "Korrigiere Schreiben von holding registers",
+          "ru": "Исправлена запись holding registers"
+        },
         "0.4.1": {
           "en": "Support of ModBus RTU over serial and over TCP (only slave)",
           "de": "Unterstützung von ModBus RTU serial und over TCP (nur Slave)",

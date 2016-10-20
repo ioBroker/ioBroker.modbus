@@ -629,7 +629,8 @@
                 dataBits:   settings.params.dataBits || 8,
                 stopBits:   settings.params.stopBits || 1,
                 parity:     settings.params.parity || 'none',
-                baudRate:   settings.params.baudRate || 9600
+                baudRate:   settings.params.baudRate || 9600,
+                timeout:    settings.params.timeout || 5000
             }
         };
         data.params.showAliases     = (data.params.showAliases     === 'true' || data.params.showAliases     === true);
@@ -1253,6 +1254,11 @@
             <tr>
                 <td class="translate">Reconnect time:</td>
                 <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_recon"></td>
+                <td>ms</td>
+            </tr>
+            <tr>
+                <td><label for="modbus_timeout" class="translate">Read timeout:</label></td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_timeout"></td>
                 <td>ms</td>
             </tr>
             <tr>

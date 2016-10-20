@@ -5,7 +5,6 @@
 
 var utils         = require(__dirname + '/lib/utils');
 var modbus        = require('jsmodbus');
-var adapter       = utils.adapter('modbus');
 var modbusClient  = null; //Master
 var modbusServer  = null; //Slave
 var connected     = false;
@@ -15,6 +14,11 @@ var serialport    = null;
 var nextPoll;
 var ackObjects    = {};
 var isStop        = false;
+
+var adapter       = utils.adapter({
+    name: 'modbus',
+    unload: stop
+});
 
 process.on('SIGINT', stop);
 
@@ -50,21 +54,29 @@ adapter.on('message', function (obj) {
     }
 });
 
-adapter.on('unload', function (callback) {
-    stop(callback);
-});
-
 function stop(callback) {
     isStop = true;
     if (adapter && adapter.setState) {
-        if (modbusClient) modbusClient.close();
-        if (modbusServer) modbusServer.close();
+        if (modbusClient) {
+            try {
+                modbusClient.close();
+            } catch (e) {
+
+            }
+        }
+        if (modbusServer) {
+            try {
+                modbusServer.close();
+            } catch (e) {
+
+            }
+        }
 
         if (adapter.config && adapter.config.params) {
             adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
         }
     }
-    if (nextPoll)  clearTimeout(nextPoll);
+    if (nextPoll) clearTimeout(nextPoll);
     if (callback) callback();
 }
 var pulseList  = {};
@@ -207,6 +219,10 @@ function send() {
     var val  = sendBuffer[id];
 
     if (type === 'coils') {
+        if (!modbusClient) {
+            adapter.log.error('Client not connected');
+            return;
+        }
         if (val === 'true'  || val === true)  val = 1;
         if (val === 'false' || val === false) val = 0;
         val = parseFloat(val);
@@ -230,13 +246,25 @@ function send() {
         }
         if (objects[id].native.len > 1) {
             var buffer = writeValue(objects[id].native.type, val, objects[id].native.len);
+
+            if (!modbusClient) {
+                adapter.log.error('Client not connected');
+                return;
+            }
+
             modbusClient.writeMultipleRegisters(objects[id].native.address, buffer, function (err, response) {
                 adapter.log.debug('Write successfully [' + objects[id].native.address + ']: ' + val);
             }).fail(function (err) {
                 adapter.log.error('Cannot write [' + objects[id].native.address + ']: ' + err);
             });
         } else {
-            modbusClient.writeSingleRegister(objects[id].native.address, val).then(function (response) {
+            if (!modbusClient) {
+                adapter.log.error('Client not connected');
+                return;
+            }
+            var buffer = writeValue(objects[id].native.type, val, objects[id].native.len);
+
+            modbusClient.writeSingleRegister(objects[id].native.address, buffer).then(function (response) {
                 adapter.log.debug('Write successfully [' + objects[id].native.address + ': ' + val);
             }).fail(function (err) {
                 adapter.log.error('Cannot write [' + objects[id].native.address + ']: ' + err);
@@ -1525,14 +1553,14 @@ var main = {
                 }
                 try {
                     modbusClient = modbus.client.tcp.complete({
-                        host:           main.acp.bind,
-                        port:           parseInt(main.acp.port, 10) || 502,
-                        logEnabled:     true,
-                        logLevel:       process.argv[3] === 'debug' ? 'verbose' : process.argv[3],
-                        logTimestamp:   true,
-                        autoReconnect:  false,
-                        timeout:        parseInt(main.acp.timeout, 10) || 5000,
-                        unitId:         main.acp.deviceId
+                        host:          main.acp.bind,
+                        port:          parseInt(main.acp.port, 10) || 502,
+                        logEnabled:    true,
+                        logLevel:      process.argv[3] === 'debug' ? 'verbose' : process.argv[3],
+                        logTimestamp:  true,
+                        autoReconnect: false,
+                        timeout:       parseInt(main.acp.timeout, 10) || 5000,
+                        unitId:        main.acp.deviceId
                     });
                 } catch (e) {
                     adapter.log.error('Cannot connect to "' + main.acp.bind + ':' + parseInt(main.acp.port, 10) || 502 + '": ' + e);
@@ -1598,6 +1626,7 @@ var main = {
                         logTimestamp:   true,
                         dataBits:       parseInt(main.acp.dataBits, 10) || 8,
                         stopBits:       parseInt(main.acp.stopBits, 10) || 1,
+                        timeout:        parseInt(main.acp.timeout,  10) || 5000,
                         parity:         main.acp.parity || 'none',
                         unitId:         main.acp.deviceId
                     });
@@ -1621,11 +1650,21 @@ var main = {
                 }
                 main.poll();
             }).on('disconnect', function () {
+                try {
+                    if (modbusClient) modbusClient.close();
+                } catch (e) {
+                    adapter.log.error('Cannot close client: ' + e);
+                }
                 if (isStop) return;
                 main.reconnect();
             });
 
             modbusClient.on('error', function (err) {
+                try {
+                    if (modbusClient) modbusClient.close();
+                } catch (e) {
+                    adapter.log.error('Cannot close client: ' + e);
+                }
                 if (isStop) return;
                 adapter.log.warn(err);
                 main.reconnect();
@@ -1804,6 +1843,11 @@ var main = {
             if (main.errorCount < 6 && connected) {
                 setTimeout(main.poll, main.acp.poll);
             } else {
+                try {
+                    if (modbusClient) modbusClient.close();
+                } catch (e) {
+                    adapter.log.error('Cannot close client: ' + e);
+                }
                 main.reconnect();
             }
         } else {
