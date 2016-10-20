@@ -213,6 +213,11 @@ function prepareWrite(id, state) {
 }
 
 function send() {
+    if (!modbusClient) {
+        adapter.log.error('Client not connected');
+        return;
+    }
+
     var id = Object.keys(sendBuffer)[0];
 
     var type = objects[id].native.regType;
@@ -230,7 +235,9 @@ function send() {
         modbusClient.writeSingleCoil(objects[id].native.address, val ? true : false).then(function (response) {
             adapter.log.debug('Write successfully [' + objects[id].native.address + ']: ' + val);
         }).fail(function (err) {
-            adapter.log.error('Cannot write [' + objects[id].native.address + ']: ' + err);
+            adapter.log.error('Cannot write [' + objects[id].native.address + ']: ' + JSON.stringify(err));
+            // still keep on communication
+            if (!isStop) main.reconnect(true);
         });
     } else if (type === 'holdingRegs') {
         if (objects[id].native.float === undefined) {
@@ -245,17 +252,14 @@ function send() {
             if (!objects[id].native.float) val = Math.round(val);
         }
         if (objects[id].native.len > 1) {
-            var buffer = writeValue(objects[id].native.type, val, objects[id].native.len);
+            var hrBuffer = writeValue(objects[id].native.type, val, objects[id].native.len);
 
-            if (!modbusClient) {
-                adapter.log.error('Client not connected');
-                return;
-            }
-
-            modbusClient.writeMultipleRegisters(objects[id].native.address, buffer, function (err, response) {
+            modbusClient.writeMultipleRegisters(objects[id].native.address, hrBuffer, function (err, response) {
                 adapter.log.debug('Write successfully [' + objects[id].native.address + ']: ' + val);
             }).fail(function (err) {
-                adapter.log.error('Cannot write [' + objects[id].native.address + ']: ' + err);
+                adapter.log.error('Cannot write [' + objects[id].native.address + ']: ' + JSON.stringify(err));
+                // still keep on communication
+                if (!isStop) main.reconnect(true);
             });
         } else {
             if (!modbusClient) {
@@ -267,7 +271,9 @@ function send() {
             modbusClient.writeSingleRegister(objects[id].native.address, buffer).then(function (response) {
                 adapter.log.debug('Write successfully [' + objects[id].native.address + ': ' + val);
             }).fail(function (err) {
-                adapter.log.error('Cannot write [' + objects[id].native.address + ']: ' + err);
+                adapter.log.error('Cannot write [' + objects[id].native.address + ']: ' + JSON.stringify(err));
+                // still keep on communication
+                if (!isStop) main.reconnect(true);
             });
         }
     }
@@ -1296,7 +1302,12 @@ var main = {
         return list.join(',');
     },
 
-    reconnect: function () {
+    reconnect: function (isImmediately) {
+        try {
+            if (modbusClient) modbusClient.close();
+        } catch (e) {
+            adapter.log.error('Cannot close master: ' + e);
+        }
         if (connected) {
             adapter.log.info('Disconnected from slave ' + main.acp.bind);
             connected = false;
@@ -1306,7 +1317,7 @@ var main = {
             connectTimer = setTimeout(function () {
                 connectTimer = null;
                 modbusClient.connect(main.acp.port, main.acp.bind);
-            }, main.acp.recon);
+            }, isImmediately ? 1000 : main.acp.recon);
         }
     },
     start: function () {
@@ -1540,7 +1551,7 @@ var main = {
                     var list = main.getListOfClients(that.getClients());
                     adapter.log.info('- Clients connected: ' + list);
                     adapter.setState('info.connection', list, true);
-                    adapter.log.warn(err);
+                    adapter.log.warn('Error on connection: ' + JSON.stringify(err));
                 });
 
             });
@@ -1650,23 +1661,13 @@ var main = {
                 }
                 main.poll();
             }).on('disconnect', function () {
-                try {
-                    if (modbusClient) modbusClient.close();
-                } catch (e) {
-                    adapter.log.error('Cannot close client: ' + e);
-                }
                 if (isStop) return;
                 main.reconnect();
             });
 
             modbusClient.on('error', function (err) {
-                try {
-                    if (modbusClient) modbusClient.close();
-                } catch (e) {
-                    adapter.log.error('Cannot close client: ' + e);
-                }
                 if (isStop) return;
-                adapter.log.warn(err);
+                adapter.log.warn('Error: ' + JSON.stringify(err));
                 main.reconnect();
             });
             if (typeof modbusClient.connect === 'function') modbusClient.connect();
@@ -1816,7 +1817,7 @@ var main = {
             modbusClient.writeMultipleRegisters(obj.native.address, buffer).then(function (response) {
                 callback();
             }).fail(function (err) {
-                adapter.log.error('Cannot write: ' + err);
+                adapter.log.error('Cannot write: ' + JSON.stringify(err));
                 callback(err);
             });
         } else {
@@ -1843,11 +1844,6 @@ var main = {
             if (main.errorCount < 6 && connected) {
                 setTimeout(main.poll, main.acp.poll);
             } else {
-                try {
-                    if (modbusClient) modbusClient.close();
-                } catch (e) {
-                    adapter.log.error('Cannot close client: ' + e);
-                }
                 main.reconnect();
             }
         } else {

@@ -1,9 +1,9 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.4.2",
+    "version":      "0.4.3",
 	"news": {
-        "0.4.2": {
+        "0.4.3": {
           "en": "Fix write of holding registers",
           "de": "Korrigiere Schreiben von holding registers",
           "ru": "Исправлена запись holding registers"
