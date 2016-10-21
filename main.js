@@ -494,11 +494,11 @@ function writeValue(type, value, len) {
             buffer = new Buffer(4);
             buffer.writeUInt32BE(value, 0);
             var a0 = buffer[0];
-            var a1 = buffer[1];
-            buffer[0] = buffer[2];
-            buffer[1] = buffer[3];
-            buffer[2] = a0;
-            buffer[3] = a1;
+            var a2 = buffer[2];
+            buffer[0] = buffer[1];
+            buffer[2] = buffer[3];
+            buffer[1] = a0;
+            buffer[3] = a2;
             break;
         case 'int32be':
             buffer = new Buffer(4);
@@ -512,11 +512,11 @@ function writeValue(type, value, len) {
             buffer = new Buffer(4);
             buffer.writeInt32BE(value, 0);
             var a0 = buffer[0];
-            var a2 = buffer[2];
-            buffer[0] = buffer[1];
-            buffer[2] = buffer[3];
-            buffer[1] = a0;
-            buffer[3] = a2;
+            var a1 = buffer[1];
+            buffer[0] = buffer[2];
+            buffer[1] = buffer[3];
+            buffer[2] = a0;
+            buffer[3] = a1;
             break;
         case 'int32sb':
             buffer = new Buffer(4);
