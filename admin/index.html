@@ -239,6 +239,10 @@
     var isDirect   = false;
 
     var type_items_len = {
+        'uint8be':    1,
+        'uint8le':    1,
+        'int8be':     1,
+        'int8le':     1,
         'uint16be':   1,
         'uint16le':   1,
         'int16be':    1,
@@ -720,6 +724,10 @@
                     {value: 'int32sb',        text: 'Signed 32 bit (Big Endian Byte Swap)'},
                     {value: 'uint64be',       text: 'Unsigned 64 bit (Big Endian)'},
                     {value: 'uint64le',       text: 'Unsigned 64 bit (Little Endian)'},
+                    {value: 'uint8be',        text: 'Unsigned 8 bit (Big Endian)'},
+                    {value: 'uint8le',        text: 'Unsigned 8 bit (Little Endian)'},
+                    {value: 'int8be',         text: 'Signed 8 bit (Big Endian)'},
+                    {value: 'int8le',         text: 'Signed 8 bit (Little Endian)'},
 //                    {value: 'int64be',        text: 'Signed 64 bit (Big Endian)'},
 //                    {value: 'int64le',        text: 'Signed 64 bit (Little Endian)'},
                     {value: 'floatbe',        text: 'Float (Big Endian)'},

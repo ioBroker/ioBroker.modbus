@@ -351,6 +351,14 @@ function extractValue(type, len, buffer, offset) {
     var i2;
 
     switch (type) {
+        case 'uint8be':
+            return buffer.readUInt8(offset * 2 + 1);
+        case 'uint8le':
+            return buffer.readUInt8(offset * 2);
+        case 'int8be':
+            return buffer.readInt8(offset * 2 + 1);
+        case 'int8le':
+            return buffer.readInt8(offset * 2);
         case 'uint16be':
             return buffer.readUInt16BE(offset * 2);
         case 'uint16le':
@@ -456,6 +464,26 @@ function extractValue(type, len, buffer, offset) {
 function writeValue(type, value, len) {
     var buffer;
     switch (type) {
+        case 'uint8be':
+            buffer = new Buffer(2);
+            buffer[0] = 0;
+            buffer.writeUInt8(value & 0xFF, 1);
+            break;
+        case 'uint8le':
+            buffer = new Buffer(2);
+            buffer[1] = 0;
+            buffer.writeUInt8(value & 0xFF, 0);
+            break;
+        case 'int8be':
+            buffer = new Buffer(2);
+            buffer[0] = 0;
+            buffer.writeInt8(value & 0xFF, 1);
+            break;
+        case 'int8le':
+            buffer = new Buffer(2);
+            buffer[1] = 0;
+            buffer.writeInt8(value & 0xFF, 0);
+            break;
         case 'uint16be':
             buffer = new Buffer(2);
             buffer.writeUInt16BE(value, 0);
@@ -597,6 +625,10 @@ function writeValue(type, value, len) {
 }
 
 var type_items_len = {
+    'uint8be':    1,
+    'uint8le':    1,
+    'int8be':     1,
+    'int8le':     1,
     'uint16be':   1,
     'uint16le':   1,
     'int16be':    1,
