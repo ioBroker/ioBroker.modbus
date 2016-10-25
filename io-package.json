@@ -1,8 +1,13 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.4.4",
+    "version":      "0.4.5",
 	"news": {
+        "0.4.5": {
+          "en": "better buffer handling on tcp and serial",
+          "de": "Bessere Pufferbehandlung für tcp und serial",
+          "ru": "Исправлена обработка потока для TCP и serial"
+        },
         "0.4.4": {
           "en": "Fix write of holding registers",
           "de": "Korrigiere Schreiben von holding registers",

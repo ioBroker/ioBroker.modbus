@@ -1393,7 +1393,7 @@ var main = {
                 port:          parseInt(main.acp.port, 10) || 502,
                 responseDelay: 100,
                 coils:         new Buffer(main.coilsHighAddress >> 3),
-                disInput:      new Buffer(main.disInputsHighAddress >> 3),
+                discrete:      new Buffer(main.disInputsHighAddress >> 3),
                 input:         new Buffer(main.inputRegsHighAddress * 2),
                 holding:       new Buffer(main.holdingRegsHighAddress * 2)
             }).compose(server.tcp.complete)
@@ -1429,7 +1429,7 @@ var main = {
                         main.disInputsChanged = false;
                         var resp = new Array(Math.ceil(quantity / 16) * 2);
                         var i = 0;
-                        var data = this.getDisInputs();
+                        var data = this.getDiscrete();
                         for (var j = 0; j < resp.length; j++) {
                             resp[j] = data.readUInt8(start + j);
                         }
@@ -1595,7 +1595,30 @@ var main = {
                     return;
                 }
                 try {
-                    modbusClient = modbus.client.tcp.complete({
+                    var client = {
+                        tcp         : {
+                            core        : require(__dirname + '/lib/modbus-tcp-client.js'),
+                            complete    : require(__dirname + '/lib/modbus-tcp-client.js')
+                        },
+                        handler     : { }
+                    };
+                    var fs = require('fs');
+                    var path = __dirname + '/node_modules/jsmodbus';
+                    if (!fs.existsSync(__dirname + '/node_modules/jsmodbus')) {
+                        path = __dirname + '/../jsmodbus';
+                    }
+
+                    fs.readdirSync(path + '/src/handler/server')
+                        .filter(function (file) {
+                            return file.substr(-3) === '.js';
+
+                        }).forEach(function (file) {
+
+                        client.tcp.complete = client.tcp.complete.compose(require(path + '/src/handler/client/' + file));
+                        client.handler[file.substr(0, file.length - 3)] = require(path + '/src/handler/client/' + file);
+                    });
+
+                    modbusClient = client.tcp.complete({
                         host:          main.acp.bind,
                         port:          parseInt(main.acp.port, 10) || 502,
                         logEnabled:    true,
@@ -1627,11 +1650,6 @@ var main = {
                         path = __dirname + '/../jsmodbus';
                     }
 
-                    main.coilsChanged       = true;
-                    main.inputRegsChanged   = true;
-                    main.disInputsChanged   = true;
-                    main.holdingRegsChanged = true;
-
                     fs.readdirSync(path + '/src/handler/server')
                         .filter(function (file) {
                             return file.substr(-3) === '.js';
@@ -1661,7 +1679,30 @@ var main = {
                     return;
                 }
                 try {
-                    modbusClient = modbus.client.serial.complete({
+                    var client = {
+                        tcp         : {
+                            core        : require(__dirname + '/lib/modbus-serial-client.js'),
+                            complete    : require(__dirname + '/lib/modbus-serial-client.js')
+                        },
+                        handler     : { }
+                    };
+                    var fs = require('fs');
+                    var path = __dirname + '/node_modules/jsmodbus';
+                    if (!fs.existsSync(__dirname + '/node_modules/jsmodbus')) {
+                        path = __dirname + '/../jsmodbus';
+                    }
+
+                    fs.readdirSync(path + '/src/handler/server')
+                        .filter(function (file) {
+                            return file.substr(-3) === '.js';
+
+                        }).forEach(function (file) {
+
+                        client.serial.complete = client.serial.complete.compose(require(path + '/src/handler/client/' + file));
+                        client.handler[file.substr(0, file.length - 3)] = require(path + '/src/handler/client/' + file);
+                    });
+
+                    modbusClient = client.serial.complete({
                         portName:       main.acp.comName,
                         baudRate:       parseInt(main.acp.baudRate, 10) || 9600,
                         logEnabled:     true,

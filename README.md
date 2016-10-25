@@ -52,6 +52,9 @@ Some systems require first "write request" to deliver the data on "read request"
 You can force this mode by setting of the "Max read request length" to 1.
 
 ## Changelog
+# 0.4.5 (2016-10-25) 
+* (bluefox) better buffer handling on tcp and serial
+
 # 0.4.4 (2016-10-21) 
 * (bluefox) Fix write of holding registers
 
