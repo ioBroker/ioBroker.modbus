@@ -57,6 +57,12 @@ adapter.on('message', function (obj) {
 function stop(callback) {
     isStop = true;
     if (adapter && adapter.setState) {
+
+        if (main && main.requestTimer) {
+            clearTimeout(main.requestTimer);
+            main.requestTimer = null;
+        }
+
         if (modbusClient) {
             try {
                 modbusClient.close();
@@ -79,6 +85,7 @@ function stop(callback) {
     if (nextPoll) clearTimeout(nextPoll);
     if (callback) callback();
 }
+
 var pulseList  = {};
 var sendBuffer = {};
 var objects    = {};
@@ -1321,6 +1328,7 @@ var main = {
                 main.start();
             }
 
+            main.acp.timeout = parseInt(main.acp.timeout, 10) || 5000;
             clear();
         });
     },
@@ -1335,6 +1343,11 @@ var main = {
     },
 
     reconnect: function (isImmediately) {
+        if (main.requestTimer) {
+            clearTimeout(main.requestTimer);
+            main.requestTimer = null;
+        }
+
         try {
             if (modbusClient) modbusClient.close();
         } catch (e) {
@@ -1625,7 +1638,7 @@ var main = {
                         logLevel:      process.argv[3] === 'debug' ? 'verbose' : process.argv[3],
                         logTimestamp:  true,
                         autoReconnect: false,
-                        timeout:       parseInt(main.acp.timeout, 10) || 5000,
+                        timeout:       main.acp.timeout,
                         unitId:        main.acp.deviceId
                     });
                 } catch (e) {
@@ -1667,7 +1680,7 @@ var main = {
                         logLevel:       process.argv[3] === 'debug' ? 'verbose' : process.argv[3],
                         logTimestamp:   true,
                         autoReconnect:  false,
-                        timeout:        parseInt(main.acp.timeout, 10) || 5000,
+                        timeout:        main.acp.timeout,
                         unitId:         main.acp.deviceId
                     });
                 } catch (e) {
@@ -1710,7 +1723,7 @@ var main = {
                         logTimestamp:   true,
                         dataBits:       parseInt(main.acp.dataBits, 10) || 8,
                         stopBits:       parseInt(main.acp.stopBits, 10) || 1,
-                        timeout:        parseInt(main.acp.timeout,  10) || 5000,
+                        timeout:        main.acp.timeout,
                         parity:         main.acp.parity || 'none',
                         unitId:         main.acp.deviceId
                     });
@@ -1739,6 +1752,12 @@ var main = {
             });
 
             modbusClient.on('error', function (err) {
+                if (isStop) return;
+                adapter.log.warn('Error: ' + JSON.stringify(err));
+                main.reconnect();
+            });
+
+            modbusClient.on('trashCurrentRequest', function (err) {
                 if (isStop) return;
                 adapter.log.warn('Error: ' + JSON.stringify(err));
                 main.reconnect();
@@ -1941,6 +1960,9 @@ var main = {
 
     poll: function () {
         var startTime = (new Date()).valueOf();
+        main.requestTimer = setTimeout(function () {
+            main.pollResult(startTime, 'App Timeout');
+        }, main.acp.timeout + 200);
 
         main.pollDisInputs(function (err) {
             if (err) return main.pollResult(startTime, err);
@@ -1949,6 +1971,8 @@ var main = {
                 main.pollInputRegsBlocks(function (err) {
                     if (err) return main.pollResult(startTime, err);
                     main.pollHoldingRegsBlocks(function (err) {
+                        clearTimeout(main.requestTimer);
+                        main.requestTimer = null;
                         main.pollResult(startTime, err);
                     });
                 });
