@@ -51,6 +51,13 @@ Maximal length of command READ_MULTIPLE_REGISTERS as number of registers to read
 Some systems require first "write request" to deliver the data on "read request".
 You can force this mode by setting of the "Max read request length" to 1.
 
+**Notice:**
+Some USB Modbus solutions (e.g. based on socat) can have trouble to work with serialport npm module.
+
+There is a software [**Modbus RTU <-> Modbus RTU over TCP**](http://mbus.sourceforge.net/index.html) gateway to enable using of serial RTU over TCP protocol.
+
+Both solutions **RTU over TCP** and **TCP** works well.
+
 ## Changelog
 # 0.4.5 (2016-10-25) 
 * (bluefox) better buffer handling on tcp and serial
