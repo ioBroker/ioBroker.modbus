@@ -1,8 +1,13 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.4.5",
+    "version":      "0.4.6",
 	"news": {
+        "0.4.6": {
+          "en": "backward compatibility with 0.3.x",
+          "de": "Rückwartskompatibilität mit 0.3.x",
+          "ru": "Обратная совместимость с 0.3.x"
+        },
         "0.4.5": {
           "en": "better buffer handling on tcp and serial",
           "de": "Bessere Pufferbehandlung für tcp und serial",

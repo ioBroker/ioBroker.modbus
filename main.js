@@ -1366,6 +1366,8 @@ var main = {
         }
     },
     start: function () {
+        main.acp.type = main.acp.type || 'tcp';
+
         if (main.acp.slave) {
             var server = {
                 tcp         : {
