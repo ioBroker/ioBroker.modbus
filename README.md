@@ -59,6 +59,9 @@ There is a software [**Modbus RTU <-> Modbus RTU over TCP**](http://mbus.sourcef
 Both solutions **RTU over TCP** and **TCP** works well.
 
 ## Changelog
+# 0.4.7 (2016-11-27) 
+* (bluefox) Use old version of jsmodbus
+
 # 0.4.6 (2016-11-08) 
 * (bluefox) backward compatibility with 0.3.x
 

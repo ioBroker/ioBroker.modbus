@@ -1,8 +1,13 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.4.6",
+    "version":      "0.4.7",
 	"news": {
+        "0.4.7": {
+          "en": "Use old version of jsmodbus",
+          "de": "Benutze alte Version von jsmodbus",
+          "ru": "Используется старая версия jsmodbus"
+        },
         "0.4.6": {
           "en": "backward compatibility with 0.3.x",
           "de": "Rückwartskompatibilität mit 0.3.x",
