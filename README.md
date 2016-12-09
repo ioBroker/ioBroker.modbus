@@ -58,6 +58,34 @@ There is a software [**Modbus RTU <-> Modbus RTU over TCP**](http://mbus.sourcef
 
 Both solutions **RTU over TCP** and **TCP** works well.
 
+### Data types
+
+- uint16be - Unsigned 16 bit (Big Endian): AABB => AABB
+- uint16le - Unsigned 16 bit (Little Endian): AABB => BBAA
+- int16be  - Signed 16 bit (Big Endian): AABB => AABB
+- int16le  - Signed 16 bit (Little Endian): AABB => BBAA
+- uint32be - Unsigned 32 bit (Big Endian): AABBCCDD => AABBCCDD
+- uint32le - Unsigned 32 bit (Little Endian): AABBCCDD => DDCCBBAA
+- uint32sw - Unsigned 32 bit (Big Endian Word Swap): AABBCCDD => CCDDAABB
+- uint32sb - Unsigned 32 bit (Big Endian Byte Swap): AABBCCDD => DDCCBBAA
+- int32be  - Signed 32 bit (Big Endian): AABBCCDD => AABBCCDD
+- int32le  - Signed 32 bit (Little Endian): ABBCCDD => DDCCBBAA
+- int32sw  - Signed 32 bit (Big Endian Word Swap): AABBCCDD => CCDDAABB
+- int32sb  - Signed 32 bit (Big Endian Byte Swap): AABBCCDD => DDCCBBAA
+- uint64be - Unsigned 64 bit (Big Endian): AABBCCDDEEFFGGHH => AABBCCDDEEFFGGHH
+- uint64le - Unsigned 64 bit (Little Endian): AABBCCDDEEFFGGHH => HHGGFFEEDDCCBBAA
+- uint8be  - Unsigned 8 bit (Big Endian): AA => AA
+- uint8le  - Unsigned 8 bit (Little Endian): AA => AA
+- int8be   - Signed 8 bit (Big Endian): AA => AA
+- int8le   - Signed 8 bit (Little Endian): AA => AA
+- floatbe  - Float (Big Endian): AABBCCDD => AABBCCDD
+- floatle  - Float (Little Endian): AABBCCDD => DDCCBBAA
+- floatsw  - Float (Big Endian Word Swap): AABBCCDD => CCDDAABB
+- floatsb  - Float (Big Endian Byte Swap): AABBCCDD => DDCCBBAA
+- doublebe - Double (Big Endian): AABBCCDDEEFFGGHH => AABBCCDDEEFFGGHH
+- doublele - Double (Little Endian): AABBCCDDEEFFGGHH => HHGGFFEEDDCCBBAA
+- string   - String (Zero-end): ABCDEF\0 => ABCDEF\0
+
 ## Changelog
 # 0.4.7 (2016-11-27) 
 * (bluefox) Use old version of jsmodbus
