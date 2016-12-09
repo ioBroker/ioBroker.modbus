@@ -118,7 +118,7 @@ Clearly, when using network protocols such as Modbus, strict attention must be p
 
 The Modbus protocol itself is declared as a ‘big-Endian’ protocol, as per the Modbus Application Protocol Specification, V1.1.b:
 
-“Modbus uses a “big-Endian” representation for addresses and data items. This means that when a numerical quantity larger than a single byte is transmitted, the most significant byte is sent first.”
+```Modbus uses a “big-Endian” representation for addresses and data items. This means that when a numerical quantity larger than a single byte is transmitted, the most significant byte is sent first.```
 
 Big-Endian is the most commonly used format for network protocols – so common, in fact, that it is also referred to as ‘network order’.
 
