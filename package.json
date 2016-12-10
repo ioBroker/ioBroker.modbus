@@ -41,7 +41,13 @@
       "grunt-replace": "^0.9.3",
       "grunt-contrib-jshint": "^0.11.2",
       "grunt-jscs": "^2.0.0",
-      "grunt-http": "^1.6.0"
+      "grunt-http": "^1.6.0",
+      "mocha": "^2.3.4",
+      "chai": "^3.4.1"
+  },
+  "main": "main.js",
+  "scripts": {
+    "test": "node node_modules/mocha/bin/mocha test/testAdapter.js"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.modbus/issues"
