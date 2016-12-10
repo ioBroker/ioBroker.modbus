@@ -34,7 +34,11 @@ function copyFileSync(source, target) {
         }
     }
 
-    fs.writeFileSync(targetFile, fs.readFileSync(source));
+    try {
+        fs.writeFileSync(targetFile, fs.readFileSync(source));
+    } catch (e) {
+        console.log('ERROR copying file ' + source + ' to ' + targetFile);
+    }
 }
 
 function copyFolderRecursiveSync(source, target, ignore) {
