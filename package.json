@@ -25,7 +25,7 @@
     "url": "https://github.com/ioBroker/ioBroker.modbus"
   },
   "optionalDependencies": {
-    "serialport": "^2.1.2"
+    "serialport": "^3.1.2"
   },
   "dependencies": {
     "jsmodbus": "1.2.4",
