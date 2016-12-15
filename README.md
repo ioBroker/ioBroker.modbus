@@ -32,7 +32,7 @@ Normally all registers can have address from 0 to 65535. By using of aliases you
 - holding registers are from 40001 to 60000
 
 Every alias will be mapped internally to address, e.g. 30011 will be mapped to input register 10. and so on.
- 
+
 #### Round Real to
 How many digits after comma for float and doubles.
 
@@ -46,7 +46,7 @@ Reconnection interval (Only relevant for master)
 if pulse used for coils, this define the interval how long is pulse.
 
 #### Max read request length
-Maximal length of command READ_MULTIPLE_REGISTERS as number of registers to read. 
+Maximal length of command READ_MULTIPLE_REGISTERS as number of registers to read.
 
 Some systems require first "write request" to deliver the data on "read request".
 You can force this mode by setting of the "Max read request length" to 1.
@@ -138,7 +138,7 @@ The FieldServer Modbus RTU drivers offer several function moves that handle 32-b
 | 2.i16-1.i32-s     | byte and word swap | [ a b ] [ c d ] | [ d c b a ]  |
 | 2.i16-1.i32-sb    | byte swap          | [ a b ] [ c d ] | [ b a d c ]  |
 | 2.i16-1.i32-sw    | word swap          | [ a b ] [ c d ] | [ c d a b ]  |
- 
+
 The following table shows the FieldServer function moves that copy two adjacent 16-bit registers to a 32-bit floating point value:
 
 | Function Keyword  | Swap Mode          | Source Bytes    | Target Bytes |
@@ -149,7 +149,7 @@ The following table shows the FieldServer function moves that copy two adjacent 
 | 2.i16-1.ifloat-sw | word swap          | [ a b ] [ c d ] | [ c d a b ]  |
 
 The following table shows the FieldServer function moves that copy a single 32-bit floating point value to two adjacent 16-bit registers:
- 
+
 | Function Keyword | Swap Mode         | Source Bytes    | Target Bytes   |
 |------------------|-------------------|-----------------|----------------|
 | 1.float-2.i16    |N/A                | [ a b ] [ c d ] | [ a b ][ c d ] |
@@ -158,7 +158,7 @@ The following table shows the FieldServer function moves that copy a single 32-b
 | 1.float-2.i16-sw |word swap          | [ a b ] [ c d ] | [ c d ][ a b ] |
 
 Given the various FieldServer function moves, the correct handling of 32-bit data is dependent on choosing the proper one. Observe the following behavior of these FieldServer function moves on the known single-precision decimal float value of 123456.00:
- 
+
 |16-bit Values	| Function Move	    | Result	| Function Move	    | Result        |
 |---------------|-------------------|-----------|-------------------|---------------|
 |0x2000 0x47F1	| 2.i16-1.float	    | 123456.00	| 1.float-2.i16	    | 0x2000 0x47F1 |
@@ -175,54 +175,57 @@ Of the many hex-to-floating point converters and calculators that are available 
 One can then swap bytes and/or words to analyze what potential endianness issues may exist between Modbus RTU master and slave devices.
 
 ## Changelog
+# 0.4.8 (2016-12-15)
+* (Apollon77) update serialport library for node 6.x compatibility
+
 # 0.4.7 (2016-11-27) 
 * (bluefox) Use old version of jsmodbus
 
-# 0.4.6 (2016-11-08) 
+# 0.4.6 (2016-11-08)
 * (bluefox) backward compatibility with 0.3.x
 
-# 0.4.5 (2016-10-25) 
+# 0.4.5 (2016-10-25)
 * (bluefox) better buffer handling on tcp and serial
 
-# 0.4.4 (2016-10-21) 
+# 0.4.4 (2016-10-21)
 * (bluefox) Fix write of holding registers
 
-# 0.4.1 (2016-10-19) 
+# 0.4.1 (2016-10-19)
 * (bluefox) Support of ModBus RTU over serial and over TCP (only slave)
 
-# 0.3.11 (2016-08-18) 
+# 0.3.11 (2016-08-18)
 * (Apollon77) Fix wrong byte count in loop
 
-# 0.3.10 (2016-02-01) 
+# 0.3.10 (2016-02-01)
 * (bluefox) fix lost of history settings.
 
-# 0.3.9 (2015-11-09) 
+# 0.3.9 (2015-11-09)
 * (bluefox) Use always write_multiple_registers by write of holding registers.
 
-# 0.3.7 (2015-11-02) 
+# 0.3.7 (2015-11-02)
 * (bluefox) add special read/write mode if "Max read request length" is 1.
 
-# 0.3.6 (2015-11-01) 
+# 0.3.6 (2015-11-01)
 * (bluefox) add cyclic write for holding registers (fix)
 
-# 0.3.5 (2015-10-31) 
+# 0.3.5 (2015-10-31)
 * (bluefox) add cyclic write for holding registers
 
-# 0.3.4 (2015-10-28) 
+# 0.3.4 (2015-10-28)
 * (bluefox) add doubles and fix uint64
 
-# 0.3.3 (2015-10-27) 
+# 0.3.3 (2015-10-27)
 * (bluefox) fix holding registers
 
-# 0.3.2 (2015-10-27) 
+# 0.3.2 (2015-10-27)
 * (bluefox) fix import from text file
 
-# 0.3.1 (2015-10-26) 
+# 0.3.1 (2015-10-26)
 * (bluefox) fix error with length of read block (master)
 * (bluefox) support of read blocks and maximal length of read request (master)
 * (bluefox) can define fields by import
 
-# 0.3.0 (2015-10-24) 
+# 0.3.0 (2015-10-24)
 * (bluefox) add round settings
 * (bluefox) add deviceID
 * (bluefox) slave supports floats, integers and strings
