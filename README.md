@@ -175,10 +175,13 @@ Of the many hex-to-floating point converters and calculators that are available 
 One can then swap bytes and/or words to analyze what potential endianness issues may exist between Modbus RTU master and slave devices.
 
 ## Changelog
+# 0.4.9 (2016-12-20)
+* (bluefox) fix serial RTU
+
 # 0.4.8 (2016-12-15)
 * (Apollon77) update serialport library for node 6.x compatibility
 
-# 0.4.7 (2016-11-27) 
+# 0.4.7 (2016-11-27)
 * (bluefox) Use old version of jsmodbus
 
 # 0.4.6 (2016-11-08)

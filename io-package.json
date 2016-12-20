@@ -1,8 +1,13 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.4.8",
+    "version":      "0.4.9",
 	"news": {
+        "0.4.9": {
+          "en": "fix serial RTU",
+          "de": "Korrigiere serial RTU",
+          "ru": "Исправлено serial RTU"
+        },
         "0.4.8": {
           "en": "update serialport library for node 6.x compatibility",
           "de": "Bibliothek serialport aktualisiert um Kompatibel zu node 6.x zu sein",
