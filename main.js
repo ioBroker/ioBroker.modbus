@@ -1409,7 +1409,7 @@ var main = {
         if (!connectTimer) {
             connectTimer = setTimeout(function () {
                 connectTimer = null;
-                modbusClient.connect(main.acp.port, main.acp.bind);
+                modbusClient.connect();
             }, isImmediately ? 1000 : main.acp.recon);
         }
     },
@@ -1671,7 +1671,7 @@ var main = {
                         path = __dirname + '/../jsmodbus';
                     }
 
-                    fs.readdirSync(path + '/src/handler/server')
+                    fs.readdirSync(path + '/src/handler/client')
                         .filter(function (file) {
                             return file.substr(-3) === '.js';
 
@@ -1713,7 +1713,7 @@ var main = {
                         path = __dirname + '/../jsmodbus';
                     }
 
-                    fs.readdirSync(path + '/src/handler/server')
+                    fs.readdirSync(path + '/src/handler/client')
                         .filter(function (file) {
                             return file.substr(-3) === '.js';
 
@@ -1755,7 +1755,7 @@ var main = {
                         path = __dirname + '/../jsmodbus';
                     }
 
-                    fs.readdirSync(path + '/src/handler/server')
+                    fs.readdirSync(path + '/src/handler/client')
                         .filter(function (file) {
                             return file.substr(-3) === '.js';
 
