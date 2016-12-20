@@ -1802,19 +1802,25 @@ var main = {
                 main.poll();
             }).on('disconnect', function () {
                 if (isStop) return;
-                main.reconnect();
+                setTimeout(function () {
+                    main.reconnect();
+                }, 1000);
             });
 
             modbusClient.on('error', function (err) {
                 if (isStop) return;
-                adapter.log.warn('Error: ' + JSON.stringify(err));
-                main.reconnect();
+                adapter.log.warn('On error: ' + JSON.stringify(err));
+                setTimeout(function () {
+                    main.reconnect();
+                }, 1000);
             });
 
             modbusClient.on('trashCurrentRequest', function (err) {
                 if (isStop) return;
                 adapter.log.warn('Error: ' + JSON.stringify(err));
-                main.reconnect();
+                setTimeout(function () {
+                    main.reconnect();
+                }, 1000);
             });
             if (typeof modbusClient.connect === 'function') modbusClient.connect();
         }
