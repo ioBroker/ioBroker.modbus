@@ -1738,7 +1738,7 @@ var main = {
                 }
             } else if (main.acp.type === 'serial') {
                 if (!main.acp.comName) {
-                    adapter.log.error('IP address is not defined');
+                    adapter.log.error('Port is not defined');
                     return;
                 }
                 try {
