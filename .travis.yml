@@ -19,4 +19,4 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - g++-48
+      - g++-4.8
