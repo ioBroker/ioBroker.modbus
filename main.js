@@ -1103,7 +1103,7 @@ var main = {
                         address:   main.ac.disInputs[i].address
                     }
                 };
-                adapter.setObject(main.ac.disInputs[i].id, objects[id]);
+                adapter.setObjectNotExists(main.ac.disInputs[i].id, objects[id]);
 
                 syncEnums('rooms', id, main.ac.disInputs[i].room);
 
@@ -1130,7 +1130,7 @@ var main = {
                         wp:        main.ac.coils[i].wp
                     }
                 };
-                adapter.setObject(main.ac.coils[i].id, objects[id]);
+                adapter.setObjectNotExists(main.ac.coils[i].id, objects[id]);
                 syncEnums('rooms', id, main.ac.coils[i].room);
                 main.newObjects.push(id);
             }
@@ -1158,7 +1158,7 @@ var main = {
                         factor:    main.ac.inputRegs[i].factor
                     }
                 };
-                adapter.setObject(main.ac.inputRegs[i].id, objects[id]);
+                adapter.setObjectNotExists(main.ac.inputRegs[i].id, objects[id]);
 
                 syncEnums('rooms', id, main.ac.inputRegs[i].room);
 
@@ -1191,7 +1191,7 @@ var main = {
                     }
                 };
 
-                adapter.setObject(main.ac.holdingRegs[i].id, objects[id]);
+                adapter.setObjectNotExists(main.ac.holdingRegs[i].id, objects[id]);
 
                 syncEnums('rooms', id, main.ac.holdingRegs[i].room);
 
@@ -1306,7 +1306,7 @@ var main = {
                 });
             }
 
-            adapter.setObject('info', {
+            adapter.setObjectNotExists('info', {
                 type: 'channel',
                 common: {
                     name:    'info'
@@ -1315,7 +1315,7 @@ var main = {
             });
 
             if (!main.acp.slave) {
-                adapter.setObject('info.pollTime', {
+                adapter.setObjectNotExists('info.pollTime', {
                     type: 'state',
                     common: {
                         name: 'Poll time',
@@ -1331,7 +1331,7 @@ var main = {
                 main.newObjects.push(adapter.namespace + '.info.pollTime');
             }
 
-            adapter.getObject('info.connection', function (err, obj) {
+            adapter.getObjectNotExists('info.connection', function (err, obj) {
                 if (!obj) {
                     obj = {
                         type: 'state',
@@ -1344,15 +1344,15 @@ var main = {
                         },
                         native: {}
                     };
-                    adapter.setObject('info.connection', obj);
+                    adapter.setObjectNotExists('info.connection', obj);
                 } else if (main.acp.slave && obj.common.type !== 'number') {
                     obj.common.type = 'number';
                     obj.common.name = 'Number of connected masters';
-                    adapter.setObject('info.connection', obj);
+                    adapter.setObjectNotExists('info.connection', obj);
                 } else if (!main.acp.slave && obj.common.type !== 'boolean') {
                     obj.common.type = 'boolean';
                     obj.common.name = 'If master connected';
-                    adapter.setObject('info.connection', obj);
+                    adapter.setObjectNotExists('info.connection', obj);
                 }
             });
 
