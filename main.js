@@ -1044,7 +1044,7 @@ var main = {
 
             // ------------------ create devices -------------
             if (main.ac.disInputs.length > 0) {
-                adapter.setObject('discreteInputs', {
+                adapter.setObjectNotExists('discreteInputs', {
                     type: 'channel',
                     common: {
                         name: 'Discrete inputs'
@@ -1054,7 +1054,7 @@ var main = {
             }
 
             if (main.ac.coils.length > 0) {
-                adapter.setObject('coils', {
+                adapter.setObjectNotExists('coils', {
                     type: 'channel',
                     common: {
                         name: 'Coils'
@@ -1064,7 +1064,7 @@ var main = {
             }
 
             if (main.ac.inputRegs.length > 0) {
-                adapter.setObject('inputRegisters', {
+                adapter.setObjectNotExists('inputRegisters', {
                     type: 'channel',
                     common: {
                         name: 'Input registers'
@@ -1074,7 +1074,7 @@ var main = {
             }
 
             if (main.ac.holdingRegs.length > 0) {
-                adapter.setObject('holdingRegisters', {
+                adapter.setObjectNotExists('holdingRegisters', {
                     type: 'channel',
                     common: {
                         name: 'Holding registers'
