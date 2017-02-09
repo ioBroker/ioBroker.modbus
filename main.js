@@ -1331,7 +1331,7 @@ var main = {
                 main.newObjects.push(adapter.namespace + '.info.pollTime');
             }
 
-            adapter.getObjectNotExists('info.connection', function (err, obj) {
+            adapter.getObject('info.connection', function (err, obj) {
                 if (!obj) {
                     obj = {
                         type: 'state',
