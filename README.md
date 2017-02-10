@@ -175,6 +175,9 @@ Of the many hex-to-floating point converters and calculators that are available 
 One can then swap bytes and/or words to analyze what potential endianness issues may exist between Modbus RTU master and slave devices.
 
 ## Changelog
+# 0.4.10 (2017-02-10)
+* (Apollon77) Do not recreate all datapoints on start of adapter
+
 # 0.4.9 (2016-12-20)
 * (bluefox) fix serial RTU
 

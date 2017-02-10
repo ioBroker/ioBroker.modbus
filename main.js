@@ -760,6 +760,16 @@ function address2alias(id, address, isDirect) {
     }
 }
 
+function createExtendObject(id, objData) {
+    adapter.getObject(id, function (err, oldObj) {
+        if (!err && oldObj) {
+            adapter.extendObject(id, objData);
+        } else {
+            adapter.setObjectNotExists(id, objData);
+        }
+    });
+}
+
 var main = {
     oldObjects:             [],
     newObjects:             [],
@@ -891,7 +901,7 @@ var main = {
                     main.coilsMapping[main.ac.coils[i].address - main.coilsLowAddress] = adapter.namespace + '.' + main.ac.coils[i].id;
                 }
             }
-            
+
             if (main.ac.inputRegs.length) {
                 for (i = main.ac.inputRegs.length - 1; i >= 0; i--) {
                     address = parseInt(main.ac.inputRegs[i].address, 10);
@@ -1044,7 +1054,7 @@ var main = {
 
             // ------------------ create devices -------------
             if (main.ac.disInputs.length > 0) {
-                adapter.setObject('discreteInputs', {
+                adapter.setObjectNotExists('discreteInputs', {
                     type: 'channel',
                     common: {
                         name: 'Discrete inputs'
@@ -1054,7 +1064,7 @@ var main = {
             }
 
             if (main.ac.coils.length > 0) {
-                adapter.setObject('coils', {
+                adapter.setObjectNotExists('coils', {
                     type: 'channel',
                     common: {
                         name: 'Coils'
@@ -1064,7 +1074,7 @@ var main = {
             }
 
             if (main.ac.inputRegs.length > 0) {
-                adapter.setObject('inputRegisters', {
+                adapter.setObjectNotExists('inputRegisters', {
                     type: 'channel',
                     common: {
                         name: 'Input registers'
@@ -1074,7 +1084,7 @@ var main = {
             }
 
             if (main.ac.holdingRegs.length > 0) {
-                adapter.setObject('holdingRegisters', {
+                adapter.setObjectNotExists('holdingRegisters', {
                     type: 'channel',
                     common: {
                         name: 'Holding registers'
@@ -1103,7 +1113,7 @@ var main = {
                         address:   main.ac.disInputs[i].address
                     }
                 };
-                adapter.setObject(main.ac.disInputs[i].id, objects[id]);
+                createExtendObject(main.ac.disInputs[i].id, objects[id]);
 
                 syncEnums('rooms', id, main.ac.disInputs[i].room);
 
@@ -1130,7 +1140,7 @@ var main = {
                         wp:        main.ac.coils[i].wp
                     }
                 };
-                adapter.setObject(main.ac.coils[i].id, objects[id]);
+                createExtendObject(main.ac.coils[i].id, objects[id]);
                 syncEnums('rooms', id, main.ac.coils[i].room);
                 main.newObjects.push(id);
             }
@@ -1158,7 +1168,7 @@ var main = {
                         factor:    main.ac.inputRegs[i].factor
                     }
                 };
-                adapter.setObject(main.ac.inputRegs[i].id, objects[id]);
+                createExtendObject(main.ac.inputRegs[i].id, objects[id]);
 
                 syncEnums('rooms', id, main.ac.inputRegs[i].room);
 
@@ -1191,7 +1201,7 @@ var main = {
                     }
                 };
 
-                adapter.setObject(main.ac.holdingRegs[i].id, objects[id]);
+                createExtendObject(main.ac.holdingRegs[i].id, objects[id]);
 
                 syncEnums('rooms', id, main.ac.holdingRegs[i].room);
 
@@ -1306,7 +1316,7 @@ var main = {
                 });
             }
 
-            adapter.setObject('info', {
+            adapter.setObjectNotExists('info', {
                 type: 'channel',
                 common: {
                     name:    'info'
@@ -1315,7 +1325,7 @@ var main = {
             });
 
             if (!main.acp.slave) {
-                adapter.setObject('info.pollTime', {
+                adapter.setObjectNotExists('info.pollTime', {
                     type: 'state',
                     common: {
                         name: 'Poll time',
@@ -1344,15 +1354,15 @@ var main = {
                         },
                         native: {}
                     };
-                    adapter.setObject('info.connection', obj);
+                    adapter.setObjectNotExists('info.connection', obj);
                 } else if (main.acp.slave && obj.common.type !== 'number') {
                     obj.common.type = 'number';
                     obj.common.name = 'Number of connected masters';
-                    adapter.setObject('info.connection', obj);
+                    adapter.setObjectNotExists('info.connection', obj);
                 } else if (!main.acp.slave && obj.common.type !== 'boolean') {
                     obj.common.type = 'boolean';
                     obj.common.name = 'If master connected';
-                    adapter.setObject('info.connection', obj);
+                    adapter.setObjectNotExists('info.connection', obj);
                 }
             });
 
@@ -2046,4 +2056,3 @@ function sortByAddress(a, b) {
     var bd = parseFloat(b.address);
     return ((ad < bd) ? -1 : ((ad > bd) ? 1 : 0));
 }
-

@@ -1,6 +1,6 @@
 {
   "name": "iobroker.modbus",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "description": "Connect devices oder Modbus protocol to ioBroker",
   "author": {
     "name": "bluefox",
