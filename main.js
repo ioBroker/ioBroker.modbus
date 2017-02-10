@@ -1103,9 +1103,15 @@ var main = {
                         address:   main.ac.disInputs[i].address
                     }
                 };
-                adapter.setObjectNotExists(main.ac.disInputs[i].id, objects[id]);
+				adapter.getObject(main.ac.disInputs[i].id, function (err, data) {objects[id]});
+					if (!err) {
+						adapter.extendObject(main.ac.disInputs[i].id, objects[id]);
+					} else {
+						adapter.setObjectNotExists(main.ac.disInputs[i].id, objects[id]);
+					}
 
-                syncEnums('rooms', id, main.ac.disInputs[i].room);
+
+				syncEnums('rooms', id, main.ac.disInputs[i].room);
 
                 main.newObjects.push(id);
             }
@@ -1130,8 +1136,14 @@ var main = {
                         wp:        main.ac.coils[i].wp
                     }
                 };
-                adapter.setObjectNotExists(main.ac.coils[i].id, objects[id]);
-                syncEnums('rooms', id, main.ac.coils[i].room);
+				adapter.getObject(main.ac.coils[i].id, function (err, data) {objects[id]});
+					if (!err) {
+						adapter.extendObject(main.ac.coils[i].id, objects[id]);
+					} else {
+						adapter.setObjectNotExists(main.ac.coils[i].id, objects[id]);
+					}
+
+				syncEnums('rooms', id, main.ac.coils[i].room);
                 main.newObjects.push(id);
             }
 
@@ -1158,9 +1170,14 @@ var main = {
                         factor:    main.ac.inputRegs[i].factor
                     }
                 };
-                adapter.setObjectNotExists(main.ac.inputRegs[i].id, objects[id]);
+				adapter.getObject(main.ac.inputRegs[i].id, function (err, data) {objects[id]});
+					if (!err) {
+						adapter.extendObject(main.ac.inputRegs[i].id, objects[id]);
+					} else {
+						adapter.setObjectNotExists(main.ac.inputRegs[i].id, objects[id]);
+					}
 
-                syncEnums('rooms', id, main.ac.inputRegs[i].room);
+				syncEnums('rooms', id, main.ac.inputRegs[i].room);
 
                 main.newObjects.push(id);
             }
@@ -1191,7 +1208,12 @@ var main = {
                     }
                 };
 
-                adapter.setObjectNotExists(main.ac.holdingRegs[i].id, objects[id]);
+				adapter.getObject(main.ac.holdingRegs[i].id, function (err, data) {objects[id]});
+					if (!err) {
+						adapter.extendObject(main.ac.holdingRegs[i].id, objects[id]);
+					} else {
+						adapter.setObjectNotExists(main.ac.holdingRegs[i].id, objects[id]);
+					}
 
                 syncEnums('rooms', id, main.ac.holdingRegs[i].room);
 
