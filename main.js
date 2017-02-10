@@ -1748,7 +1748,7 @@ var main = {
                 }
             } else if (main.acp.type === 'serial') {
                 if (!main.acp.comName) {
-                    adapter.log.error('IP address is not defined');
+                    adapter.log.error('Serial devicename is not defined');
                     return;
                 }
                 try {
