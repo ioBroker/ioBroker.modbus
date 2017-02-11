@@ -28,7 +28,7 @@
     "serialport": "^3.1.2"
   },
   "dependencies": {
-    "jsmodbus": "1.2.4",
+    "jsmodbus": "^2.0.2",
     "stampit": "^2.1.2",
     "put": "0.0.6",
     "crc": "3.4.0",
