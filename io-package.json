@@ -1,8 +1,13 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.4.10",
+    "version":      "0.5.0",
 	"news": {
+        "0.5.0": {
+          "en": "Create all states each after other",
+          "de": "Erzege die Datenpunkte eins nach dem anderem",
+          "ru": "Создавать объекты последовательно"
+        },
         "0.4.10": {
           "en": "Do not recreate all datapoints on start of adapter",
           "de": "Datenpunkte nicht beim Start des Adapters neu erzeugen",

@@ -287,7 +287,7 @@ function send() {
         if (val === 'false' || val === false) val = 0;
         val = parseFloat(val);
 
-        modbusClient.writeSingleCoil(objects[id].native.address, val ? true : false).then(function (response) {
+        modbusClient.writeSingleCoil(objects[id].native.address, !!val).then(function (response) {
             adapter.log.debug('Write successfully [' + objects[id].native.address + ']: ' + val);
         }).fail(function (err) {
             adapter.log.error('Cannot write [' + objects[id].native.address + ']: ' + JSON.stringify(err));
@@ -383,27 +383,39 @@ function syncEnums(enumGroup, id, newEnumName, callback) {
         });
         return;
     }
+
     // try to find this id in enums
     var found = false;
+    var count = 0;
     for (var e in enums[enumGroup]) {
-        if (enums[enumGroup][e].common &&
+        if (enums[enumGroup].hasOwnProperty(e) &&
+            enums[enumGroup][e].common &&
             enums[enumGroup][e].common.members &&
             enums[enumGroup][e].common.members.indexOf(id) !== -1) {
             if (enums[enumGroup][e]._id !== newEnumName) {
-                removeFromEnum(enums[enumGroup][e]._id, id);
+                count++;
+                removeFromEnum(enums[enumGroup][e]._id, id, function () {
+                    if (!--count && typeof callback === 'function') callback();
+                });
             } else {
                 found = true;
             }
         }
     }
     if (!found && newEnumName) {
-        addToEnum(newEnumName, id);
+        count++;
+        addToEnum(newEnumName, id, function () {
+            if (!--count&& typeof callback === 'function') callback();
+        });
     }
+
+    if (!count && typeof callback === 'function') callback();
 }
 
 function extractValue(type, len, buffer, offset) {
     var i1;
     var i2;
+    var buf;
 
     switch (type) {
         case 'uint8be':
@@ -427,14 +439,14 @@ function extractValue(type, len, buffer, offset) {
         case 'uint32le':
             return buffer.readUInt32LE(offset * 2);
         case 'uint32sw':
-            var buf = new Buffer(4);
+            buf = new Buffer(4);
             buf[0] = buffer[offset * 2 + 2];
             buf[1] = buffer[offset * 2 + 3];
             buf[2] = buffer[offset * 2 + 0];
             buf[3] = buffer[offset * 2 + 1];
             return buf.readUInt32BE(0);
         case 'uint32sb':
-            var buf = new Buffer(4);
+            buf = new Buffer(4);
             buf[0] = buffer[offset * 2 + 1];
             buf[1] = buffer[offset * 2 + 0];
             buf[2] = buffer[offset * 2 + 3];
@@ -445,14 +457,14 @@ function extractValue(type, len, buffer, offset) {
         case 'int32le':
             return buffer.readInt32LE(offset * 2);
         case 'int32sw':
-            var buf = new Buffer(4);
+            buf = new Buffer(4);
             buf[0] = buffer[offset * 2 + 2];
             buf[1] = buffer[offset * 2 + 3];
             buf[2] = buffer[offset * 2 + 0];
             buf[3] = buffer[offset * 2 + 1];
             return buf.readInt32BE(0);
         case 'int32sb':
-            var buf = new Buffer(4);
+            buf = new Buffer(4);
             buf[0] = buffer[offset * 2 + 1];
             buf[1] = buffer[offset * 2 + 0];
             buf[2] = buffer[offset * 2 + 3];
@@ -485,14 +497,14 @@ function extractValue(type, len, buffer, offset) {
         case 'floatle':
             return buffer.readFloatLE(offset * 2);
         case 'floatsw':
-            var buf = new Buffer(4);
+            buf = new Buffer(4);
             buf[0] = buffer[offset * 2 + 2];
             buf[1] = buffer[offset * 2 + 3];
             buf[2] = buffer[offset * 2 + 0];
             buf[3] = buffer[offset * 2 + 1];
             return buf.readFloatBE(0);
         case 'floatsb':
-            var buf = new Buffer(4);
+            buf = new Buffer(4);
             buf[0] = buffer[offset * 2 + 1];
             buf[1] = buffer[offset * 2 + 0];
             buf[2] = buffer[offset * 2 + 3];
@@ -517,7 +529,11 @@ function extractValue(type, len, buffer, offset) {
 }
 
 function writeValue(type, value, len) {
+    var a0;
+    var a1;
+    var a2;
     var buffer;
+
     switch (type) {
         case 'uint8be':
             buffer = new Buffer(2);
@@ -566,8 +582,8 @@ function writeValue(type, value, len) {
         case 'uint32sw':
             buffer = new Buffer(4);
             buffer.writeUInt32BE(value, 0);
-            var a0 = buffer[0];
-            var a1 = buffer[1];
+            a0 = buffer[0];
+            a1 = buffer[1];
             buffer[0] = buffer[2];
             buffer[1] = buffer[3];
             buffer[2] = a0;
@@ -576,8 +592,8 @@ function writeValue(type, value, len) {
         case 'uint32sb':
             buffer = new Buffer(4);
             buffer.writeUInt32BE(value, 0);
-            var a0 = buffer[0];
-            var a2 = buffer[2];
+            a0 = buffer[0];
+            a2 = buffer[2];
             buffer[0] = buffer[1];
             buffer[2] = buffer[3];
             buffer[1] = a0;
@@ -594,8 +610,8 @@ function writeValue(type, value, len) {
         case 'int32sw':
             buffer = new Buffer(4);
             buffer.writeInt32BE(value, 0);
-            var a0 = buffer[0];
-            var a1 = buffer[1];
+            a0 = buffer[0];
+            a1 = buffer[1];
             buffer[0] = buffer[2];
             buffer[1] = buffer[3];
             buffer[2] = a0;
@@ -604,8 +620,8 @@ function writeValue(type, value, len) {
         case 'int32sb':
             buffer = new Buffer(4);
             buffer.writeInt32BE(value, 0);
-            var a0 = buffer[0];
-            var a2 = buffer[2];
+            a0 = buffer[0];
+            a2 = buffer[2];
             buffer[0] = buffer[1];
             buffer[2] = buffer[3];
             buffer[1] = a0;
@@ -613,19 +629,23 @@ function writeValue(type, value, len) {
             break;
         case 'uint64be':
             buffer = new Buffer(8);
-            buffer.writeUInt32BE(value >> 32, 0) + buffer.writeUInt32BE(value & 0xFFFFFFFF, 4);
+            buffer.writeUInt32BE(value >> 32, 0);
+            buffer.writeUInt32BE(value & 0xFFFFFFFF, 4);
             break;
         case 'uint64le':
             buffer = new Buffer(8);
-            buffer.writeUInt32LE(value & 0xFFFFFFFF, 0) + buffer.writeUInt32LE(value >> 32, 4);
+            buffer.writeUInt32LE(value & 0xFFFFFFFF, 0);
+            buffer.writeUInt32LE(value >> 32, 4);
             break;
         case 'int64be':
             buffer = new Buffer(8);
-            buffer.writeInt32BE(value >> 32, 0) + buffer.writeUInt32BE(value & 0xFFFFFFFF, 4);
+            buffer.writeInt32BE(value >> 32, 0);
+            buffer.writeUInt32BE(value & 0xFFFFFFFF, 4);
             break;
         case 'int64le':
             buffer = new Buffer(8);
-            buffer.writeUInt32LE(value & 0xFFFFFFFF, 0) + buffer.writeInt32LE(value >> 32, 4);
+            buffer.writeUInt32LE(value & 0xFFFFFFFF, 0);
+            buffer.writeInt32LE(value >> 32, 4);
             break;
         case 'floatbe':
             buffer = new Buffer(4);
@@ -638,8 +658,8 @@ function writeValue(type, value, len) {
         case 'floatsw':
             buffer = new Buffer(4);
             buffer.writeFloatBE(value, 0);
-            var a0 = buffer[0];
-            var a1 = buffer[1];
+            a0 = buffer[0];
+            a1 = buffer[1];
             buffer[0] = buffer[2];
             buffer[1] = buffer[3];
             buffer[2] = a0;
@@ -648,8 +668,8 @@ function writeValue(type, value, len) {
         case 'floatsb':
             buffer = new Buffer(4);
             buffer.writeFloatBE(value, 0);
-            var a0 = buffer[0];
-            var a2 = buffer[2];
+            a0 = buffer[0];
+            a2 = buffer[2];
             buffer[0] = buffer[1];
             buffer[2] = buffer[3];
             buffer[1] = a0;
@@ -760,14 +780,37 @@ function address2alias(id, address, isDirect) {
     }
 }
 
-function createExtendObject(id, objData) {
+function createExtendObject(id, objData, callback) {
     adapter.getObject(id, function (err, oldObj) {
         if (!err && oldObj) {
-            adapter.extendObject(id, objData);
+            adapter.extendObject(id, objData, callback);
         } else {
-            adapter.setObjectNotExists(id, objData);
+            adapter.setObjectNotExists(id, objData, callback);
         }
     });
+}
+
+function processTasks(tasks, callback) {
+    if (!tasks || !tasks.length) {
+        if (typeof callback === 'function') callback();
+        return;
+    }
+    var task = tasks.shift();
+    if (task.name === 'add') {
+        createExtendObject(task.id, task.obj, function () {
+            setTimeout(processTasks, 0, tasks, callback);
+        });
+    } else if (task.name === 'del') {
+        adapter.delObject(task.id, function () {
+            setTimeout(processTasks, 0, tasks, callback);
+        });
+    } else if (task.name === 'syncEnums') {
+        syncEnums('rooms', task.id, task.obj, function () {
+            setTimeout(processTasks, 0, tasks, callback);
+        });
+    } else {
+        throw 'Unknown task';
+    }
 }
 
 var main = {
@@ -836,6 +879,7 @@ var main = {
             var lastAddress = null;
             var blockStart;
             var startIndex;
+            var tasks = [];
 
             if (main.ac.disInputs.length) {
                 for (i = main.ac.disInputs.length - 1; i >= 0; i--) {
@@ -1054,42 +1098,58 @@ var main = {
 
             // ------------------ create devices -------------
             if (main.ac.disInputs.length > 0) {
-                adapter.setObjectNotExists('discreteInputs', {
-                    type: 'channel',
-                    common: {
-                        name: 'Discrete inputs'
-                    },
-                    native: {}
+                tasks.push({
+                    id: 'discreteInputs',
+                    name: 'add',
+                    obj: {
+                        type: 'channel',
+                        common: {
+                            name: 'Discrete inputs'
+                        },
+                        native: {}
+                    }
                 });
             }
 
             if (main.ac.coils.length > 0) {
-                adapter.setObjectNotExists('coils', {
-                    type: 'channel',
-                    common: {
-                        name: 'Coils'
-                    },
-                    native: {}
+                tasks.push({
+                    id: 'coils',
+                    name: 'add',
+                    obj: {
+                        type: 'channel',
+                        common: {
+                            name: 'Coils'
+                        },
+                        native: {}
+                    }
                 });
             }
 
             if (main.ac.inputRegs.length > 0) {
-                adapter.setObjectNotExists('inputRegisters', {
-                    type: 'channel',
-                    common: {
-                        name: 'Input registers'
-                    },
-                    native: {}
+                tasks.push({
+                    id: 'inputRegisters',
+                    name: 'add',
+                    obj: {
+                        type: 'channel',
+                        common: {
+                            name: 'Input registers'
+                        },
+                        native: {}
+                    }
                 });
             }
 
             if (main.ac.holdingRegs.length > 0) {
-                adapter.setObjectNotExists('holdingRegisters', {
-                    type: 'channel',
-                    common: {
-                        name: 'Holding registers'
-                    },
-                    native: {}
+                tasks.push({
+                    id: 'holdingRegisters',
+                    name: 'add',
+                    obj: {
+                        type: 'channel',
+                        common: {
+                            name: 'Holding registers'
+                        },
+                        native: {}
+                    }
                 });
             }
 
@@ -1099,6 +1159,7 @@ var main = {
                 id = adapter.namespace + '.' + main.ac.disInputs[i].id;
                 main.ac.disInputs[i].fullId = id;
                 objects[id] = {
+                    _id: main.ac.disInputs[i].id,
                     type: 'state',
                     common: {
                         name:    main.ac.disInputs[i].description,
@@ -1113,8 +1174,16 @@ var main = {
                         address:   main.ac.disInputs[i].address
                     }
                 };
-                createExtendObject(main.ac.disInputs[i].id, objects[id]);
-				        syncEnums('rooms', id, main.ac.disInputs[i].room);
+                tasks.push({
+                    id: 'discreteInputs',
+                    name: 'add',
+                    obj: objects[id]
+                });
+                tasks.push({
+                    id: id,
+                    name: 'syncEnums',
+                    obj: main.ac.disInputs[i].room
+                });
                 main.newObjects.push(id);
             }
 
@@ -1122,6 +1191,7 @@ var main = {
                 id = adapter.namespace + '.' + main.ac.coils[i].id;
                 main.ac.coils[i].fullId = id;
                 objects[id] = {
+                    _id: main.ac.coils[i].id,
                     type: 'state',
                     common: {
                         name:    main.ac.coils[i].description,
@@ -1139,8 +1209,16 @@ var main = {
                     }
                 };
 
-                createExtendObject(main.ac.coils[i].id, objects[id]);
-                syncEnums('rooms', id, main.ac.coils[i].room);
+                tasks.push({
+                    id: 'discreteInputs',
+                    name: 'add',
+                    obj: objects[id]
+                });
+                tasks.push({
+                    id: id,
+                    name: 'syncEnums',
+                    obj: main.ac.coils[i].room
+                });
                 main.newObjects.push(id);
             }
 
@@ -1148,6 +1226,7 @@ var main = {
                 id = adapter.namespace + '.' + main.ac.inputRegs[i].id;
                 main.ac.inputRegs[i].fullId = id;
                 objects[id] = {
+                    _id: main.ac.inputRegs[i].id,
                     type: 'state',
                     common: {
                         name:    main.ac.inputRegs[i].description,
@@ -1167,10 +1246,16 @@ var main = {
                         factor:    main.ac.inputRegs[i].factor
                     }
                 };
-                createExtendObject(main.ac.inputRegs[i].id, objects[id]);
-
-				        syncEnums('rooms', id, main.ac.inputRegs[i].room);
-
+                tasks.push({
+                    id: 'discreteInputs',
+                    name: 'add',
+                    obj: objects[id]
+                });
+                tasks.push({
+                    id: id,
+                    name: 'syncEnums',
+                    obj: main.ac.inputRegs[i].room
+                });
                 main.newObjects.push(id);
             }
 
@@ -1178,6 +1263,7 @@ var main = {
                 id = adapter.namespace + '.' + main.ac.holdingRegs[i].id;
                 main.ac.holdingRegs[i].fullId = id;
                 objects[id] = {
+                    _id: main.ac.holdingRegs[i].id,
                     type: 'state',
                     common: {
                         name:    main.ac.holdingRegs[i].description,
@@ -1199,10 +1285,16 @@ var main = {
                         factor:    main.ac.holdingRegs[i].factor
                     }
                 };
-                createExtendObject(main.ac.holdingRegs[i].id, objects[id]);
-
-                syncEnums('rooms', id, main.ac.holdingRegs[i].room);
-
+                tasks.push({
+                    id: 'discreteInputs',
+                    name: 'add',
+                    obj: objects[id]
+                });
+                tasks.push({
+                    id: id,
+                    name: 'syncEnums',
+                    obj: main.ac.holdingRegs[i].room
+                });
                 main.newObjects.push(id);
             }
 
@@ -1314,27 +1406,35 @@ var main = {
                 });
             }
 
-            adapter.setObjectNotExists('info', {
-                type: 'channel',
-                common: {
-                    name:    'info'
-                },
-                native: {}
+            tasks.push({
+                id: 'info',
+                name: 'add',
+                obj: {
+                    type: 'channel',
+                    common: {
+                        name: 'info'
+                    },
+                    native: {}
+                }
             });
 
             if (!main.acp.slave) {
-                adapter.setObjectNotExists('info.pollTime', {
-                    type: 'state',
-                    common: {
-                        name: 'Poll time',
-                        type: 'number',
-                        role: '',
-                        write: false,
-                        read:  true,
-                        def:   0,
-                        unit: 'ms'
-                    },
-                    native: {}
+                tasks.push({
+                    id: 'info.pollTime',
+                    name: 'add',
+                    obj: {
+                        type: 'state',
+                        common: {
+                            name: 'Poll time',
+                            type: 'number',
+                            role: '',
+                            write: false,
+                            read: true,
+                            def:  0,
+                            unit: 'ms'
+                        },
+                        native: {}
+                    }
                 });
                 main.newObjects.push(adapter.namespace + '.info.pollTime');
             }
@@ -1368,24 +1468,23 @@ var main = {
 
             adapter.setState('info.connection', main.acp.slave ? 0 : false, true);
 
+            main.acp.timeout = parseInt(main.acp.timeout, 10) || 5000;
             // clear unused states
-            function clear() {
-                for (var id in main.oldObjects) {
-                    if (main.newObjects.indexOf(id) === -1) {
-                        adapter.delObject(id, function () {
 
-                        });
-                    }
+            for (var id_ in main.oldObjects) {
+                if (main.oldObjects.hasOwnProperty(id_) && main.newObjects.indexOf(id_) === -1) {
+                    tasks.push({
+                        id: id_,
+                        name: 'del'
+                    });
                 }
-
+            }
+            processTasks(tasks, function () {
                 main.oldObjects = [];
                 main.newObjects = [];
                 adapter.subscribeStates('*');
                 main.start();
-            }
-
-            main.acp.timeout = parseInt(main.acp.timeout, 10) || 5000;
-            clear();
+            });
         });
     },
 
@@ -1423,6 +1522,9 @@ var main = {
     },
     start: function () {
         main.acp.type = main.acp.type || 'tcp';
+        var fs;
+        var path;
+        var client;
 
         if (main.acp.slave) {
             var server = {
@@ -1432,8 +1534,8 @@ var main = {
                 },
                 handler     : { }
             };
-            var fs = require('fs');
-            var path = __dirname + '/node_modules/jsmodbus';
+            fs = fs || require('fs');
+            path = __dirname + '/node_modules/jsmodbus';
             if (!fs.existsSync(__dirname + '/node_modules/jsmodbus')) {
                 path = __dirname + '/../jsmodbus';
             }
@@ -1666,15 +1768,15 @@ var main = {
                     return;
                 }
                 try {
-                    var client = {
+                    client = {
                         tcp         : {
                             core        : require(__dirname + '/lib/modbus-tcp-client.js'),
                             complete    : require(__dirname + '/lib/modbus-tcp-client.js')
                         },
                         handler     : { }
                     };
-                    var fs = require('fs');
-                    var path = __dirname + '/node_modules/jsmodbus';
+                    fs = fs || require('fs');
+                    path = __dirname + '/node_modules/jsmodbus';
                     if (!fs.existsSync(__dirname + '/node_modules/jsmodbus')) {
                         path = __dirname + '/../jsmodbus';
                     }
@@ -1708,15 +1810,15 @@ var main = {
                     return;
                 }
                 try {
-                    var client = {
+                    client = {
                         tcp         : {
                             core        : require(__dirname + '/lib/modbus-tcp-rtu-client.js'),
                             complete    : require(__dirname + '/lib/modbus-tcp-rtu-client.js')
                         },
                         handler     : { }
                     };
-                    var fs = require('fs');
-                    var path = __dirname + '/node_modules/jsmodbus';
+                    fs = fs || require('fs');
+                    path = __dirname + '/node_modules/jsmodbus';
                     if (!fs.existsSync(__dirname + '/node_modules/jsmodbus')) {
                         path = __dirname + '/../jsmodbus';
                     }
@@ -1750,15 +1852,15 @@ var main = {
                     return;
                 }
                 try {
-                    var client = {
+                    client = {
                         serial      : {
                             core        : require(__dirname + '/lib/modbus-serial-client.js'),
                             complete    : require(__dirname + '/lib/modbus-serial-client.js')
                         },
                         handler     : { }
                     };
-                    var fs = require('fs');
-                    var path = __dirname + '/node_modules/jsmodbus';
+                    fs = fs || require('fs');
+                    path = __dirname + '/node_modules/jsmodbus';
                     if (!fs.existsSync(__dirname + '/node_modules/jsmodbus')) {
                         path = __dirname + '/../jsmodbus';
                     }
@@ -1766,7 +1868,6 @@ var main = {
                     fs.readdirSync(path + '/src/handler/client')
                         .filter(function (file) {
                             return file.substr(-3) === '.js';
-
                         }).forEach(function (file) {
 
                         client.serial.complete = client.serial.complete.compose(require(path + '/src/handler/client/' + file));
@@ -1843,7 +1944,7 @@ var main = {
 
                     if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
                         ackObjects[id] = {val: val};
-                        adapter.setState(id, val ? true : false, true);
+                        adapter.setState(id, !!val, true);
                     }
                 }
                 callback();
@@ -1863,7 +1964,7 @@ var main = {
 
                     if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
                         ackObjects[id] = {val: val};
-                        adapter.setState(id, val ? true : false, true);
+                        adapter.setState(id, !!val, true);
                     }
                 }
                 callback();
