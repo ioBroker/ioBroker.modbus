@@ -760,6 +760,16 @@ function address2alias(id, address, isDirect) {
     }
 }
 
+function createExtendObject(id, objData) {
+    adapter.getObject(id, function (err, oldObj) {
+        if (!err && oldObj) {
+            adapter.extendObject(id, objData);
+        } else {
+            adapter.setObjectNotExists(id, objData);
+        }
+    });
+}
+
 var main = {
     oldObjects:             [],
     newObjects:             [],
@@ -891,7 +901,7 @@ var main = {
                     main.coilsMapping[main.ac.coils[i].address - main.coilsLowAddress] = adapter.namespace + '.' + main.ac.coils[i].id;
                 }
             }
-            
+
             if (main.ac.inputRegs.length) {
                 for (i = main.ac.inputRegs.length - 1; i >= 0; i--) {
                     address = parseInt(main.ac.inputRegs[i].address, 10);
@@ -1103,16 +1113,8 @@ var main = {
                         address:   main.ac.disInputs[i].address
                     }
                 };
-				adapter.getObject(main.ac.disInputs[i].id, function (err, data) {objects[id]});
-					if (!err) {
-						adapter.extendObject(main.ac.disInputs[i].id, objects[id]);
-					} else {
-						adapter.setObjectNotExists(main.ac.disInputs[i].id, objects[id]);
-					}
-
-
-				syncEnums('rooms', id, main.ac.disInputs[i].room);
-
+                createExtendObject(main.ac.disInputs[i].id, objects[id]);
+				        syncEnums('rooms', id, main.ac.disInputs[i].room);
                 main.newObjects.push(id);
             }
 
@@ -1136,14 +1138,9 @@ var main = {
                         wp:        main.ac.coils[i].wp
                     }
                 };
-				adapter.getObject(main.ac.coils[i].id, function (err, data) {objects[id]});
-					if (!err) {
-						adapter.extendObject(main.ac.coils[i].id, objects[id]);
-					} else {
-						adapter.setObjectNotExists(main.ac.coils[i].id, objects[id]);
-					}
 
-				syncEnums('rooms', id, main.ac.coils[i].room);
+                createExtendObject(main.ac.coils[i].id, objects[id]);
+                syncEnums('rooms', id, main.ac.coils[i].room);
                 main.newObjects.push(id);
             }
 
@@ -1170,14 +1167,9 @@ var main = {
                         factor:    main.ac.inputRegs[i].factor
                     }
                 };
-				adapter.getObject(main.ac.inputRegs[i].id, function (err, data) {objects[id]});
-					if (!err) {
-						adapter.extendObject(main.ac.inputRegs[i].id, objects[id]);
-					} else {
-						adapter.setObjectNotExists(main.ac.inputRegs[i].id, objects[id]);
-					}
+                createExtendObject(main.ac.inputRegs[i].id, objects[id]);
 
-				syncEnums('rooms', id, main.ac.inputRegs[i].room);
+				        syncEnums('rooms', id, main.ac.inputRegs[i].room);
 
                 main.newObjects.push(id);
             }
@@ -1207,13 +1199,7 @@ var main = {
                         factor:    main.ac.holdingRegs[i].factor
                     }
                 };
-
-				adapter.getObject(main.ac.holdingRegs[i].id, function (err, data) {objects[id]});
-					if (!err) {
-						adapter.extendObject(main.ac.holdingRegs[i].id, objects[id]);
-					} else {
-						adapter.setObjectNotExists(main.ac.holdingRegs[i].id, objects[id]);
-					}
+                createExtendObject(main.ac.holdingRegs[i].id, objects[id]);
 
                 syncEnums('rooms', id, main.ac.holdingRegs[i].room);
 
@@ -1760,7 +1746,7 @@ var main = {
                 }
             } else if (main.acp.type === 'serial') {
                 if (!main.acp.comName) {
-                    adapter.log.error('Port is not defined');
+                    adapter.log.error('Serial devicename is not defined');
                     return;
                 }
                 try {
@@ -2068,4 +2054,3 @@ function sortByAddress(a, b) {
     var bd = parseFloat(b.address);
     return ((ad < bd) ? -1 : ((ad > bd) ? 1 : 0));
 }
-
