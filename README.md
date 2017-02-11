@@ -177,6 +177,7 @@ One can then swap bytes and/or words to analyze what potential endianness issues
 ## Changelog
 # 0.4.10 (2017-02-10)
 * (Apollon77) Do not recreate all datapoints on start of adapter
+* (ykuendig) Multiple optimization and wording fixes
 
 # 0.4.9 (2016-12-20)
 * (bluefox) fix serial RTU
