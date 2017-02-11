@@ -1114,9 +1114,7 @@ var main = {
                     }
                 };
                 createExtendObject(main.ac.disInputs[i].id, objects[id]);
-
-                syncEnums('rooms', id, main.ac.disInputs[i].room);
-
+				        syncEnums('rooms', id, main.ac.disInputs[i].room);
                 main.newObjects.push(id);
             }
 
@@ -1140,6 +1138,7 @@ var main = {
                         wp:        main.ac.coils[i].wp
                     }
                 };
+
                 createExtendObject(main.ac.coils[i].id, objects[id]);
                 syncEnums('rooms', id, main.ac.coils[i].room);
                 main.newObjects.push(id);
@@ -1170,7 +1169,7 @@ var main = {
                 };
                 createExtendObject(main.ac.inputRegs[i].id, objects[id]);
 
-                syncEnums('rooms', id, main.ac.inputRegs[i].room);
+				        syncEnums('rooms', id, main.ac.inputRegs[i].room);
 
                 main.newObjects.push(id);
             }
@@ -1200,7 +1199,6 @@ var main = {
                         factor:    main.ac.holdingRegs[i].factor
                     }
                 };
-
                 createExtendObject(main.ac.holdingRegs[i].id, objects[id]);
 
                 syncEnums('rooms', id, main.ac.holdingRegs[i].room);
