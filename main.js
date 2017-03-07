@@ -235,7 +235,10 @@ function prepareWrite(id, state) {
                 writeHelper(id, state);
                 setTimeout(function () {
                     var _id = id.substring(adapter.namespace.length + 1);
-                    adapter.setState(id, ackObjects[_id] ? ackObjects[_id].val : null, true);
+                    adapter.setState(id, ackObjects[_id] ? ackObjects[_id].val : null, true, function (err) {
+                        // analyse if the state could be set (because of permissions)
+                        if (err) adapter.log.error('Can not set state ' + id + ': ' + err);
+                    });
                 }, main.acp.poll * 1.5);
 
             } else {
@@ -248,7 +251,10 @@ function prepareWrite(id, state) {
 
                         setTimeout(function () {
                             if (ackObjects[_id]) {
-                                adapter.setState(id, ackObjects[_id].val, true);
+                                adapter.setState(id, ackObjects[_id].val, true, function (err) {
+                                    // analyse if the state could be set (because of permissions)
+                                    if (err) adapter.log.error('Can not set state ' + id + ': ' + err);
+                                });
                             }
                             delete pulseList[id];
                         }, main.acp.poll * 1.5);
@@ -261,7 +267,10 @@ function prepareWrite(id, state) {
         } else {
             setTimeout(function () {
                 var _id = id.substring(adapter.namespace.length + 1);
-                adapter.setState(id, ackObjects[_id] ? ackObjects[_id].val : null, true);
+                adapter.setState(id, ackObjects[_id] ? ackObjects[_id].val : null, true, function (err) {
+                    // analyse if the state could be set (because of permissions)
+                    if (err) adapter.log.error('Can not set state ' + id + ': ' + err);
+                });
             }, 0);
         }
     }
@@ -1330,7 +1339,10 @@ var main = {
                             prepareWrite(id, states[id]);
                             //main.disInputs[main.ac.disInputs[i].address - main.disInputsLowAddress] = states[id].val;
                         } else {
-                            adapter.setState(id, 0, true);
+                            adapter.setState(id, 0, true, function (err) {
+                                // analyse if the state could be set (because of permissions)
+                                if (err) adapter.log.error('Can not set state ' + id + ': ' + err);
+                            });
                         }
                     }
                     // fill with 0 empty values
@@ -1350,7 +1362,10 @@ var main = {
                             prepareWrite(id, states[id]);
                             //main.coils[main.ac.coils[i].address - main.coilsLowAddress] = states[id].val;
                         } else {
-                            adapter.setState(id, 0, true);
+                            adapter.setState(id, 0, true, function (err) {
+                                // analyse if the state could be set (because of permissions)
+                                if (err) adapter.log.error('Can not set state ' + id + ': ' + err);
+                            });
                         }
                     }
                     // fill with 0 empty values
@@ -1370,7 +1385,10 @@ var main = {
                             //main.inputRegs[main.ac.inputRegs[i].address - main.inputRegsLowAddress] = states[id].val;
                             prepareWrite(id, states[id]);
                         } else {
-                            adapter.setState(id, 0, true);
+                            adapter.setState(id, 0, true, function (err) {
+                                // analyse if the state could be set (because of permissions)
+                                if (err) adapter.log.error('Can not set state ' + id + ': ' + err);
+                            });
                         }
                     }
                     // fill with 0 empty values
@@ -1390,7 +1408,10 @@ var main = {
                             prepareWrite(id, states[id]);
                             //main.holdingRegs[main.ac.holdingRegs[i].address - main.holdingRegsLowAddress] = states[id].val;
                         } else {
-                            adapter.setState(id, 0, true);
+                            adapter.setState(id, 0, true, function (err) {
+                                // analyse if the state could be set (because of permissions)
+                                if (err) adapter.log.error('Can not set state ' + id + ': ' + err);
+                            });
                         }
                     }
                     // fill with 0 empty values
@@ -1662,7 +1683,10 @@ var main = {
                     var a = start - main.coilsLowAddress;
 
                     if (a >= 0 && main.coilsMapping[a]) {
-                        adapter.setState(main.coilsMapping[a], value, true);
+                        adapter.setState(main.coilsMapping[a], value, true, function (err) {
+                            // analyse if the state could be set (because of permissions)
+                            if (err) adapter.log.error('Can not set state: ' + err);
+                        });
                         main.coils[a] = value;
                     }
                 });
@@ -1687,7 +1711,10 @@ var main = {
                         if (a >= 0 && main.coilsMapping[a]) {
                             var value = data.readUInt8((i + start) >> 3);
                             value = value & mPow2[(i + start) % 8];
-                            adapter.setState(main.coilsMapping[a], value ? true : false, true);
+                            adapter.setState(main.coilsMapping[a], value ? true : false, true, function (err) {
+                                // analyse if the state could be set (because of permissions)
+                                if (err) adapter.log.error('Can not set state: ' + err);
+                            });
                             main.coils[a] = value ? true : false;
                         }
                         i++;
@@ -1709,7 +1736,10 @@ var main = {
                             val = Math.round(val * main.acp.round) / main.acp.round;
                         }
 
-                        adapter.setState(main.holdingRegsMapping[a], val, true);
+                        adapter.setState(main.holdingRegsMapping[a], val, true, function (err) {
+                            // analyse if the state could be set (because of permissions)
+                            if (err) adapter.log.error('Can not set state: ' + err);
+                        });
 
                         main.holdingRegs[a]     = buf[0];
                         main.holdingRegs[a + 1] = buf[1];
@@ -1733,7 +1763,10 @@ var main = {
                                 val = val * native.factor + native.offset;
                                 val = Math.round(val * main.acp.round) / main.acp.round;
                             }
-                            adapter.setState(main.holdingRegsMapping[a], val, true);
+                            adapter.setState(main.holdingRegsMapping[a], val, true, function (err) {
+                                // analyse if the state could be set (because of permissions)
+                                if (err) adapter.log.error('Can not set state: ' + err);
+                            });
                             for (var k = 0; k < native.len * 2; k++) {
                                 main.holdingRegs[a * 2 + k] = data.readUInt8(start * 2 + k);
                             }
@@ -1944,7 +1977,10 @@ var main = {
 
                     if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
                         ackObjects[id] = {val: val};
-                        adapter.setState(id, !!val, true);
+                        adapter.setState(id, !!val, true, function (err) {
+                            // analyse if the state could be set (because of permissions)
+                            if (err) adapter.log.error('Can not set state ' + id + ': ' + err);
+                        });
                     }
                 }
                 callback();
@@ -1964,7 +2000,10 @@ var main = {
 
                     if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
                         ackObjects[id] = {val: val};
-                        adapter.setState(id, !!val, true);
+                        adapter.setState(id, !!val, true, function (err) {
+                            // analyse if the state could be set (because of permissions)
+                            if (err) adapter.log.error('Can not set state ' + id + ': ' + err);
+                        });
                     }
                 }
                 callback();
@@ -1993,7 +2032,10 @@ var main = {
                     }
                     if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
                         ackObjects[id] = {val: val};
-                        adapter.setState(id, val, true);
+                        adapter.setState(id, val, true, function (err) {
+                            // analyse if the state could be set (because of permissions)
+                            if (err) adapter.log.error('Can not set state ' + id + ': ' + err);
+                        });
                     }
                 }
             } else {
@@ -2034,7 +2076,10 @@ var main = {
 
                     if (ackObjects[id] === undefined || ackObjects[id].val !== val) {
                         ackObjects[id] = {val: val};
-                        adapter.setState(id, val, true);
+                        adapter.setState(id, val, true, function (err) {
+                            // analyse if the state could be set (because of permissions)
+                            if (err) adapter.log.error('Can not set state ' + id + ': ' + err);
+                        });
                     }
                 }
             } else {
