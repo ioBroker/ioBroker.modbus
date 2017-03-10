@@ -1511,7 +1511,7 @@ var main = {
 
     getListOfClients: function (clients) {
         var list = [];
-        for (var c = 0; c < clients.length; c++) {
+        for(var c in clients) {
             var address = clients[c].address().address;
             if (address) list.push(address);
         }
