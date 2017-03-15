@@ -1,8 +1,13 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.5.1",
+    "version":      "0.5.2",
 	"news": {
+        "0.5.2": {
+          "en": "Fix object creation",
+          "de": "Fehler bei Objektanlage behoben",
+          "ru": "Fix object creation"
+        },
         "0.5.1": {
           "en": "Fix memory leak for TCP Server",
           "de": "Speicherproblem für TCP Server behoben",
