@@ -1184,7 +1184,7 @@ var main = {
                     }
                 };
                 tasks.push({
-                    id: 'discreteInputs',
+                    id: main.ac.disInputs[i].id,
                     name: 'add',
                     obj: objects[id]
                 });
@@ -1219,7 +1219,7 @@ var main = {
                 };
 
                 tasks.push({
-                    id: 'discreteInputs',
+                    id: main.ac.coils[i].id,
                     name: 'add',
                     obj: objects[id]
                 });
@@ -1256,7 +1256,7 @@ var main = {
                     }
                 };
                 tasks.push({
-                    id: 'discreteInputs',
+                    id: main.ac.inputRegs[i].id,
                     name: 'add',
                     obj: objects[id]
                 });
@@ -1295,7 +1295,7 @@ var main = {
                     }
                 };
                 tasks.push({
-                    id: 'discreteInputs',
+                    id: main.ac.holdingRegs[i].id,
                     name: 'add',
                     obj: objects[id]
                 });
@@ -1511,7 +1511,7 @@ var main = {
 
     getListOfClients: function (clients) {
         var list = [];
-        for (var c = 0; c < clients.length; c++) {
+        for(var c in clients) {
             var address = clients[c].address().address;
             if (address) list.push(address);
         }
