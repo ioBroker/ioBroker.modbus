@@ -1779,11 +1779,11 @@ var main = {
 
                 this.on('connection', function (client) {
                     var list = main.getListOfClients(that.getClients());
-                    adapter.log.info('+ Clients connected: ' + list);
+                    adapter.log.debug('+ Clients connected: ' + list);
                     adapter.setState('info.connection', list, true);
                 }).on('close', function (client) {
                     var list = main.getListOfClients(that.getClients());
-                    adapter.log.info('- Client connected: ' + list);
+                    adapter.log.debug('- Client connected: ' + list);
                     adapter.setState('info.connection', list, true);
                 }).on('error', function (err) {
                     var list = main.getListOfClients(that.getClients());
