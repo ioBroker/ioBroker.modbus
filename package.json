@@ -1,6 +1,6 @@
 {
   "name": "iobroker.modbus",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Connect devices oder Modbus protocol to ioBroker",
   "author": {
     "name": "bluefox",
@@ -25,7 +25,7 @@
     "url": "https://github.com/ioBroker/ioBroker.modbus"
   },
   "optionalDependencies": {
-    "serialport": "^3.1.2"
+    "serialport": "^4.0.7"
   },
   "dependencies": {
     "jsmodbus": "1.2.4",
