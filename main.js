@@ -2149,7 +2149,11 @@ var main = {
 
             if (main.errorCount < 6 && connected) {
                 setTimeout(main.poll, main.acp.poll);
-            } else {
+            }
+            else if (main.errorCount > 18) { // 3 reconnects did not help, restart adapter
+                throw new Error('Reconnect did not help, restart adapter');
+            }
+            else {
                 main.reconnect();
             }
         } else {
