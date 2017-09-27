@@ -1,12 +1,12 @@
 {
   "common": {
     "name":         "modbus",
-    "version":      "0.5.3",
+    "version":      "0.5.4",
 	"news": {
-        "0.5.3": {
-          "en": "Upgrade Serial Library",
-          "de": "Serial Library aktualisiert",
-          "ru": "Upgrade Serial Library"
+        "0.5.4": {
+          "en": "Fixes",
+          "de": "Fixes",
+          "ru": "Fixes"
         },
         "0.5.2": {
           "en": "Fix object creation",

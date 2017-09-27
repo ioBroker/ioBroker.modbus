@@ -175,6 +175,10 @@ Of the many hex-to-floating point converters and calculators that are available 
 One can then swap bytes and/or words to analyze what potential endianness issues may exist between Modbus RTU master and slave devices.
 
 ## Changelog
+
+# 0.5.4 (2017-09-27)
+* (Apollon77) Several Fixes
+
 # 0.5.0 (2017-02-11)
 * (bluefox) Create all states each after other
 
