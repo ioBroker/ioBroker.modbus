@@ -17,7 +17,7 @@ var isStop        = false;
 var pathMod;
 var fs;
 
-var adapter       = utils.adapter({
+var adapter       = utils.Adapter({
     name: 'modbus',
     unload: stop
 });
