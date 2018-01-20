@@ -536,6 +536,7 @@
                 holdingRegsOffset:  settings.params.holdingRegsOffset || 40001,
                 showAliases:        (settings.params.showAliases === undefined) ? true : settings.params.showAliases,
                 directAddresses:    settings.params.directAddresses || false,
+                doNotRoundAddressToWord:    settings.params.doNotRoundAddressToWord || false,
                 comName:    settings.params.comName  || '',
                 type:       settings.params.type || 'tcp',
                 dataBits:   settings.params.dataBits || 8,
@@ -713,7 +714,7 @@
                             obj.item.poll = true;
                             changed = true;
                         }
-                        if (parseInt(obj.item.address, 10).toString() != obj.item.address) changed = true;
+                        if (parseInt(obj.item.address, 10).toString() !== obj.item.address.toString()) changed = true;
                         obj.item._address = parseInt(obj.item._address, 10);
 
                         if ($('#modbus_showAliases').prop('checked')) {
@@ -750,11 +751,11 @@
                                 changed = true;
                             }
 
-                            if (parseFloat(obj.item.factor).toString() != obj.item.factor) {
+                            if (parseFloat(obj.item.factor).toString() !== obj.item.factor.toString()) {
                                 obj.item.factor = parseFloat(obj.item.factor) || 1;
                                 changed = true;
                             }
-                            if (parseFloat(obj.item.offset).toString() != obj.item.offset) {
+                            if (parseFloat(obj.item.offset).toString() !== obj.item.offset.toString()) {
                                 obj.item.offset = parseFloat(obj.item.offset) || 0;
                                 changed = true;
                             }
