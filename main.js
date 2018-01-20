@@ -1512,8 +1512,10 @@ var main = {
     getListOfClients: function (clients) {
         var list = [];
         for(var c in clients) {
-            var address = clients[c].address().address;
-            if (address) list.push(address);
+            if (clients.hasOwnProperty(c)) {
+                var address = clients[c].address().address;
+                if (address) list.push(address);
+            }
         }
         return list.join(',');
     },
@@ -1556,10 +1558,10 @@ var main = {
                 handler     : { }
             };
             fs = fs || require('fs');
-            path = __dirname + '/node_modules/jsmodbus';
-            if (!fs.existsSync(__dirname + '/node_modules/jsmodbus')) {
-                path = __dirname + '/../jsmodbus';
-            }
+            path = require.resolve('jsmodbus/package.json');
+            var parts = path.replace(/\\/g, '/').split('/');
+            parts.pop();
+            path = parts.join('/');
 
             main.coilsChanged       = true;
             main.inputRegsChanged   = true;
@@ -1586,9 +1588,9 @@ var main = {
                 logLevel:      process.argv[3] === 'debug' ? 'verbose' : process.argv[3],
                 port:          parseInt(main.acp.port, 10) || 502,
                 responseDelay: 100,
-                coils:         new Buffer(main.coilsHighAddress >> 3),
-                discrete:      new Buffer(main.disInputsHighAddress >> 3),
-                input:         new Buffer(main.inputRegsHighAddress * 2),
+                coils:         new Buffer((main.coilsHighAddress      >> 3) + (main.coilsHighAddress     % 8 ? 1 : 0)),
+                discrete:      new Buffer((main.disInputsHighAddress  >> 3) + (main.disInputsHighAddress % 8 ? 1 : 0)),
+                input:         new Buffer(main.inputRegsHighAddress   * 2),
                 holding:       new Buffer(main.holdingRegsHighAddress * 2)
             }).compose(server.tcp.complete)
             .init(function () {
@@ -1599,9 +1601,14 @@ var main = {
                         var resp = new Array(Math.ceil(quantity / 16) * 2);
                         var i = 0;
                         var data = this.getCoils();
-                        for (var j = 0; j < resp.length; j++) {
+                        var j;
+                        for (j = 0; j < resp.length && start + j < data.byteLength; j++) {
                             resp[j] = data.readUInt8(start + j);
                         }
+                        for (; j < resp.length; j++) {
+                            resp[j] = 0;
+                        }
+
                         while (i < quantity && i + start <= main.coilsHighAddress) {
                             if (main.coils[i + start - main.coilsLowAddress]) {
                                 resp[Math.floor(i / 8)] |= 1 << (i % 8);
@@ -1624,8 +1631,12 @@ var main = {
                         var resp = new Array(Math.ceil(quantity / 16) * 2);
                         var i = 0;
                         var data = this.getDiscrete();
-                        for (var j = 0; j < resp.length; j++) {
+                        var j;
+                        for (j = 0; j < resp.length && start + j < data.byteLength; j++) {
                             resp[j] = data.readUInt8(start + j);
+                        }
+                        for (; j < resp.length; j++) {
+                            resp[j] = 0;
                         }
                         while (i < quantity && i + start <= main.disInputsHighAddress) {
                             if (main.disInputs[i + start - main.disInputsLowAddress]) {

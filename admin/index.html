@@ -17,6 +17,7 @@
 <link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
 <script type="text/javascript" src="../../js/translate.js"></script>
 <script type="text/javascript" src="../../js/adapter-settings.js"></script>
+<script type="text/javascript" src="words.js"></script>
 <style>
     .dialog-config {
         overflow: hidden !important;
@@ -130,108 +131,6 @@
 
 <script type="text/javascript">
 
-    systemDictionary = {
-        "General":          {"en": "General",           "de": "Allgemein",          "ru": "Основное"},
-        "Inputs":           {"en": "Discrete Inputs",   "de": "Diskrete Eingänge",  "ru": "Дискретные входы"},
-        "Coils":            {"en": "Coils",             "de": "Diskrete Ausgänge",  "ru": "Регистры флагов"},
-        "Input Registers":  {"en": "Input Registers",   "de": "Eingangsregister",   "ru": "Регистры входа"},
-        "Holding Registers": {"en": "Holding Registers",   "de": "Eingangsregister",   "ru": "Регистры хранения"},
-        "PLC Connection:":  {"en": "PLC Connection:",   "de": "SPS Verbindung:",    "ru": "PLC соединение:"},
-        "PLC IP Address:":  {"en": "PLC IP Address:",   "de": "SPS IP Adresse:",    "ru": "PLC IP адрес:"},
-        "PLC Rack:":        {"en": "PLC Rack:",         "de": "SPS Rack:",          "ru": "PLC Rack:"},
-        "PLC Slot:":        {"en": "PLC Slot:",         "de": "SPS Slot:",          "ru": "PLC слот:"},
-        "Round Real to:":   {"en": "Round real to:",    "de": "Aufrunden Real auf:", "ru": "Округлять real до:"},
-        "Poll delay:":      {"en": "Poll delay:",       "de": "Poll delay:",        "ru": "Интервал опроса:"},
-        "Reconnect time:":  {"en": "Reconnect time:",   "de": "Reconnect-Zeit:",    "ru": "Reconnect time:"},
-        "Pulse time:":      {"en": "Pulse time:",       "de": "Pulsetime:",         "ru": "Pulse time:"},
-        "Import symbols file:": {"en": "Import symbols file:", "de": "Symboldatei Importieren:", "ru": "Ипморт символьных файлов:"},
-        "Import DB file:":  {"en": "Import DB file:",   "de": "DB-Datei importieren:", "ru": "Ипморт DB файлов:"},
-        "Load Symbols":     {"en": "Load symbols",      "de": "Lade Symbole",       "ru": "Загрузить символы"},
-        "Add DB":           {"en": "Add DB",            "de": "DB einfügen",        "ru": "Добавить DB"},
-        "Toggle poll":      {"en": "Toggle poll",       "de": "Poll umschalten",    "ru": "Изменить poll"},
-        "Toggle RW":        {"en": "Toggle RW",         "de": "RW umschalten",      "ru": "Изменить RW"},
-        "Toggle WP":        {"en": "Toggle WP",         "de": "WP umschalten",      "ru": "Изменить WP"},
-        "Address":          {"en": "Address",           "de": "Adresse",            "ru": "Адрес"},
-        "Name":             {"en": "Name",              "de": "Name",               "ru": "Имя"},
-        "Description":      {"en": "Description",       "de": "Beschreibung",       "ru": "Описание"},
-        "Type":             {"en": "Type",              "de": "Typ",                "ru": "Тип"},
-        "Unit":             {"en": "Unit",              "de": "Einheit",            "ru": "Единицы"},
-        "poll":             {"en": "poll",              "de": "poll",               "ru": "poll"},
-        "RW":               {"en": "RW",                "de": "RW",                 "ru": "RW"},
-        "CW":               {"en": "CW",                "de": "CW",                 "ru": "CW"},
-        "WP":               {"en": "WP",                "de": "WP",                 "ru": "WP"},
-        "Role":             {"en": "Role",              "de": "Rolle",              "ru": "Роль"},
-        "Room":             {"en": "Room",              "de": "Raum",               "ru": "Комната"},
-        "registers":        {"en": "registers",         "de": "Register",           "ru": "регистров"},
-        "Device ID:":       {"en": "Device ID:",        "de": "Geräte ID:",         "ru": "ID устройства:"},
-        "RTU over TCP":     {"en": "RTU over TCP",      "de": "RTU over TCP",       "ru": "RTU over TCP"},
-        "Data bits:":       {"en": "Data bits:",        "de": "Data bits:",         "ru": "Data bits:"},
-        "Stop bits:":       {"en": "Stop bits:",        "de": "Stop bits:",         "ru": "Stop bits:"},
-        "Parity:":          {"en": "Parity:",           "de": "Parity:",            "ru": "Parity:"},
-        "Read timeout:":    {"en": "Read timeout:",     "de": "Read timeout:",      "ru": "Таймаут чтения:"},
-        "Use aliases as address:": {"en": "Use aliases:", "de": "Aliases benutzen:", "ru": "Использовать alias:"},
-        "Max read request length:": {"en": "Max read request length:", "de": "Maximale Lese-Request-Länge:", "ru": "Макс. кол-во регистров при чтении:"},
-        "Enable polling of data point": {
-            "en": "Enable polling of data point",
-            "de": "Zyklische Abfrage vom Datenpunkt",
-            "ru": "Постоянный опрос переменной в каждом цикле"
-        },
-        "Write access allowed": {
-            "en": "Write access allowed",
-            "de": "Schreiben erlaubt",
-            "ru": "Разрешить запись в переменную"
-        },
-        "Write pulses (true=>false edge)": {
-            "en": "Write pulses (true=>false edge)",
-            "de": "Schreibe Pulse (Ja=>Nein Flanke)",
-            "ru": "Генерировать импульсы (1 => 0)"
-        },
-        "Connection parameters:": {
-            "en": "Connection parameters:",
-            "de": "Verbindungsparameter:",
-            "ru": "Параметры соединения:"
-        },
-        "Partner IP Address:": {
-            "en": "Partner IP Address:",
-            "de": "Partner IP Adresse:",
-            "ru": "IP адрес партнёра:"
-        },
-        "Port:":            {"en": "Port:",                 "de": "Port:",          "ru": "Порт:"},
-        "Type:":            {"en": "Type:",                 "de": "Typ:",           "ru": "Тип:"},
-        "Master":           {"en": "Master",                "de": "Master",         "ru": "Master"},
-        "Slave":            {"en": "Slave",                 "de": "Slave",          "ru": "Slave"},
-        "Are you sure?":    {"en": "Are you sure?",         "de": "Sind Sie sicher?", "ru": "Вы уверенны?"},
-        "Start address:":   {"en": "Start address:",        "de": "Start-Adresse:", "ru": "Начальный адрес:"},
-        "Text copied to clipboard. Click to close the window": {
-            "en": "Text copied to clipboard. Click to close the window",
-            "de": "Text wurde in die Zwischenablage kopiert. Klicke um das Fenster zu schliessen.",
-            "ru": "Текст скопирован в буфер обмена. Щелкните мышкой здесь, чтобы закрыть окно"},
-        "Export":           {"en": "Export",            "de": "Export",             "ru": "Экспорт"},
-        "Import":           {"en": "Import",            "de": "Import",             "ru": "Импорт"},
-        "Close":            {"en": "Close",             "de": "Zumachen",           "ru": "Закрыть"},
-        "Export to CSV":    {"en": "Export to CSV",     "de": "Export in CSV",      "ru": "Экспорт в CSV"},
-        "Import from CSV":  {"en": "Import from CSV",   "de": "Import aus CSV",     "ru": "Импорт из CSV"},
-        "Delete all entries": {"en": "Delete all entries", "de": "Alle Einträge löschen", "ru": "Удалить все элементы"},
-        "Length":           {"en": "Length",            "de": "Länge",              "ru": "Длина"},
-        "All entries will be deleted. Are you sure?": {
-            "en": "All entries will be deleted. Are you sure?",
-            "de": "Alle Einträge werden gelöscht. Sind sie sicher?",
-            "ru": "Все элементы будут удалены. Вы уверенны?"
-        },
-        "Factor":           {"en": "Factor",            "de": "Faktor",             "ru": "Множитель"},
-        "Offset":           {"en": "Offset",            "de": "Offset",             "ru": "Сдвиг"},
-        "Cyclic write":     {"en": "Cyclic write",      "de": "Zyklisch schreiben", "ru": "Писать в каждом цикле"},
-        "TCP/Serial RTU:":  {"en": "TCP/Serial RTU:",   "de": "TCP/Serial RTU:",    "ru": "TCP/Serial RTU:"},
-        "TCP":              {"en": "TCP",               "de": "TCP",                "ru": "TCP"},
-        "Serial":           {"en": "Serial",            "de": "Serial",             "ru": "Serial"},
-        "Baud rate:":       {"en": "Baud rate:",        "de": "Baud rate:",         "ru": "Скорость порта:"},
-        "Use direct addresses by aliases:": {
-            "en": "Use direct addresses by aliases:",
-            "de": "Direkte Adressen benutzen (bei Aliases):",
-            "ru": "Использовать прямые адреса при alias:"
-        },
-        "Select port":      {"en": "Select port",       "de": "Port wählen",        "ru": "Выберите порт"}
-    };
 
     var onChange   = null;
     var activePage = '';
@@ -275,8 +174,9 @@
         'string':     0
     };
 
+    var attempts = 0;
     function getComPorts(actualValue) {
-        timeout = setTimeout(function () {
+        var timeout = setTimeout(function () {
             getComPorts(actualValue);
         }, 2000);
 
@@ -286,9 +186,12 @@
                 timeout = null;
             }
             if (!list || !list.length) {
-                setTimeout(function () {
-                    getComPorts(actualValue);
-                }, 1000);
+                attempts++;
+                if (attempts < 10) {
+                    setTimeout(function () {
+                        getComPorts(actualValue);
+                    }, 1000);
+                }
                 return;
             }
             var text = '<option value="">' + _('Select port') + '</option>';

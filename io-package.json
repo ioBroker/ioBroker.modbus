@@ -1,8 +1,19 @@
 {
     "common": {
         "name": "modbus",
-        "version": "0.5.4",
+        "version": "1.0.0",
         "news": {
+            "1.0.0": {
+                "en": "Fixed read of coils",
+                "de": "Das Lesen von Coils wurde korrigiert",
+                "ru": "Исправлено считывание coils",
+                "pt": "Leitura fixa de coils",
+                "nl": "Vast lezen van coils",
+                "fr": "Lecture fixe des coils",
+                "it": "Risolto il problema della lettura delle coils",
+                "es": "Lectura fija de coils",
+                "pl": "Naprawiono odczyt coils"
+            },
             "0.5.4": {
                 "en": "Fixes",
                 "de": "Fixes",
@@ -69,11 +80,17 @@
                 "ru": "Fix wrong byte count in loop"
             }
         },
-        "title": "ModBus Adapter",
+        "title": "ModBus",
         "desc": {
             "en": "ModBus connection Slave or Master",
             "de": "ModBus Verbindung Slave oder Master",
-            "ru": "ModBus соединение Slave или Master"
+            "ru": "ModBus соединение Slave или Master",
+            "pt": "Conexão ModBus Escravo ou Mestre",
+            "nl": "ModBus-verbinding Slave of Master",
+            "fr": "Connexion ModBus Esclave ou Maître",
+            "it": "Connessione ModBus Slave o Master",
+            "es": "Conexión ModBus Slave o Master",
+            "pl": "Połączenie ModBus Slave lub Master"
         },
         "authors": [
             "bluefox <dogafox@gmail.com>"

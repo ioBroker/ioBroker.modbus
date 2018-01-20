@@ -1,6 +1,7 @@
 ![Logo](admin/modbus.png)
-## iobroker.modbus
+# iobroker.modbus
 =====================
+
 [![NPM version](http://img.shields.io/npm/v/iobroker.modbus.svg)](https://www.npmjs.com/package/iobroker.modbus)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.modbus.svg)](https://www.npmjs.com/package/iobroker.modbus)
 
@@ -11,20 +12,20 @@ Implementation of ModBus Slave and Master for ioBroker. Following types are supp
 - Modbus RTU over TCP (slave)
 - Modbus TCP (slave, master)
 
-### Settings
-#### Partner IP Address
+## Settings
+### Partner IP Address
 IP address of modbus partner.
 
-#### Port
+### Port
 TCP Port of modbus partner if configured as master (client) or own port if configured as slave(server).
 
-#### Device ID
+### Device ID
 Modbus Device ID. Important if TCP/Modbus bridge is used.
 
-#### Type
+### Type
 Slave(Server) or Master(Client).
 
-#### Use aliases as address
+### Use aliases as address
 Normally all registers can have address from 0 to 65535. By using of aliases you can define virtual address fields for every type of registers. Normally:
 - discrete inputs are from 10001 to 20000
 - coils are from 1 to 1000
@@ -33,19 +34,19 @@ Normally all registers can have address from 0 to 65535. By using of aliases you
 
 Every alias will be mapped internally to address, e.g. 30011 will be mapped to input register 10. and so on.
 
-#### Round Real to
+### Round Real to
 How many digits after comma for float and doubles.
 
-#### Poll delay
+### Poll delay
 Cyclic poll interval (Only relevant for master)
 
-#### Reconnect time
+### Reconnect time
 Reconnection interval (Only relevant for master)
 
-#### Pulse time
+### Pulse time
 if pulse used for coils, this define the interval how long is pulse.
 
-#### Max read request length
+### Max read request length
 Maximal length of command READ_MULTIPLE_REGISTERS as number of registers to read.
 
 Some systems require first "write request" to deliver the data on "read request".
@@ -175,6 +176,8 @@ Of the many hex-to-floating point converters and calculators that are available 
 One can then swap bytes and/or words to analyze what potential endianness issues may exist between Modbus RTU master and slave devices.
 
 ## Changelog
+# 1.0.0 (2018-01-20)
+* (bluefox) Fixed read of coils
 
 # 0.5.4 (2017-09-27)
 * (Apollon77) Several Fixes
