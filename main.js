@@ -908,10 +908,12 @@ var main = {
                 }
                 if (main.ac.disInputs.length) {
                     main.ac.disInputs.sort(sortByAddress);
-                    main.disInputsLowAddress  = Math.floor(main.ac.disInputs[0].address / 16) * 16;
+                    if (!main.acp.doNotRoundAddressToWord) {
+                        main.disInputsLowAddress  = Math.floor(main.ac.disInputs[0].address / 16) * 16;
+                    }
                     main.disInputsHighAddress = main.ac.disInputs[main.ac.disInputs.length - 1].address;
                     main.disInputsLength      = main.disInputsHighAddress - main.disInputsLowAddress + 1;
-                    if (main.disInputsLength % 16) main.disInputsLength = (Math.floor(main.disInputsLength / 16) + 1) * 16;
+                    if (!main.acp.doNotRoundAddressToWord && main.disInputsLength % 16) main.disInputsLength = (Math.floor(main.disInputsLength / 16) + 1) * 16;
                 } else {
                     main.disInputsLength = 0;
                 }
@@ -944,9 +946,12 @@ var main = {
                 }
                 if (main.ac.coils.length) {
                     main.ac.coils.sort(sortByAddress);
-                    main.coilsLowAddress = Math.floor(main.coilsLowAddress / 16) * 16;
+                    if (!main.acp.doNotRoundAddressToWord) {
+                        main.coilsLowAddress = Math.floor(main.coilsLowAddress / 16) * 16;
+                    }
+
                     main.coilsLength = main.coilsHighAddress - main.coilsLowAddress + 1;
-                    if (main.coilsLength % 16) main.coilsLength = (Math.floor(main.coilsLength / 16) + 1) * 16;
+                    if (!main.acp.doNotRoundAddressToWord && main.coilsLength % 16) main.coilsLength = (Math.floor(main.coilsLength / 16) + 1) * 16;
                 } else {
                     main.coilsLength = 0;
                 }
@@ -1820,10 +1825,10 @@ var main = {
                         handler     : { }
                     };
                     fs = fs || require('fs');
-                    path = __dirname + '/node_modules/jsmodbus';
-                    if (!fs.existsSync(__dirname + '/node_modules/jsmodbus')) {
-                        path = __dirname + '/../jsmodbus';
-                    }
+                    path = require.resolve('jsmodbus/package.json');
+                    var pparts = path.replace(/\\/g, '/').split('/');
+                    pparts.pop();
+                    path = pparts.join('/');
 
                     fs.readdirSync(path + '/src/handler/client')
                         .filter(function (file) {
@@ -1862,10 +1867,10 @@ var main = {
                         handler     : { }
                     };
                     fs = fs || require('fs');
-                    path = __dirname + '/node_modules/jsmodbus';
-                    if (!fs.existsSync(__dirname + '/node_modules/jsmodbus')) {
-                        path = __dirname + '/../jsmodbus';
-                    }
+                    path = require.resolve('jsmodbus/package.json');
+                    var parts_ = path.replace(/\\/g, '/').split('/');
+                    parts_.pop();
+                    path = parts_.join('/');
 
                     fs.readdirSync(path + '/src/handler/client')
                         .filter(function (file) {
@@ -1904,10 +1909,10 @@ var main = {
                         handler     : { }
                     };
                     fs = fs || require('fs');
-                    path = __dirname + '/node_modules/jsmodbus';
-                    if (!fs.existsSync(__dirname + '/node_modules/jsmodbus')) {
-                        path = __dirname + '/../jsmodbus';
-                    }
+                    path = require.resolve('jsmodbus/package.json');
+                    var parts__ = path.replace(/\\/g, '/').split('/');
+                    parts__.pop();
+                    path = parts__.join('/');
 
                     fs.readdirSync(path + '/src/handler/client')
                         .filter(function (file) {

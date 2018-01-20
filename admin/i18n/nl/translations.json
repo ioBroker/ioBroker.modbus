@@ -1,6 +1,7 @@
 {
   "General": "Algemeen",
   "Inputs": "Discrete ingangen",
+  "Do not align addresses to word:": "Lijn adressen niet uit met 16 bits:",
   "Coils": "coils",
   "Input Registers": "Invoegregisters",
   "Holding Registers": "Registers houden",

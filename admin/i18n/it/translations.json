@@ -1,6 +1,7 @@
 {
   "General": "Generale",
   "Inputs": "Ingressi discreti",
+  "Do not align addresses to word:": "Non allineare gli indirizzi a 16 bit:",
   "Coils": "bobine",
   "Input Registers": "Registri di input",
   "Holding Registers": "Holding Registers",

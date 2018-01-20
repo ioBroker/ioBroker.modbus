@@ -1,6 +1,7 @@
 {
   "General": "Основное",
   "Inputs": "Дискретные входы",
+  "Do not align addresses to word:": "Не выравнивать адреса до 16 бит:",
   "Coils": "Регистры флагов",
   "Input Registers": "Регистры входа",
   "Holding Registers": "Регистры хранения",

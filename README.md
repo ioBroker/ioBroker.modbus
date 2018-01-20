@@ -34,6 +34,10 @@ Normally all registers can have address from 0 to 65535. By using of aliases you
 
 Every alias will be mapped internally to address, e.g. 30011 will be mapped to input register 10. and so on.
 
+### Do not align addresses to word
+Normally the coils and the input register addresses are aligned to 16 bit. Like addresses from 3 to 20 will be aligned to 0 up 32.
+If this option is active the addresses will not be aligned.
+
 ### Round Real to
 How many digits after comma for float and doubles.
 
@@ -175,8 +179,14 @@ Of the many hex-to-floating point converters and calculators that are available 
 
 One can then swap bytes and/or words to analyze what potential endianness issues may exist between Modbus RTU master and slave devices.
 
+## Test
+There are some programs in folder *test' to test the TCP communication:
+- Ananas32/64 is slave simulator (only holding registers and inputs, no coils and digital inputs)
+- RMMS is master simulator
+- mod_RSsim.exe is slave simulator. It can be that you need [Microsoft Visual C++ 2008 SP1 Redistributable Package](https://www.microsoft.com/en-us/download/details.aspx?id=5582) to start it (because of SideBySide error).
+
 ## Changelog
-# 1.0.0 (2018-01-20)
+# 1.0.1 (2018-01-20)
 * (bluefox) Fixed read of coils
 
 # 0.5.4 (2017-09-27)

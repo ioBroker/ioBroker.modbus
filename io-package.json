@@ -1,9 +1,9 @@
 {
     "common": {
         "name": "modbus",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "news": {
-            "1.0.0": {
+            "1.0.1": {
                 "en": "Fixed read of coils",
                 "de": "Das Lesen von Coils wurde korrigiert",
                 "ru": "Исправлено считывание coils",
@@ -136,7 +136,8 @@
             "holdingRegsOffset": 40001,
             "showAliases": true,
             "directAddresses": false,
-            "round": 2
+            "round": 2,
+            "doNotRoundAddressToWord": false
         },
         "disInputs": [],
         "coils": [],

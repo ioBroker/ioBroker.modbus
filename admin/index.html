@@ -1148,27 +1148,32 @@
             </tr>
 
             <tr>
-                <td class="translate">Use aliases as address:</td>
+                <td><label class="translate" for="modbus_showAliases">Use aliases as address:</label></td>
                 <td><input style="margin-right: 5px;text-align: right" class="modbus-params" type="checkbox" id="modbus_showAliases"/></td>
                 <td></td>
             </tr>
             <tr class="direct-addresses">
-                <td class="translate">Use direct addresses by aliases:</td>
+                <td><label class="translate" for="modbus_directAddresses">Use direct addresses by aliases:</label></td>
                 <td><input style="margin-right: 5px;text-align: right" class="modbus-params" type="checkbox" id="modbus_directAddresses"/></td>
                 <td></td>
             </tr>
             <tr>
-                <td style="width: 184px" class="translate">Round Real to:</td>
+                <td><label class="translate" for="modbus_doNotRoundAddressToWord">Do not align addresses to word:</label></td>
+                <td><input style="margin-right: 5px; text-align: right" class="modbus-params" type="checkbox" id="modbus_doNotRoundAddressToWord"/></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style="width: 184px"><label class="translate" for="modbus_round">Round Real to:</label></td>
                 <td style="text-align: center"><input style="margin-right: 5px; text-align: right" type="text" class="modbus-params" id="modbus_round"></td>
                 <td></td>
             </tr>
             <tr>
-                <td class="translate">Poll delay:</td>
-                <td  style="text-align: center"><input style="margin-right: 5px;text-align: right" class="modbus-params" id="modbus_poll"/></td>
+                <td><label class="translate" for="modbus_poll">Poll delay:</label></td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" class="modbus-params" id="modbus_poll"/></td>
                 <td style="padding-right: 20px">ms</td>
             </tr>
             <tr>
-                <td class="translate">Reconnect time:</td>
+                <td><label class="translate" for="modbus_recon">Reconnect time:</label></td>
                 <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_recon"></td>
                 <td>ms</td>
             </tr>
@@ -1178,12 +1183,12 @@
                 <td>ms</td>
             </tr>
             <tr>
-                <td class="translate">Pulse time:</td>
+                <td><label class="translate" for="modbus_pulsetime">Pulse time:</label></td>
                 <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_pulsetime"></td>
                 <td>ms</td>
             </tr>
             <tr>
-                <td class="translate">Max read request length:</td>
+                <td><label class="translate" for="modbus_maxBlock">Max read request length:</label></td>
                 <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_maxBlock"></td>
                 <td calss="translate">registers</td>
             </tr>

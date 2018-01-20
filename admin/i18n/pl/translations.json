@@ -1,6 +1,7 @@
 {
   "General": "Generał",
   "Inputs": "Wejścia dyskretne",
+  "Do not align addresses to word:": "Nie wyrównaj adresów do 16 bitów:",
   "Coils": "Cewki",
   "Input Registers": "Rejestry wejściowe",
   "Holding Registers": "Prowadzenie rejestrów",
