@@ -35,7 +35,7 @@ Normally all registers can have address from 0 to 65535. By using of aliases you
 Every alias will be mapped internally to address, e.g. 30011 will be mapped to input register 10. and so on.
 
 ### Do not align addresses to word
-Normally the coils and the input register addresses are aligned to 16 bit. Like addresses from 3 to 20 will be aligned to 0 up 32.
+Normally the coils and the discrete inputs addresses are aligned to 16 bit. Like addresses from 3 to 20 will be aligned to 0 up 32.
 If this option is active the addresses will not be aligned.
 
 ### Round Real to
