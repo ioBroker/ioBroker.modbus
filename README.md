@@ -186,6 +186,9 @@ There are some programs in folder *test' to test the TCP communication:
 - mod_RSsim.exe is slave simulator. It can be that you need [Microsoft Visual C++ 2008 SP1 Redistributable Package](https://www.microsoft.com/en-us/download/details.aspx?id=5582) to start it (because of SideBySide error).
 
 ## Changelog
+### 1.1.0 (2018-01-23)
+* (Apollon77) Upgrade Serialport Library
+
 # 1.0.2 (2018-01-20)
 * (bluefox) Fixed read of coils
 
