@@ -171,7 +171,8 @@
         'floatsb':    2,
         'doublebe':   4,
         'doublele':   4,
-        'string':     0
+        'string':     0,
+        'stringle':   0
     };
 
     var attempts = 0;
@@ -374,39 +375,40 @@
 
         $('.btn_toggle_pool').button().click(function (e, ui) {
             var grid = $(this).parent().data('grid');
+            var $grid = $('#' + grid);
 
-            var data = $('#' + grid).jsGrid('option', 'data');
+            var data = $grid.jsGrid('option', 'data');
             $.each(data, function () {
                 this.poll = !this.poll;
             });
 
-            $('#' + grid).jsGrid('option', 'data', data);
+            $grid.jsGrid('option', 'data', data);
             onChange();
         });
 
         $('.btn_toggle_rw').button().click(function () {
             var grid = $(this).parent().data('grid');
-
-            var data = $('#' + grid).jsGrid('option', 'data');
+            var $grid = $('#' + grid);
+            var data = $grid.jsGrid('option', 'data');
             $.each(data, function () {
                 this.RW = !this.RW;
             });
 
-            $('#' + grid).jsGrid('option', 'data', data);
+            $grid.jsGrid('option', 'data', data);
             onChange();
 
         });
 
         $('.btn_toggle_wp').button().click(function () {
             var grid = $(this).parent().data('grid');
-
-            var data = $('#' + grid).jsGrid('option', 'data');
+            var $grid = $('#' + grid);
+            var data = $grid.jsGrid('option', 'data');
 
             $.each(data, function () {
                 this.wp = !this.wp;
             });
 
-            $('#' + grid).jsGrid('option', 'data', data);
+            $grid.jsGrid('option', 'data', data);
             onChange();
         });
 
@@ -645,12 +647,15 @@
                     {value: 'floatsb',        text: 'Float (Big Endian Byte Swap)'},
                     {value: 'doublebe',       text: 'Double (Big Endian)'},
                     {value: 'doublele',       text: 'Double (Little Endian)'},
-                    {value: 'string',         text: 'String (Zero-end)'}
+                    {value: 'string',         text: 'String (Zero-end)'},
+                    {value: 'stringle',       text: 'String (Little Endian, Zero-end)'}
                 ];
 
                 var room_items = [{value: '', text: ''}];
                 for (var room in rooms) {
-                    room_items.push({value: room, text: rooms[room].common.name || room.substring('enum.rooms.'.length)});
+                    if (rooms.hasOwnProperty(room)) {
+                        room_items.push({value: room, text: rooms[room].common.name || room.substring('enum.rooms.'.length)});
+                    }
                 }
                 var fields = [
                     {name: '_address'   , title:  _('Address'),       type: 'text',       width: '110px', sorter: 'number'},
@@ -730,7 +735,7 @@
                         }
 
                         // update length
-                        if (obj.item.type === 'string') {
+                        if (obj.item.type === 'string' || obj.item.type === 'stringle') {
                             if (obj.item.factor !== '') {
                                 obj.item.factor = '';
                                 changed = true;
@@ -761,7 +766,7 @@
                             }
                         }
 
-                        if (!obj.item.role && obj.item.type !== 'string') {
+                        if (!obj.item.role && obj.item.type !== 'string' && obj.item.type !== 'stringle') {
                             if (id === 'modbus_disInputs') {
                                 obj.item.role = 'status';
                             } else if (id === 'modbus_coils') {
@@ -800,7 +805,7 @@
 
                                 if (!obj.item.type) {
                                     len = 1;
-                                } else if (obj.item.type !== 'string') {
+                                } else if (obj.item.type !== 'string' && obj.item.type !== 'stringle') {
                                     len = type_items_len[obj.item.type];
                                 } else {
                                     len = obj.item.len;

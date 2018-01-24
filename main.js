@@ -524,13 +524,33 @@ function extractValue(type, len, buffer, offset) {
         case 'doublele':
             return buffer.readDoubleLE(offset * 2);
         case 'string':
-            // find lenght
+            // find length
             var _len = 0;
             while (buffer[offset * 2 + _len] && _len < len * 2) {
                 _len++;
             }
 
             return buffer.toString('ascii', offset * 2, offset * 2 + _len);
+        case 'stringle':
+            // find length
+            var __len = 0;
+            var str = '';
+            while (__len < len * 2) {
+                if (buffer[offset * 2 + __len + 1]) {
+                    str += String.fromCharCode(buffer[offset * 2 + __len + 1]);
+
+                    if (str += String.fromCharCode(buffer[offset * 2 + __len])) {
+                        str += String.fromCharCode(buffer[offset * 2 + __len]);
+                    } else {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+                __len += 2;
+            }
+
+            return str;
         default:
             adapter.log.error('Invalid type: ' + type);
             return 0;
@@ -697,8 +717,21 @@ function writeValue(type, value, len) {
             value = value.toString();
             var _len = (value.length + 1);
             if (_len % 2) _len++;
-            buffer = new Buffer(len);
+            buffer = new Buffer(_len);
             buffer.write(value, 0, value.length > _len ? _len : value.length, 'ascii');
+            break;
+        case 'stringle':
+            if (value === null) value = 'null';
+            value = value.toString();
+            var __len = (value.length + 1);
+            if (__len % 2) __len++;
+            buffer = new Buffer(__len);
+            for (var b = 0; b < (__len >> 1); b++) {
+                buffer.writeInt16LE((value.charCodeAt(b * 2) << 8) | value.charCodeAt(b * 2 + 1));
+                if (b * 2 + 2 >= buffer.length) {
+                    break;
+                }
+            }
             break;
         default:
             adapter.log.error('Invalid type: ' + type);

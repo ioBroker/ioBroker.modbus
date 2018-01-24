@@ -1,12 +1,18 @@
 {
     "common": {
         "name": "modbus",
-        "version": "1.1.0",
+        "version": "1.0.3",
         "news": {
-            "1.1.0": {
-                "en": "Upgrade Serialport Library",
-                "de": "Serialport Bibliothek aktualisiert",
-                "ru": "Upgrade Serialport Library"
+            "1.0.3": {
+                "en": "Little endian strings added",
+                "de": "Little Endian Strings hinzugefügt",
+                "ru": "Добавлены little endian строки",
+                "pt": "Pequenas cordas de endian adicionadas",
+                "nl": "Little endian strings toegevoegd",
+                "fr": "Petites chaînes endiennes ajoutées",
+                "it": "Aggiunti i cordini little endian",
+                "es": "Pequeñas cadenas endian añadidas",
+                "pl": "Dodano małe ciągi endianów"
             },
             "1.0.2": {
                 "en": "Fixed read of coils",

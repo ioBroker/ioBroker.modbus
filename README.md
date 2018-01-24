@@ -90,6 +90,7 @@ Both solutions **RTU over TCP** and **TCP** works well.
 - doublebe - Double (Big Endian): AABBCCDDEEFFGGHH => AABBCCDDEEFFGGHH
 - doublele - Double (Little Endian): AABBCCDDEEFFGGHH => HHGGFFEEDDCCBBAA
 - string   - String (Zero-end): ABCDEF\0 => ABCDEF\0
+- stringle - String (Little Endian, Zero-end): BADCFE\0 => ABCDEF\0
 
 Following description was copied from [here](http://www.chipkin.com/how-real-floating-point-and-32-bit-data-is-encoded-in-modbus-rtu-messages/)
 
@@ -186,8 +187,8 @@ There are some programs in folder *test' to test the TCP communication:
 - mod_RSsim.exe is slave simulator. It can be that you need [Microsoft Visual C++ 2008 SP1 Redistributable Package](https://www.microsoft.com/en-us/download/details.aspx?id=5582) to start it (because of SideBySide error).
 
 ## Changelog
-### 1.1.0 (2018-01-23)
-* (Apollon77) Upgrade Serialport Library
+# 1.0.3 (2018-01-23)
+* (bluefox) Little endian strings added
 
 # 1.0.2 (2018-01-20)
 * (bluefox) Fixed read of coils
