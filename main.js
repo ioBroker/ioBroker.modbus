@@ -4,7 +4,6 @@
 'use strict';
 
 var utils         = require(__dirname + '/lib/utils');
-var modbus        = require('jsmodbus');
 var modbusClient  = null; //Master
 var modbusServer  = null; //Slave
 var connected     = false;
@@ -1739,6 +1738,7 @@ var main = {
                         main.coils[a] = value;
                     }
                 });
+
                 var mPow2 = [
                     0x01,
                     0x02,
@@ -1840,8 +1840,8 @@ var main = {
                     adapter.setState('info.connection', list, true);
                     adapter.log.warn('Error on connection: ' + JSON.stringify(err));
                 });
-
             });
+
             modbusServer();
         } else {
             if (main.acp.type === 'tcp') {
