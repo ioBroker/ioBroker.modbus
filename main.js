@@ -2196,11 +2196,11 @@ var main = {
             adapter.log.warn('Poll error count: ' + main.errorCount + ' code: ' + JSON.stringify(err));
             adapter.setState('info.connection', false, true);
 
-            if (main.errorCount%6 < 6 && connected) {
-                setTimeout(main.poll, main.acp.poll);
-            }
-            else if (main.errorCount > 12) { // 3 reconnects did not help, restart adapter
+            if (main.errorCount > 12) { // 2 reconnects did not help, restart adapter
                 throw new Error('Reconnect did not help, restart adapter');
+            }
+            else if (main.errorCount%6 !== 0 && connected) {
+                setTimeout(main.poll, main.acp.poll);
             }
             else {
                 main.reconnect();
