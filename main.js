@@ -1,6 +1,6 @@
-/* jshint -W097 */// jshint strict:false
+/* jshint -W097 */
+/* jshint strict: false */
 /* jslint node: true */
-
 'use strict';
 
 const utils       = require(__dirname + '/lib/utils');
@@ -23,7 +23,7 @@ adapter.on('ready', function () {
     }
 
     adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
-    main.main();
+    main();
 });
 
 adapter.on('message', function (obj) {
@@ -67,17 +67,21 @@ let objects    = {};
 let enums      = {};
 let infoRegExp = new RegExp(adapter.namespace.replace('.', '\\.') + '\\.info\\.');
 
-adapter.on('stateChange', function (id, state) {
+adapter.on('stateChange', (id, state) => {
     if (state && !state.ack && id && !infoRegExp.test(id)) {
-        if (objects[id]) {
-            prepareWrite(id, state);
+        if (!modbus) {
+            adapter.log.warn('No connection')
         } else {
-            adapter.getObject(id, function (err, data) {
-                if (!err) {
-                    objects[id] = data;
-                    prepareWrite(id, state);
-                }
-            });
+            if (objects[id]) {
+                modbus.write(id, state);
+            } else {
+                adapter.getObject(id, (err, data) => {
+                    if (!err) {
+                        objects[id] = data;
+                        modbus.write(id, state);
+                    }
+                });
+            }
         }
     }
 });
@@ -268,16 +272,15 @@ const _dmap = {
     14: 14,
     15: 15
 };
-function address2alias(id, address, isDirect) {
+function address2alias(id, address, isDirect, offset) {
     if (typeof address                 === 'string') address                 = parseInt(address, 10);
-    if (typeof main.acp[id + 'Offset'] === 'string') main.acp[id + 'Offset'] = parseInt(main.acp[id + 'Offset'], 10);
 
     if (id === 'disInputs' || id === 'coils') {
         address = Math.floor(address / 16) * 16 + (isDirect ? _dmap[address % 16] : _rmap[address % 16]);
-        address += main.acp[id + 'Offset'];
+        address += offset;
         return address;
     } else {
-        return address + main.acp[id + 'Offset'];
+        return address + offset;
     }
 }
 
@@ -357,7 +360,8 @@ function prepareConfig(params) {
             addressHigh:   0,
             addressLow:    0,
             values:        [],
-            mapping:       {}
+            mapping:       {},
+            offset:        parseInt(params.coilsOffset,   10) || 10001
         };
         options.inputRegs = {
             fullIds:       [],
@@ -365,7 +369,8 @@ function prepareConfig(params) {
             addressHigh:   0,
             addressLow:    0,
             values:        [],
-            mapping:       {}
+            mapping:       {},
+            offset:        parseInt(params.inputRegsOffset,   10) || 10001
         };
         options.disInputs = {
             fullIds:       [],
@@ -373,7 +378,8 @@ function prepareConfig(params) {
             addressHigh:   0,
             addressLow:    0,
             values:        [],
-            mapping:       {}
+            mapping:       {},
+            offset:        parseInt(params.disInputsOffset,   10) || 10001
         };
         options.holdingRegs = {
             fullIds:       [],
@@ -381,33 +387,39 @@ function prepareConfig(params) {
             addressHigh:   0,
             addressLow:    0,
             values:        [],
-            mapping:       {}
+            mapping:       {},
+            offset:        parseInt(params.holdingRegsOffset,   10) || 10001
         };
+        options.objects = objects
     } else {
         options.coils = {
              addressLow: 0,
              length: 1000,
              config: [],
-             blocks: {}
+             blocks: [],
+            offset:        parseInt(params.coilsOffset,   10) || 10001
         };
         options.inputRegs = {
             addressLow: 0,
             length: 1000,
             config: [],
-            blocks: {},
+            blocks: [],
+            offset:        parseInt(params.inputRegsOffset,   10) || 10001
         };
         options.disInputs = {
             addressLow: 0,
             length: 1000,
             config: [],
-            blocks: {}
+            blocks: [],
+            offset:        parseInt(params.disInputsOffset,   10) || 10001
         };
         options.holdingRegs = {
             addressLow: 0,
             length: 1000,
             config: [],
-            blocks: {},
-            cyclicWrite: [] // only holdingRegs
+            blocks: [],
+            cyclicWrite: [], // only holdingRegs
+            offset:        parseInt(params.holdingRegsOffset,   10) || 10001
         };
     }
     
@@ -450,7 +462,7 @@ function parseConfig(callback) {
                 }
                 regs[i].id = 'discreteInputs.';
                 if (showAliases) {
-                    regs[i].id += address2alias('disInputs', address, directAddresses);
+                    regs[i].id += address2alias('disInputs', address, directAddresses, res.offset);
                 } else {
                     regs[i].id += address;
                 }
@@ -504,7 +516,7 @@ function parseConfig(callback) {
 
                 regs[i].id = 'coils.';
                 if (showAliases) {
-                    regs[i].id += address2alias('coils', address, directAddresses);
+                    regs[i].id += address2alias('coils', address, directAddresses, res.offset);
                 } else {
                     regs[i].id += address;
                 }
@@ -542,8 +554,10 @@ function parseConfig(callback) {
             } else {
                 regs.length = 0;
             }
-            for (i = 0; i <  regs.length; i++) {
-                regs.mapping[regs[i].address - res.addressLow] = adapter.namespace + '.' + regs[i].id;
+            if (regs.mapping) {
+                for (i = 0; i <  regs.length; i++) {
+                    regs.mapping[regs[i].address - res.addressLow] = adapter.namespace + '.' + regs[i].id;
+                }
             }
         }
 
@@ -573,7 +587,7 @@ function parseConfig(callback) {
 
                 regs[i].id = 'inputRegisters.';
                 if (showAliases) {
-                    regs[i].id += address2alias('inputRegs', address, directAddresses);
+                    regs[i].id += address2alias('inputRegs', address, directAddresses, res.offset);
                 } else {
                     regs[i].id += address;
                 }
@@ -593,16 +607,18 @@ function parseConfig(callback) {
                 }
 
                 // try to detect next block
-                if ((address - lastAddress > 10 && regs[i].len < 10) || (lastAddress - blockStart >= options.config.maxBlock)) {
-                    if (res.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
-                        res.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                if (res.blocks) {
+                    if ((address - lastAddress > 10 && regs[i].len < 10) || (lastAddress - blockStart >= options.config.maxBlock)) {
+                        if (res.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
+                            res.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                        }
+                        blockStart  = address;
+                        startIndex  = i;
                     }
-                    blockStart  = address;
-                    startIndex  = i;
                 }
                 lastAddress = address + regs[i].len;
             }
-            if (res.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
+            if (res.blocks && res.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
                 res.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
             }
             if (regs.length) {
@@ -656,7 +672,7 @@ function parseConfig(callback) {
 
                 regs[i].id = 'holdingRegisters.';
                 if (showAliases) {
-                    regs[i].id += address2alias('holdingRegs', address, directAddresses);
+                    regs[i].id += address2alias('holdingRegs', address, directAddresses, res.offset);
                 } else {
                     regs[i].id += address;
                 }
@@ -684,16 +700,18 @@ function parseConfig(callback) {
                     lastAddress = address + regs[i].len;
                 }
                 // try to detect next block
-                if ((address - lastAddress > 10 && regs[i].len < 10) || (lastAddress - blockStart >= options.config.maxBlock)) {
-                    if (res.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
-                        res.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                if (res.blocks) {
+                    if ((address - lastAddress > 10 && regs[i].len < 10) || (lastAddress - blockStart >= options.config.maxBlock)) {
+                        if (res.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
+                            res.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                        }
+                        blockStart  = address;
+                        startIndex  = i;
                     }
-                    blockStart  = address;
-                    startIndex  = i;
                 }
                 lastAddress = address + regs[i].len;
             }
-            if (res.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
+            if (res.blocks && res.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
                 res.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
             }
 
@@ -719,8 +737,11 @@ function parseConfig(callback) {
             }
 
             lastAddress = null;
-            for (i = 0; i < regs.length; i++) {
-                res.mapping[regs[i].address - res.addressLow] = adapter.namespace + '.' + regs[i].id;
+
+            if (regs.mapping) {
+                for (i = 0; i < regs.length; i++) {
+                    res.mapping[regs[i].address - res.addressLow] = adapter.namespace + '.' + regs[i].id;
+                }
             }
         }
 
@@ -972,7 +993,8 @@ function main() {
         } else {
             Modbus = require(__dirname + '/lib/master');
         }
-        modbus = new Modbus(options);
+        modbus = new Modbus(options, adapter);
+        modbus.start();
     });
 }
 
