@@ -2197,7 +2197,11 @@ var main = {
             adapter.setState('info.connection', false, true);
 
             if (main.errorCount > 12) { // 2 reconnects did not help, restart adapter
-                throw new Error('Reconnect did not help, restart adapter');
+                adapter.log.error('Reconnect did not help, restart adapter');
+                stop(function() {
+                    adapter.stop();
+                });
+                return;
             }
             else if (main.errorCount % 6 !== 0 && connected) {
                 setTimeout(main.poll, main.acp.poll);
