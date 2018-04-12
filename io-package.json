@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "modbus",
-        "version": "1.1.0",
+        "version": "1.1.1",
         "news": {
             "1.1.0": {
                 "en": "Upgrade Serialport Library, Little endian strings added",
