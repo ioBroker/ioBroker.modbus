@@ -3,6 +3,17 @@
         "name": "modbus",
         "version": "1.1.1",
         "news": {
+            "1.1.1": {
+                "en": "Optimize reconnect handling",
+                "de": "Optimieren Sie die Verbindungswiederherstellung",
+                "ru": "Оптимизировать переподключение обработки",
+                "pt": "Otimizar o manuseio de reconexão",
+                "nl": "Optimaliseer de verbinding opnieuw verbinden",
+                "fr": "Optimisez la gestion de la reconnexion",
+                "it": "Ottimizza la gestione della riconnessione",
+                "es": "Optimizar el manejo de reconexión",
+                "pl": "Zoptymalizuj obsługę ponownego połączenia"
+            },
             "1.1.0": {
                 "en": "Upgrade Serialport Library, Little endian strings added",
                 "de": "Upgrade Serialport Library, Little Endian Strings hinzugefügt",
