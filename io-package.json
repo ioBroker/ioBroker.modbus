@@ -140,6 +140,7 @@
             "slave": 0,
             "poll": 1000,
             "recon": 60000,
+            "multiDeviceId": false,
             "pulsetime": 1000,
             "disInputsOffset": 10001,
             "coilsOffset": 1,

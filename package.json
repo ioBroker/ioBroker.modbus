@@ -34,7 +34,7 @@
     "crc": "3.5.0",
     "stampit-state-machine": "^0.2.1",
     "stampit-event-bus": "^0.1.1",
-    "stampit-log": "^0.3.0"
+    "serialport": "^4.0.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
