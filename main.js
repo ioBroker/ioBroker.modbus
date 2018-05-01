@@ -58,34 +58,35 @@ adapter.on('message', function (obj) {
 
 function stop(callback) {
     isStop = true;
+    if (main && main.requestTimer) {
+        clearTimeout(main.requestTimer);
+        main.requestTimer = null;
+    }
+
+    if (modbusClient) {
+        try {
+            modbusClient.close();
+        } catch (e) {
+
+        }
+    }
+    if (modbusServer) {
+        try {
+            modbusServer.close();
+        } catch (e) {
+
+        }
+    }
     if (adapter && adapter.setState) {
-
-        if (main && main.requestTimer) {
-            clearTimeout(main.requestTimer);
-            main.requestTimer = null;
-        }
-
-        if (modbusClient) {
-            try {
-                modbusClient.close();
-            } catch (e) {
-
-            }
-        }
-        if (modbusServer) {
-            try {
-                modbusServer.close();
-            } catch (e) {
-
-            }
-        }
-
         if (adapter.config && adapter.config.params) {
             adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
         }
     }
     if (nextPoll) clearTimeout(nextPoll);
     if (callback) callback();
+    setTimeout(function() {
+        process.exit();
+    }, 5000);
 }
 
 var pulseList  = {};
