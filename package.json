@@ -28,13 +28,12 @@
     "serialport": "^6.0.4"
   },
   "dependencies": {
-    "jsmodbus": "1.2.4",
     "stampit": "^2.1.2",
     "put": "0.0.6",
     "crc": "3.5.0",
     "stampit-state-machine": "^0.2.1",
     "stampit-event-bus": "^0.1.1",
-    "serialport": "^4.0.1"
+    "serialport": "^6.0.4"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
