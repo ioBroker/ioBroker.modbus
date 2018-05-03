@@ -32,8 +32,7 @@
     "put": "0.0.6",
     "crc": "3.5.0",
     "stampit-state-machine": "^0.2.1",
-    "stampit-event-bus": "^0.1.1",
-    "serialport": "^6.0.4"
+    "stampit-event-bus": "^0.1.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
