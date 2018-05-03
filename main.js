@@ -332,7 +332,7 @@ function prepareConfig(config) {
         devices: {}
     };
 
-    if (options.config.slave) {
+    if (!options.config.slave) {
         options.config.multiDeviceId = params.multiDeviceId === true || params.multiDeviceId === 'true';
     }
 
@@ -367,7 +367,7 @@ function prepareConfig(config) {
         };
     }
 
-    for (let d = 0; d < deviceIds; d++) {
+    for (let d = 0; d < deviceIds.length; d++) {
         let deviceId = deviceIds[d];
         options.devices[deviceId] = {};
         let device = options.devices[deviceId];
@@ -1093,7 +1093,7 @@ function parseConfig(callback) {
                 device.holdingRegs.fullIds = adapter.config.holdingRegs.filter(e => e.deviceId === deviceId).map(e => e.fullId);
             }
 
-            if (!options.multiDeviceId) {
+            if (!options.config.multiDeviceId) {
                 break;
             }
         }

@@ -25,7 +25,7 @@
 
     .ui-tabs-panel {
         height: calc(100% - 70px);
-        padding: 0px !important;
+        padding: 0 !important;
     }
 
     .table_header {
@@ -142,7 +142,7 @@
     };
     var isDirect   = false;
 
-    var type_items_len = {
+    var typeItemsLen = {
         'uint8be':    1,
         'uint8le':    1,
         'int8be':     1,
@@ -195,17 +195,18 @@
                 }
                 return;
             }
+            var $comName = $('#modbus_comName');
             var text = '<option value="">' + _('Select port') + '</option>';
             for (var j = 0; j < list.length; j++) {
                 if (list[j].comName === 'Not available') {
                     text = '<option value="" selected>' + _('Not available') + '</option>';
-                    $('#modbus_comName').prop('disabled', true);
+                    $comName.prop('disabled', true);
                     break;
                 } else {
                     text += '<option value="' + list[j].comName + '" ' + ((actualValue === list[j].comName) ? 'selected' : '') + '>' + list[j].comName + '</option>';
                 }
             }
-            $('#modbus_comName').html(text);
+            $comName.html(text);
         });
     }
 
@@ -287,7 +288,7 @@
         for (var i = 0; i < lines.length; i++) {
             var parts = lines[i].split(delimiter);
             if (parts.length === 1) continue;
-            if (parseInt(parts[0].trim(), 10).toString() != parts[0]) {
+            if (parseInt(parts[0].trim(), 10).toString() !== parts[0]) {
                 // may be it is fields description
                 mapping = parts;
                 continue;
@@ -323,7 +324,7 @@
                     obj[mapping[m]] = val || '';
                 }
             }
-            if (type_items_len[obj.type]) obj.len = type_items_len[obj.type];
+            if (typeItemsLen[obj.type]) obj.len = typeItemsLen[obj.type];
             data[id].push(obj);
         }
         $('#modbus_' + id).jsGrid('render');
@@ -539,13 +540,14 @@
                 showAliases:        (settings.params.showAliases === undefined) ? true : settings.params.showAliases,
                 directAddresses:    settings.params.directAddresses || false,
                 doNotRoundAddressToWord:    settings.params.doNotRoundAddressToWord || false,
-                comName:    settings.params.comName  || '',
-                type:       settings.params.type || 'tcp',
-                dataBits:   settings.params.dataBits || 8,
-                stopBits:   settings.params.stopBits || 1,
-                parity:     settings.params.parity || 'none',
-                baudRate:   settings.params.baudRate || 9600,
-                timeout:    settings.params.timeout || 5000
+                comName:       settings.params.comName       || '',
+                type:          settings.params.type          || 'tcp',
+                dataBits:      settings.params.dataBits      || 8,
+                stopBits:      settings.params.stopBits      || 1,
+                parity:        settings.params.parity        || 'none',
+                baudRate:      settings.params.baudRate      || 9600,
+                timeout:       settings.params.timeout       || 5000,
+                multiDeviceId: settings.params.multiDeviceId || false
             }
         };
         data.params.showAliases     = (data.params.showAliases     === 'true' || data.params.showAliases     === true);
@@ -561,7 +563,7 @@
                 $(this).val(data.params[id.split('_')[1]]);
             }
 
-            $(this).change(function () {
+            $(this).on('change', function () {
                 var id = $(this).attr('id').split('_')[1];
                 if (id === 'disInputsOffset')    {
                     recalculate(data, 'disInputs', offsets.disInputs, parseInt($(this).val(), 10));
@@ -585,7 +587,7 @@
                 }
 
                 onchange();
-            }).keyup(function () {
+            }).on('keyup', function () {
                 $(this).trigger('change');
             });
         });
@@ -597,7 +599,7 @@
                 var _id = $(this).attr('id');
 
                 // todo read roles and expand this list
-                var role_items = [
+                var roleItems = [
                     {value: '',                     text: ''},
                     {value: 'value',                text: 'value'},
                     {value: 'level',                text: 'level'},
@@ -619,7 +621,7 @@
                     {value: 'level.interval',       text: 'level.interval'}
                 ];
 
-                var type_items = [
+                var typeItems = [
                     {value: '',               text: ''},
                     {value: 'uint16be',       text: 'Unsigned 16 bit (Big Endian)'},
                     {value: 'uint16le',       text: 'Unsigned 16 bit (Little Endian)'},
@@ -651,36 +653,42 @@
                     {value: 'stringle',       text: 'String (Little Endian, Zero-end)'}
                 ];
 
-                var room_items = [{value: '', text: ''}];
+                var roomsItems = [{value: '', text: ''}];
                 for (var room in rooms) {
                     if (rooms.hasOwnProperty(room)) {
-                        room_items.push({value: room, text: rooms[room].common.name || room.substring('enum.rooms.'.length)});
+                        roomsItems.push({value: room, text: rooms[room].common.name || room.substring('enum.rooms.'.length)});
                     }
                 }
                 var fields = [
                     {name: '_address'   , title:  _('Address'),       type: 'text',       width: '110px', sorter: 'number'},
+                    {name: 'deviceId'   , title:  _('deviceId'),      type: 'text',       width: '50px',  sorter: 'number'},
                     {name: 'name'       , title:  _('Name'),          type: 'text',       width: '*'},
                     {name: 'description', title:  _('Description'),   type: 'text',       width: '*'},
                     {name: 'unit'       , title:  _('Unit'),          type: 'text',       width: '50px'},
-                    {name: 'type'       , title:  _('Type'),          type: 'select',     width: '200px', items: type_items, valueField: 'value', textField: 'text'},
+                    {name: 'type'       , title:  _('Type'),          type: 'select',     width: '200px', items: typeItems,  valueField: 'value', textField: 'text'},
                     {name: 'len'        , title:  _('Length'),        type: 'text',       width: '50px'},
                     {name: 'factor'     , title:  _('Factor'),        type: 'text',       width: '50px'},
                     {name: 'offset'     , title:  _('Offset'),        type: 'text',       width: '50px'},
-                    {name: 'role'       , title:  _('Role'),          type: 'select',     width: '100px', items: role_items, valueField: 'value', textField: 'text'},
-                    {name: 'room'       , title:  _('Room'),          type: 'select',     width: '100px', items: room_items, valueField: 'value', textField: 'text'},
+                    {name: 'role'       , title:  _('Role'),          type: 'select',     width: '100px', items: roleItems,  valueField: 'value', textField: 'text'},
+                    {name: 'room'       , title:  _('Room'),          type: 'select',     width: '100px', items: roomsItems, valueField: 'value', textField: 'text'},
                     {name: 'poll'       , title:  _('poll'),          type: 'checkbox',   width: '35px'},
                     {name: 'wp'         , title:  _('WP'),            type: 'checkbox',   width: '35px'},
                     {name: 'cw'         , title:  _('CW'),            type: 'checkbox',   width: '35px'},
                     {                                                 type: 'control',    width: '80px'}
                 ];
                 if (_id === 'modbus_disInputs' || _id === 'modbus_inputRegs') {
-                    fields.splice(10, 3);
+                    fields.splice(11, 3);
                 }
                 if (_id === 'modbus_coils' || _id === 'modbus_disInputs') {
-                    fields.splice(3, 5);
+                    fields.splice(4, 5);
                 }
                 if (parseInt($('#modbus_slave').val())) {
-                    fields.splice(12, 1);
+                    fields.splice(13, 1);
+                    fields.splice(2, 1);
+                } else {
+                    if ($('#modbus_type').val() !== 'serial' || !$('#modbus_multiDeviceId').prop('checked')) {
+                        fields.splice(2, 1);
+                    }
                 }
 
                 var g = $('#' + _id).jsGrid({
@@ -730,7 +738,7 @@
                         }
 
                         if (obj.item.type === '') {
-                            obj.item.type = type_items[1].value;
+                            obj.item.type = typeItems[1].value;
                             changed = true;
                         }
 
@@ -750,9 +758,10 @@
                                 obj.item.len = 2;
                                 changed = true;
                             }
-                        } else if (type_items_len[obj.item.type]) {
-                            if (obj.item.len != type_items_len[obj.item.type]) {
-                                obj.item.len = type_items_len[obj.item.type];
+                        } else if (typeItemsLen[obj.item.type]) {
+                            obj.item.len = parseInt(obj.item.len, 10);
+                            if (obj.item.len != typeItemsLen[obj.item.type]) {
+                                obj.item.len = typeItemsLen[obj.item.type];
                                 changed = true;
                             }
 
@@ -791,22 +800,29 @@
                         var id = obj.grid._body.parent().attr('id').split('_')[1];
                         if (data[id].length) {
                             var max = 0;
-                            obj.item.role   = data[id][data[id].length - 1].role;
-                            obj.item.poll   = data[id][data[id].length - 1].poll;
-                            obj.item.wp     = data[id][data[id].length - 1].wp;
-                            obj.item.cw     = data[id][data[id].length - 1].cw;
-                            obj.item.type   = data[id][data[id].length - 1].type;
-                            obj.item.len    = data[id][data[id].length - 1].len;
-                            obj.item.factor = data[id][data[id].length - 1].factor;
-                            obj.item.offset = data[id][data[id].length - 1].offset;
+                            obj.item.role     = data[id][data[id].length - 1].role;
+                            obj.item.poll     = data[id][data[id].length - 1].poll;
+                            obj.item.wp       = data[id][data[id].length - 1].wp;
+                            obj.item.cw       = data[id][data[id].length - 1].cw;
+                            obj.item.type     = data[id][data[id].length - 1].type;
+                            obj.item.len      = data[id][data[id].length - 1].len;
+                            obj.item.factor   = data[id][data[id].length - 1].factor;
+                            obj.item.offset   = data[id][data[id].length - 1].offset;
+                            obj.item.deviceId = data[id][data[id].length - 1].deviceId;
 
                             var len;
-                            for (var a = 0; a < data[id].length; a++) {
+                            var defaultDeviceId = parseInt($('#modbus_deviceId').val(), 10) || 1;
+                            var actualDeviceId = parseInt(obj.item.deviceId, 10);
+                            if (!actualDeviceId) actualDeviceId = defaultDeviceId;
 
+                            for (var a = 0; a < data[id].length; a++) {
+                                var deviceId = parseInt(data[id][a].deviceId, 10);
+                                if (!deviceId) deviceId = defaultDeviceId;
+                                if (deviceId !== actualDeviceId) continue;
                                 if (!obj.item.type) {
                                     len = 1;
                                 } else if (obj.item.type !== 'string' && obj.item.type !== 'stringle') {
-                                    len = type_items_len[obj.item.type];
+                                    len = typeItemsLen[obj.item.type];
                                 } else {
                                     len = obj.item.len;
                                 }
@@ -887,11 +903,11 @@
             switchAll(data);
         });
 
-        $('#modbus_directAddresses').change(function () {
+        $('#modbus_directAddresses').on('change', function () {
             isDirect = $(this).prop('checked');
         });
 
-        $('#modbus_showAliases').change(function () {
+        $('#modbus_showAliases').on('change', function () {
             if (!$(this).prop('checked')) {
                 $('#modbus_directAddresses').prop('checked', false).prop('disabled', true);
             } else {
@@ -901,7 +917,7 @@
 
         settings.params.type = settings.params.type || 'tcp';
 
-        $('#modbus_type').change(function () {
+        $('#modbus_type').on('change', function () {
             if ($(this).val() === 'tcp' || $(this).val() === 'tcprtu') {
                 $('.tcp').show();
                 $('.serial').hide();
@@ -1134,6 +1150,10 @@
                 <td><label class="translate" for="modbus_deviceId">Device ID:</label></td>
                 <td><input class="modbus-params" id="modbus_deviceId" type="text"  style="width: 100%;"/></td>
             </tr>
+            <tr class="serial">
+                <td><label class="translate" for="modbus_multiDeviceId">Multi device IDs:</label></td>
+                <td><input class="modbus-params" id="modbus_multiDeviceId" type="checkbox"/></td>
+            </tr>
             <tr>
                 <td><label class="translate" for="modbus_slave">Type:</label></td>
                 <td>
@@ -1150,7 +1170,7 @@
 
         <table class="ui-widget-content" style="z-index: 2;margin-top: 20px; border-collapse: collapse; display: inline; border: 1px solid black;">
             <tr>
-                <td style="text-align: center" colspan="3" class="ui-widget-header" class="translate">General</td>
+                <td style="text-align: center" colspan="3" class="ui-widget-header translate">General</td>
             </tr>
 
             <tr>
