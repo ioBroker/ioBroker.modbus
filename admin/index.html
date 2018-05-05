@@ -661,7 +661,7 @@
                 }
                 var fields = [
                     {name: '_address'   , title:  _('Address'),       type: 'text',       width: '110px', sorter: 'number'},
-                    {name: 'deviceId'   , title:  _('deviceId'),      type: 'text',       width: '50px',  sorter: 'number'},
+                    {name: 'deviceId'   , title:  _('deviceId'),      type: 'text',       width: '60px',  sorter: 'number'},
                     {name: 'name'       , title:  _('Name'),          type: 'text',       width: '*'},
                     {name: 'description', title:  _('Description'),   type: 'text',       width: '*'},
                     {name: 'unit'       , title:  _('Unit'),          type: 'text',       width: '50px'},
@@ -922,14 +922,23 @@
                 $('.tcp').show();
                 $('.serial').hide();
                 if ($(this).val() === 'tcprtu') {
-                    $('#modbus_slave').val(0).prop('disabled', true);
+                    $('#modbus_slave').val(0).prop('disabled', true).trigger('change');
                 } else {
                     $('#modbus_slave').prop('disabled', false);
                 }
             } else {
                 $('.tcp').hide();
                 $('.serial').show();
-                $('#modbus_slave').val(0).prop('disabled', true);
+                $('#modbus_slave').val(0).prop('disabled', true).trigger('change');
+            }
+        }).trigger('change');
+
+        $('#modbus_slave').on('change', function () {
+            if ($(this).val() === '0') {
+                $('#multiDeviceId').show();
+            } else {
+                $('#multiDeviceId').hide();
+                $('#modbus_multiDeviceId').prop('checked', false);
             }
         }).trigger('change');
 
@@ -1150,7 +1159,7 @@
                 <td><label class="translate" for="modbus_deviceId">Device ID:</label></td>
                 <td><input class="modbus-params" id="modbus_deviceId" type="text"  style="width: 100%;"/></td>
             </tr>
-            <tr class="serial">
+            <tr id="multiDeviceId">
                 <td><label class="translate" for="modbus_multiDeviceId">Multi device IDs:</label></td>
                 <td><input class="modbus-params" id="modbus_multiDeviceId" type="checkbox"/></td>
             </tr>

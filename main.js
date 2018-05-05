@@ -379,7 +379,7 @@ function prepareConfig(config) {
                 addressLow:    0,
                 values:        [],
                 mapping:       {},
-                offset:        parseInt(params.coilsOffset,   10) || 10001
+                offset:        parseInt(params.coilsOffset,   10)
             };
             device.inputRegs = {
                 fullIds:       [],
@@ -388,7 +388,7 @@ function prepareConfig(config) {
                 addressLow:    0,
                 values:        [],
                 mapping:       {},
-                offset:        parseInt(params.inputRegsOffset,   10) || 10001
+                offset:        parseInt(params.inputRegsOffset,   10)
             };
             device.disInputs = {
                 fullIds:       [],
@@ -397,7 +397,7 @@ function prepareConfig(config) {
                 addressLow:    0,
                 values:        [],
                 mapping:       {},
-                offset:        parseInt(params.disInputsOffset,   10) || 10001
+                offset:        parseInt(params.disInputsOffset,   10)
             };
             device.holdingRegs = {
                 fullIds:       [],
@@ -406,42 +406,42 @@ function prepareConfig(config) {
                 addressLow:    0,
                 values:        [],
                 mapping:       {},
-                offset:        parseInt(params.holdingRegsOffset,   10) || 10001
+                offset:        parseInt(params.holdingRegsOffset,   10)
             };
             if (!options.objects) options.objects = objects
         } else {
             device.coils = {
                 deviceId:    deviceId,
                 addressLow:  0,
-                length:      1000,
+                length:      0,
                 config:      [],
                 blocks:      [],
-                offset:      parseInt(params.coilsOffset,   10) || 10001
+                offset:      parseInt(params.coilsOffset,   10)
             };
             device.inputRegs = {
                 deviceId:    deviceId,
                 addressLow:  0,
-                length:      1000,
+                length:      0,
                 config:      [],
                 blocks:      [],
-                offset:      parseInt(params.inputRegsOffset,   10) || 10001
+                offset:      parseInt(params.inputRegsOffset,   10)
             };
             device.disInputs = {
                 deviceId:    deviceId,
                 addressLow:  0,
-                length:      1000,
+                length:      0,
                 config:      [],
                 blocks:      [],
-                offset:      parseInt(params.disInputsOffset,   10) || 10001
+                offset:      parseInt(params.disInputsOffset,   10)
             };
             device.holdingRegs = {
                 deviceId:    deviceId,
                 addressLow:  0,
-                length:      1000,
+                length:      0,
                 config:      [],
                 blocks:      [],
                 cyclicWrite: [], // only holdingRegs
-                offset:      parseInt(params.holdingRegsOffset,   10) || 10001
+                offset:      parseInt(params.holdingRegsOffset,   10)
             };
         }
     }
@@ -639,7 +639,7 @@ function parseConfig(callback) {
     const params = adapter.config.params;
 
     const localOptions = {
-        multiDeviceId:              options.multiDeviceId,
+        multiDeviceId:              options.config.multiDeviceId,
         showAliases:                (params.showAliases             === true || params.showAliases             === 'true'),
         doNotRoundAddressToWord:    (params.doNotRoundAddressToWord === true || params.doNotRoundAddressToWord === 'true'),
         directAddresses:            (params.directAddresses         === true || params.directAddresses         === 'true'),
@@ -661,7 +661,6 @@ function parseConfig(callback) {
             if (!options.devices.hasOwnProperty(_deviceId)) continue;
             let device = options.devices[_deviceId];
             let deviceId = parseInt(_deviceId, 10);
-
 
             // Discrete inputs
             iterateAddresses(true,  deviceId, adapter.config.disInputs,   device.disInputs,   'discreteInputs',   'disInputs',   localOptions);
