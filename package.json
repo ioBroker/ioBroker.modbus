@@ -38,7 +38,8 @@
     "gulp": "^3.9.1",
     "mocha": "^4.1.0",
     "chai": "^4.1.2",
-    "nan": "2.4.0"
+    "nan": "2.4.0",
+    "modbus-stack": "^0.2.1"
   },
   "main": "main.js",
   "scripts": {
