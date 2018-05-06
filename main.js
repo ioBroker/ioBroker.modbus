@@ -50,18 +50,21 @@ adapter.on('message', function (obj) {
 });
 
 function stop(callback) {
-    if (adapter && adapter.setState) {
-        if (modbus) {
-            modbus.close();
-            modbus = null;
-        }
-
-        if (adapter.config && adapter.config.params) {
-            adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
-        }
+    if (modbus) {
+        modbus.close();
+        modbus = null;
     }
 
+    if (adapter && adapter.setState && adapter.config && adapter.config.params) {
+        adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
+    }
+    
+
     if (callback) callback();
+
+    setTimeout(function() {
+        process.exit();
+    }, 5000);
 }
 
 let objects    = {};

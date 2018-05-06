@@ -190,6 +190,9 @@ There are some programs in folder *test' to test the TCP communication:
 # 2.0.0 (2018-05-06)
 * (bluefox) Added the support of multiple device IDs
 
+# 1.1.1 (2018-04-15)
+* (Apollon77) Optimize reconnect handling
+
 # 1.1.0 (2018-01-23)
 * (bluefox) Little endian strings added
 * (Apollon77) Upgrade Serialport Library
