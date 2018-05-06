@@ -4,4 +4,5 @@
 admin/i18n/flat.txt
 admin/i18n/*/flat.txt
 iob_npm.done
+tmp
 package-lock.json

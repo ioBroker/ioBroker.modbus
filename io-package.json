@@ -1,8 +1,19 @@
 {
     "common": {
         "name": "modbus",
-        "version": "1.1.0",
+        "version": "2.0.0",
         "news": {
+            "2.0.0": {
+                "en": "Added the support of multiple device IDs",
+                "de": "Die Unterstützung mehrerer Geräte-IDs wurde hinzugefügt",
+                "ru": "Добавлена ​​поддержка нескольких идентификаторов устройств",
+                "pt": "Adicionado o suporte de vários IDs de dispositivos",
+                "nl": "De ondersteuning van meerdere apparaat-ID's toegevoegd",
+                "fr": "Ajout de la prise en charge de plusieurs ID de périphérique",
+                "it": "Aggiunto il supporto di più ID dispositivo",
+                "es": "Se agregó la compatibilidad con múltiples ID de dispositivo",
+                "pl": "Dodano obsługę wielu identyfikatorów urządzeń"
+            },
             "1.1.0": {
                 "en": "Upgrade Serialport Library, Little endian strings added",
                 "de": "Upgrade Serialport Library, Little Endian Strings hinzugefügt",

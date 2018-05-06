@@ -5,6 +5,7 @@
 
 const utils       = require(__dirname + '/lib/utils');
 let modbus        = null;
+let fs;
 
 let serialport    = null;
 
@@ -87,6 +88,7 @@ adapter.on('stateChange', (id, state) => {
 });
 
 function filterSerialPorts(path) {
+    fs = fs || require('fs');
     // get only serial port names
     if (!(/(tty(S|ACM|USB|AMA|MFD)|rfcomm)/).test(path)) return false;
 
@@ -98,7 +100,7 @@ function filterSerialPorts(path) {
 function listSerial(ports) {
     ports = ports || [];
     const path = require('path');
-    const fs      = require('fs');
+    fs = fs || require('fs');
 
     // Filter out the devices that aren't serial ports
     let devDirName = '/dev';
