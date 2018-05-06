@@ -58,9 +58,8 @@ function stop(callback) {
     if (adapter && adapter.setState && adapter.config && adapter.config.params) {
         adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
     }
-    
 
-    if (callback) callback();
+    if (typeof callback === 'function') callback();
 
     setTimeout(function() {
         process.exit();
