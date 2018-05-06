@@ -57,6 +57,9 @@ adapter.on('message', function (obj) {
 });
 
 function stop(callback) {
+    if (adapter && adapter.log) {
+        adapter.log.info('stopping adapter now');
+    }
     isStop = true;
     if (main && main.requestTimer) {
         clearTimeout(main.requestTimer);
