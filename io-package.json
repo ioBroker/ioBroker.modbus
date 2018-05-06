@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "modbus",
-        "version": "1.1.1",
+        "version": "1.1.2",
         "news": {
             "1.1.1": {
                 "en": "Optimize reconnect handling",
