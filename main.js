@@ -412,7 +412,6 @@ function prepareConfig(config) {
                 mapping:       {},
                 offset:        parseInt(params.holdingRegsOffset,   10)
             };
-            if (!options.objects) options.objects = objects
         } else {
             device.coils = {
                 deviceId:    deviceId,
@@ -449,6 +448,8 @@ function prepareConfig(config) {
             };
         }
     }
+
+    options.objects = objects;
 
     return options;
 }
