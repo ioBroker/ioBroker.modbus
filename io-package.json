@@ -1,9 +1,9 @@
 {
     "common": {
         "name": "modbus",
-        "version": "2.0.0",
+        "version": "2.0.1",
         "news": {
-            "2.0.0": {
+            "2.0.1": {
                 "en": "Added the support of multiple device IDs",
                 "de": "Die Unterstützung mehrerer Geräte-IDs wurde hinzugefügt",
                 "ru": "Добавлена ​​поддержка нескольких идентификаторов устройств",

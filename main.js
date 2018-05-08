@@ -376,24 +376,6 @@ function prepareConfig(config) {
         options.devices[deviceId] = {};
         let device = options.devices[deviceId];
         if (options.config.slave) {
-            device.coils = {
-                fullIds:       [],
-                changed:       true,
-                addressHigh:   0,
-                addressLow:    0,
-                values:        [],
-                mapping:       {},
-                offset:        parseInt(params.coilsOffset,   10)
-            };
-            device.inputRegs = {
-                fullIds:       [],
-                changed:       true,
-                addressHigh:   0,
-                addressLow:    0,
-                values:        [],
-                mapping:       {},
-                offset:        parseInt(params.inputRegsOffset,   10)
-            };
             device.disInputs = {
                 fullIds:       [],
                 changed:       true,
@@ -403,6 +385,27 @@ function prepareConfig(config) {
                 mapping:       {},
                 offset:        parseInt(params.disInputsOffset,   10)
             };
+
+            device.coils = {
+                fullIds:       [],
+                changed:       true,
+                addressHigh:   0,
+                addressLow:    0,
+                values:        [],
+                mapping:       {},
+                offset:        parseInt(params.coilsOffset,   10)
+            };
+
+            device.inputRegs = {
+                fullIds:       [],
+                changed:       true,
+                addressHigh:   0,
+                addressLow:    0,
+                values:        [],
+                mapping:       {},
+                offset:        parseInt(params.inputRegsOffset,   10)
+            };
+
             device.holdingRegs = {
                 fullIds:       [],
                 changed:       true,
@@ -413,22 +416,6 @@ function prepareConfig(config) {
                 offset:        parseInt(params.holdingRegsOffset,   10)
             };
         } else {
-            device.coils = {
-                deviceId:    deviceId,
-                addressLow:  0,
-                length:      0,
-                config:      [],
-                blocks:      [],
-                offset:      parseInt(params.coilsOffset,   10)
-            };
-            device.inputRegs = {
-                deviceId:    deviceId,
-                addressLow:  0,
-                length:      0,
-                config:      [],
-                blocks:      [],
-                offset:      parseInt(params.inputRegsOffset,   10)
-            };
             device.disInputs = {
                 deviceId:    deviceId,
                 addressLow:  0,
@@ -437,13 +424,33 @@ function prepareConfig(config) {
                 blocks:      [],
                 offset:      parseInt(params.disInputsOffset,   10)
             };
+
+            device.coils = {
+                deviceId:    deviceId,
+                addressLow:  0,
+                length:      0,
+                config:      [],
+                blocks:      [],
+                cyclicWrite: [], // only holdingRegs and coils
+                offset:      parseInt(params.coilsOffset,   10)
+            };
+
+            device.inputRegs = {
+                deviceId:    deviceId,
+                addressLow:  0,
+                length:      0,
+                config:      [],
+                blocks:      [],
+                offset:      parseInt(params.inputRegsOffset,   10)
+            };
+
             device.holdingRegs = {
                 deviceId:    deviceId,
                 addressLow:  0,
                 length:      0,
                 config:      [],
                 blocks:      [],
-                cyclicWrite: [], // only holdingRegs
+                cyclicWrite: [], // only holdingRegs and coils
                 offset:      parseInt(params.holdingRegsOffset,   10)
             };
         }
