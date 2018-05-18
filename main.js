@@ -2203,7 +2203,7 @@ var main = {
             if (main.errorCount > 12) { // 2 reconnects did not help, restart adapter
                 adapter.log.error('Reconnect did not help, restart adapter');
                 stop(function() {
-                    adapter.stop();
+                    if (adapter && adapter.stop) adapter.stop();
                 });
                 return;
             }
