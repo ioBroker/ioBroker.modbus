@@ -1,8 +1,19 @@
 {
     "common": {
         "name": "modbus",
-        "version": "2.0.1",
+        "version": "2.0.2",
         "news": {
+            "2.0.2": {
+                "en": "The error with blocks reading was fixed\nThe block reading for discrete values was implemented",
+                "de": "Der Fehler beim Lesen der Blöcke wurde behoben\nDas Blocklesen für diskrete Werte wurde implementiert",
+                "ru": "Исправлена ​​ошибка с чтением блоков\nБыло реализовано считывание блока для дискретных значений",
+                "pt": "O erro com a leitura dos blocos foi corrigido\nA leitura de bloco para valores discretos foi implementada",
+                "nl": "De fout met het lezen van blokken was opgelost\nDe blokwaarde voor discrete waarden is geïmplementeerd",
+                "fr": "L'erreur avec la lecture des blocs a été corrigée\nLa lecture du bloc pour les valeurs discrètes a été implémentée",
+                "it": "L'errore con la lettura dei blocchi è stato corretto\nÈ stata implementata la lettura dei blocchi per i valori discreti",
+                "es": "El error con la lectura de bloques fue arreglado\nSe implementó la lectura de bloques para valores discretos",
+                "pl": "Naprawiono błąd z odczytem bloków\nWprowadzono odczyt blokowy dla wartości dyskretnych"
+            },
             "2.0.1": {
                 "en": "Added the support of multiple device IDs",
                 "de": "Die Unterstützung mehrerer Geräte-IDs wurde hinzugefügt",
@@ -162,6 +173,8 @@
             "slave": 0,
             "poll": 1000,
             "recon": 60000,
+            "maxBlock": 100,
+            "maxBoolBlock": 128,
             "multiDeviceId": false,
             "pulsetime": 1000,
             "disInputsOffset": 10001,

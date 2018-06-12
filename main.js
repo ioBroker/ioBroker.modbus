@@ -349,10 +349,11 @@ function prepareConfig(config) {
 
     // settings for master
     if (!options.config.slave) {
-        options.config.poll      = parseInt(params.poll, 10)     || 1000; // default is 1 second
-        options.config.recon     = parseInt(params.recon, 10)    || 60000;
-        options.config.maxBlock  = parseInt(params.maxBlock, 10) || 100;
-        options.config.pulsetime = parseInt(params.pulsetime     || 1000);
+        options.config.poll         = parseInt(params.poll, 10)         || 1000; // default is 1 second
+        options.config.recon        = parseInt(params.recon, 10)        || 60000;
+        options.config.maxBlock     = parseInt(params.maxBlock, 10)     || 100;
+        options.config.maxBoolBlock = parseInt(params.maxBoolBlock, 10) || 128;
+        options.config.pulsetime    = parseInt(params.pulsetime         || 1000);
     }
 
 
@@ -545,8 +546,10 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
 //      directAddresses
 //      isSlave
 //      maxBlock
+//      maxBoolBlock
 // };
-function iterateAddresses(isBools, deviceId, config, result, regName, regType, localOptions) {
+function iterateAddresses(isBools, deviceId, result, regName, regType, localOptions) {
+    const config = result.config;
     if (config && config.length) {
         result.addressLow  = 0xFFFFFFFF;
         result.addressHigh = 0;
@@ -595,34 +598,34 @@ function iterateAddresses(isBools, deviceId, config, result, regName, regType, l
             if (address + config[i].len > result.addressHigh) result.addressHigh = address + config[i].len;
         }
 
-        if (!isBools) {
-            let lastAddress = null;
-            let startIndex  = 0;
-            let blockStart  = 0;
-            let i;
-            for (i = 0; i < config.length; i++) {
-                if (config[i].deviceId !== deviceId) continue;
+        const maxBlock = isBools ? localOptions.maxBoolBlock : localOptions.maxBlock;
+        let lastAddress = null;
+        let startIndex  = 0;
+        let blockStart  = 0;
+        let i;
+        for (i = 0; i < config.length; i++) {
+            if (config[i].deviceId !== deviceId) continue;
 
-                if (lastAddress === null) {
-                    startIndex  = i;
-                    blockStart  = config[i].address;
-                }
+            if (lastAddress === null) {
+                startIndex  = i;
+                blockStart  = config[i].address;
+                lastAddress = blockStart + config[i].len;
+            }
 
-                // try to detect next block
-                if (result.blocks) {
-                    if ((config[i].address - lastAddress > 10 && config[i].len < 10) || (lastAddress - blockStart >= localOptions.maxBlock)) {
-                        if (result.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
-                            result.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
-                        }
-                        blockStart  = config[i].address;
-                        startIndex  = i;
+            // try to detect next block
+            if (result.blocks) {
+                if ((config[i].address - lastAddress > 10 && config[i].len < 10) || (lastAddress - blockStart >= maxBlock)) {
+                    if (result.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
+                        result.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
                     }
+                    blockStart  = config[i].address;
+                    startIndex  = i;
                 }
-                lastAddress = config[i].address + config[i].len;
             }
-            if (result.blocks && result.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
-                result.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
-            }
+            lastAddress = config[i].address + config[i].len;
+        }
+        if (lastAddress && lastAddress - blockStart && result.blocks && result.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
+            result.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
         }
 
         if (config.length) {
@@ -632,6 +635,13 @@ function iterateAddresses(isBools, deviceId, config, result, regName, regType, l
 
                 if (result.length % 16) {
                     result.length = (Math.floor(result.length / 16) + 1) * 16;
+                }
+                for (let b = 0; b < result.blocks.length; b++) {
+                    result.blocks[b].start = Math.floor(result.blocks[b].start / 16) * 16;
+
+                    if (result.blocks[b].count % 16) {
+                        result.blocks[b].count = (Math.floor(result.blocks[b].count / 16) + 1) * 16;
+                    }
                 }
             }
         } else {
@@ -655,7 +665,8 @@ function parseConfig(callback) {
         showAliases:                (params.showAliases             === true || params.showAliases             === 'true'),
         doNotRoundAddressToWord:    (params.doNotRoundAddressToWord === true || params.doNotRoundAddressToWord === 'true'),
         directAddresses:            (params.directAddresses         === true || params.directAddresses         === 'true'),
-        maxBlock:                   options.config.maxBlock
+        maxBlock:                   options.config.maxBlock,
+        maxBoolBlock:               options.config.maxBoolBlock
     };
 
     adapter.getForeignObjects(adapter.namespace + '.*', (err, list) => {
@@ -674,11 +685,43 @@ function parseConfig(callback) {
             let device = options.devices[_deviceId];
             let deviceId = parseInt(_deviceId, 10);
 
+            // ----------- remember poll values --------------------------
+            if (!options.config.slave) {
+                device.disInputs.config   = adapter.config.disInputs.  filter(e =>           e.deviceId === deviceId);
+                device.coils.config       = adapter.config.coils.      filter(e => e.poll && e.deviceId === deviceId);
+                device.inputRegs.config   = adapter.config.inputRegs.  filter(e =>           e.deviceId === deviceId);
+                device.holdingRegs.config = adapter.config.holdingRegs.filter(e => e.poll && e.deviceId === deviceId);
+
+                tasks.push({
+                    id: 'info.pollTime',
+                    name: 'add',
+                    obj: {
+                        type: 'state',
+                        common: {
+                            name: 'Poll time',
+                            type: 'number',
+                            role: '',
+                            write: false,
+                            read: true,
+                            def:  0,
+                            unit: 'ms'
+                        },
+                        native: {}
+                    }
+                });
+                newObjects.push(adapter.namespace + '.info.pollTime');
+            } else {
+                device.disInputs.fullIds   = adapter.config.disInputs  .filter(e => e.deviceId === deviceId).map(e => e.fullId);
+                device.coils.fullIds       = adapter.config.coils      .filter(e => e.deviceId === deviceId).map(e => e.fullId);
+                device.inputRegs.fullIds   = adapter.config.inputRegs  .filter(e => e.deviceId === deviceId).map(e => e.fullId);
+                device.holdingRegs.fullIds = adapter.config.holdingRegs.filter(e => e.deviceId === deviceId).map(e => e.fullId);
+            }
+
             // Discrete inputs
-            iterateAddresses(true,  deviceId, adapter.config.disInputs,   device.disInputs,   'discreteInputs',   'disInputs',   localOptions);
-            iterateAddresses(true,  deviceId, adapter.config.coils,       device.coils,       'coils',            'coils',       localOptions);
-            iterateAddresses(false, deviceId, adapter.config.inputRegs,   device.inputRegs,   'inputRegisters',   'inputRegs',   localOptions);
-            iterateAddresses(false, deviceId, adapter.config.holdingRegs, device.holdingRegs, 'holdingRegisters', 'holdingRegs', localOptions);
+            iterateAddresses(true,  deviceId, device.disInputs,   'discreteInputs',   'disInputs',   localOptions);
+            iterateAddresses(true,  deviceId, device.coils,       'coils',            'coils',       localOptions);
+            iterateAddresses(false, deviceId, device.inputRegs,   'inputRegisters',   'inputRegs',   localOptions);
+            iterateAddresses(false, deviceId, device.holdingRegs, 'holdingRegisters', 'holdingRegs', localOptions);
             /*let regs = adapter.config.disInputs;
             let res  = device.disInputs;
             if (regs && regs.length) {
@@ -1071,38 +1114,6 @@ function parseConfig(callback) {
                 });
                 newObjects.push(id);
             }*/
-
-            // ----------- remember poll values --------------------------
-            if (!options.config.slave) {
-                device.disInputs.config   = adapter.config.disInputs.  filter(e =>           e.deviceId === deviceId);
-                device.coils.config       = adapter.config.coils.      filter(e => e.poll && e.deviceId === deviceId);
-                device.inputRegs.config   = adapter.config.inputRegs.  filter(e =>           e.deviceId === deviceId);
-                device.holdingRegs.config = adapter.config.holdingRegs.filter(e => e.poll && e.deviceId === deviceId);
-
-                tasks.push({
-                    id: 'info.pollTime',
-                    name: 'add',
-                    obj: {
-                        type: 'state',
-                        common: {
-                            name: 'Poll time',
-                            type: 'number',
-                            role: '',
-                            write: false,
-                            read: true,
-                            def:  0,
-                            unit: 'ms'
-                        },
-                        native: {}
-                    }
-                });
-                newObjects.push(adapter.namespace + '.info.pollTime');
-            } else {
-                device.disInputs.fullIds   = adapter.config.disInputs  .filter(e => e.deviceId === deviceId).map(e => e.fullId);
-                device.coils.fullIds       = adapter.config.coils      .filter(e => e.deviceId === deviceId).map(e => e.fullId);
-                device.inputRegs.fullIds   = adapter.config.inputRegs  .filter(e => e.deviceId === deviceId).map(e => e.fullId);
-                device.holdingRegs.fullIds = adapter.config.holdingRegs.filter(e => e.deviceId === deviceId).map(e => e.fullId);
-            }
 
             if (!options.config.multiDeviceId) {
                 break;

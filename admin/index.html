@@ -533,6 +533,7 @@
                 pulsetime:  settings.params.pulsetime || 1000,
                 round:      settings.params.round || 2,
                 maxBlock:   settings.params.maxBlock || 100,
+                maxBoolBlock:   settings.params.maxBoolBlock || 128,
                 disInputsOffset:    settings.params.disInputsOffset   || 10001,
                 coilsOffset:        settings.params.coilsOffset       || 1,
                 inputRegsOffset:    settings.params.inputRegsOffset   || 30001,
@@ -1225,6 +1226,11 @@
             <tr>
                 <td><label class="translate" for="modbus_maxBlock">Max read request length:</label></td>
                 <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_maxBlock"></td>
+                <td calss="translate">registers</td>
+            </tr>
+            <tr>
+                <td><label class="translate" for="modbus_maxBoolBlock">Max read request length (booleans):</label></td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_maxBoolBlock"></td>
                 <td calss="translate">registers</td>
             </tr>
             <tr>

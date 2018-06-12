@@ -187,6 +187,10 @@ There are some programs in folder *test' to test the TCP communication:
 - mod_RSsim.exe is slave simulator. It can be that you need [Microsoft Visual C++ 2008 SP1 Redistributable Package](https://www.microsoft.com/en-us/download/details.aspx?id=5582) to start it (because of SideBySide error).
 
 ## Changelog
+# 2.0.2 (2018-06-12)
+* (bluefox) The error with blocks reading was fixed
+* (bluefox) The block reading for discrete values was implemented
+
 # 2.0.1 (2018-05-06)
 * (bluefox) Added the support of multiple device IDs
 
