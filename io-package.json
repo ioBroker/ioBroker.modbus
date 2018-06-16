@@ -1,8 +1,19 @@
 {
     "common": {
         "name": "modbus",
-        "version": "2.0.2",
+        "version": "2.0.3",
         "news": {
+            "2.0.3": {
+                "en": "Fixed the rounding of numbers",
+                "de": "Die Rundung von Zahlen wurde korrigiert",
+                "ru": "Исправлено округление чисел",
+                "pt": "Corrigido o arredondamento de números",
+                "nl": "Vaste afronding van nummers",
+                "fr": "Correction de l'arrondissement des nombres",
+                "it": "Risolto l'arrotondamento dei numeri",
+                "es": "Se corrigió el redondeo de números",
+                "pl": "Naprawiono zaokrąglanie liczb"
+            },
             "2.0.2": {
                 "en": "The error with blocks reading was fixed\nThe block reading for discrete values was implemented",
                 "de": "Der Fehler beim Lesen der Blöcke wurde behoben\nDas Blocklesen für diskrete Werte wurde implementiert",

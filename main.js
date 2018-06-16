@@ -335,6 +335,7 @@ function prepareConfig(config) {
         },
         devices: {}
     };
+    options.config.round = Math.pow(10, options.config.round);
 
     if (!options.config.slave) {
         options.config.multiDeviceId = params.multiDeviceId === true || params.multiDeviceId === 'true';
