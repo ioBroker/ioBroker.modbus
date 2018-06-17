@@ -9,7 +9,7 @@
 
 <link rel="stylesheet" type="text/css" href="./lib/css/jsgrid.css"/>
 <link rel="stylesheet" type="text/css" href="./lib/css/jsgrid-theme.css"/>
-<script type="text/javascript" src="./lib/js/jsgrid.min.js"></script>
+<script type="text/javascript" src="./lib/js/jsgrid.js"></script>
 <script type="text/javascript" src="./lib/js/grid.locale-de.js"></script>
 <script type="text/javascript" src="./lib/js/grid.locale-ru.js"></script>
 
@@ -127,6 +127,16 @@
         -webkit-user-drag: none;
         user-select: none;
     }
+
+    #export-dlg .select-dropdown {
+        display: none;
+    }
+    #export-dlg .dropdown-content {
+        display: none;
+    }
+    #export-dlg .caret {
+        display: none;
+    }
 </style>
 
 <script type="text/javascript">
@@ -141,7 +151,6 @@
         holdingRegs:    40001
     };
     var isDirect   = false;
-    var tabsInited = false;
 
     var typeItemsLen = {
         'uint8be':    1,
@@ -177,6 +186,7 @@
     };
 
     var attempts = 0;
+    var ignoreDialog = 0;
 
     function getComPorts(actualValue) {
         var timeout = setTimeout(function () {
@@ -367,7 +377,7 @@
         }
     }
 
-    function initTabs(data) {
+    function initTabs(onchange, data) {
         if (!data) {
             data = {};
             $.each($('.modbus-grid'), function () {
@@ -486,7 +496,36 @@
                     sorting:    true,
                     heading:    true,
                     paging:     false,
-                    deleteConfirm: _('Are you sure?'),
+                    deleteConfirm: function (el, item, cb) {
+                        if (!ignoreDialog || Date.now() - ignoreDialog > 60000) {
+                            var buttons = {};
+                            buttons[_('Delete')] = function() {
+                                if ($('#delete_ignore_dialog').prop('checked')) {
+                                    ignoreDialog = Date.now();
+                                }
+
+                                cb && cb(true);
+                                $( this ).dialog('close');
+                            };
+                            buttons[_('Cancel')] = function() {
+                                cb && cb(false);
+                                $( this ).dialog('close');
+                            };
+
+                            $('#delete_ignore_dialog').prop('checked', false);
+
+                            $("#delete-dlg").dialog({
+                                resizable: false,
+                                height: 'auto',
+                                title: _('Delete address'),
+                                width: 500,
+                                modal: true,
+                                buttons: buttons
+                            });
+                        } else {
+                            cb && cb(true);
+                        }
+                    },
                     data:       data[_id.split('_')[1]],
                     fields:     fields,
 
@@ -779,7 +818,7 @@
             // build text
             var text = getExport(data, id);
             $('#export-dlg').show();
-            $('#export_textarea').val(text).focus().select();
+            $('#export_textarea').val(text).trigger('select');
             document.execCommand('copy');
         });
 
@@ -949,7 +988,7 @@
                 $('.serial').show();
                 $('#modbus_slave').val(0).prop('disabled', true).trigger('change');
             }
-            initTabs();
+            initTabs(onchange);
         }).trigger('change');
 
         $('#modbus_slave').on('change', function () {
@@ -959,11 +998,11 @@
                 $('#multiDeviceId').hide();
                 $('#modbus_multiDeviceId').prop('checked', false);
             }
-            initTabs();
+            initTabs(onchange);
         }).trigger('change');
 
         $('#multiDeviceId').on('change', function () {
-            initTabs();
+            initTabs(onchange);
         });
 
         getIsAdapterAlive(function (isAlive) {
@@ -972,7 +1011,7 @@
             }
         });
 
-        initTabs(data);
+        initTabs(onchange, data);
 
         onchange(false);
     }
@@ -1303,14 +1342,21 @@
         </div>
         <div id="modbus_holdingRegs" class="modbus-grid"></div>
     </div>
-    <div id="export-dlg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;display: none; z-index: 100">
+    <div id="export-dlg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; z-index: 100; background: white">
         <div id="export_help" class="translate" style="position: absolute; opacity: 0.8; top: 10px; right: 10px; font-size: 24px; font-weight: bold; color: blue">Text copied to clipboard. Click to close the window</div>
-        <textarea id="export_textarea" readonly style="width: 100%; height: 100%"></textarea>
+        <textarea id="export_textarea" readonly style="resize: none; width: 100%; height: calc(100% - 40px); margin-top: 40px;"></textarea>
     </div>
-    <div id="import-dlg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;display: none; z-index: 100">
-        <textarea id="import_textarea" style="width: 100%; height: calc(100% - 40px)"></textarea>
-        <button id="import_button_ok"    style="position: absolute; bottom: 10px; right: 120px;" class="translateB">Import</button>
-        <button id="import_button_cancel" style="position: absolute; bottom: 10px; right: 10px;" class="translateB">Close</button>
+    <div id="import-dlg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; z-index: 100; background: white">
+        <textarea id="import_textarea" style="width: 100%; height: calc(100% - 40px); resize: none;"></textarea>
+        <button id="import_button_ok"    style="position: absolute; bottom: 10px; right: 120px;" ></button>
+        <button id="import_button_cancel" style="position: absolute; bottom: 10px; right: 10px;"></button>
+    </div>
+    <div id="delete-dlg" style="display: none;">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>
+            <span class="translate">Are you sure?</span><br><br>
+            <input type="checkbox" id="delete_ignore_dialog" /><label class="translate">Say "yes" for the next minute:</label>
+        </p>
     </div>
 </div>
 

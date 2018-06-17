@@ -1110,10 +1110,19 @@
             if(!$row.length)
                 return;
 
-            if(this.confirmDeleting && !window.confirm(getOrApply(this.deleteConfirm, this, $row.data(JSGRID_ROW_DATA_KEY))))
-                return;
+            var that = this;
+            if (typeof this.deleteConfirm === 'function') {
+                this.deleteConfirm(this, $row.data(JSGRID_ROW_DATA_KEY), function (result) {
+                    if (result) {
+                        that._deleteRow($row);
+                    }
+                });
+            } else {
+                if(this.confirmDeleting && !window.confirm(getOrApply(this.deleteConfirm, this, $row.data(JSGRID_ROW_DATA_KEY))))
+                    return;
 
-            return this._deleteRow($row);
+                return this._deleteRow($row);
+            }
         },
 
         _deleteRow: function($row) {
