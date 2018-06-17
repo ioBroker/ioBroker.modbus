@@ -141,6 +141,7 @@
         holdingRegs:    40001
     };
     var isDirect   = false;
+    var tabsInited = false;
 
     var typeItemsLen = {
         'uint8be':    1,
@@ -176,6 +177,7 @@
     };
 
     var attempts = 0;
+
     function getComPorts(actualValue) {
         var timeout = setTimeout(function () {
             getComPorts(actualValue);
@@ -363,6 +365,330 @@
                 data[id][i].address += (oldOffset - newOffset);
             }
         }
+    }
+
+    function initTabs(data) {
+        if (!data) {
+            data = {};
+            $.each($('.modbus-grid'), function () {
+                var id = $(this).attr('id');
+                var key = id.split('_')[1];
+
+                if ($(this).data('JSGrid')._editingRow) {
+                    $(this).jsGrid('updateItem');
+                }
+
+                data[key] = $(this).jsGrid('option', 'data');
+            });
+        }
+
+
+        getEnums('rooms', function (err, rooms) {
+            $.each($('.modbus-grid'), function () {
+                var _id = $(this).attr('id');
+
+                // todo read roles and expand this list
+                var roleItems = [
+                    {value: '',                     text: ''},
+                    {value: 'value',                text: 'value'},
+                    {value: 'level',                text: 'level'},
+                    {value: 'state',                text: 'state'},
+                    {value: 'switch',               text: 'switch'},
+                    {value: 'value.temperature',    text: 'value.temperature'},
+                    {value: 'value.humidity',       text: 'value.humidity'},
+                    {value: 'value.brightness',     text: 'value.brightness'},
+                    {value: 'value.battery',        text: 'value.battery'},
+                    {value: 'value.valve',          text: 'value.valve'},
+                    {value: 'value.time',           text: 'value.time'},
+                    {value: 'value.interval',       text: 'value.interval'},
+                    {value: 'button',               text: 'button'},
+                    {value: 'indicator',            text: 'indicator'},
+                    {value: 'level.dimmer',         text: 'level.dimmer'},
+                    {value: 'level.valve',          text: 'level.valve'},
+                    {value: 'level.blind',          text: 'level.blind'},
+                    {value: 'level.temperature',    text: 'level.temperature'},
+                    {value: 'level.interval',       text: 'level.interval'}
+                ];
+
+                var typeItems = [
+                    {value: '',               text: ''},
+                    {value: 'uint16be',       text: 'Unsigned 16 bit (Big Endian)'},
+                    {value: 'uint16le',       text: 'Unsigned 16 bit (Little Endian)'},
+                    {value: 'int16be',        text: 'Signed 16 bit (Big Endian)'},
+                    {value: 'int16le',        text: 'Signed 16 bit (Little Endian)'},
+                    {value: 'uint32be',       text: 'Unsigned 32 bit (Big Endian)'},
+                    {value: 'uint32le',       text: 'Unsigned 32 bit (Little Endian)'},
+                    {value: 'uint32sw',       text: 'Unsigned 32 bit (Big Endian Word Swap)'},
+                    {value: 'uint32sb',       text: 'Unsigned 32 bit (Big Endian Byte Swap)'},
+                    {value: 'int32be',        text: 'Signed 32 bit (Big Endian)'},
+                    {value: 'int32le',        text: 'Signed 32 bit (Little Endian)'},
+                    {value: 'int32sw',        text: 'Signed 32 bit (Big Endian Word Swap)'},
+                    {value: 'int32sb',        text: 'Signed 32 bit (Big Endian Byte Swap)'},
+                    {value: 'uint64be',       text: 'Unsigned 64 bit (Big Endian)'},
+                    {value: 'uint64le',       text: 'Unsigned 64 bit (Little Endian)'},
+                    {value: 'uint8be',        text: 'Unsigned 8 bit (Big Endian)'},
+                    {value: 'uint8le',        text: 'Unsigned 8 bit (Little Endian)'},
+                    {value: 'int8be',         text: 'Signed 8 bit (Big Endian)'},
+                    {value: 'int8le',         text: 'Signed 8 bit (Little Endian)'},
+//                    {value: 'int64be',        text: 'Signed 64 bit (Big Endian)'},
+//                    {value: 'int64le',        text: 'Signed 64 bit (Little Endian)'},
+                    {value: 'floatbe',        text: 'Float (Big Endian)'},
+                    {value: 'floatle',        text: 'Float (Little Endian)'},
+                    {value: 'floatsw',        text: 'Float (Big Endian Word Swap)'},
+                    {value: 'floatsb',        text: 'Float (Big Endian Byte Swap)'},
+                    {value: 'doublebe',       text: 'Double (Big Endian)'},
+                    {value: 'doublele',       text: 'Double (Little Endian)'},
+                    {value: 'string',         text: 'String (Zero-end)'},
+                    {value: 'stringle',       text: 'String (Little Endian, Zero-end)'}
+                ];
+
+                var roomsItems = [{value: '', text: ''}];
+                for (var room in rooms) {
+                    if (rooms.hasOwnProperty(room)) {
+                        roomsItems.push({value: room, text: rooms[room].common.name || room.substring('enum.rooms.'.length)});
+                    }
+                }
+                var fields = [
+                    {name: '_address'   , title:  _('Address'),       type: 'text',       width: '110px', sorter: 'number'},
+                    {name: 'deviceId'   , title:  _('deviceId'),      type: 'text',       width: '60px',  sorter: 'number'},
+                    {name: 'name'       , title:  _('Name'),          type: 'text',       width: '*'},
+                    {name: 'description', title:  _('Description'),   type: 'text',       width: '*'},
+                    {name: 'unit'       , title:  _('Unit'),          type: 'text',       width: '50px'},
+                    {name: 'type'       , title:  _('Type'),          type: 'select',     width: '200px', items: typeItems,  valueField: 'value', textField: 'text'},
+                    {name: 'len'        , title:  _('Length'),        type: 'text',       width: '50px'},
+                    {name: 'factor'     , title:  _('Factor'),        type: 'text',       width: '50px'},
+                    {name: 'offset'     , title:  _('Offset'),        type: 'text',       width: '50px'},
+                    {name: 'role'       , title:  _('Role'),          type: 'select',     width: '100px', items: roleItems,  valueField: 'value', textField: 'text'},
+                    {name: 'room'       , title:  _('Room'),          type: 'select',     width: '100px', items: roomsItems, valueField: 'value', textField: 'text'},
+                    {name: 'poll'       , title:  _('poll'),          type: 'checkbox',   width: '35px'},
+                    {name: 'wp'         , title:  _('WP'),            type: 'checkbox',   width: '35px'},
+                    {name: 'cw'         , title:  _('CW'),            type: 'checkbox',   width: '35px'},
+                    {                                                 type: 'control',    width: '80px'}
+                ];
+                if (_id === 'modbus_disInputs' || _id === 'modbus_inputRegs') {
+                    fields.splice(11, 3);
+                }
+                if (_id === 'modbus_coils' || _id === 'modbus_disInputs') {
+                    fields.splice(4, 5);
+                }
+                if (parseInt($('#modbus_slave').val())) {
+                    fields.splice(13, 1);
+                    fields.splice(1, 1);
+                } else if (!$('#modbus_multiDeviceId').prop('checked')) {
+                    fields.splice(1, 1);
+                }
+
+                var g = $('#' + _id).jsGrid({
+                    width:      'auto',
+                    height:     'auto',
+                    inserting:  true,
+                    editing:    true,
+                    sorting:    true,
+                    heading:    true,
+                    paging:     false,
+                    deleteConfirm: _('Are you sure?'),
+                    data:       data[_id.split('_')[1]],
+                    fields:     fields,
+
+                    editRowRenderer: function(item) {
+                        var $result = $('<tr>').addClass(this.editRowClass);
+
+                        this._eachField(function(field) {
+                            $('<td>').addClass(field.css)
+                                .appendTo($result)
+                                .append(field.editTemplate ? field.editTemplate(item ? item[field.name] : '', item) : '')
+                                .width(field.width || 'auto').keypress(function (e) {
+                                if (e.which === 13) {
+                                    $('#' + _id).jsGrid('updateItem');
+                                }
+                                onchange();
+                            });
+                        });
+                        return $result;
+                    },
+                    onItemUpdated:   function (obj) {
+                        /* {grid, row, item, itemIndex, previousItem}*/
+                        var id = obj.grid._body.parent().attr('id');
+                        var changed = false;
+                        if (obj.item.wp && !obj.item.poll) {
+                            obj.item.poll = true;
+                            changed = true;
+                        }
+                        if (parseInt(obj.item.address, 10).toString() !== obj.item.address.toString()) changed = true;
+                        obj.item._address = parseInt(obj.item._address, 10);
+
+                        if ($('#modbus_showAliases').prop('checked')) {
+                            var isDirect = $('#modbus_directAddresses').prop('checked');
+                            obj.item.address = alias2address(id.split('_').pop(), obj.item._address, isDirect);
+                        } else {
+                            obj.item.address = obj.item._address;
+                        }
+
+                        if (obj.item.type === '') {
+                            obj.item.type = typeItems[1].value;
+                            changed = true;
+                        }
+
+                        // update length
+                        if (obj.item.type === 'string' || obj.item.type === 'stringle') {
+                            if (obj.item.factor !== '') {
+                                obj.item.factor = '';
+                                changed = true;
+                            }
+                            if (obj.item.offset !== '') {
+                                obj.item.offset = '';
+                                changed = true;
+                            }
+
+                            obj.item.len = parseInt(obj.item.len, 10) || 0;
+                            if (!obj.item.len) {
+                                obj.item.len = 2;
+                                changed = true;
+                            }
+                        } else if (typeItemsLen[obj.item.type]) {
+                            obj.item.len = parseInt(obj.item.len, 10);
+                            if (obj.item.len != typeItemsLen[obj.item.type]) {
+                                obj.item.len = typeItemsLen[obj.item.type];
+                                changed = true;
+                            }
+
+                            if (parseFloat(obj.item.factor).toString() !== obj.item.factor.toString()) {
+                                obj.item.factor = parseFloat(obj.item.factor) || 1;
+                                changed = true;
+                            }
+                            if (parseFloat(obj.item.offset).toString() !== obj.item.offset.toString()) {
+                                obj.item.offset = parseFloat(obj.item.offset) || 0;
+                                changed = true;
+                            }
+                        }
+
+                        if (!obj.item.role && obj.item.type !== 'string' && obj.item.type !== 'stringle') {
+                            if (id === 'modbus_disInputs') {
+                                obj.item.role = 'status';
+                            } else if (id === 'modbus_coils') {
+                                obj.item.role = 'button';
+                            } else if (id === 'modbus_inputRegs') {
+                                obj.item.role = 'value';
+                            } else if (id === 'modbus_holdingRegs') {
+                                obj.item.role = 'level';
+                            }
+                            changed = true;
+                        }
+
+                        if (changed) this.render();
+
+                        onchange();
+                    },
+                    onItemInserting: function (obj) {
+                        if (obj.item.poll !== undefined) {
+                            obj.item.poll = true;
+                        }
+                        // find automatically next address
+                        var id = obj.grid._body.parent().attr('id').split('_')[1];
+                        if (data[id].length) {
+                            var max = 0;
+                            obj.item.role     = data[id][data[id].length - 1].role;
+                            obj.item.poll     = data[id][data[id].length - 1].poll;
+                            obj.item.wp       = data[id][data[id].length - 1].wp;
+                            obj.item.cw       = data[id][data[id].length - 1].cw;
+                            obj.item.type     = data[id][data[id].length - 1].type;
+                            obj.item.len      = data[id][data[id].length - 1].len;
+                            obj.item.factor   = data[id][data[id].length - 1].factor;
+                            obj.item.offset   = data[id][data[id].length - 1].offset;
+                            obj.item.deviceId = data[id][data[id].length - 1].deviceId;
+
+                            var len;
+                            var defaultDeviceId = parseInt($('#modbus_deviceId').val(), 10) || 1;
+                            var actualDeviceId = parseInt(obj.item.deviceId, 10);
+                            if (!actualDeviceId) actualDeviceId = defaultDeviceId;
+
+                            for (var a = 0; a < data[id].length; a++) {
+                                var deviceId = parseInt(data[id][a].deviceId, 10);
+                                if (!deviceId) deviceId = defaultDeviceId;
+                                if (deviceId !== actualDeviceId) continue;
+                                if (!obj.item.type) {
+                                    len = 1;
+                                } else if (obj.item.type !== 'string' && obj.item.type !== 'stringle') {
+                                    len = typeItemsLen[obj.item.type];
+                                } else {
+                                    len = obj.item.len;
+                                }
+                                data[id][a]._address = parseInt(data[id][a]._address, 10);
+
+                                if (data[id][a]._address + len > max) max = data[id][a]._address + len;
+                            }
+                            obj.item._address = max;
+
+                            if ($('#modbus_showAliases').prop('checked')) {
+                                obj.item.address = alias2address(id, parseInt(obj.item._address, 10), isDirect);
+                            } else {
+                                obj.item.address = obj.item._address;
+                            }
+
+                        } else {
+                            if ($('#modbus_showAliases').prop('checked')) {
+                                if (id === 'disInputs') {
+                                    obj.item._address = data.params.disInputsOffset;
+                                } else if (id === 'coils') {
+                                    obj.item._address = data.params.coilsOffset;
+                                } else if (id === 'inputRegs') {
+                                    obj.item._address = data.params.inputRegsOffset;
+                                } else if (id === 'holdingRegs') {
+                                    obj.item._address = data.params.holdingRegsOffset;
+                                }
+                                obj.item.address = alias2address(id, obj.item._address, isDirect);
+                            } else {
+                                obj.item.address  = 0;
+                                obj.item._address = 0;
+                            }
+
+                            if (id === 'inputRegs' || 'holdingRegs') {
+                                obj.item.factor = 1;
+                                obj.item.offset = 0;
+                                obj.item.type   = 'uint16be';
+                                obj.item.len    = '';
+                            }
+                        }
+
+                        onchange();
+                    },
+                    onItemDeleted:   function (obj) {
+                        onchange();
+                    }
+                });
+                g.data('JSGrid')._editRow = function($row) {
+                    if(this._editingRow) {
+                        this.updateItem();
+                    }
+
+                    var item = $row.data('JSGridItem');
+                    if (!item) return;
+                    var $editRow = this._createEditRow(item);
+
+                    this._editingRow = $row;
+                    $row.hide();
+                    $editRow.insertAfter($row);
+                    $row.data('JSGridEditRow', $editRow);
+                };
+
+                setTimeout(function () {
+                    // add custom titles
+                    $('.jsgrid-header-sortable').each(function () {
+                        if ($(this).text() === _('poll')) {
+                            $(this).attr('title', _('Enable polling of data point'));
+                        } else
+                        if ($(this).text() === _('WP')) {
+                            $(this).attr('title', _('Write pulses (true=>false edge)'));
+                        } else
+                        if ($(this).text() === _('CW')) {
+                            $(this).attr('title', _('Cyclic write'));
+                        }
+                    });
+                }, 1000);
+            });
+
+            switchAll(data);
+        });
     }
 
     function load(settings, onchange) {
@@ -595,313 +921,6 @@
 
         isDirect = !!settings.params.directAddresses;
 
-        getEnums('rooms', function (err, rooms) {
-            $.each($('.modbus-grid'), function () {
-                var _id = $(this).attr('id');
-
-                // todo read roles and expand this list
-                var roleItems = [
-                    {value: '',                     text: ''},
-                    {value: 'value',                text: 'value'},
-                    {value: 'level',                text: 'level'},
-                    {value: 'state',                text: 'state'},
-                    {value: 'switch',               text: 'switch'},
-                    {value: 'value.temperature',    text: 'value.temperature'},
-                    {value: 'value.humidity',       text: 'value.humidity'},
-                    {value: 'value.brightness',     text: 'value.brightness'},
-                    {value: 'value.battery',        text: 'value.battery'},
-                    {value: 'value.valve',          text: 'value.valve'},
-                    {value: 'value.time',           text: 'value.time'},
-                    {value: 'value.interval',       text: 'value.interval'},
-                    {value: 'button',               text: 'button'},
-                    {value: 'indicator',            text: 'indicator'},
-                    {value: 'level.dimmer',         text: 'level.dimmer'},
-                    {value: 'level.valve',          text: 'level.valve'},
-                    {value: 'level.blind',          text: 'level.blind'},
-                    {value: 'level.temperature',    text: 'level.temperature'},
-                    {value: 'level.interval',       text: 'level.interval'}
-                ];
-
-                var typeItems = [
-                    {value: '',               text: ''},
-                    {value: 'uint16be',       text: 'Unsigned 16 bit (Big Endian)'},
-                    {value: 'uint16le',       text: 'Unsigned 16 bit (Little Endian)'},
-                    {value: 'int16be',        text: 'Signed 16 bit (Big Endian)'},
-                    {value: 'int16le',        text: 'Signed 16 bit (Little Endian)'},
-                    {value: 'uint32be',       text: 'Unsigned 32 bit (Big Endian)'},
-                    {value: 'uint32le',       text: 'Unsigned 32 bit (Little Endian)'},
-                    {value: 'uint32sw',       text: 'Unsigned 32 bit (Big Endian Word Swap)'},
-                    {value: 'uint32sb',       text: 'Unsigned 32 bit (Big Endian Byte Swap)'},
-                    {value: 'int32be',        text: 'Signed 32 bit (Big Endian)'},
-                    {value: 'int32le',        text: 'Signed 32 bit (Little Endian)'},
-                    {value: 'int32sw',        text: 'Signed 32 bit (Big Endian Word Swap)'},
-                    {value: 'int32sb',        text: 'Signed 32 bit (Big Endian Byte Swap)'},
-                    {value: 'uint64be',       text: 'Unsigned 64 bit (Big Endian)'},
-                    {value: 'uint64le',       text: 'Unsigned 64 bit (Little Endian)'},
-                    {value: 'uint8be',        text: 'Unsigned 8 bit (Big Endian)'},
-                    {value: 'uint8le',        text: 'Unsigned 8 bit (Little Endian)'},
-                    {value: 'int8be',         text: 'Signed 8 bit (Big Endian)'},
-                    {value: 'int8le',         text: 'Signed 8 bit (Little Endian)'},
-//                    {value: 'int64be',        text: 'Signed 64 bit (Big Endian)'},
-//                    {value: 'int64le',        text: 'Signed 64 bit (Little Endian)'},
-                    {value: 'floatbe',        text: 'Float (Big Endian)'},
-                    {value: 'floatle',        text: 'Float (Little Endian)'},
-                    {value: 'floatsw',        text: 'Float (Big Endian Word Swap)'},
-                    {value: 'floatsb',        text: 'Float (Big Endian Byte Swap)'},
-                    {value: 'doublebe',       text: 'Double (Big Endian)'},
-                    {value: 'doublele',       text: 'Double (Little Endian)'},
-                    {value: 'string',         text: 'String (Zero-end)'},
-                    {value: 'stringle',       text: 'String (Little Endian, Zero-end)'}
-                ];
-
-                var roomsItems = [{value: '', text: ''}];
-                for (var room in rooms) {
-                    if (rooms.hasOwnProperty(room)) {
-                        roomsItems.push({value: room, text: rooms[room].common.name || room.substring('enum.rooms.'.length)});
-                    }
-                }
-                var fields = [
-                    {name: '_address'   , title:  _('Address'),       type: 'text',       width: '110px', sorter: 'number'},
-                    {name: 'deviceId'   , title:  _('deviceId'),      type: 'text',       width: '60px',  sorter: 'number'},
-                    {name: 'name'       , title:  _('Name'),          type: 'text',       width: '*'},
-                    {name: 'description', title:  _('Description'),   type: 'text',       width: '*'},
-                    {name: 'unit'       , title:  _('Unit'),          type: 'text',       width: '50px'},
-                    {name: 'type'       , title:  _('Type'),          type: 'select',     width: '200px', items: typeItems,  valueField: 'value', textField: 'text'},
-                    {name: 'len'        , title:  _('Length'),        type: 'text',       width: '50px'},
-                    {name: 'factor'     , title:  _('Factor'),        type: 'text',       width: '50px'},
-                    {name: 'offset'     , title:  _('Offset'),        type: 'text',       width: '50px'},
-                    {name: 'role'       , title:  _('Role'),          type: 'select',     width: '100px', items: roleItems,  valueField: 'value', textField: 'text'},
-                    {name: 'room'       , title:  _('Room'),          type: 'select',     width: '100px', items: roomsItems, valueField: 'value', textField: 'text'},
-                    {name: 'poll'       , title:  _('poll'),          type: 'checkbox',   width: '35px'},
-                    {name: 'wp'         , title:  _('WP'),            type: 'checkbox',   width: '35px'},
-                    {name: 'cw'         , title:  _('CW'),            type: 'checkbox',   width: '35px'},
-                    {                                                 type: 'control',    width: '80px'}
-                ];
-                if (_id === 'modbus_disInputs' || _id === 'modbus_inputRegs') {
-                    fields.splice(11, 3);
-                }
-                if (_id === 'modbus_coils' || _id === 'modbus_disInputs') {
-                    fields.splice(4, 5);
-                }
-                if (parseInt($('#modbus_slave').val())) {
-                    fields.splice(13, 1);
-                    fields.splice(1, 1);
-                } else if (!$('#modbus_multiDeviceId').prop('checked')) {
-                    fields.splice(1, 1);
-                }
-
-                var g = $('#' + _id).jsGrid({
-                    width:      'auto',
-                    height:     'auto',
-                    inserting:  true,
-                    editing:    true,
-                    sorting:    true,
-                    heading:    true,
-                    paging:     false,
-                    deleteConfirm: _('Are you sure?'),
-                    data:       data[_id.split('_')[1]],
-                    fields:     fields,
-
-                    editRowRenderer: function(item) {
-                        var $result = $('<tr>').addClass(this.editRowClass);
-
-                        this._eachField(function(field) {
-                            $('<td>').addClass(field.css)
-                                    .appendTo($result)
-                                    .append(field.editTemplate ? field.editTemplate(item ? item[field.name] : '', item) : '')
-                                    .width(field.width || 'auto').keypress(function (e) {
-                                        if (e.which === 13) {
-                                            $('#' + _id).jsGrid('updateItem');
-                                        }
-                                        onchange();
-                                    });
-                        });
-                        return $result;
-                    },
-                    onItemUpdated: function (obj) {
-                        /* {grid, row, item, itemIndex, previousItem}*/
-                        var id = obj.grid._body.parent().attr('id');
-                        var changed = false;
-                        if (obj.item.wp && !obj.item.poll) {
-                            obj.item.poll = true;
-                            changed = true;
-                        }
-                        if (parseInt(obj.item.address, 10).toString() !== obj.item.address.toString()) changed = true;
-                        obj.item._address = parseInt(obj.item._address, 10);
-
-                        if ($('#modbus_showAliases').prop('checked')) {
-                            var isDirect = $('#modbus_directAddresses').prop('checked');
-                            obj.item.address = alias2address(id.split('_').pop(), obj.item._address, isDirect);
-                        } else {
-                            obj.item.address = obj.item._address;
-                        }
-
-                        if (obj.item.type === '') {
-                            obj.item.type = typeItems[1].value;
-                            changed = true;
-                        }
-
-                        // update length
-                        if (obj.item.type === 'string' || obj.item.type === 'stringle') {
-                            if (obj.item.factor !== '') {
-                                obj.item.factor = '';
-                                changed = true;
-                            }
-                            if (obj.item.offset !== '') {
-                                obj.item.offset = '';
-                                changed = true;
-                            }
-
-                            obj.item.len = parseInt(obj.item.len, 10) || 0;
-                            if (!obj.item.len) {
-                                obj.item.len = 2;
-                                changed = true;
-                            }
-                        } else if (typeItemsLen[obj.item.type]) {
-                            obj.item.len = parseInt(obj.item.len, 10);
-                            if (obj.item.len != typeItemsLen[obj.item.type]) {
-                                obj.item.len = typeItemsLen[obj.item.type];
-                                changed = true;
-                            }
-
-                            if (parseFloat(obj.item.factor).toString() !== obj.item.factor.toString()) {
-                                obj.item.factor = parseFloat(obj.item.factor) || 1;
-                                changed = true;
-                            }
-                            if (parseFloat(obj.item.offset).toString() !== obj.item.offset.toString()) {
-                                obj.item.offset = parseFloat(obj.item.offset) || 0;
-                                changed = true;
-                            }
-                        }
-
-                        if (!obj.item.role && obj.item.type !== 'string' && obj.item.type !== 'stringle') {
-                            if (id === 'modbus_disInputs') {
-                                obj.item.role = 'status';
-                            } else if (id === 'modbus_coils') {
-                                obj.item.role = 'button';
-                            } else if (id === 'modbus_inputRegs') {
-                                obj.item.role = 'value';
-                            } else if (id === 'modbus_holdingRegs') {
-                                obj.item.role = 'level';
-                            }
-                            changed = true;
-                        }
-
-                        if (changed) this.render();
-
-                        onchange();
-                    },
-                    onItemInserting: function (obj) {
-                        if (obj.item.poll !== undefined) {
-                            obj.item.poll = true;
-                        }
-                        // find automatically next address
-                        var id = obj.grid._body.parent().attr('id').split('_')[1];
-                        if (data[id].length) {
-                            var max = 0;
-                            obj.item.role     = data[id][data[id].length - 1].role;
-                            obj.item.poll     = data[id][data[id].length - 1].poll;
-                            obj.item.wp       = data[id][data[id].length - 1].wp;
-                            obj.item.cw       = data[id][data[id].length - 1].cw;
-                            obj.item.type     = data[id][data[id].length - 1].type;
-                            obj.item.len      = data[id][data[id].length - 1].len;
-                            obj.item.factor   = data[id][data[id].length - 1].factor;
-                            obj.item.offset   = data[id][data[id].length - 1].offset;
-                            obj.item.deviceId = data[id][data[id].length - 1].deviceId;
-
-                            var len;
-                            var defaultDeviceId = parseInt($('#modbus_deviceId').val(), 10) || 1;
-                            var actualDeviceId = parseInt(obj.item.deviceId, 10);
-                            if (!actualDeviceId) actualDeviceId = defaultDeviceId;
-
-                            for (var a = 0; a < data[id].length; a++) {
-                                var deviceId = parseInt(data[id][a].deviceId, 10);
-                                if (!deviceId) deviceId = defaultDeviceId;
-                                if (deviceId !== actualDeviceId) continue;
-                                if (!obj.item.type) {
-                                    len = 1;
-                                } else if (obj.item.type !== 'string' && obj.item.type !== 'stringle') {
-                                    len = typeItemsLen[obj.item.type];
-                                } else {
-                                    len = obj.item.len;
-                                }
-                                data[id][a]._address = parseInt(data[id][a]._address, 10);
-
-                                if (data[id][a]._address + len > max) max = data[id][a]._address + len;
-                            }
-                            obj.item._address = max;
-
-                            if ($('#modbus_showAliases').prop('checked')) {
-                                obj.item.address = alias2address(id, parseInt(obj.item._address, 10), isDirect);
-                            } else {
-                                obj.item.address = obj.item._address;
-                            }
-
-                        } else {
-                            if ($('#modbus_showAliases').prop('checked')) {
-                                if (id === 'disInputs') {
-                                    obj.item._address = data.params.disInputsOffset;
-                                } else if (id === 'coils') {
-                                    obj.item._address = data.params.coilsOffset;
-                                } else if (id === 'inputRegs') {
-                                    obj.item._address = data.params.inputRegsOffset;
-                                } else if (id === 'holdingRegs') {
-                                    obj.item._address = data.params.holdingRegsOffset;
-                                }
-                                obj.item.address = alias2address(id, obj.item._address, isDirect);
-                            } else {
-                                obj.item.address  = 0;
-                                obj.item._address = 0;
-                            }
-
-                            if (id === 'inputRegs' || 'holdingRegs') {
-                                obj.item.factor = 1;
-                                obj.item.offset = 0;
-                                obj.item.type   = 'uint16be';
-                                obj.item.len    = '';
-                            }
-                        }
-
-                        onchange();
-                    },
-                    onItemDeleted: function (obj) {
-                        onchange();
-                    }
-                });
-                g.data('JSGrid')._editRow = function($row) {
-                    if(this._editingRow) {
-                        this.updateItem();
-                    }
-
-                    var item = $row.data('JSGridItem');
-                    if (!item) return;
-                    var $editRow = this._createEditRow(item);
-
-                    this._editingRow = $row;
-                    $row.hide();
-                    $editRow.insertAfter($row);
-                    $row.data('JSGridEditRow', $editRow);
-                };
-
-                setTimeout(function () {
-                    // add custom titles
-                    $('.jsgrid-header-sortable').each(function () {
-                        if ($(this).text() === _('poll')) {
-                            $(this).attr('title', _('Enable polling of data point'));
-                        } else
-                        if ($(this).text() === _('WP')) {
-                            $(this).attr('title', _('Write pulses (true=>false edge)'));
-                        } else
-                        if ($(this).text() === _('CW')) {
-                            $(this).attr('title', _('Cyclic write'));
-                        }
-                    });
-                }, 1000);
-            });
-
-            switchAll(data);
-        });
-
         $('#modbus_directAddresses').on('change', function () {
             isDirect = $(this).prop('checked');
         });
@@ -930,6 +949,7 @@
                 $('.serial').show();
                 $('#modbus_slave').val(0).prop('disabled', true).trigger('change');
             }
+            initTabs();
         }).trigger('change');
 
         $('#modbus_slave').on('change', function () {
@@ -939,13 +959,20 @@
                 $('#multiDeviceId').hide();
                 $('#modbus_multiDeviceId').prop('checked', false);
             }
+            initTabs();
         }).trigger('change');
+
+        $('#multiDeviceId').on('change', function () {
+            initTabs();
+        });
 
         getIsAdapterAlive(function (isAlive) {
             if (isAlive || common.enabled) {
                 getComPorts(settings.params.comName);
             }
         });
+
+        initTabs(data);
 
         onchange(false);
     }
