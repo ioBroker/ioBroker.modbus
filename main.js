@@ -570,11 +570,13 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
                 config[i].offset = parseFloat(config[i].offset) || 0;
                 config[i].factor = parseFloat(config[i].factor) || 1;
                 if (config[i].type === 'string') {
-                    config[i].len = parseInt(config[i].len) || 1;
+                    config[i].len = parseInt(config[i].len, 10) || 1;
                 } else {
                     config[i].len = type_items_len[config[i].type];
                 }
                 config[i].len = config[i].len || 1;
+            } else {
+                config[i].len = 1;
             }
 
             if (localOptions.multiDeviceId) {
@@ -596,7 +598,9 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
             }
 
             if (address < result.addressLow)  result.addressLow = address;
-            if (address + config[i].len > result.addressHigh) result.addressHigh = address + config[i].len;
+            if (address + config[i].len > result.addressHigh) {
+                result.addressHigh = address + (config[i].len || 1);
+            }
         }
 
         const maxBlock = isBools ? localOptions.maxBoolBlock : localOptions.maxBlock;
