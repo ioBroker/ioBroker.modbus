@@ -8,8 +8,8 @@
 [![NPM](https://nodei.co/npm/iobroker.modbus.png?downloads=true)](https://nodei.co/npm/iobroker.modbus/)
 
 Implementation of ModBus Slave and Master for ioBroker. Following types are supported:
-- Modbus RTU over serial (slave)
-- Modbus RTU over TCP (slave)
+- Modbus RTU over serial (master)
+- Modbus RTU over TCP (master)
 - Modbus TCP (slave, master)
 
 ## Settings
