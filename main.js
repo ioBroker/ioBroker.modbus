@@ -358,7 +358,7 @@ function prepareConfig(config) {
     }
 
 
-    if (options.config.slave || params.type === 'tcp' || params.type === 'tcprtu') {
+    if (params.type === 'tcp' || params.type === 'tcprtu') {
         options.config.tcp = {
             port: parseInt(params.port, 10) || 502,
             bind: params.bind
@@ -1164,7 +1164,7 @@ function parseConfig(callback) {
         });
 
         newObjects.push(adapter.namespace + '.info.connection');
-        
+
         // clear unused states
         for (let id_ in oldObjects) {
             if (oldObjects.hasOwnProperty(id_) && newObjects.indexOf(id_) === -1) {
