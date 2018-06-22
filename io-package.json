@@ -1,8 +1,19 @@
 {
     "common": {
         "name": "modbus",
-        "version": "2.0.3",
+        "version": "2.0.4",
         "news": {
+            "2.0.4": {
+                "en": "rtu-tcp master mode was fixed",
+                "de": "rtu-tcp Master-Modus wurde behoben",
+                "ru": "Исправлен master режим rtu-tcp",
+                "pt": "modo mestre rtu-tcp foi corrigido",
+                "nl": "De rtu-tcp-mastermodus was opgelost",
+                "fr": "Le mode master de rtu-tcp a été corrigé",
+                "it": "la modalità master rtu-tcp è stata riparata",
+                "es": "El modo master rtu-tcp fue arreglado",
+                "pl": "Naprawiono tryb master rtu-tcp"
+            },
             "2.0.3": {
                 "en": "Fixed the rounding of numbers",
                 "de": "Die Rundung von Zahlen wurde korrigiert",
