@@ -487,7 +487,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
                 role:    regs[i].role,
                 type:    'boolean',
                 read:    true,
-                write:   false,
+                write:   regType === 'coils' || regType === 'holdingRegs',
                 def:     regType === 'coils' || regType === 'disInputs' ? false : 0
             },
             native: {
