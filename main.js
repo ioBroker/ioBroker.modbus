@@ -485,7 +485,8 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
             common: {
                 name:    regs[i].description,
                 role:    regs[i].role,
-                type:    'boolean',
+                type:    regType === 'coils' || regType === 'disInputs' ? 'boolean' :
+                    ((regs[i].type === 'string' || regs[i].type === 'string') ? 'string' : 'number'),
                 read:    true,
                 write:   regType === 'coils' || regType === 'holdingRegs',
                 def:     regType === 'coils' || regType === 'disInputs' ? false : 0
