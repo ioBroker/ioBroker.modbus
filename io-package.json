@@ -1,9 +1,9 @@
 {
     "common": {
         "name": "modbus",
-        "version": "2.0.4",
+        "version": "2.0.5",
         "news": {
-            "2.0.4": {
+            "2.0.5": {
                 "en": "rtu-tcp master mode was fixed",
                 "de": "rtu-tcp Master-Modus wurde behoben",
                 "ru": "Исправлен master режим rtu-tcp",
@@ -79,71 +79,6 @@
                 "it": "Risolto il problema della lettura delle coils",
                 "es": "Lectura fija de coils",
                 "pl": "Naprawiono odczyt coils"
-            },
-            "0.5.4": {
-                "en": "Fixes",
-                "de": "Fixes",
-                "ru": "Fixes"
-            },
-            "0.5.2": {
-                "en": "Fix object creation",
-                "de": "Fehler bei Objektanlage behoben",
-                "ru": "Fix object creation"
-            },
-            "0.5.1": {
-                "en": "Fix memory leak for TCP Server",
-                "de": "Speicherproblem für TCP Server behoben",
-                "ru": "Fix memory leak for TCP Server"
-            },
-            "0.5.0": {
-                "en": "Create all states each after other",
-                "de": "Erzeuge die Datenpunkte eins nach dem anderem",
-                "ru": "Создавать объекты последовательно"
-            },
-            "0.4.10": {
-                "en": "Do not recreate all datapoints on start of adapter",
-                "de": "Datenpunkte nicht beim Start des Adapters neu erzeugen",
-                "ru": "Do not recreate all datapoints on start of adapter"
-            },
-            "0.4.9": {
-                "en": "fix serial RTU",
-                "de": "Korrigiere serial RTU",
-                "ru": "Исправлено serial RTU"
-            },
-            "0.4.8": {
-                "en": "update serialport library for node 6.x compatibility",
-                "de": "Bibliothek serialport aktualisiert um Kompatibel zu node 6.x zu sein",
-                "ru": "update serialport library for node 6.x compatibility"
-            },
-            "0.4.7": {
-                "en": "Use old version of jsmodbus",
-                "de": "Benutze alte Version von jsmodbus",
-                "ru": "Используется старая версия jsmodbus"
-            },
-            "0.4.6": {
-                "en": "backward compatibility with 0.3.x",
-                "de": "Rückwartskompatibilität mit 0.3.x",
-                "ru": "Обратная совместимость с 0.3.x"
-            },
-            "0.4.5": {
-                "en": "better buffer handling on tcp and serial",
-                "de": "Bessere Pufferbehandlung für tcp und serial",
-                "ru": "Исправлена обработка потока для TCP и serial"
-            },
-            "0.4.4": {
-                "en": "Fix write of holding registers",
-                "de": "Korrigiere Schreiben von holding registers",
-                "ru": "Исправлена запись holding registers"
-            },
-            "0.4.1": {
-                "en": "Support of ModBus RTU over serial and over TCP (only slave)",
-                "de": "Unterstützung von ModBus RTU serial und over TCP (nur Slave)",
-                "ru": "Поддержка ModBus RTU по RS485 и по TCP (только slave)"
-            },
-            "0.3.11": {
-                "en": "Fix wrong byte count in loop",
-                "de": "Fix wrong byte count in loop",
-                "ru": "Fix wrong byte count in loop"
             }
         },
         "title": "ModBus",
