@@ -1,9 +1,9 @@
 {
     "common": {
         "name": "modbus",
-        "version": "2.0.5",
+        "version": "2.0.6",
         "news": {
-            "2.0.5": {
+            "2.0.6": {
                 "en": "rtu-tcp master mode was fixed",
                 "de": "rtu-tcp Master-Modus wurde behoben",
                 "ru": "Исправлен master режим rtu-tcp",
