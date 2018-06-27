@@ -642,11 +642,13 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
                 if (result.length % 16) {
                     result.length = (Math.floor(result.length / 16) + 1) * 16;
                 }
-                for (let b = 0; b < result.blocks.length; b++) {
-                    result.blocks[b].start = Math.floor(result.blocks[b].start / 16) * 16;
+                if (result.blocks) {
+                    for (let b = 0; b < result.blocks.length; b++) {
+                        result.blocks[b].start = Math.floor(result.blocks[b].start / 16) * 16;
 
-                    if (result.blocks[b].count % 16) {
-                        result.blocks[b].count = (Math.floor(result.blocks[b].count / 16) + 1) * 16;
+                        if (result.blocks[b].count % 16) {
+                            result.blocks[b].count = (Math.floor(result.blocks[b].count / 16) + 1) * 16;
+                        }
                     }
                 }
             }
@@ -691,13 +693,13 @@ function parseConfig(callback) {
             let device = options.devices[_deviceId];
             let deviceId = parseInt(_deviceId, 10);
 
+            device.disInputs.config   = adapter.config.disInputs.  filter(e =>           e.deviceId === deviceId);
+            device.coils.config       = adapter.config.coils.      filter(e => e.poll && e.deviceId === deviceId);
+            device.inputRegs.config   = adapter.config.inputRegs.  filter(e =>           e.deviceId === deviceId);
+            device.holdingRegs.config = adapter.config.holdingRegs.filter(e => e.poll && e.deviceId === deviceId);
+
             // ----------- remember poll values --------------------------
             if (!options.config.slave) {
-                device.disInputs.config   = adapter.config.disInputs.  filter(e =>           e.deviceId === deviceId);
-                device.coils.config       = adapter.config.coils.      filter(e => e.poll && e.deviceId === deviceId);
-                device.inputRegs.config   = adapter.config.inputRegs.  filter(e =>           e.deviceId === deviceId);
-                device.holdingRegs.config = adapter.config.holdingRegs.filter(e => e.poll && e.deviceId === deviceId);
-
                 tasks.push({
                     id: 'info.pollTime',
                     name: 'add',
@@ -716,11 +718,6 @@ function parseConfig(callback) {
                     }
                 });
                 newObjects.push(adapter.namespace + '.info.pollTime');
-            } else {
-                device.disInputs.fullIds   = adapter.config.disInputs  .filter(e => e.deviceId === deviceId).map(e => e.fullId);
-                device.coils.fullIds       = adapter.config.coils      .filter(e => e.deviceId === deviceId).map(e => e.fullId);
-                device.inputRegs.fullIds   = adapter.config.inputRegs  .filter(e => e.deviceId === deviceId).map(e => e.fullId);
-                device.holdingRegs.fullIds = adapter.config.holdingRegs.filter(e => e.deviceId === deviceId).map(e => e.fullId);
             }
 
             // Discrete inputs
@@ -974,6 +971,14 @@ function parseConfig(callback) {
             checkObjects(adapter.config, 'coils',       'coils',            'Coils',             tasks, newObjects);
             checkObjects(adapter.config, 'inputRegs',   'inputRegisters',   'Input registers',   tasks, newObjects);
             checkObjects(adapter.config, 'holdingRegs', 'holdingRegisters', 'Holding registers', tasks, newObjects);
+
+            if (options.config.slave) {
+                device.disInputs.fullIds   = adapter.config.disInputs  .filter(e => e.deviceId === deviceId).map(e => e.fullId);
+                device.coils.fullIds       = adapter.config.coils      .filter(e => e.deviceId === deviceId).map(e => e.fullId);
+                device.inputRegs.fullIds   = adapter.config.inputRegs  .filter(e => e.deviceId === deviceId).map(e => e.fullId);
+                device.holdingRegs.fullIds = adapter.config.holdingRegs.filter(e => e.deviceId === deviceId).map(e => e.fullId);
+            }
+
             /*for (i = 0; regs.length > i; i++) {
                 id = adapter.namespace + '.' + regs[i].id;
                 regs[i].fullId = id;
