@@ -187,6 +187,9 @@ There are some programs in folder *test' to test the TCP communication:
 - mod_RSsim.exe is slave simulator. It can be that you need [Microsoft Visual C++ 2008 SP1 Redistributable Package](https://www.microsoft.com/en-us/download/details.aspx?id=5582) to start it (because of SideBySide error).
 
 ## Changelog
+# 2.0.6 (2018-07-02)
+* (bluefox) The server mode was fixed
+
 # 2.0.6 (2018-06-26)
 * (bluefox) rtu-tcp master mode was fixed
 

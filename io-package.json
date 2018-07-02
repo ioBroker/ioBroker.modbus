@@ -1,8 +1,19 @@
 {
     "common": {
         "name": "modbus",
-        "version": "2.0.6",
+        "version": "2.0.7",
         "news": {
+            "2.0.7":  {
+                "en": "The server mode was fixed",
+                "de": "Der Servermodus wurde behoben",
+                "ru": "Режим сервера был исправлен",
+                "pt": "O modo do servidor foi corrigido",
+                "nl": "De servermodus is opgelost",
+                "fr": "Le mode serveur a été corrigé",
+                "it": "La modalità server è stata riparata",
+                "es": "El modo del servidor fue arreglado",
+                "pl": "Tryb serwera został naprawiony"
+            },
             "2.0.6": {
                 "en": "rtu-tcp master mode was fixed",
                 "de": "rtu-tcp Master-Modus wurde behoben",
