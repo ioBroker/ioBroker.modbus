@@ -1,6 +1,6 @@
 {
   "name": "iobroker.modbus",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Connect devices oder Modbus protocol to ioBroker",
   "author": {
     "name": "bluefox",
@@ -30,15 +30,15 @@
   "dependencies": {
     "stampit": "^2.1.2",
     "put": "0.0.6",
-    "crc": "3.5.0",
+    "crc": "3.8.0",
     "stampit-state-machine": "^0.2.1",
     "stampit-event-bus": "^0.1.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
-    "mocha": "^4.1.0",
-    "chai": "^4.1.2",
-    "nan": "2.4.0",
+    "mocha": "^5.2.0",
+    "chai": "^4.2.0",
+    "nan": "2.11.1",
     "modbus-stack": "^0.2.1"
   },
   "main": "main.js",
