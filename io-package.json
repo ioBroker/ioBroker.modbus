@@ -1,8 +1,19 @@
 {
     "common": {
         "name": "modbus",
-        "version": "2.0.7",
+        "version": "2.0.8",
         "news": {
+            "2.0.8":  {
+                "en": "Write registers was corrected",
+                "de": "Schreibregister wurde korrigiert",
+                "ru": "Исправлены записи регистров",
+                "pt": "Registros de gravação foram corrigidos",
+                "nl": "Schrijfregisters werden gecorrigeerd",
+                "fr": "Ecrire des registres a été corrigé",
+                "it": "I registri di scrittura sono stati corretti",
+                "es": "Escribir registros fue corregido",
+                "pl": "Rejestry zapisu zostały poprawione"
+            },
             "2.0.7":  {
                 "en": "The server mode was fixed",
                 "de": "Der Servermodus wurde behoben",
