@@ -908,6 +908,7 @@
                 holdingRegsOffset:  settings.params.holdingRegsOffset || 40001,
                 showAliases:        (settings.params.showAliases === undefined) ? true : settings.params.showAliases,
                 directAddresses:    settings.params.directAddresses || false,
+                alwaysUpdate:       settings.params.alwaysUpdate    || false,
                 doNotRoundAddressToWord:    settings.params.doNotRoundAddressToWord || false,
                 comName:       settings.params.comName       || '',
                 type:          settings.params.type          || 'tcp',
@@ -921,6 +922,7 @@
         };
         data.params.showAliases     = (data.params.showAliases     === 'true' || data.params.showAliases     === true);
         data.params.directAddresses = (data.params.directAddresses === 'true' || data.params.directAddresses === true);
+        data.params.alwaysUpdate    = (data.params.alwaysUpdate    === 'true' || data.params.alwaysUpdate    === true);
 
         onChange = onchange;
 
@@ -1293,12 +1295,16 @@
             <tr>
                 <td><label class="translate" for="modbus_maxBlock">Max read request length:</label></td>
                 <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_maxBlock"></td>
-                <td calss="translate">registers</td>
+                <td class="translate">registers</td>
             </tr>
             <tr>
                 <td><label class="translate" for="modbus_maxBoolBlock">Max read request length (booleans):</label></td>
                 <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_maxBoolBlock"></td>
-                <td calss="translate">registers</td>
+                <td class="translate">registers</td>
+            </tr>
+            <tr>
+                <td><label class="translate" for="modbus_alwaysUpdate">Update unchanged states:</label></td>
+                <td><input style="margin-right: 5px;text-align: right" class="modbus-params" type="checkbox" id="modbus_alwaysUpdate"/></td>
             </tr>
             <tr>
                 <td colspan="3" style="height: 10px"></td>

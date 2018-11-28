@@ -329,6 +329,7 @@ function prepareConfig(config) {
         config: {
             type:               params.type || 'tcp',
             slave:              params.slave,
+            alwaysUpdate:       params.alwaysUpdate,
             round:              parseInt(params.round, 10) || 0,
             timeout:            parseInt(params.timeout, 10) || 5000,
             defaultDeviceId:   (params.deviceId === undefined || params.deviceId === null) ? 1 : (parseInt(params.deviceId, 10) || 0),
