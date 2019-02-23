@@ -237,7 +237,8 @@ const type_items_len = {
     'floatsb':    2,
     'doublebe':   4,
     'doublele':   4,
-    'string':     0
+    'string':     0,
+    'stringle':   0,
 };
 
 const _rmap = {
@@ -487,7 +488,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
                 name:    regs[i].description,
                 role:    regs[i].role,
                 type:    regType === 'coils' || regType === 'disInputs' ? 'boolean' :
-                    ((regs[i].type === 'string' || regs[i].type === 'string') ? 'string' : 'number'),
+                    ((regs[i].type === 'string' || regs[i].type === 'stringle') ? 'string' : 'number'),
                 read:    true,
                 write:   regType === 'coils' || regType === 'holdingRegs',
                 def:     regType === 'coils' || regType === 'disInputs' ? false : 0
@@ -571,7 +572,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
                 config[i].type   = config[i].type || 'uint16be';
                 config[i].offset = parseFloat(config[i].offset) || 0;
                 config[i].factor = parseFloat(config[i].factor) || 1;
-                if (config[i].type === 'string') {
+                if ((config[i].type === 'string') || (config[i].type === 'stringle')) {
                     config[i].len = parseInt(config[i].len, 10) || 1;
                 } else {
                     config[i].len = type_items_len[config[i].type];
