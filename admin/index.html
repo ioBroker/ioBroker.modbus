@@ -902,13 +902,15 @@
                 round:      settings.params.round || 2,
                 maxBlock:   settings.params.maxBlock || 100,
                 maxBoolBlock:   settings.params.maxBoolBlock || 128,
-                disInputsOffset:    settings.params.disInputsOffset   || 10001,
-                coilsOffset:        settings.params.coilsOffset       || 1,
-                inputRegsOffset:    settings.params.inputRegsOffset   || 30001,
-                holdingRegsOffset:  settings.params.holdingRegsOffset || 40001,
-                showAliases:        (settings.params.showAliases === undefined) ? true : settings.params.showAliases,
-                directAddresses:    settings.params.directAddresses || false,
-                alwaysUpdate:       settings.params.alwaysUpdate    || false,
+                disInputsOffset:      settings.params.disInputsOffset   || 10001,
+                coilsOffset:          settings.params.coilsOffset       || 1,
+                inputRegsOffset:      settings.params.inputRegsOffset   || 30001,
+                holdingRegsOffset:    settings.params.holdingRegsOffset || 40001,
+                showAliases:          (settings.params.showAliases === undefined) ? true : settings.params.showAliases,
+                directAddresses:      settings.params.directAddresses     || false,
+                alwaysUpdate:         settings.params.alwaysUpdate        || false,
+                doNotIncludeAdrInId:  settings.params.doNotIncludeAdrInId || false,
+                preserveDotsInId:     settings.params.preserveDotsInId    || false,
                 doNotRoundAddressToWord:    settings.params.doNotRoundAddressToWord || false,
                 comName:       settings.params.comName       || '',
                 type:          settings.params.type          || 'tcp',
@@ -920,9 +922,11 @@
                 multiDeviceId: settings.params.multiDeviceId || false
             }
         };
-        data.params.showAliases     = (data.params.showAliases     === 'true' || data.params.showAliases     === true);
-        data.params.directAddresses = (data.params.directAddresses === 'true' || data.params.directAddresses === true);
-        data.params.alwaysUpdate    = (data.params.alwaysUpdate    === 'true' || data.params.alwaysUpdate    === true);
+        data.params.showAliases         = (data.params.showAliases          === 'true' || data.params.showAliases           === true);
+        data.params.directAddresses     = (data.params.directAddresses      === 'true' || data.params.directAddresses       === true);
+        data.params.alwaysUpdate        = (data.params.alwaysUpdate         === 'true' || data.params.alwaysUpdate          === true);
+        data.params.doNotIncludeAdrInId = (data.params.doNotIncludeAdrInId  === 'true' || data.params.doNotIncludeAdrInId   === true);
+        data.params.preserveDotsInId    = (data.params.preserveDotsInId     === 'true' || data.params.preserveDotsInId      === true);
 
         onChange = onchange;
 
@@ -1305,6 +1309,14 @@
             <tr>
                 <td><label class="translate" for="modbus_alwaysUpdate">Update unchanged states:</label></td>
                 <td><input style="margin-right: 5px;text-align: right" class="modbus-params" type="checkbox" id="modbus_alwaysUpdate"/></td>
+            </tr>
+            <tr>
+                <td><label class="translate" for="modbus_doNotIncludeAdrInId">do not include address in ID:</label></td>
+                <td><input style="margin-right: 5px;text-align: right" class="modbus-params" type="checkbox" id="modbus_doNotIncludeAdrInId"/></td>
+            </tr>
+            <tr>
+                <td><label class="translate" for="modbus_preserveDotsInId">preserve dots in ID:</label></td>
+                <td><input style="margin-right: 5px;text-align: right" class="modbus-params" type="checkbox" id="modbus_preserveDotsInId"/></td>
             </tr>
             <tr>
                 <td colspan="3" style="height: 10px"></td>
