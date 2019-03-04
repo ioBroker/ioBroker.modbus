@@ -32,15 +32,15 @@
     "put": "0.0.6",
     "crc": "3.8.0",
     "stampit-state-machine": "^0.2.1",
-    "stampit-event-bus": "^0.1.1"
+    "stampit-event-bus": "^0.1.1",
+    "@iobroker/adapter-core": "^1.0.3"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
     "mocha": "^6.0.2",
     "chai": "^4.2.0",
     "nan": "2.11.1",
-    "modbus-stack": "^0.2.1",
-    "@iobroker/adapter-core": "^1.0.3"
+    "modbus-stack": "^0.2.1"
   },
   "main": "main.js",
   "scripts": {
