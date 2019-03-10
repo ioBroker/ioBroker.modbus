@@ -2,7 +2,7 @@
 # iobroker.modbus
 =====================
 
-[![NPM version](http://img.shields.io/npm/v/iobroker.modbus.svg)](https://www.npmjs.com/package/iobroker.modbus)
+![Number of Installations](http://iobroker.live/badges/modbus-installed.svg) ![Number of Installations](http://iobroker.live/badges/modbus-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.modbus.svg)](https://www.npmjs.com/package/iobroker.modbus)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.modbus.svg)](https://www.npmjs.com/package/iobroker.modbus)
 
 [![NPM](https://nodei.co/npm/iobroker.modbus.png?downloads=true)](https://nodei.co/npm/iobroker.modbus/)
