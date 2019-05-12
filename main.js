@@ -237,7 +237,8 @@ const type_items_len = {
     'floatsb':    2,
     'doublebe':   4,
     'doublele':   4,
-    'string':     0
+    'string':     0,
+    'stringle':   0,
 };
 
 const _rmap = {
@@ -333,6 +334,8 @@ function prepareConfig(config) {
             round:              parseInt(params.round, 10) || 0,
             timeout:            parseInt(params.timeout, 10) || 5000,
             defaultDeviceId:   (params.deviceId === undefined || params.deviceId === null) ? 1 : (parseInt(params.deviceId, 10) || 0),
+            doNotIncludeAdrInId: params.doNotIncludeAdrInId,
+            preserveDotsInId:   params.preserveDotsInId,
         },
         devices: {}
     };
@@ -487,7 +490,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
                 name:    regs[i].description,
                 role:    regs[i].role,
                 type:    regType === 'coils' || regType === 'disInputs' ? 'boolean' :
-                    ((regs[i].type === 'string' || regs[i].type === 'string') ? 'string' : 'number'),
+                    ((regs[i].type === 'string' || regs[i].type === 'stringle') ? 'string' : 'number'),
                 read:    true,
                 write:   regType === 'coils' || regType === 'holdingRegs',
                 def:     regType === 'coils' || regType === 'disInputs' ? false : 0
@@ -571,7 +574,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
                 config[i].type   = config[i].type || 'uint16be';
                 config[i].offset = parseFloat(config[i].offset) || 0;
                 config[i].factor = parseFloat(config[i].factor) || 1;
-                if (config[i].type === 'string') {
+                if ((config[i].type === 'string') || (config[i].type === 'stringle')) {
                     config[i].len = parseInt(config[i].len, 10) || 1;
                 } else {
                     config[i].len = type_items_len[config[i].type];
@@ -590,9 +593,21 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
             if (localOptions.showAliases) {
                 config[i].id += address2alias(regType, address, localOptions.directAddresses, result.offset);
             } else {
+              // add address if not disabled or name not empty
+              if (!localOptions.doNotIncludeAdrInId || !config[i].name) {
                 config[i].id += address;
+                if (localOptions.preserveDotsInId) {
+                  config[i].id += '_';
+                }
+              }
             }
-            config[i].id += (config[i].name ? '_' + (config[i].name.replace('.', '_').replace(' ', '_')) : '');
+            if (localOptions.preserveDotsInId) {
+              // preserve dots in name and add to ID
+              config[i].id += (config[i].name ? (config[i].name.replace(' ', '_')) : '');
+            } else {
+              // replace dots by underlines and add to ID
+              config[i].id += (config[i].name ? '_' + (config[i].name.replace('.', '_').replace(' ', '_')) : '');
+            }
 
             // collect cyclic write registers
             if (config[i].cw) {
@@ -675,7 +690,9 @@ function parseConfig(callback) {
         doNotRoundAddressToWord:    (params.doNotRoundAddressToWord === true || params.doNotRoundAddressToWord === 'true'),
         directAddresses:            (params.directAddresses         === true || params.directAddresses         === 'true'),
         maxBlock:                   options.config.maxBlock,
-        maxBoolBlock:               options.config.maxBoolBlock
+        maxBoolBlock:               options.config.maxBoolBlock,
+        doNotIncludeAdrInId:        (params.doNotIncludeAdrInId     === true || params.doNotIncludeAdrInId     === 'true'),
+        preserveDotsInId:           (params.preserveDotsInId        === true || params.preserveDotsInId        === 'true'),
     };
 
     adapter.getForeignObjects(adapter.namespace + '.*', (err, list) => {
