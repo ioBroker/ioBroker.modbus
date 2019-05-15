@@ -3,6 +3,18 @@
         "name": "modbus",
         "version": "3.0.0",
         "news": {
+            "3.0.0":  {
+                "en": "Support for nodejs 12 added, nodejs 4 is no longer supported!",
+                "de": "Unterstützung für NodeJS 12 hinzugefügt, NodeJS 4 wird nicht mehr unterstützt!",
+                "ru": "Добавлена ​​поддержка nodejs 12, nodejs 4 больше не поддерживается!",
+                "pt": "Suporte para nodejs 12 adicionado, nodejs 4 não é mais suportado!",
+                "nl": "Ondersteuning voor nodejs 12 toegevoegd, nodejs 4 wordt niet langer ondersteund!",
+                "fr": "Prise en charge de nodejs 12 ajoutée, nodejs 4 n'est plus prise en charge!",
+                "it": "Supporto per nodejs 12 aggiunto, nodejs 4 non è più supportato!",
+                "es": "Se agregó soporte para nodejs 12, ¡nodejs 4 ya no es compatible!",
+                "pl": "Dodano wsparcie dla nodejs 12, nodejs 4 nie jest już obsługiwany!",
+                "zh-cn": "添加了对nodejs 12的支持，不再支持nodejs 4！"
+            },
             "2.0.9":  {
                 "en": "Write registers was corrected",
                 "de": "Schreibregister wurde korrigiert",
