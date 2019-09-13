@@ -17,6 +17,7 @@ let adapter       = utils.Adapter({
 process.on('SIGINT', stop);
 
 adapter.on('ready', function () {
+    console.log("Modbus Adapter ready");
     try {
         serialport = require('serialport');
     } catch (err) {
