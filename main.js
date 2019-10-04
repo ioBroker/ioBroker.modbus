@@ -17,7 +17,7 @@ let adapter       = utils.Adapter({
 process.on('SIGINT', stop);
 
 adapter.on('ready', function () {
-    console.log("Modbus Adapter ready");
+    console.log('Modbus Adapter ready');
     try {
         serialport = require('serialport');
     } catch (err) {
@@ -360,6 +360,7 @@ function prepareConfig(config) {
         options.config.maxBlock     = parseInt(params.maxBlock, 10)     || 100;
         options.config.maxBoolBlock = parseInt(params.maxBoolBlock, 10) || 128;
         options.config.pulsetime    = parseInt(params.pulsetime         || 1000);
+        options.config.waittime    = parseInt(params.waittime         || 50);
     }
 
 

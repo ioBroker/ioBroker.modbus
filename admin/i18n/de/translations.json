@@ -14,6 +14,7 @@
   "deviceId": "Slave-ID",
   "Reconnect time:": "Reconnect-Zeit:",
   "Pulse time:": "Pulsetime:",
+  "Wait time:": "Wartezeit:",
   "Import symbols file:": "Symboldatei Importieren:",
   "Import DB file:": "DB-Datei importieren:",
   "Load Symbols": "Lade Symbole",
