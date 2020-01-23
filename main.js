@@ -48,11 +48,31 @@ function startAdapter(options) {
         }
     });
 
+    let infoRegExp = new RegExp(adapter.namespace.replace('.', '\\.') + '\\.info\\.');
+
+    adapter.on('stateChange', (id, state) => {
+        if (state && !state.ack && id && !infoRegExp.test(id)) {
+            if (!modbus) {
+                adapter.log.warn('No connection')
+            } else {
+                if (objects[id]) {
+                    modbus.write(id, state);
+                } else {
+                    adapter.getObject(id, (err, data) => {
+                        if (!err) {
+                            objects[id] = data;
+                            modbus.write(id, state);
+                        }
+                    });
+                }
+            }
+        }
+    });
+
     return adapter;
 }
 
 process.on('SIGINT', stop);
-
 
 function stop(callback) {
     if (modbus) {
@@ -73,26 +93,6 @@ function stop(callback) {
 
 let objects    = {};
 let enums      = {};
-let infoRegExp = new RegExp(adapter.namespace.replace('.', '\\.') + '\\.info\\.');
-
-adapter.on('stateChange', (id, state) => {
-    if (state && !state.ack && id && !infoRegExp.test(id)) {
-        if (!modbus) {
-            adapter.log.warn('No connection')
-        } else {
-            if (objects[id]) {
-                modbus.write(id, state);
-            } else {
-                adapter.getObject(id, (err, data) => {
-                    if (!err) {
-                        objects[id] = data;
-                        modbus.write(id, state);
-                    }
-                });
-            }
-        }
-    }
-});
 
 function filterSerialPorts(path) {
     fs = fs || require('fs');
