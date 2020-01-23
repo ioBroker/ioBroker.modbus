@@ -3,52 +3,56 @@
 /* jslint node: true */
 'use strict';
 
-const utils = require('@iobroker/adapter-core');
+const utils       = require('@iobroker/adapter-core');
+const adapterName = require('./package.json').name.split('.').pop();
 let modbus        = null;
-let fs;
-
 let serialport    = null;
+let fs;
+let adapter;
 
-let adapter       = utils.Adapter({
-    name: 'modbus',
-    unload: stop
-});
+function startAdapter(options) {
+    options = options || {};
+    Object.assign(options, {name: adapterName, unload: stop});
+    adapter = new utils.Adapter(options);
+
+    adapter.on('ready', () => {
+        try {
+            serialport = require('serialport');
+        } catch (err) {
+            adapter.log.warn('Serial is not available');
+        }
+
+        adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
+        main();
+    });
+
+    adapter.on('message', obj => {
+        if (obj) {
+            switch (obj.command) {
+                case 'listUart':
+                    if (obj.callback) {
+                        if (serialport) {
+                            // read all found serial ports
+                            serialport.list((err, ports) => {
+                                listSerial(ports);
+                                adapter.log.info('List of port: ' + JSON.stringify(ports));
+                                adapter.sendTo(obj.from, obj.command, ports, obj.callback);
+                            });
+                        } else {
+                            adapter.log.warn('Module serialport is not available');
+                            adapter.sendTo(obj.from, obj.command, [{comName: 'Not available'}], obj.callback);
+                        }
+                    }
+                    break;
+            }
+        }
+    });
+
+    return adapter;
+}
 
 process.on('SIGINT', stop);
 
-adapter.on('ready', function () {
-    console.log('Modbus Adapter ready');
-    try {
-        serialport = require('serialport');
-    } catch (err) {
-        adapter.log.warn('Serial is not available');
-    }
-
-    adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
-    main();
-});
-
-adapter.on('message', function (obj) {
-    if (obj) {
-        switch (obj.command) {
-            case 'listUart':
-                if (obj.callback) {
-                    if (serialport) {
-                        // read all found serial ports
-                        serialport.list(function (err, ports) {
-                            listSerial(ports);
-                            adapter.log.info('List of port: ' + JSON.stringify(ports));
-                            adapter.sendTo(obj.from, obj.command, ports, obj.callback);
-                        });
-                    } else {
-                        adapter.log.warn('Module serialport is not available');
-                        adapter.sendTo(obj.from, obj.command, [{comName: 'Not available'}], obj.callback);
-                    }
-                }
-                break;
-        }
-    }
-});
 
 function stop(callback) {
     if (modbus) {
@@ -60,11 +64,11 @@ function stop(callback) {
         adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
     }
 
-    if (typeof callback === 'function') callback();
+    typeof callback === 'function' && callback();
 
-    setTimeout(function() {
-        process.exit();
-    }, 5000);
+    adapter.terminate ?
+        adapter.terminate() :
+        setTimeout(() => process.exit(), 5000);
 }
 
 let objects    = {};
@@ -112,11 +116,9 @@ function listSerial(ports) {
     try {
         result = fs
             .readdirSync(devDirName)
-            .map(function (file) {
-                return path.join(devDirName, file);
-            })
+            .map(file => path.join(devDirName, file))
             .filter(filterSerialPorts)
-            .map(function (port) {
+            .map(port => {
                 let found = false;
                 for (let v = 0; v < ports.length; v++) {
                     if (ports[v].comName === port) {
@@ -124,7 +126,9 @@ function listSerial(ports) {
                         break;
                     }
                 }
-                if (!found) ports.push({comName: port});
+
+                !found && ports.push({comName: port});
+
                 return {comName: port};
             });
     } catch (e) {
@@ -137,44 +141,40 @@ function listSerial(ports) {
 }
 
 function addToEnum(enumName, id, callback) {
-    adapter.getForeignObject(enumName, function (err, obj) {
+    adapter.getForeignObject(enumName, (err, obj) => {
         if (!err && obj) {
             let pos = obj.common.members.indexOf(id);
             if (pos === -1) {
                 obj.common.members.push(id);
-                adapter.setForeignObject(obj._id, obj, function (err) {
-                    if (callback) callback(err);
-                });
+                adapter.setForeignObject(obj._id, obj, err => callback && callback(err));
             } else {
-                if (callback) callback(err);
+                callback && callback(err);
             }
         } else {
-            if (callback) callback(err);
+            callback && callback(err);
         }
     });
 }
 
 function removeFromEnum(enumName, id, callback) {
-    adapter.getForeignObject(enumName, function (err, obj) {
+    adapter.getForeignObject(enumName, (err, obj) => {
         if (!err && obj) {
             let pos = obj.common.members.indexOf(id);
             if (pos !== -1) {
                 obj.common.members.splice(pos, 1);
-                adapter.setForeignObject(obj._id, obj, function (err) {
-                    if (callback) callback(err);
-                });
+                adapter.setForeignObject(obj._id, obj, err => callback && callback(err));
             } else {
-                if (callback) callback(err);
+                callback && callback(err);
             }
         } else {
-            if (callback) callback(err);
+            callback && callback(err);
         }
     });
 }
 
 function syncEnums(enumGroup, id, newEnumName, callback) {
     if (!enums[enumGroup]) {
-        adapter.getEnum(enumGroup, function (err, _enums) {
+        adapter.getEnum(enumGroup, (err, _enums) => {
             enums[enumGroup] = _enums;
             syncEnums(enumGroup, id, newEnumName, callback);
         });
@@ -191,9 +191,8 @@ function syncEnums(enumGroup, id, newEnumName, callback) {
             enums[enumGroup][e].common.members.indexOf(id) !== -1) {
             if (enums[enumGroup][e]._id !== newEnumName) {
                 count++;
-                removeFromEnum(enums[enumGroup][e]._id, id, function () {
-                    if (!--count && typeof callback === 'function') callback();
-                });
+                removeFromEnum(enums[enumGroup][e]._id, id, () =>
+                    !--count && typeof callback === 'function' && callback());
             } else {
                 found = true;
             }
@@ -201,15 +200,14 @@ function syncEnums(enumGroup, id, newEnumName, callback) {
     }
     if (!found && newEnumName) {
         count++;
-        addToEnum(newEnumName, id, function () {
-            if (!--count&& typeof callback === 'function') callback();
-        });
+        addToEnum(newEnumName, id, () =>
+            !--count&& typeof callback === 'function' && callback());
     }
 
-    if (!count && typeof callback === 'function') callback();
+    !count && typeof callback === 'function' && callback();
 }
 
-const type_items_len = {
+const typeItemsLen = {
     'uint8be':    1,
     'uint8le':    1,
     'int8be':     1,
@@ -279,7 +277,9 @@ const _dmap = {
     15: 15
 };
 function address2alias(id, address, isDirect, offset) {
-    if (typeof address                 === 'string') address                 = parseInt(address, 10);
+    if (typeof address === 'string') {
+        address = parseInt(address, 10);
+    }
 
     if (id === 'disInputs' || id === 'coils') {
         address = Math.floor(address / 16) * 16 + (isDirect ? _dmap[address % 16] : _rmap[address % 16]);
@@ -291,7 +291,7 @@ function address2alias(id, address, isDirect, offset) {
 }
 
 function createExtendObject(id, objData, callback) {
-    adapter.getObject(id, function (err, oldObj) {
+    adapter.getObject(id, (err, oldObj) => {
         if (!err && oldObj) {
             adapter.extendObject(id, objData, callback);
         } else {
@@ -302,22 +302,18 @@ function createExtendObject(id, objData, callback) {
 
 function processTasks(tasks, callback) {
     if (!tasks || !tasks.length) {
-        if (typeof callback === 'function') callback();
-        return;
+        return typeof callback === 'function' && callback();
     }
     let task = tasks.shift();
     if (task.name === 'add') {
-        createExtendObject(task.id, task.obj, function () {
-            setTimeout(processTasks, 0, tasks, callback);
-        });
+        createExtendObject(task.id, task.obj, () =>
+            setImmediate(processTasks, 0, tasks, callback));
     } else if (task.name === 'del') {
-        adapter.delObject(task.id, function () {
-            setTimeout(processTasks, 0, tasks, callback);
-        });
+        adapter.delObject(task.id, () =>
+            setImmediate(processTasks, 0, tasks, callback));
     } else if (task.name === 'syncEnums') {
-        syncEnums('rooms', task.id, task.obj, function () {
-            setTimeout(processTasks, 0, tasks, callback);
-        });
+        syncEnums('rooms', task.id, task.obj, () =>
+            setImmediate(processTasks, 0, tasks, callback));
     } else {
         throw 'Unknown task';
     }
@@ -359,8 +355,8 @@ function prepareConfig(config) {
         options.config.recon        = parseInt(params.recon, 10)        || 60000;
         options.config.maxBlock     = parseInt(params.maxBlock, 10)     || 100;
         options.config.maxBoolBlock = parseInt(params.maxBoolBlock, 10) || 128;
-        options.config.pulsetime    = parseInt(params.pulsetime         || 1000);
-        options.config.waittime    = parseInt(params.waittime         || 50);
+        options.config.pulsetime    = parseInt(params.pulsetime            || 1000);
+        options.config.waitTime     = parseInt(params.waitTime, 10)     || 50;
     }
 
 
@@ -472,7 +468,11 @@ function prepareConfig(config) {
 function checkDeviceIds(options, config, deviceIds) {
     for (let i = config.length - 1; i >= 0; i--) {
         config[i].deviceId = !options.config.multiDeviceId ? options.config.defaultDeviceId : (config[i].deviceId !== undefined ? parseInt(config[i].deviceId, 10) : options.config.defaultDeviceId);
-        if (isNaN(config[i].deviceId)) config[i].deviceId = options.config.defaultDeviceId;
+
+        if (isNaN(config[i].deviceId)) {
+            config[i].deviceId = options.config.defaultDeviceId;
+        }
+
         if (deviceIds.indexOf(config[i].deviceId) === -1) {
             deviceIds.push(config[i].deviceId);
         }
@@ -558,6 +558,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
 // };
 function iterateAddresses(isBools, deviceId, result, regName, regType, localOptions) {
     const config = result.config;
+
     if (config && config.length) {
         result.addressLow  = 0xFFFFFFFF;
         result.addressHigh = 0;
@@ -579,7 +580,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
                 if ((config[i].type === 'string') || (config[i].type === 'stringle')) {
                     config[i].len = parseInt(config[i].len, 10) || 1;
                 } else {
-                    config[i].len = type_items_len[config[i].type];
+                    config[i].len = typeItemsLen[config[i].type];
                 }
                 config[i].len = config[i].len || 1;
             } else {
@@ -849,7 +850,7 @@ function parseConfig(callback) {
                     if (regs[i].type === 'string') {
                         regs[i].len = parseInt(regs[i].len) || 1;
                     } else {
-                        regs[i].len = type_items_len[regs[i].type];
+                        regs[i].len = typeItemsLen[regs[i].type];
                     }
                     regs[i].len = regs[i].len || 1;
 
@@ -922,7 +923,7 @@ function parseConfig(callback) {
                     if (regs[i].type === 'string') {
                         regs[i].len = parseInt(regs[i].len) || 1;
                     } else {
-                        regs[i].len = type_items_len[regs[i].type];
+                        regs[i].len = typeItemsLen[regs[i].type];
                     }
                     regs[i].len = regs[i].len || 1;
 
@@ -1164,7 +1165,7 @@ function parseConfig(callback) {
         });
 
         // create/ update 'info.connection' object
-        adapter.getObject('info.connection', function (err, obj) {
+        adapter.getObject('info.connection', (err, obj) => {
             if (!obj) {
                 obj = {
                     type: 'state',
@@ -1201,7 +1202,7 @@ function parseConfig(callback) {
             }
         }
 
-        processTasks(tasks, function () {
+        processTasks(tasks, () => {
             oldObjects = [];
             newObjects = [];
             adapter.subscribeStates('*');
@@ -1227,4 +1228,12 @@ function sortByAddress(a, b) {
     let ad = parseFloat(a.address);
     let bd = parseFloat(b.address);
     return ((ad < bd) ? -1 : ((ad > bd) ? 1 : 0));
+}
+
+// If started as allInOne/compact mode => return function to create instance
+if (module && module.parent) {
+    module.exports = startAdapter;
+} else {
+    // or start the instance directly
+    startAdapter();
 }

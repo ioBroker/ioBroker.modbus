@@ -1,6 +1,6 @@
 {
   "name": "iobroker.modbus",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Connect devices oder Modbus protocol to ioBroker",
   "author": {
     "name": "bluefox",
@@ -36,10 +36,10 @@
     "@iobroker/adapter-core": "^1.0.3"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "mocha": "^6.0.2",
+    "gulp": "^4.0.2",
+    "mocha": "^7.0.0",
     "chai": "^4.2.0",
-    "nan": "2.11.1",
+    "nan": "2.14.0",
     "modbus-stack": "^0.2.1"
   },
   "main": "main.js",
