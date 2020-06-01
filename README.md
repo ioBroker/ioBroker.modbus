@@ -187,7 +187,7 @@ There are some programs in folder *test' to test the TCP communication:
 
 ## Changelog
 # 3.0.2 (2020-06-01)
-* (bluefox) Decodes 0xFF00 as coil ON
+* (compton-git) Decodes 0xFF00 as coil ON
 
 # 3.0.1 (2020-01-23)
 * (BlackBird77) Fixes for Serial Timeouts done
