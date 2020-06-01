@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.0.1",
+        "version": "3.0.2",
         "news": {
+            "3.0.2": {
+                "en": "Decodes 0xFF00 as coil ON",
+                "de": "Dekodiert 0xFF00 als Spule EIN",
+                "ru": "Декодирует 0xFF00 как катушка ВКЛ",
+                "pt": "Decodifica 0xFF00 como ON da bobina",
+                "nl": "Decodeert 0xFF00 als spoel AAN",
+                "fr": "Décode 0xFF00 comme bobine ON",
+                "it": "Decodifica 0xFF00 come bobina ON",
+                "es": "Decodifica 0xFF00 como bobina ENCENDIDA",
+                "pl": "Dekoduje 0xFF00 jako cewkę WŁĄCZONĄ",
+                "zh-cn": "将0xFF00解码为线圈ON"
+            },
             "3.0.1": {
                 "en": "Fixes for Serial Timeouts done",
                 "de": "Korrekturen für serielle Timeouts durchgeführt",
