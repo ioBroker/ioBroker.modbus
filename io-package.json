@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.0.3",
+        "version": "3.0.4",
         "news": {
+            "3.0.4": {
+                "en": "Added device ID by export/import\nAdded the write interval parameter\nAdded the disabling of write multiple registers",
+                "de": "Geräte-ID durch Export/Import hinzugefügt\nDer Parameter Schreibintervall wurde hinzugefügt\nDas Deaktivieren des Schreibens mehrerer Register wurde hinzugefügt",
+                "ru": "Добавлен идентификатор устройства при экспорте/импорте\nДобавлен параметр интервала записи\nДобавлено отключение записи нескольких регистров",
+                "pt": "ID do dispositivo adicionada por exportação/importação\nAdicionado o parâmetro de intervalo de gravação\nFoi adicionada a desativação de vários registros de gravação",
+                "nl": "Apparaat-ID toegevoegd door te exporteren/importeren\nDe parameter voor het schrijfinterval toegevoegd\nHet uitschakelen van het schrijven van meerdere registers toegevoegd",
+                "fr": "ID d'appareil ajouté par export/import\nAjout du paramètre d'intervalle d'écriture\nAjout de la désactivation de l'écriture de plusieurs registres",
+                "it": "Aggiunto ID dispositivo per esportazione/importazione\nAggiunto il parametro dell'intervallo di scrittura\nAggiunta la disabilitazione della scrittura di più registri",
+                "es": "ID de dispositivo agregado por exportación/importación\nSe agregó el parámetro de intervalo de escritura\nSe agregó la desactivación de escribir múltiples registros",
+                "pl": "Dodano identyfikator urządzenia według eksportu/importu\nDodano parametr interwału zapisu\nDodano wyłączenie zapisu wielu rejestrów",
+                "zh-cn": "通过导出/导入添加了设备ID\n添加了写入间隔参数\n添加了禁用写入多个寄存器的功能"
+            },
             "3.0.3": {
                 "en": "Corrected error after refactoring",
                 "de": "Fehler nach dem Refactoring behoben",
@@ -214,7 +226,9 @@
             "doNotIncludeAdrInId": false,
             "preserveDotsInId": false,
             "round": 2,
-            "doNotRoundAddressToWord": false
+            "doNotRoundAddressToWord": false,
+            "doNotUseWriteMultipleRegisters": false,
+            "writeInterval": 0
         },
         "disInputs": [],
         "coils": [],

@@ -80,5 +80,77 @@ systemDictionary = {
     "Serial": {                                      "en": "Serial",                                          "de": "Serial",                                          "ru": "Serial",                                          "pt": "Serial",                                          "nl": "serie-",                                          "fr": "En série",                                        "it": "Seriale",                                         "es": "De serie",                                        "pl": "Seryjny",                                         "zh-cn": "序列号"},
     "Baud rate:": {                                  "en": "Baud rate:",                                      "de": "Baud rate:",                                      "ru": "Скорость порта:",                                 "pt": "Taxa de transmissão:",                            "nl": "Baudrate:",                                       "fr": "Débit en bauds:",                                 "it": "Baud rate:",                                      "es": "Velocidad de baudios:",                           "pl": "Szybkość transmisji:",                            "zh-cn": "波特率："},
     "Use direct addresses by aliases:": {            "en": "Use direct addresses by aliases:",                "de": "Direkte Adressen benutzen (bei Aliases):",        "ru": "Использовать прямые адреса при alias:",           "pt": "Use endereços diretos por alias:",                "nl": "Gebruik directe adressen op aliassen:",           "fr": "Utilisez des adresses directes par alias:",       "it": "Usa indirizzi diretti per alias:",                "es": "Use direcciones directas por alias:",             "pl": "Użyj bezpośrednich adresów przez aliasy:",        "zh-cn": "通过别名使用直接地址："},
-    "Select port": {                                 "en": "Select port",                                     "de": "Port wählen",                                     "ru": "Выберите порт",                                   "pt": "Selecione a porta",                               "nl": "Selecteer poort",                                 "fr": "Sélectionnez un port",                            "it": "Seleziona porta",                                 "es": "Seleccionar puerto",                              "pl": "Wybierz port",                                    "zh-cn": "选择端口"}
+    "Select port": {                                 "en": "Select port",                                     "de": "Port wählen",                                     "ru": "Выберите порт",                                   "pt": "Selecione a porta",                               "nl": "Selecteer poort",                                 "fr": "Sélectionnez un port",                            "it": "Seleziona porta",                                 "es": "Seleccionar puerto",                              "pl": "Wybierz port",                                    "zh-cn": "选择端口"},
+    "Do not use Write multiple registers:": {
+        "en": "Do not use Write multiple registers:",
+        "de": "Nicht Mehrere Register schreiben verwenden:",
+        "ru": "Не используйте запись нескольких регистров:",
+        "pt": "Não use Write múltiplo registradores:",
+        "nl": "Gebruik niet meerdere registers schrijven:",
+        "fr": "N'utilisez pas Écrire plusieurs registres:",
+        "it": "Non utilizzare Scrivi più registri:",
+        "es": "No use Escribir registros múltiples:",
+        "pl": "Nie używaj zapisu wielu rejestrów:",
+        "zh-cn": "不要使用写多个寄存器："
+    },
+    "Write interval:": {
+        "en": "Write interval:",
+        "de": "Schreibintervall:",
+        "ru": "Интервал записи:",
+        "pt": "Intervalo de gravação:",
+        "nl": "Schrijfinterval:",
+        "fr": "Intervalle d'écriture:",
+        "it": "Intervallo di scrittura:",
+        "es": "Intervalo de escritura:",
+        "pl": "Interwał zapisu:",
+        "zh-cn": "写间隔："
+    },
+    "ms": {
+        "en": "ms",
+        "de": "ms",
+        "ru": "ms",
+        "pt": "ms",
+        "nl": "ms",
+        "fr": "ms",
+        "it": "ms",
+        "es": "ms",
+        "pl": "ms",
+        "zh-cn": "毫秒"
+    },
+    "Update unchanged states:": {
+        "en": "Update unchanged states:",
+        "de": "Unveränderte Zustände aktualisieren:",
+        "ru": "Обновите неизмененные состояния:",
+        "pt": "Atualize estados inalterados:",
+        "nl": "Ongewijzigde staten bijwerken:",
+        "fr": "Mettre à jour les états inchangés:",
+        "it": "Aggiorna stati invariati:",
+        "es": "Actualizar estados sin cambios:",
+        "pl": "Zaktualizuj niezmienione stany:",
+        "zh-cn": "更新未更改状态："
+    },
+    "do not include address in ID:": {
+        "en": "do not include address in ID:",
+        "de": "Adresse nicht in ID aufnehmen:",
+        "ru": "не включайте адрес в ID:",
+        "pt": "não inclua endereço no ID:",
+        "nl": "adres niet opnemen in ID:",
+        "fr": "n'incluez pas l'adresse dans l'ID:",
+        "it": "non includere l'indirizzo nell'ID:",
+        "es": "no incluya la dirección en la identificación:",
+        "pl": "nie podawaj adresu w ID:",
+        "zh-cn": "在ID中不包含地址："
+    },
+    "preserve dots in ID:": {
+        "en": "preserve dots in ID:",
+        "de": "Punkte in ID beibehalten:",
+        "ru": "сохранить точки в ID:",
+        "pt": "preservar pontos no ID:",
+        "nl": "bewaar stippen in ID:",
+        "fr": "conserver les points dans l'ID:",
+        "it": "conserva punti nell'ID:",
+        "es": "preservar puntos en ID:",
+        "pl": "zachowaj kropki w ID:",
+        "zh-cn": "保留ID中的点："
+    }
 };

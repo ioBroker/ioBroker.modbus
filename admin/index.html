@@ -1,5 +1,5 @@
 <html>
-
+<head>
 <link rel="stylesheet" type="text/css" href="../../lib/css/themes/jquery-ui/redmond/jquery-ui.min.css"/>
 
 <script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
@@ -53,7 +53,7 @@
     .modbus-tab {
         /*overflow: hidden;*/
         position: relative;
-        height: calc(100% - 20px);
+        height: calc(100% - 30px);
         width: 100%;
     }
 
@@ -137,11 +137,16 @@
     #export-dlg .caret {
         display: none;
     }
+
+    #modbus_tab_g {
+        background-image: url(img/plc_back_opacity.png);
+    }
+    input.modbus-params[type=number] {
+        width: 100px;
+    }
 </style>
 
 <script type="text/javascript">
-
-
     var onChange   = null;
     var activePage = '';
     var offsets    = {
@@ -225,14 +230,18 @@
     function getExport(data, id, delimiter) {
         delimiter = delimiter || '\t';
         var text = '';
+        var deviceId = parseInt($('#modbus_deviceId').val(), 10);
 
-        text += 'address' + delimiter +
-                'name' + delimiter +
+        text += 'deviceId'    + delimiter;
+
+        text += 'address'     + delimiter +
+                'name'        + delimiter +
                 'description' + delimiter;
+
         if (id !== 'coils' && id !== 'disInputs') {
-            text += 'unit' + delimiter;
-            text += 'type' + delimiter;
-            text += 'len' + delimiter;
+            text += 'unit'   + delimiter;
+            text += 'type'   + delimiter;
+            text += 'len'    + delimiter;
             text += 'factor' + delimiter;
             text += 'offset' + delimiter;
         }
@@ -249,9 +258,17 @@
         text += '\n';
 
         for (var i = 0; i < data[id].length; i++) {
+            if (data[id][i].deviceId) {
+                text += data[id][i].deviceId + delimiter;
+            } else {
+                text += deviceId + delimiter;
+            }
+
+            text += data[id][i]._address + delimiter;
             text += data[id][i]._address + delimiter;
             text += (data[id][i].name || '') + delimiter;
             text += (data[id][i].description || '') + delimiter;
+
             if (id !== 'coils' && id !== 'disInputs') {
                 text += (data[id][i].unit   || '') + delimiter;
                 text += (data[id][i].type   || '') + delimiter;
@@ -259,11 +276,13 @@
                 text += (data[id][i].factor || 1)  + delimiter;
                 text += (data[id][i].offset || 0)  + delimiter;
             }
+
             text += (data[id][i].role || '') + delimiter;
             text += (data[id][i].room || '') + delimiter;
             if (id === 'coils' || id === 'holdingRegs') {
                 text += (data[id][i].poll ? 'true' : 'false') + delimiter;
                 text += (data[id][i].wp   ? 'true' : 'false') + delimiter;
+
                 if (!data.params.slave) {
                     text += (data[id][i].cw   ? 'true' : 'false') + delimiter;
                 }
@@ -275,6 +294,8 @@
 
     function getImport(data, id, text) {
         var delimiter;
+        var deviceId = parseInt($('#modbus_deviceId').val(), 10);
+
         if (text.indexOf('\t') !== -1) {
             delimiter = '\t';
         } else if (text.indexOf(';') !== -1) {
@@ -292,24 +313,31 @@
         var isAliases = $('#modbus_showAliases').prop('checked');
         var mapping;
         if (id !== 'coils' && id !== 'disInputs') {
-            mapping = ['address', 'name', 'description', 'unit', 'type', 'len', 'factor', 'offset', 'role', 'room'];
+            mapping = ['deviceId', 'address', 'name', 'description', 'unit', 'type', 'len', 'factor', 'offset', 'role', 'room'];
         } else {
-            mapping = ['address', 'name', 'description', 'role', 'room'];
+            mapping = ['deviceId', 'address', 'name', 'description', 'role', 'room'];
         }
 
         for (var i = 0; i < lines.length; i++) {
             var parts = lines[i].split(delimiter);
-            if (parts.length === 1) continue;
+            if (parts.length === 1) {
+                continue;
+            }
             if (parseInt(parts[0].trim(), 10).toString() !== parts[0]) {
                 // may be it is fields description
                 mapping = parts;
                 continue;
             }
             var obj = {};
-            var j = 0;
             for (var m = 0; m < mapping.length; m++) {
                 var val = parts[m].trim();
 
+                if (mapping[m] === 'deviceId') {
+                    var _deviceId = parseInt(val, 10) || 0;
+                    if (_deviceId !== deviceId) {
+                        obj.deviceId = _deviceId;
+                    }
+                } else
                 if (mapping[m] === 'address') {
                     obj._address = parseInt(val, 10) || 0;
                     if (isAliases) {
@@ -336,7 +364,9 @@
                     obj[mapping[m]] = val || '';
                 }
             }
-            if (typeItemsLen[obj.type]) obj.len = typeItemsLen[obj.type];
+            if (typeItemsLen[obj.type]) {
+                obj.len = typeItemsLen[obj.type];
+            }
             data[id].push(obj);
         }
         $('#modbus_' + id).jsGrid('render');
@@ -589,7 +619,7 @@
                             }
                         } else if (typeItemsLen[obj.item.type]) {
                             obj.item.len = parseInt(obj.item.len, 10);
-                            if (obj.item.len != typeItemsLen[obj.item.type]) {
+                            if (obj.item.len !== typeItemsLen[obj.item.type]) {
                                 obj.item.len = typeItemsLen[obj.item.type];
                                 changed = true;
                             }
@@ -617,7 +647,7 @@
                             changed = true;
                         }
 
-                        if (changed) this.render();
+                        changed && this.render();
 
                         onchange();
                     },
@@ -734,15 +764,15 @@
     }
 
     function load(settings, onchange) {
-        $('#btn_loadsymbole').button().click(function () {
+        $('#btn_loadsymbole').button().on('click', function () {
             $('#symol_import').trigger('click')
         });
 
-        $('#btn_loaddb').button().click(function () {
+        $('#btn_loaddb').button().on('click', function () {
             $('#db_import').trigger('click')
         });
 
-        $('.btn_toggle_pool').button().click(function (e, ui) {
+        $('.btn_toggle_pool').button().on('click', function (e, ui) {
             var grid = $(this).parent().data('grid');
             var $grid = $('#' + grid);
 
@@ -755,7 +785,7 @@
             onChange();
         });
 
-        $('.btn_toggle_rw').button().click(function () {
+        $('.btn_toggle_rw').button().on('click', function () {
             var grid = $(this).parent().data('grid');
             var $grid = $('#' + grid);
             var data = $grid.jsGrid('option', 'data');
@@ -768,7 +798,7 @@
 
         });
 
-        $('.btn_toggle_wp').button().click(function () {
+        $('.btn_toggle_wp').button().on('click', function () {
             var grid = $(this).parent().data('grid');
             var $grid = $('#' + grid);
             var data = $grid.jsGrid('option', 'data');
@@ -816,7 +846,7 @@
         })
         .attr('title', _('Export to CSV'))
         .css({width: 24, height: 24})
-        .click(function () {
+        .on('click', function () {
             var id = $(this).data('table');
             // build text
             var text = getExport(data, id);
@@ -825,7 +855,7 @@
             document.execCommand('copy');
         });
 
-        $('#export-dlg').click(function () {
+        $('#export-dlg').on('click', function () {
             $(this).hide();
         });
 
@@ -835,7 +865,7 @@
         })
                 .attr('title', _('Import from CSV'))
                 .css({width: 24, height: 24})
-                .click(function () {
+                .on('click', function () {
                     $('#import-dlg').show().data('table', $(this).data('table'));
                     $('#import_textarea').val('').focus();
                 });
@@ -843,7 +873,7 @@
         $('#import_button_ok').button({
             icons: {primary: 'ui-icon-check'},
             text: _('Export')
-        }).click(function () {
+        }).on('click', function () {
             var $importDlg = $('#import-dlg');
             getImport(data, $importDlg.data('table'), $('#import_textarea').val());
             $importDlg.hide();
@@ -852,7 +882,7 @@
         $('#import_button_cancel').button({
             icons: {primary: 'ui-icon-close'},
             text: _('Close')
-        }).click(function () {
+        }).on('click', function () {
             $('#import-dlg').hide();
         });
 
@@ -862,7 +892,7 @@
         })
         .attr('title', _('Delete all entries'))
         .css({width: 24, height: 24})
-        .click(function () {
+        .on('click', function () {
             if (window.confirm(_('All entries will be deleted. Are you sure?'))) {
                 var id = $(this).data('table');
                 if (data[id].length) {
@@ -872,7 +902,6 @@
                 }
             }
         });
-
 
         if (systemLang === 'de') {
             translate_de();
@@ -1004,7 +1033,9 @@
         $('#modbus_slave').on('change', function () {
             if ($(this).val() === '0') {
                 $('#multiDeviceId').show();
+                $('.master').show();
             } else {
+                $('.master').hide();
                 $('#multiDeviceId').hide();
                 $('#modbus_multiDeviceId').prop('checked', false);
             }
@@ -1140,10 +1171,10 @@
     }
 
 </script>
-
+</head>
+<body>
 <!-- you have to put your config page in a div with id adapter-container -->
-<div id="adapter-container" style="height: calc(100% - 40px);width: calc(100% - 10px); overflow: hidden;">
-
+<div id="adapter-container" style="height: calc(100% - 6px); width: calc(100% - 10px); overflow: hidden;">
     <ul>
         <li><a href="#modbus_tab_g" class="translate">General</a></li>
         <li><a href="#modbus_tab_dis_inputs" class="translate">Inputs</a></li>
@@ -1151,11 +1182,10 @@
         <li><a href="#modbus_tab_input_regs" class="translate">Input Registers</a></li>
         <li><a href="#modbus_tab_holding_regs">Holding Registers</a></li>
     </ul>
-    <div id="modbus_tab_g" style="display: flex;  align-items: center; flex-direction: column;overflow: auto" class="modbus-tab">
+    <div id="modbus_tab_g" style="display: flex;  align-items: center; flex-direction: column; overflow: auto" class="modbus-tab">
         <div class="logo">ModBus</div>
-        <img src="img/plc_back.png" class="back_image">
 
-        <table class="ui-widget-content" style="z-index: 2;margin-top: 60px; border: 1px solid black; border-collapse: collapse; ">
+        <table class="ui-widget-content" style="z-index: 2; margin-top: 60px; border: 1px solid black; border-collapse: collapse; ">
             <tr style="border-bottom: 1px solid black;text-align: center " class="ui-widget-header">
                 <td colspan="2" class="translate">Connection parameters:</td>
             </tr>
@@ -1241,9 +1271,9 @@
             <tr>
                 <td><label class="translate" for="modbus_slave">Type:</label></td>
                 <td>
-                    <select class="modbus-params" id="modbus_slave"  style="width: 100%;">
+                    <select class="modbus-params" id="modbus_slave" style="width: 100%;">
                         <option value="0" class="translate">Master</option>
-                        <option value="1"  class="translate">Slave</option>
+                        <option value="1" class="translate">Slave</option>
                     </select>
                 </td>
             </tr>
@@ -1252,7 +1282,7 @@
             </tr>
         </table>
 
-        <table class="ui-widget-content" style="z-index: 2;margin-top: 20px; border-collapse: collapse; display: inline; border: 1px solid black;">
+        <table class="ui-widget-content" style="z-index: 2; margin-top: 20px; border-collapse: collapse; display: inline; border: 1px solid black;">
             <tr>
                 <td style="text-align: center" colspan="3" class="ui-widget-header translate">General</td>
             </tr>
@@ -1272,57 +1302,67 @@
                 <td><input style="margin-right: 5px; text-align: right" class="modbus-params" type="checkbox" id="modbus_doNotRoundAddressToWord"/></td>
                 <td></td>
             </tr>
-            <tr>
-                <td style="width: 184px"><label class="translate" for="modbus_round">Round Real to:</label></td>
-                <td style="text-align: center"><input style="margin-right: 5px; text-align: right" type="text" class="modbus-params" id="modbus_round"></td>
+            <tr class="master">
+                <td><label class="translate" for="modbus_doNotUseWriteMultipleRegisters">Do not use Write multiple registers:</label></td>
+                <td><input style="margin-right: 5px; text-align: right" class="modbus-params" type="checkbox" id="modbus_doNotUseWriteMultipleRegisters"/></td>
                 <td></td>
             </tr>
             <tr>
+                <td style="width: 184px"><label class="translate" for="modbus_round">Round Real to:</label></td>
+                <td style="text-align: center"><input style="margin-right: 5px; text-align: right" type="number" class="modbus-params" id="modbus_round"></td>
+                <td></td>
+            </tr>
+            <tr class="master">
                 <td><label class="translate" for="modbus_poll">Poll delay:</label></td>
-                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" class="modbus-params" id="modbus_poll"/></td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="number" class="modbus-params" id="modbus_poll"/></td>
                 <td style="padding-right: 20px">ms</td>
             </tr>
-            <tr>
+            <tr class="master">
                 <td><label class="translate" for="modbus_recon">Reconnect time:</label></td>
-                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_recon"></td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="number" class="modbus-params" id="modbus_recon"></td>
                 <td>ms</td>
             </tr>
-            <tr>
+            <tr class="master">
                 <td><label for="modbus_timeout" class="translate">Read timeout:</label></td>
-                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_timeout"></td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="number" class="modbus-params" id="modbus_timeout"></td>
                 <td>ms</td>
             </tr>
-            <tr>
+            <tr class="master">
                 <td><label class="translate" for="modbus_pulsetime">Pulse time:</label></td>
-                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_pulsetime"></td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="number" class="modbus-params" id="modbus_pulsetime"></td>
                 <td>ms</td>
             </tr>
-            <tr>
+            <tr class="master">
                 <td><label class="translate" for="modbus_waitTime">Wait time:</label></td>
-                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_waitTime"></td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="number" class="modbus-params" id="modbus_waitTime"></td>
                 <td>ms</td>
             </tr>
-            <tr>
+            <tr class="master">
                 <td><label class="translate" for="modbus_maxBlock">Max read request length:</label></td>
-                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_maxBlock"></td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="number" class="modbus-params" id="modbus_maxBlock"></td>
                 <td class="translate">registers</td>
             </tr>
-            <tr>
+            <tr class="master">
                 <td><label class="translate" for="modbus_maxBoolBlock">Max read request length (booleans):</label></td>
-                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="text" class="modbus-params" id="modbus_maxBoolBlock"></td>
-                <td class="translate">registers</td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="number" class="modbus-params" id="modbus_maxBoolBlock"></td>
+                <td><span class="translate">registers</span>&nbsp;</td>
             </tr>
-            <tr>
+            <tr class="master">
+                <td><label class="translate" for="modbus_writeInterval">Write interval:</label></td>
+                <td style="text-align: center"><input style="margin-right: 5px;text-align: right" type="number" class="modbus-params" id="modbus_writeInterval"></td>
+                <td class="translate">ms</td>
+            </tr>
+            <tr class="master">
                 <td><label class="translate" for="modbus_alwaysUpdate">Update unchanged states:</label></td>
                 <td><input style="margin-right: 5px;text-align: right" class="modbus-params" type="checkbox" id="modbus_alwaysUpdate"/></td>
             </tr>
             <tr>
                 <td><label class="translate" for="modbus_doNotIncludeAdrInId">do not include address in ID:</label></td>
-                <td><input style="margin-right: 5px;text-align: right" class="modbus-params" type="checkbox" id="modbus_doNotIncludeAdrInId"/></td>
+                <td><input style="margin-right: 5px; text-align: right" class="modbus-params" type="checkbox" id="modbus_doNotIncludeAdrInId"/></td>
             </tr>
             <tr>
                 <td><label class="translate" for="modbus_preserveDotsInId">preserve dots in ID:</label></td>
-                <td><input style="margin-right: 5px;text-align: right" class="modbus-params" type="checkbox" id="modbus_preserveDotsInId"/></td>
+                <td><input style="margin-right: 5px; text-align: right" class="modbus-params" type="checkbox" id="modbus_preserveDotsInId"/></td>
             </tr>
             <tr>
                 <td colspan="3" style="height: 10px"></td>
@@ -1386,5 +1426,5 @@
         </p>
     </div>
 </div>
-
+</body>
 </html>

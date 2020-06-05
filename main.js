@@ -333,6 +333,7 @@ function prepareConfig(config) {
             defaultDeviceId:   (params.deviceId === undefined || params.deviceId === null) ? 1 : (parseInt(params.deviceId, 10) || 0),
             doNotIncludeAdrInId: params.doNotIncludeAdrInId,
             preserveDotsInId:   params.preserveDotsInId,
+            writeInterval:      parseInt(params.writeInterval, 10) || 0,
         },
         devices: {}
     };
@@ -688,14 +689,15 @@ function parseConfig(callback) {
     const params = adapter.config.params;
 
     const localOptions = {
-        multiDeviceId:              options.config.multiDeviceId,
-        showAliases:                (params.showAliases             === true || params.showAliases             === 'true'),
-        doNotRoundAddressToWord:    (params.doNotRoundAddressToWord === true || params.doNotRoundAddressToWord === 'true'),
-        directAddresses:            (params.directAddresses         === true || params.directAddresses         === 'true'),
-        maxBlock:                   options.config.maxBlock,
-        maxBoolBlock:               options.config.maxBoolBlock,
-        doNotIncludeAdrInId:        (params.doNotIncludeAdrInId     === true || params.doNotIncludeAdrInId     === 'true'),
-        preserveDotsInId:           (params.preserveDotsInId        === true || params.preserveDotsInId        === 'true'),
+        multiDeviceId:                  options.config.multiDeviceId,
+        showAliases:                    (params.showAliases                    === true || params.showAliases                    === 'true'),
+        doNotRoundAddressToWord:        (params.doNotRoundAddressToWord        === true || params.doNotRoundAddressToWord        === 'true'),
+        directAddresses:                (params.directAddresses                === true || params.directAddresses                === 'true'),
+        maxBlock:                       options.config.maxBlock,
+        maxBoolBlock:                   options.config.maxBoolBlock,
+        doNotIncludeAdrInId:            (params.doNotIncludeAdrInId            === true || params.doNotIncludeAdrInId            === 'true'),
+        preserveDotsInId:               (params.preserveDotsInId               === true || params.preserveDotsInId               === 'true'),
+        doNotUseWriteMultipleRegisters: (params.doNotUseWriteMultipleRegisters === true || params.doNotUseWriteMultipleRegisters === 'true'),
     };
 
     adapter.getForeignObjects(adapter.namespace + '.*', (err, list) => {
@@ -710,7 +712,9 @@ function parseConfig(callback) {
         let tasks = [];
 
         for (let _deviceId in options.devices) {
-            if (!options.devices.hasOwnProperty(_deviceId)) continue;
+            if (!options.devices.hasOwnProperty(_deviceId)) {
+                continue;
+            }
             let device = options.devices[_deviceId];
             let deviceId = parseInt(_deviceId, 10);
 
@@ -746,246 +750,6 @@ function parseConfig(callback) {
             iterateAddresses(true,  deviceId, device.coils,       'coils',            'coils',       localOptions);
             iterateAddresses(false, deviceId, device.inputRegs,   'inputRegisters',   'inputRegs',   localOptions);
             iterateAddresses(false, deviceId, device.holdingRegs, 'holdingRegisters', 'holdingRegs', localOptions);
-            /*let regs = adapter.config.disInputs;
-            let res  = device.disInputs;
-            if (regs && regs.length) {
-                res.addressLow  = 0xFFFFFFFF;
-                res.addressHigh = 0;
-                for (i = regs.length - 1; i >= 0; i--) {
-                    address = parseInt(regs[i].address, 10);
-
-                    if (address < 0) {
-                        adapter.log.error('Invalid discrete inputs address: ' + address);
-                        regs.splice(i, 1);
-                        continue;
-                    }
-
-                    regs[i].id = 'discreteInputs.';
-                    if (showAliases) {
-                        regs[i].id += address2alias('disInputs', address, directAddresses, res.offset, options.multiDeviceId, regs[i].deviceId);
-                    } else {
-                        regs[i].id += address;
-                    }
-                    regs[i].id += (regs[i].name ? '_' + (regs[i].name.replace('.', '_').replace(' ', '_')) : '');
-                }
-
-                if (regs.length) {
-                    regs.sort(sortByAddress);
-                    if (!doNotRoundAddressToWord) {
-                        res.addressLow = Math.floor(regs[0].address / 16) * 16;
-                    }
-                    res.addressHigh = regs[regs.length - 1].address;
-                    res.length      = res.addressHigh - res.addressLow + 1;
-                    if (!doNotRoundAddressToWord && (res.length % 16)) {
-                        res.length = (Math.floor(res.length / 16) + 1) * 16;
-                    }
-                } else {
-                    res.length = 0;
-                }
-            }
-
-            // Coils
-            regs = adapter.config.coils;
-            res  = device.coils;
-            if (regs && regs.length) {
-                res.addressLow  = 0xFFFFFFFF;
-                res.addressHigh = 0;
-                for (i = regs.length - 1; i >= 0; i--) {
-                    address = parseInt(regs[i].address, 10);
-
-                    if (address < 0) {
-                        adapter.log.error('Invalid coils address: ' + address);
-                        regs.splice(i, 1);
-                        continue;
-                    }
-
-                    regs[i].id = 'coils.';
-                    if (showAliases) {
-                        regs[i].id += address2alias('coils', address, directAddresses, res.offset, options.multiDeviceId, regs[i].deviceId);
-                    } else {
-                        regs[i].id += address;
-                    }
-                    regs[i].id += (regs[i].name ? '_' + (regs[i].name.replace('.', '_').replace(' ', '_')) : '');
-
-                    if (options.config.slave || regs[i].poll) {
-                        if (address < res.addressLow)  res.addressLow  = address;
-                        if (address > res.addressHigh) res.addressHigh = address;
-                    }
-                }
-                if (regs.length) {
-                    regs.sort(sortByAddress);
-                    if (!doNotRoundAddressToWord) {
-                        res.addressLow = Math.floor(res.addressLow / 16) * 16;
-                    }
-
-                    res.length = res.addressHigh - res.addressLow + 1;
-                    if (!doNotRoundAddressToWord && (res.length % 16)) {
-                        res.length = (Math.floor(res.length / 16) + 1) * 16;
-                    }
-                } else {
-                    regs.length = 0;
-                }
-                if (regs.mapping) {
-                    for (i = 0; i <  regs.length; i++) {
-                        regs.mapping[regs[i].address - res.addressLow] = adapter.namespace + '.' + regs[i].id;
-                    }
-                }
-            }
-
-            // Input registers
-            regs = adapter.config.inputRegs;
-            res  = device.inputRegs;
-            if (regs.length) {
-                for (i = regs.length - 1; i >= 0; i--) {
-                    address = parseInt(regs[i].address, 10);
-                    if (address < 0) {
-                        adapter.log.error('Invalid input register address: ' + address);
-                        regs.splice(i, 1);
-                        continue;
-                    }
-
-                    regs[i].type   = regs[i].type || 'uint16be';
-                    regs[i].offset = parseFloat(regs[i].offset) || 0;
-                    regs[i].factor = parseFloat(regs[i].factor) || 1;
-                    if (regs[i].type === 'string') {
-                        regs[i].len = parseInt(regs[i].len) || 1;
-                    } else {
-                        regs[i].len = typeItemsLen[regs[i].type];
-                    }
-                    regs[i].len = regs[i].len || 1;
-
-                    if (!regs[i].len) regs[i].len = parseInt(regs[i].len) || 1;
-
-                    regs[i].id = 'inputRegisters.';
-                    if (showAliases) {
-                        regs[i].id += address2alias('inputRegs', address, directAddresses, res.offset, options.multiDeviceId, regs[i].deviceId);
-                    } else {
-                        regs[i].id += address;
-                    }
-
-                    regs[i].id += (regs[i].name ? '_' + (regs[i].name.replace('.', '_').replace(' ', '_')) : '');
-                }
-
-                lastAddress = null;
-                startIndex = 0;
-                for (i = 0; i < regs.length; i++) {
-                    address = parseInt(regs[i].address, 10);
-                    if (address < 0) continue;
-                    if (lastAddress === null) {
-                        startIndex  = i;
-                        blockStart  = address;
-                        lastAddress = address + regs[i].len;
-                    }
-
-                    // try to detect next block
-                    if (res.blocks) {
-                        if ((address - lastAddress > 10 && regs[i].len < 10) || (lastAddress - blockStart >= options.config.maxBlock)) {
-                            if (res.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
-                                res.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
-                            }
-                            blockStart  = address;
-                            startIndex  = i;
-                        }
-                    }
-                    lastAddress = address + regs[i].len;
-                }
-                if (res.blocks && res.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
-                    res.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
-                }
-                if (regs.length) {
-                    res.addressLow  = regs[0].address;
-                    res.addressHigh = regs[regs.length - 1].address + regs[regs.length - 1].len;
-                    res.length      = res.addressHigh - res.addressLow;
-                } else {
-                    regs.length = 0;
-                }
-            }
-
-            // Holding registers
-            regs = adapter.config.holdingRegs;
-            res  = device.holdingRegs;
-            if (regs.length) {
-                res.addressLow  = 0xFFFFFFFF;
-                res.addressHigh = 0;
-
-                for (i = regs.length - 1; i >= 0; i--) {
-                    address = parseInt(regs[i].address, 10);
-
-                    if (address < 0) {
-                        adapter.log.error('Invalid holding register address: ' + address);
-                        regs.splice(i, 1);
-                        continue;
-                    }
-
-                    regs[i].type   = regs[i].type || 'uint16be';
-                    regs[i].offset = parseFloat(regs[i].offset) || 0;
-                    regs[i].factor = parseFloat(regs[i].factor) || 1;
-                    if (regs[i].type === 'string') {
-                        regs[i].len = parseInt(regs[i].len) || 1;
-                    } else {
-                        regs[i].len = typeItemsLen[regs[i].type];
-                    }
-                    regs[i].len = regs[i].len || 1;
-
-                    regs[i].id = 'holdingRegisters.';
-                    if (showAliases) {
-                        regs[i].id += address2alias('holdingRegs', address, directAddresses, res.offset, options.multiDeviceId, regs[i].deviceId);
-                    } else {
-                        regs[i].id += address;
-                    }
-                    regs[i].id += (regs[i].name ? '_' + (regs[i].name.replace('.', '_').replace(' ', '_')) : '');
-
-                    // collect cyclic write registers
-                    if (regs[i].cw) {
-                        res.cyclicWrite.push(adapter.namespace + '.' + regs[i].id);
-                    }
-
-                    if (options.config.slave || regs[i].poll) {
-                        if (address < res.addressLow)  res.addressLow  = address;
-                        if (address + regs[i].len > res.addressHigh) res.addressHigh = address + regs[i].len;
-                    }
-                }
-
-                lastAddress = null;
-                startIndex = 0;
-                for (i = 0; i < regs.length; i++) {
-                    address = parseInt(regs[i].address, 10);
-                    if (address < 0) continue;
-                    if (lastAddress === null) {
-                        startIndex  = i;
-                        blockStart  = address;
-                        lastAddress = address + regs[i].len;
-                    }
-                    // try to detect next block
-                    if (res.blocks) {
-                        if ((address - lastAddress > 10 && regs[i].len < 10) || (lastAddress - blockStart >= options.config.maxBlock)) {
-                            if (res.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
-                                res.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
-                            }
-                            blockStart  = address;
-                            startIndex  = i;
-                        }
-                    }
-                    lastAddress = address + regs[i].len;
-                }
-                if (res.blocks && res.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
-                    res.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
-                }
-
-                if (regs.length) {
-                    res.length = res.addressHigh - res.addressLow;
-                } else {
-                    res.length = 0;
-                }
-
-                lastAddress = null;
-
-                if (regs.mapping) {
-                    for (i = 0; i < regs.length; i++) {
-                        res.mapping[regs[i].address - res.addressLow] = adapter.namespace + '.' + regs[i].id;
-                    }
-                }
-            }*/
 
             // ------------- create states and objects ----------------------------
             checkObjects(adapter.config, 'disInputs',   'discreteInputs',   'Discrete inputs',   tasks, newObjects);
@@ -999,153 +763,6 @@ function parseConfig(callback) {
                 device.inputRegs.fullIds   = adapter.config.inputRegs  .filter(e => e.deviceId === deviceId).map(e => e.fullId);
                 device.holdingRegs.fullIds = adapter.config.holdingRegs.filter(e => e.deviceId === deviceId).map(e => e.fullId);
             }
-
-            /*for (i = 0; regs.length > i; i++) {
-                id = adapter.namespace + '.' + regs[i].id;
-                regs[i].fullId = id;
-                objects[id] = {
-                    _id: regs[i].id,
-                    type: 'state',
-                    common: {
-                        name:    regs[i].description,
-                        role:    regs[i].role,
-                        type:    'boolean',
-                        read:    true,
-                        write:   false,
-                        def:     false
-                    },
-                    native: {
-                        regType:  'disInputs',
-                        address:   regs[i].address
-                    }
-                };
-                tasks.push({
-                    id: regs[i].id,
-                    name: 'add',
-                    obj: objects[id]
-                });
-                tasks.push({
-                    id: id,
-                    name: 'syncEnums',
-                    obj: regs[i].room
-                });
-                newObjects.push(id);
-            }
-
-            regs = adapter.config.coils;
-            for (i = 0; regs.length > i; i++) {
-                id = adapter.namespace + '.' + regs[i].id;
-                regs[i].fullId = id;
-                objects[id] = {
-                    _id: regs[i].id,
-                    type: 'state',
-                    common: {
-                        name:    regs[i].description,
-                        role:    regs[i].role,
-                        type:    'boolean',
-                        read:    true,
-                        write:   true,
-                        def:     false
-                    },
-                    native: {
-                        regType:   'coils',
-                        address:   regs[i].address,
-
-                        poll:      regs[i].poll,
-                        wp:        regs[i].wp
-                    }
-                };
-
-                tasks.push({
-                    id: regs[i].id,
-                    name: 'add',
-                    obj: objects[id]
-                });
-                tasks.push({
-                    id: id,
-                    name: 'syncEnums',
-                    obj: regs[i].room
-                });
-                newObjects.push(id);
-            }
-
-            regs = adapter.config.inputRegs;
-            for (i = 0; regs.length > i; i++) {
-                id = adapter.namespace + '.' + regs[i].id;
-                regs[i].fullId = id;
-                objects[id] = {
-                    _id: regs[i].id,
-                    type: 'state',
-                    common: {
-                        name:    regs[i].description,
-                        role:    regs[i].role,
-                        type:    'number',
-                        read:    true,
-                        write:   false,
-                        def:     0,
-                        unit:    regs[i].unit || ''
-                    },
-                    native: {
-                        regType:  'inputRegs',
-                        address:   regs[i].address,
-                        type:      regs[i].type,
-                        len:       regs[i].len,
-                        offset:    regs[i].offset,
-                        factor:    regs[i].factor
-                    }
-                };
-                tasks.push({
-                    id: regs[i].id,
-                    name: 'add',
-                    obj: objects[id]
-                });
-                tasks.push({
-                    id: id,
-                    name: 'syncEnums',
-                    obj: regs[i].room
-                });
-                newObjects.push(id);
-            }
-
-            regs = adapter.config.holdingRegs;
-            for (i = 0; regs.length > i; i++) {
-                id = adapter.namespace + '.' + regs[i].id;
-                regs[i].fullId = id;
-                objects[id] = {
-                    _id: regs[i].id,
-                    type: 'state',
-                    common: {
-                        name:    regs[i].description,
-                        role:    regs[i].role,
-                        type:    'number',
-                        read:    true,
-                        write:   true,
-                        def:     0,
-                        unit:    regs[i].unit || ''
-                    },
-                    native: {
-                        regType:   'holdingRegs',
-                        address:   regs[i].address,
-                        poll:      regs[i].poll,
-                        // wp:        adapter.config.coils[i].wp
-                        type:      regs[i].type,
-                        len:       regs[i].len,
-                        offset:    regs[i].offset,
-                        factor:    regs[i].factor
-                    }
-                };
-                tasks.push({
-                    id: regs[i].id,
-                    name: 'add',
-                    obj: objects[id]
-                });
-                tasks.push({
-                    id: id,
-                    name: 'syncEnums',
-                    obj: regs[i].room
-                });
-                newObjects.push(id);
-            }*/
 
             if (!options.config.multiDeviceId) {
                 break;
@@ -1215,9 +832,9 @@ function main() {
     parseConfig(options => {
         let Modbus;
         if (options.config.slave) {
-            Modbus = require(__dirname + '/lib/slave');
+            Modbus = require('./lib/slave');
         } else {
-            Modbus = require(__dirname + '/lib/master');
+            Modbus = require('./lib/master');
         }
         modbus = new Modbus(options, adapter);
         modbus.start();
