@@ -302,18 +302,18 @@ function createExtendObject(id, objData, callback) {
 
 function processTasks(tasks, callback) {
     if (!tasks || !tasks.length) {
-        return typeof callback === 'function' && callback();
+        return callback();
     }
     let task = tasks.shift();
     if (task.name === 'add') {
         createExtendObject(task.id, task.obj, () =>
-            setImmediate(processTasks, 0, tasks, callback));
+            setImmediate(processTasks, tasks, callback));
     } else if (task.name === 'del') {
         adapter.delObject(task.id, () =>
-            setImmediate(processTasks, 0, tasks, callback));
+            setImmediate(processTasks, tasks, callback));
     } else if (task.name === 'syncEnums') {
         syncEnums('rooms', task.id, task.obj, () =>
-            setImmediate(processTasks, 0, tasks, callback));
+            setImmediate(processTasks, tasks, callback));
     } else {
         throw 'Unknown task';
     }

@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.0.2",
+        "version": "3.0.3",
         "news": {
+            "3.0.3": {
+                "en": "Corrected error after refactoring",
+                "de": "Fehler nach dem Refactoring behoben",
+                "ru": "Исправлена ошибка после рефакторинга",
+                "pt": "Erro corrigido após refatoração",
+                "nl": "Gecorrigeerde fout na refactoring",
+                "fr": "Erreur corrigée après refactoring",
+                "it": "Errore corretto dopo il refactoring",
+                "es": "Error corregido después de refactorizar",
+                "pl": "Poprawiony błąd po refaktoryzacji",
+                "zh-cn": "重构后纠正错误"
+            },
             "3.0.2": {
                 "en": "Decodes 0xFF00 as coil ON",
                 "de": "Dekodiert 0xFF00 als Spule EIN",

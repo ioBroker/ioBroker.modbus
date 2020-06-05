@@ -1,8 +1,10 @@
-/* jshint -W097 */// jshint strict:false
-/*jslint node: true */
-/*jshint expr: true*/
+/* jshint -W097 */
+/* jshint strict: false */
+/* jslint node: true */
+/* jshint expr: true */
+'use strict';
 var expect = require('chai').expect;
-var setup  = require(__dirname + '/lib/setup');
+var setup  = require('./lib/setup');
 
 var objects = null;
 var states  = null;
@@ -74,7 +76,7 @@ function sendTo(target, command, message, callback) {
     });
 }
 
-describe('Test ' + adapterShortName + ' adapter', function() {
+describe('Test ' + adapterShortName + ' adapter', function () {
     before('Test ' + adapterShortName + ' adapter: Start js-controller', function (_done) {
         this.timeout(600000); // because of first install from npm
 
@@ -88,7 +90,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 
             setup.setAdapterConfig(config.common, config.native);
 
-            setup.startController(true, function(id, obj) {}, function (id, state) {
+            setup.startController(true, function (id, obj) {}, function (id, state) {
                     if (onStateChanged) onStateChanged(id, state);
                 },
                 function (_objects, _states) {
