@@ -4,9 +4,9 @@ os:
   - windows
 language: node_js
 node_js:
-  - '8'
   - '10'
   - '12'
+  - '14'
 before_install:
   - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export CC=clang++; export CXX=clang++; export CXXFLAGS=-std=c++11; fi'
   - 'if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CXX=g++-6; fi'

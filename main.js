@@ -33,10 +33,13 @@ function startAdapter(options) {
                     if (obj.callback) {
                         if (serialport) {
                             // read all found serial ports
-                            serialport.list((err, ports) => {
+                            serialport.list.then(ports => {
                                 listSerial(ports);
                                 adapter.log.info('List of port: ' + JSON.stringify(ports));
                                 adapter.sendTo(obj.from, obj.command, ports, obj.callback);
+                            }).catch(err => {
+                                adapter.log.warn('Can not get Serial port list: ' + err);
+                                adapter.sendTo(obj.from, obj.command, [{path: 'Not available'}], obj.callback);
                             });
                         } else {
                             adapter.log.warn('Module serialport is not available');
@@ -84,7 +87,9 @@ function stop(callback) {
         adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
     }
 
-    typeof callback === 'function' && callback();
+    if (callback === 'function') {
+        return void callback();
+    }
 
     adapter.terminate ?
         adapter.terminate() :
