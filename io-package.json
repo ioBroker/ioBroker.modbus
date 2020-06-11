@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.1.0",
+        "version": "3.1.1",
         "news": {
+            "3.1.1": {
+                "en": "Add Sentry crash reporting when used with js-controller >=3.x",
+                "de": "Fügen Sie Sentry-Absturzberichte hinzu, wenn Sie mit js-controller> = 3.x verwenden",
+                "ru": "Добавить отчет о сбое Sentry при использовании с js-controller> = 3.x",
+                "pt": "Adicionar relatório de falha do Sentry quando usado com js-controller> = 3.x",
+                "nl": "Voeg Sentry-crashrapportage toe bij gebruik met js-controller> = 3.x",
+                "fr": "Ajouter un rapport d'incident Sentry lorsqu'il est utilisé avec js-controller> = 3.x",
+                "it": "Aggiungi il rapporto sugli arresti anomali di Sentry quando utilizzato con js-controller> = 3.x",
+                "es": "Agregue informes de fallas de Sentry cuando se use con js-controller> = 3.x",
+                "pl": "Dodaj raportowanie awarii Sentry, jeśli jest używane z js-controller> = 3.x",
+                "zh-cn": "与js-controller> = 3.x一起使用时添加Sentry崩溃报告"
+            },
             "3.1.0": {
                 "en": "Make sure that regular adapter stops do not terminate the process, so that scheduled restarts still work\nupdate serialport, support nodejs 12/14",
                 "de": "Stellen Sie sicher, dass regelmäßige Adapterstopps den Prozess nicht beenden, damit geplante Neustarts weiterhin funktionieren\nSerialport aktualisieren, NodeJJ 12/14 unterstützen",
@@ -207,6 +219,11 @@
             "minWidth": 1024,
             "width": 1224,
             "height": 600
+        },
+        "plugins": {
+            "sentry": {
+                "dsn": "https://0c7b6d766435448cbf4908f615efe683@sentry.iobroker.net/84"
+            }
         }
     },
     "native": {

@@ -6,6 +6,8 @@
 
 [![NPM](https://nodei.co/npm/iobroker.modbus.png?downloads=true)](https://nodei.co/npm/iobroker.modbus/)
 
+**This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
+
 Implementation of ModBus Slave and Master for ioBroker. Following types are supported:
 - Modbus RTU over serial (master)
 - Modbus RTU over TCP (master)
@@ -192,6 +194,9 @@ There are some programs in folder *test' to test the TCP communication:
 - mod_RSsim.exe is slave simulator. It can be that you need [Microsoft Visual C++ 2008 SP1 Redistributable Package](https://www.microsoft.com/en-us/download/details.aspx?id=5582) to start it (because of SideBySide error).
 
 ## Changelog
+
+### 3.1.1 (2020-06-11)
+* (Apollon77) Add Sentry crash reporting when used with js-controller >=3.x
 
 ### 3.1.0 (2020-06-11)
 * (Apollon77) Make sure that regular adapter stops do not terminate the process, so that scheduled restarts still work
