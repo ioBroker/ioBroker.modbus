@@ -87,7 +87,7 @@ function stop(callback) {
         adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
     }
 
-    if (callback === 'function') {
+    if (typeof callback === 'function') {
         return void callback();
     }
 

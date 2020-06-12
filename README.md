@@ -195,6 +195,9 @@ There are some programs in folder *test' to test the TCP communication:
 
 ## Changelog
 
+### __WORK IN PROGRESS__
+* (Apollon77) fix scheduled restart
+
 ### 3.1.2 (2020-06-12)
 * (Apollon77) fix serialport list for Admin
 
