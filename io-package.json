@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.1.1",
+        "version": "3.1.2",
         "news": {
+            "3.1.2": {
+                "en": "fix serialport list for Admin",
+                "de": "Korrigieren Sie die Serialport-Liste für Admin",
+                "ru": "исправить список последовательных портов для администратора",
+                "pt": "corrigir lista serialport para Admin",
+                "nl": "seriële poortlijst voor Admin repareren",
+                "fr": "correction de la liste des ports série pour l'administrateur",
+                "it": "correzione dell'elenco delle porte seriali per l'amministratore",
+                "es": "arreglar la lista de puerto serie para Admin",
+                "pl": "napraw listę portów szeregowych dla administratora",
+                "zh-cn": "修复管理员的串行端口列表"
+            },
             "3.1.1": {
                 "en": "Add Sentry crash reporting when used with js-controller >=3.x",
                 "de": "Fügen Sie Sentry-Absturzberichte hinzu, wenn Sie mit js-controller> = 3.x verwenden",

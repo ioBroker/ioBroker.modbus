@@ -195,6 +195,9 @@ There are some programs in folder *test' to test the TCP communication:
 
 ## Changelog
 
+### 3.1.2 (2020-06-12)
+* (Apollon77) fix serialport list for Admin
+
 ### 3.1.1 (2020-06-11)
 * (Apollon77) Add Sentry crash reporting when used with js-controller >=3.x
 
