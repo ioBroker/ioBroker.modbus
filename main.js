@@ -33,7 +33,7 @@ function startAdapter(options) {
                     if (obj.callback) {
                         if (serialport) {
                             // read all found serial ports
-                            serialport.list.then(ports => {
+                            serialport.list().then(ports => {
                                 listSerial(ports);
                                 adapter.log.info('List of port: ' + JSON.stringify(ports));
                                 adapter.sendTo(obj.from, obj.command, ports, obj.callback);
