@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.1.3",
+        "version": "3.1.4",
         "news": {
+            "3.1.4": {
+                "en": "Fix some Sentry crash reports (IOBROKER-MODBUS-4, IOBROKER-MODBUS-7, IOBROKER-MODBUS-6)\nChange the way adapter restarts when reconnections do not help",
+                "de": "Behebung einiger Sentry-Absturzberichte (IOBROKER-MODBUS-4, IOBROKER-MODBUS-7, IOBROKER-MODBUS-6)\nÄndern Sie die Art und Weise, wie der Adapter neu gestartet wird, wenn Wiederverbindungen nicht helfen",
+                "ru": "Исправлены некоторые сообщения о сбоях Sentry (IOBROKER-MODBUS-4, IOBROKER-MODBUS-7, IOBROKER-MODBUS-6)\nИзмените способ перезапуска адаптера, если переподключения не помогают",
+                "pt": "Corrija alguns relatórios de falha do Sentry (IOBROKER-MODBUS-4, IOBROKER-MODBUS-7, IOBROKER-MODBUS-6)\nAlterar a maneira como o adaptador reinicia quando as reconexões não ajudam",
+                "nl": "Enkele Sentry-crashrapporten repareren (IOBROKER-MODBUS-4, IOBROKER-MODBUS-7, IOBROKER-MODBUS-6)\nWijzig de manier waarop de adapter opnieuw opstart wanneer opnieuw verbinden niet helpt",
+                "fr": "Correction de certains rapports d'erreur Sentry (IOBROKER-MODBUS-4, IOBROKER-MODBUS-7, IOBROKER-MODBUS-6)\nModifier la façon dont l'adaptateur redémarre lorsque les reconnexions n'aident pas",
+                "it": "Risolti alcuni rapporti sugli arresti anomali di Sentry (IOBROKER-MODBUS-4, IOBROKER-MODBUS-7, IOBROKER-MODBUS-6)\nModificare il modo in cui l'adattatore si riavvia quando le riconnessioni non aiutano",
+                "es": "Solucione algunos informes de bloqueo de Sentry (IOBROKER-MODBUS-4, IOBROKER-MODBUS-7, IOBROKER-MODBUS-6)\nCambie la forma en que se reinicia el adaptador cuando las reconexiones no ayudan",
+                "pl": "Napraw niektóre raporty o awariach Sentry (IOBROKER-MODBUS-4, IOBROKER-MODBUS-7, IOBROKER-MODBUS-6)\nZmień sposób ponownego uruchamiania adaptera, gdy ponowne połączenia nie pomogą",
+                "zh-cn": "修复一些Sentry崩溃报告（IOBROKER-MODBUS-4，IOBROKER-MODBUS-7，IOBROKER-MODBUS-6）\n更改重新连接无济于事时适配器重新启动的方式"
+            },
             "3.1.3": {
                 "en": "fix scheduled restart",
                 "de": "Beheben Sie den geplanten Neustart",
