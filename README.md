@@ -195,7 +195,7 @@ There are some programs in folder *test' to test the TCP communication:
 
 ## Changelog
 
-### __WORK IN PROGRESS__
+### 3.1.5 (2020-06-29)
 * (Apollon77) Fix some Sentry crash reports (IOBROKER-MODBUS-F)
 
 ### 3.1.4 (2020-06-24)

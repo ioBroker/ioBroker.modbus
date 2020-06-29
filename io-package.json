@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.1.4",
+        "version": "3.1.5",
         "news": {
+            "3.1.5": {
+                "en": "Fix some Sentry crash reports (IOBROKER-MODBUS-F)",
+                "de": "Behebung einiger Sentry-Absturzberichte (IOBROKER-MODBUS-F)",
+                "ru": "Исправлены некоторые сообщения о сбоях в Sentry (IOBROKER-MODBUS-F)",
+                "pt": "Corrigir alguns relatórios de falha do Sentry (IOBROKER-MODBUS-F)",
+                "nl": "Enkele Sentry-crashrapporten repareren (IOBROKER-MODBUS-F)",
+                "fr": "Correction de certains rapports d'erreur Sentry (IOBROKER-MODBUS-F)",
+                "it": "Risolti alcuni rapporti sugli arresti anomali di Sentry (IOBROKER-MODBUS-F)",
+                "es": "Arreglar algunos informes de bloqueo de Centinela (IOBROKER-MODBUS-F)",
+                "pl": "Napraw niektóre raporty o awariach Sentry (IOBROKER-MODBUS-F)",
+                "zh-cn": "修复了一些Sentry崩溃报告（IOBROKER-MODBUS-F）"
+            },
             "3.1.4": {
                 "en": "Fix some Sentry crash reports (IOBROKER-MODBUS-4, IOBROKER-MODBUS-7, IOBROKER-MODBUS-6)\nChange the way adapter restarts when reconnections do not help",
                 "de": "Behebung einiger Sentry-Absturzberichte (IOBROKER-MODBUS-4, IOBROKER-MODBUS-7, IOBROKER-MODBUS-6)\nÄndern Sie die Art und Weise, wie der Adapter neu gestartet wird, wenn Wiederverbindungen nicht helfen",
