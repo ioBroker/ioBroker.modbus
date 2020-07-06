@@ -195,6 +195,9 @@ There are some programs in folder *test' to test the TCP communication:
 
 ## Changelog
 
+### 3.1.6 (2020-07-06)
+* (bluefox) Fix some Sentry crash reports (IOBROKER-MODBUS-J)
+
 ### 3.1.5 (2020-06-29)
 * (Apollon77) Fix some Sentry crash reports (IOBROKER-MODBUS-F)
 

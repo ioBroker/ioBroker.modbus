@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.1.5",
+        "version": "3.1.6",
         "news": {
+            "3.1.6": {
+                "en": "Fix some Sentry crash reports (IOBROKER-MODBUS-О)",
+                "de": "Behebung einiger Sentry-Absturzberichte (IOBROKER-MODBUS-О)",
+                "ru": "Исправлены некоторые сообщения о сбоях в Sentry (IOBROKER-MODBUS-О)",
+                "pt": "Corrigir alguns relatórios de falha do Sentry (IOBROKER-MODBUS-О)",
+                "nl": "Enkele Sentry-crashrapporten repareren (IOBROKER-MODBUS-О)",
+                "fr": "Correction de certains rapports d'erreur Sentry (IOBROKER-MODBUS-О)",
+                "it": "Risolti alcuni rapporti sugli arresti anomali di Sentry (IOBROKER-MODBUS-О)",
+                "es": "Arreglar algunos informes de bloqueo de Centinela (IOBROKER-MODBUS-О)",
+                "pl": "Napraw niektóre raporty o awariach Sentry (IOBROKER-MODBUS-О)",
+                "zh-cn": "修复了一些Sentry崩溃报告（IOBROKER-MODBUS-О）"
+            },
             "3.1.5": {
                 "en": "Fix some Sentry crash reports (IOBROKER-MODBUS-F)",
                 "de": "Behebung einiger Sentry-Absturzberichte (IOBROKER-MODBUS-F)",
