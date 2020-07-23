@@ -619,7 +619,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
             }
 
             // collect cyclic write registers
-            if (config[i].cw) {
+            if (config[i].cw && Array.isArray(result.cyclicWrite)) {
                 result.cyclicWrite.push(adapter.namespace + '.' + config[i].id);
             }
 
