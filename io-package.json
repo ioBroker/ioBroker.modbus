@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.1.6",
+        "version": "3.1.7",
         "news": {
+            "3.1.7": {
+                "en": "Fix some Sentry crash reports (IOBROKER-MODBUS-N)",
+                "de": "Behebung einiger Sentry-Absturzberichte (IOBROKER-MODBUS-N)",
+                "ru": "Исправлены некоторые отчеты о сбоях в Sentry (IOBROKER-MODBUS-N)",
+                "pt": "Corrigir alguns relatórios de falha do Sentry (IOBROKER-MODBUS-N)",
+                "nl": "Enkele Sentry-crashrapporten repareren (IOBROKER-MODBUS-N)",
+                "fr": "Correction de certains rapports de plantage Sentry (IOBROKER-MODBUS-N)",
+                "it": "Risolti alcuni rapporti sugli arresti anomali di Sentry (IOBROKER-MODBUS-N)",
+                "es": "Repare algunos informes de bloqueo de Sentry (IOBROKER-MODBUS-N)",
+                "pl": "Napraw niektóre raporty o awariach Sentry (IOBROKER-MODBUS-N)",
+                "zh-cn": "修复一些Sentry崩溃报告（IOBROKER-MODBUS-N）"
+            },
             "3.1.6": {
                 "en": "Fix some Sentry crash reports (IOBROKER-MODBUS-О)",
                 "de": "Behebung einiger Sentry-Absturzberichte (IOBROKER-MODBUS-О)",
@@ -223,28 +235,6 @@
                 "it": "Ottimizza la gestione della riconnessione",
                 "es": "Optimizar el manejo de reconexión",
                 "pl": "Zoptymalizuj obsługę ponownego połączenia"
-            },
-            "1.1.0": {
-                "en": "Upgrade Serialport Library, Little endian strings added",
-                "de": "Upgrade Serialport Library, Little Endian Strings hinzugefügt",
-                "ru": "Обновление библиотеки Serialport, добавлены небольшие строки endian",
-                "pt": "Upgrade Serialport Library, Little endian strings adicionado",
-                "nl": "Upgrade Serialport-bibliotheek, Little endian strings toegevoegd",
-                "fr": "Mettre à niveau la bibliothèque Serialport, ajouter des chaînes little endian",
-                "it": "Esegui l'upgrade della libreria Serialport, aggiungendo piccoli stringhe endian",
-                "es": "Actualizar Serialport Library, pequeñas cadenas de endian agregadas",
-                "pl": "Zaktualizuj Bibliotekę Serialport, dodano małe łańcuchy endian"
-            },
-            "1.0.2": {
-                "en": "Fixed read of coils",
-                "de": "Das Lesen von Coils wurde korrigiert",
-                "ru": "Исправлено считывание coils",
-                "pt": "Leitura fixa de coils",
-                "nl": "Vast lezen van coils",
-                "fr": "Lecture fixe des coils",
-                "it": "Risolto il problema della lettura delle coils",
-                "es": "Lectura fija de coils",
-                "pl": "Naprawiono odczyt coils"
             }
         },
         "title": "ModBus",
