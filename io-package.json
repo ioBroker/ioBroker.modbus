@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.1.7",
+        "version": "3.1.8",
         "news": {
+            "3.1.8": {
+                "en": "Prevent crash case (Sentry IOBROKER-MODBUS-1C)",
+                "de": "Absturz verhindern (Sentry IOBROKER-MODBUS-1C)",
+                "ru": "Предотвращение сбоя (Sentry IOBROKER-MODBUS-1C)",
+                "pt": "Prevenir caso de travamento (Sentry IOBROKER-MODBUS-1C)",
+                "nl": "Voorkom crash case (Sentry IOBROKER-MODBUS-1C)",
+                "fr": "Prévenir les cas de crash (Sentry IOBROKER-MODBUS-1C)",
+                "it": "Prevenire il crash case (Sentry IOBROKER-MODBUS-1C)",
+                "es": "Caso de prevención de accidentes (Sentry IOBROKER-MODBUS-1C)",
+                "pl": "Zapobiegaj awariom (Sentry IOBROKER-MODBUS-1C)",
+                "zh-cn": "防止崩溃情况（Sentry IOBROKER-MODBUS-1C）"
+            },
             "3.1.7": {
                 "en": "Fix some Sentry crash reports (IOBROKER-MODBUS-N)",
                 "de": "Behebung einiger Sentry-Absturzberichte (IOBROKER-MODBUS-N)",
@@ -224,17 +236,6 @@
                 "it": "Aggiunto il supporto di più ID dispositivo",
                 "es": "Se agregó la compatibilidad con múltiples ID de dispositivo",
                 "pl": "Dodano obsługę wielu identyfikatorów urządzeń"
-            },
-            "1.1.1": {
-                "en": "Optimize reconnect handling",
-                "de": "Optimieren Sie die Verbindungswiederherstellung",
-                "ru": "Оптимизировать переподключение обработки",
-                "pt": "Otimizar o manuseio de reconexão",
-                "nl": "Optimaliseer de verbinding opnieuw verbinden",
-                "fr": "Optimisez la gestion de la reconnexion",
-                "it": "Ottimizza la gestione della riconnessione",
-                "es": "Optimizar el manejo de reconexión",
-                "pl": "Zoptymalizuj obsługę ponownego połączenia"
             }
         },
         "title": "ModBus",
