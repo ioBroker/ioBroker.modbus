@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.1.9",
+        "version": "3.1.10",
         "news": {
+            "3.1.10": {
+                "en": "Corrected: the exported data cannot be imported without modification",
+                "de": "Korrigiert: Die exportierten Daten können nicht ohne Änderung importiert werden",
+                "ru": "Исправлено: экспортированные данные нельзя импортировать без изменений.",
+                "pt": "Corrigido: os dados exportados não podem ser importados sem modificação",
+                "nl": "Gecorrigeerd: de geëxporteerde gegevens kunnen niet zonder wijziging worden geïmporteerd",
+                "fr": "Corrigé: les données exportées ne peuvent pas être importées sans modification",
+                "it": "Corretto: i dati esportati non possono essere importati senza modifiche",
+                "es": "Corregido: los datos exportados no se pueden importar sin modificación",
+                "pl": "Poprawiono: wyeksportowanych danych nie można importować bez modyfikacji",
+                "zh-cn": "已更正：导出的数据未经修改就无法导入"
+            },
             "3.1.9": {
                 "en": "Prevent crash case (Sentry IOBROKER-MODBUS-1C)",
                 "de": "Absturz verhindern (Sentry IOBROKER-MODBUS-1C)",
@@ -225,17 +237,6 @@
                 "it": "L'errore con la lettura dei blocchi è stato corretto\nÈ stata implementata la lettura dei blocchi per i valori discreti",
                 "es": "El error con la lectura de bloques fue arreglado\nSe implementó la lectura de bloques para valores discretos",
                 "pl": "Naprawiono błąd z odczytem bloków\nWprowadzono odczyt blokowy dla wartości dyskretnych"
-            },
-            "2.0.1": {
-                "en": "Added the support of multiple device IDs",
-                "de": "Die Unterstützung mehrerer Geräte-IDs wurde hinzugefügt",
-                "ru": "Добавлена ​​поддержка нескольких идентификаторов устройств",
-                "pt": "Adicionado o suporte de vários IDs de dispositivos",
-                "nl": "De ondersteuning van meerdere apparaat-ID's toegevoegd",
-                "fr": "Ajout de la prise en charge de plusieurs ID de périphérique",
-                "it": "Aggiunto il supporto di più ID dispositivo",
-                "es": "Se agregó la compatibilidad con múltiples ID de dispositivo",
-                "pl": "Dodano obsługę wielu identyfikatorów urządzeń"
             }
         },
         "title": "ModBus",
