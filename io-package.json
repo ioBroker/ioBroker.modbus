@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.1.10",
+        "version": "3.1.11",
         "news": {
+            "3.1.11": {
+                "en": "fix admin serial port selection",
+                "de": "Korrektur der Auswahl der seriellen Admin-Schnittstelle",
+                "ru": "исправить выбор последовательного порта администратора",
+                "pt": "corrigir seleção de porta serial de administrador",
+                "nl": "reparatie seriële poort selectie",
+                "fr": "correction de la sélection du port série administrateur",
+                "it": "correggere la selezione della porta seriale dell'amministratore",
+                "es": "arreglar la selección del puerto serial del administrador",
+                "pl": "naprawić wybór portu szeregowego administratora",
+                "zh-cn": "修复管理员串行端口选择"
+            },
             "3.1.10": {
                 "en": "Corrected: the exported data cannot be imported without modification",
                 "de": "Korrigiert: Die exportierten Daten können nicht ohne Änderung importiert werden",
@@ -226,17 +238,6 @@
                 "it": "Risolto l'arrotondamento dei numeri",
                 "es": "Se corrigió el redondeo de números",
                 "pl": "Naprawiono zaokrąglanie liczb"
-            },
-            "2.0.2": {
-                "en": "The error with blocks reading was fixed\nThe block reading for discrete values was implemented",
-                "de": "Der Fehler beim Lesen der Blöcke wurde behoben\nDas Blocklesen für diskrete Werte wurde implementiert",
-                "ru": "Исправлена ​​ошибка с чтением блоков\nБыло реализовано считывание блока для дискретных значений",
-                "pt": "O erro com a leitura dos blocos foi corrigido\nA leitura de bloco para valores discretos foi implementada",
-                "nl": "De fout met het lezen van blokken was opgelost\nDe blokwaarde voor discrete waarden is geïmplementeerd",
-                "fr": "L'erreur avec la lecture des blocs a été corrigée\nLa lecture du bloc pour les valeurs discrètes a été implémentée",
-                "it": "L'errore con la lettura dei blocchi è stato corretto\nÈ stata implementata la lettura dei blocchi per i valori discreti",
-                "es": "El error con la lectura de bloques fue arreglado\nSe implementó la lectura de bloques para valores discretos",
-                "pl": "Naprawiono błąd z odczytem bloków\nWprowadzono odczyt blokowy dla wartości dyskretnych"
             }
         },
         "title": "ModBus",
