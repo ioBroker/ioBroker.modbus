@@ -198,6 +198,10 @@ There are some programs in folder *test' to test the TCP communication:
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
+
+### __WORK IN PROGRESS__
+* (Apollon77) fix admin serial port selection
+
 ### 3.1.10 (2020-09-25)
 * (nkleber78) Corrected: the exported data cannot be imported without modification
 
