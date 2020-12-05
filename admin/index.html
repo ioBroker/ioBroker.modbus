@@ -215,12 +215,12 @@
             var $comName = $('#modbus_comName');
             var text = '<option value="">' + _('Select port') + '</option>';
             for (var j = 0; j < list.length; j++) {
-                if (list[j].comName === 'Not available') {
+                if (list[j].path === 'Not available') {
                     text = '<option value="" selected>' + _('Not available') + '</option>';
                     $comName.prop('disabled', true);
                     break;
                 } else {
-                    text += '<option value="' + list[j].comName + '" ' + ((actualValue === list[j].comName) ? 'selected' : '') + '>' + list[j].comName + '</option>';
+                    text += '<option value="' + list[j].path + '" ' + ((actualValue === list[j].path) ? 'selected' : '') + '>' + list[j].path + '</option>';
                 }
             }
             $comName.html(text);

@@ -1,9 +1,9 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.1.11",
+        "version": "3.1.12",
         "news": {
-            "3.1.11": {
+            "3.1.12": {
                 "en": "fix admin serial port selection",
                 "de": "Korrektur der Auswahl der seriellen Admin-Schnittstelle",
                 "ru": "исправить выбор последовательного порта администратора",
