@@ -119,6 +119,7 @@ function listSerial(ports) {
 
     let result;
     try {
+        adapter.log.info('Verify ' + JSON.stringify(ports));
         result = fs
             .readdirSync(devDirName)
             .map(file => path.join(devDirName, file))
@@ -131,10 +132,11 @@ function listSerial(ports) {
                         break;
                     }
                 }
+                adapter.log.info('Check ' + port + ' : ' + found);
 
-                !found && ports.push({comName: port});
+                !found && ports.push({path: port});
 
-                return {comName: port};
+                return {path: port};
             });
     } catch (e) {
         if (require('os').platform() !== 'win32') {
