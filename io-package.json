@@ -3,18 +3,6 @@
         "name": "modbus",
         "version": "3.1.11",
         "news": {
-            "3.1.11": {
-                "en": "fix admin serial port selection",
-                "de": "Korrektur der Auswahl der seriellen Admin-Schnittstelle",
-                "ru": "исправить выбор последовательного порта администратора",
-                "pt": "corrigir seleção de porta serial de administrador",
-                "nl": "reparatie seriële poort selectie",
-                "fr": "correction de la sélection du port série administrateur",
-                "it": "correggere la selezione della porta seriale dell'amministratore",
-                "es": "arreglar la selección del puerto serial del administrador",
-                "pl": "naprawić wybór portu szeregowego administratora",
-                "zh-cn": "修复管理员串行端口选择"
-            },
             "3.1.10": {
                 "en": "Corrected: the exported data cannot be imported without modification",
                 "de": "Korrigiert: Die exportierten Daten können nicht ohne Änderung importiert werden",

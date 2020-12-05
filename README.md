@@ -199,7 +199,7 @@ There are some programs in folder *test' to test the TCP communication:
 -->
 ## Changelog
 
-### 3.1.11 (2020-12-03)
+### __WORK IN PROGRESS__
 * (Apollon77) fix admin serial port selection
 
 ### 3.1.10 (2020-09-25)
