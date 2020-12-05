@@ -152,5 +152,29 @@ systemDictionary = {
         "es": "preservar puntos en ID:",
         "pl": "zachowaj kropki w ID:",
         "zh-cn": "保留ID中的点："
+    },
+    "SF:": {
+        "en": "SF",
+        "de": "SF",
+        "ru": "SF",
+        "pt": "SF",
+        "nl": "",
+        "fr": "SF",
+        "it": "SF",
+        "es": "SF",
+        "pl": "SF",
+        "zh-cn": "SF"
+    },
+    "formula:": {
+        "en": "formula",
+        "de": "Formel",
+        "ru": "formula",
+        "pt": "formula",
+        "nl": "formula",
+        "fr": "formula",
+        "it": "formula",
+        "es": "formula",
+        "pl": "formula",
+        "zh-cn": "formula"
     }
 };
