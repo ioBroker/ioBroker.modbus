@@ -34,7 +34,7 @@ function startAdapter(options) {
                         if (serialport) {
                             // read all found serial ports
                             serialport.list().then(ports => {
-                                listSerial(ports);
+                                ports = listSerial(ports);
                                 adapter.log.info('List of port: ' + JSON.stringify(ports));
                                 adapter.sendTo(obj.from, obj.command, ports, obj.callback);
                             }).catch(err => {
@@ -43,7 +43,7 @@ function startAdapter(options) {
                             });
                         } else {
                             adapter.log.warn('Module serialport is not available');
-                            adapter.sendTo(obj.from, obj.command, [{comName: 'Not available'}], obj.callback);
+                            adapter.sendTo(obj.from, obj.command, [{path: 'Not available'}], obj.callback);
                         }
                     }
                     break;
@@ -126,7 +126,7 @@ function listSerial(ports) {
             .map(port => {
                 let found = false;
                 for (let v = 0; v < ports.length; v++) {
-                    if (ports[v].comName === port) {
+                    if (ports[v].path === port) {
                         found = true;
                         break;
                     }
@@ -140,7 +140,7 @@ function listSerial(ports) {
         if (require('os').platform() !== 'win32') {
             adapter.log.error('Cannot read "' + devDirName + '": ' + e);
         }
-        result = [];
+        result = ports;
     }
     return result;
 }
