@@ -255,7 +255,7 @@
             if (!data.params.slave) {
                 text += delimiter + 'cw';
             }
-            text += 'sf' + delimiter;
+            text += delimiter + 'isScale';
         }
         text += '\n';
 
@@ -288,7 +288,7 @@
                 if (!data.params.slave) {
                     text += (data[id][i].cw   ? 'true' : 'false') + delimiter;
                 }
-                text += (data[id][i].isScaleFactor   ? 'true' : 'false') + delimiter;
+                text += (data[id][i].isScale   ? 'true' : 'false') + delimiter;
             }
             text += '\n';
         }
@@ -316,7 +316,7 @@
         var isAliases = $('#modbus_showAliases').prop('checked');
         var mapping;
         if (id !== 'coils' && id !== 'disInputs') {
-            mapping = ['deviceId', 'address', 'name', 'description', 'unit', 'type', 'len', 'factor', 'offset', 'role', 'room','formula','isScaleFactor'];
+            mapping = ['deviceId', 'address', 'name', 'description', 'unit', 'type', 'len', 'factor', 'offset', 'role', 'room','formula','isScale'];
         } else {
             mapping = ['deviceId', 'address', 'name', 'description', 'role', 'room'];
         }
@@ -365,9 +365,9 @@
                 } else if (mapping[m] === 'cw') {
                     obj[mapping[m]] = val || '';
                     obj.cw = (obj.cw.toLowerCase() === 'true' || obj.cw === '1' || obj.cw === '+');
-                } else if (mapping[m] === 'isScaleFactor') {
+                } else if (mapping[m] === 'isScale') {
                     obj[mapping[m]] = val || '';
-                    obj.isScaleFactor = (obj.isScaleFactor.toLowerCase() === 'true' || obj.isScaleFactor === '1' || obj.isScaleFactor === '+');
+                    obj.isScale = (obj.isScale.toLowerCase() === 'true' || obj.isScale === '1' || obj.isScale === '+');
                 } else {
                     obj[mapping[m]] = val || '';
                 }
@@ -500,23 +500,23 @@
                     }
                 }
                 var fields = [
-                    {name: '_address'   , title:  _('Address'),       type: 'text',       width: '80px', sorter: 'number'},
+                    {name: '_address'   , title:  _('Address'),       type: 'text',       width: '60px', sorter: 'number'},
                     {name: 'deviceId'   , title:  _('deviceId'),      type: 'text',       width: '60px',  sorter: 'number'},
                     {name: 'name'       , title:  _('Name'),          type: 'text',       width: '*'},
                     {name: 'description', title:  _('Description'),   type: 'text',       width: '*'},
                     {name: 'unit'       , title:  _('Unit'),          type: 'text',       width: '50px'},
-                    {name: 'type'       , title:  _('Type'),          type: 'select',     width: '150px', items: typeItems,  valueField: 'value', textField: 'text'},
+                    {name: 'type'       , title:  _('Type'),          type: 'select',     width: '*', items: typeItems,  valueField: 'value', textField: 'text'},
                     {name: 'len'        , title:  _('Length'),        type: 'text',       width: '50px'},
                     {name: 'factor'     , title:  _('Factor'),        type: 'text',       width: '50px'},
                     {name: 'offset'     , title:  _('Offset'),        type: 'text',       width: '50px'},
-                    {name: 'formula'     , title:  _('formula'),      type: 'text',       width: '100px'},
-                    {name: 'role'       , title:  _('Role'),          type: 'select',     width: '70px', items: roleItems,  valueField: 'value', textField: 'text'},
-                    {name: 'room'       , title:  _('Room'),          type: 'select',     width: '70px', items: roomsItems, valueField: 'value', textField: 'text'},
+                    {name: 'formula'    , title:  _('formula'),      type: 'text',       width: '*'},
+                    {name: 'role'       , title:  _('Role'),          type: 'select',     width: '60px', items: roleItems,  valueField: 'value', textField: 'text'},
+                    {name: 'room'       , title:  _('Room'),          type: 'select',     width: '60px', items: roomsItems, valueField: 'value', textField: 'text'},
                     {name: 'poll'       , title:  _('poll'),          type: 'checkbox',   width: '30px'},
                     {name: 'wp'         , title:  _('WP'),            type: 'checkbox',   width: '30px'},
                     {name: 'cw'         , title:  _('CW'),            type: 'checkbox',   width: '30px'},
-                    {name: 'isScaleFactor', title:  _('SF'),          type: 'checkbox',   width: '30px'},
-                    {                                                 type: 'control',    width: '80px'}
+                    {name: 'isScale'    , title:  _('SF'),            type: 'checkbox',   width: '30px'},
+                    {                                                 type: 'control',    width: '60px'}
                 ];
                 if (_id === 'modbus_disInputs' || _id === 'modbus_inputRegs') {
                     fields.splice(11, 3);
@@ -682,7 +682,7 @@
                             obj.item.factor   = data[id][data[id].length - 1].factor;
                             obj.item.offset   = data[id][data[id].length - 1].offset;
                             obj.item.deviceId = data[id][data[id].length - 1].deviceId;
-                            obj.item.isScaleFactor = data[id][data[id].length - 1].isScaleFactor;
+                            obj.item.isScale = data[id][data[id].length - 1].isScale;
                             obj.item.formula = data[id][data[id].length - 1].formula;
 
                             var len;
