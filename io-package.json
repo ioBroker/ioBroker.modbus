@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.1.12",
+        "version": "3.1.13",
         "news": {
+            "3.1.13": {
+                "en": "Added the possibility to use formulas for values",
+                "de": "Es wurde die Möglichkeit hinzugefügt, Formeln für Werte zu verwenden",
+                "ru": "Добавлена возможность использовать формулы для значений",
+                "pt": "Adicionada a possibilidade de usar fórmulas para valores",
+                "nl": "De mogelijkheid toegevoegd om formules voor waarden te gebruiken",
+                "fr": "Ajout de la possibilité d'utiliser des formules pour les valeurs",
+                "it": "Aggiunta la possibilità di utilizzare formule per i valori",
+                "es": "Se agregó la posibilidad de usar fórmulas para valores.",
+                "pl": "Dodano możliwość używania formuł dla wartości",
+                "zh-cn": "增加了将公式用于值的可能性"
+            },
             "3.1.12": {
                 "en": "fix admin serial port selection",
                 "de": "Korrektur der Auswahl der seriellen Admin-Schnittstelle",
@@ -227,17 +239,6 @@
                 "it": "la modalità master rtu-tcp è stata riparata",
                 "es": "El modo master rtu-tcp fue arreglado",
                 "pl": "Naprawiono tryb master rtu-tcp"
-            },
-            "2.0.3": {
-                "en": "Fixed the rounding of numbers",
-                "de": "Die Rundung von Zahlen wurde korrigiert",
-                "ru": "Исправлено округление чисел",
-                "pt": "Corrigido o arredondamento de números",
-                "nl": "Vaste afronding van nummers",
-                "fr": "Correction de l'arrondissement des nombres",
-                "it": "Risolto l'arrotondamento dei numeri",
-                "es": "Se corrigió el redondeo de números",
-                "pl": "Naprawiono zaokrąglanie liczb"
             }
         },
         "title": "ModBus",
