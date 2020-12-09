@@ -239,7 +239,7 @@ There are some programs in folder *test' to test the TCP communication:
 -->
 ## Changelog
 
-### __WORK IN PROGRESS__
+### 3.2.0 (2020-12-09)
 * (nkleber78) Fixed formula where return keyword was missing
 
 ### 3.1.13 (2020-12-07)
