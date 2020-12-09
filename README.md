@@ -238,6 +238,10 @@ There are some programs in folder *test' to test the TCP communication:
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
+
+### __WORK IN PROGRESS__
+* (nkleber78) Fixed formula where return keyword was missing
+
 ### 3.1.13 (2020-12-07)
 * (nkleber78) Added the possibility to use formulas for values
 
