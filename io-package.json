@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.2.0",
+        "version": "3.2.1",
         "news": {
+            "3.2.1": {
+                "en": "prevent a crash case (Sentry IOBROKER-MODBUS-1R)",
+                "de": "einen Absturz verhindern (Sentry IOBROKER-MODBUS-1R)",
+                "ru": "предотвращение сбоя (Sentry IOBROKER-MODBUS-1R)",
+                "pt": "evitar um caso de travamento (Sentry IOBROKER-MODBUS-1R)",
+                "nl": "een crashgeval voorkomen (Sentry IOBROKER-MODBUS-1R)",
+                "fr": "éviter un cas de crash (Sentry IOBROKER-MODBUS-1R)",
+                "it": "prevenire un crash case (Sentry IOBROKER-MODBUS-1R)",
+                "es": "prevenir un caso de accidente (Sentry IOBROKER-MODBUS-1R)",
+                "pl": "zapobiec awariom (Sentry IOBROKER-MODBUS-1R)",
+                "zh-cn": "防止发生崩溃情况（Sentry IOBROKER-MODBUS-1R）"
+            },
             "3.2.0": {
                 "en": "Fixed formula where return keyword was missing",
                 "de": "Formel behoben, bei der das Schlüsselwort return fehlte",
@@ -229,17 +241,6 @@
                 "it": "I registri di scrittura sono stati corretti",
                 "es": "Escribir registros fue corregido",
                 "pl": "Rejestry zapisu zostały poprawione"
-            },
-            "2.0.7": {
-                "en": "The server mode was fixed",
-                "de": "Der Servermodus wurde behoben",
-                "ru": "Режим сервера был исправлен",
-                "pt": "O modo do servidor foi corrigido",
-                "nl": "De servermodus is opgelost",
-                "fr": "Le mode serveur a été corrigé",
-                "it": "La modalità server è stata riparata",
-                "es": "El modo del servidor fue arreglado",
-                "pl": "Tryb serwera został naprawiony"
             }
         },
         "title": "ModBus",
