@@ -49,7 +49,7 @@
   "main": "main.js",
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha test/testAdapter.js --exit && node node_modules/mocha/bin/mocha test/testPackageFiles.js --exit",
-    "release": "release-script"
+    "release": "node node_modules/@alcalzone/release-script/bin/release.js"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.modbus/issues"
