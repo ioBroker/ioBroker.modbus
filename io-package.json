@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.2.1",
+        "version": "3.2.2",
         "news": {
+            "3.2.2": {
+                "en": "prevent a rash case (Sentry IOBROKER-MODBUS-1S)",
+                "de": "einen Hautausschlag verhindern (Sentry IOBROKER-MODBUS-1S)",
+                "ru": "предотвратить сыпь (Sentry IOBROKER-MODBUS-1S)",
+                "pt": "prevenir uma erupção cutânea (Sentry IOBROKER-MODBUS-1S)",
+                "nl": "voorkomen van uitslag (Sentry IOBROKER-MODBUS-1S)",
+                "fr": "prévenir une éruption cutanée (Sentry IOBROKER-MODBUS-1S)",
+                "it": "prevenire un caso avventato (Sentry IOBROKER-MODBUS-1S)",
+                "es": "prevenir un caso de erupción (Sentry IOBROKER-MODBUS-1S)",
+                "pl": "zapobiegać przypadkom wysypki (Sentry IOBROKER-MODBUS-1S)",
+                "zh-cn": "防止出现皮疹的情况（Sentry IOBROKER-MODBUS-1S）"
+            },
             "3.2.1": {
                 "en": "prevent a crash case (Sentry IOBROKER-MODBUS-1R)",
                 "de": "einen Absturz verhindern (Sentry IOBROKER-MODBUS-1R)",
@@ -230,17 +242,6 @@
                 "es": "Se agregó soporte para nodejs 12, ¡nodejs 4 ya no es compatible!",
                 "pl": "Dodano wsparcie dla nodejs 12, nodejs 4 nie jest już obsługiwany!",
                 "zh-cn": "添加了对nodejs 12的支持，不再支持nodejs 4！"
-            },
-            "2.0.9": {
-                "en": "Write registers was corrected",
-                "de": "Schreibregister wurde korrigiert",
-                "ru": "Исправлены записи регистров",
-                "pt": "Registros de gravação foram corrigidos",
-                "nl": "Schrijfregisters werden gecorrigeerd",
-                "fr": "Ecrire des registres a été corrigé",
-                "it": "I registri di scrittura sono stati corretti",
-                "es": "Escribir registros fue corregido",
-                "pl": "Rejestry zapisu zostały poprawione"
             }
         },
         "title": "ModBus",
