@@ -328,6 +328,15 @@
     },
     "instanceObjects": [
         {
+            "_id": "",
+            "type": "meta",
+            "common": {
+                "name": "Modbus",
+                "type": "meta"
+            },
+            "native": {}
+        },
+        {
             "_id": "info",
             "type": "channel",
             "common": {
