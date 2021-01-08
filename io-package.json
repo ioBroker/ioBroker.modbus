@@ -331,7 +331,6 @@
             "_id": "",
             "type": "meta",
             "common": {
-                "name": "Modbus",
                 "type": "meta"
             },
             "native": {}
