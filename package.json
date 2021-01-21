@@ -28,7 +28,7 @@
     "node": ">=8.0.0"
   },
   "optionalDependencies": {
-    "serialport": "^9.0.2"
+    "serialport": "^9.0.6"
   },
   "dependencies": {
     "stampit": "^2.1.2",
@@ -39,7 +39,7 @@
     "@iobroker/adapter-core": "^2.4.0"
   },
   "devDependencies": {
-    "@alcalzone/release-script": "^1.8.1",
+    "@alcalzone/release-script": "^1.8.3",
     "gulp": "^4.0.2",
     "mocha": "^8.2.1",
     "chai": "^4.2.0",
