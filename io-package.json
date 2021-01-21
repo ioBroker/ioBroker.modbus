@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.2.2",
+        "version": "3.2.3",
         "news": {
+            "3.2.3": {
+                "en": "Catch value encoding error and do not crash adapter (Sentry IOBROKER-MODBUS-1W)\nadd a meta object as instance object",
+                "de": "Catch-Wert-Codierungsfehler und Adapter nicht abstürzen (Sentry IOBROKER-MODBUS-1W)\nFügen Sie ein Metaobjekt als Instanzobjekt hinzu",
+                "ru": "Выявить ошибку кодирования значения и не вызывать сбой адаптера (Sentry IOBROKER-MODBUS-1W)\nдобавить мета-объект как объект-экземпляр",
+                "pt": "Capture o erro de codificação do valor e não bloqueie o adaptador (Sentry IOBROKER-MODBUS-1W)\nadicione um meta-objeto como objeto de instância",
+                "nl": "Vang waarde coderingsfout en crash adapter niet (Sentry IOBROKER-MODBUS-1W)\nvoeg een meta-object toe als instantieobject",
+                "fr": "Erreur de codage de valeur de capture et ne plante pas l'adaptateur (Sentry IOBROKER-MODBUS-1W)\najouter un objet méta comme objet d'instance",
+                "it": "Rilevare l'errore di codifica del valore e non bloccare l'adattatore (Sentry IOBROKER-MODBUS-1W)\naggiungi un meta oggetto come oggetto istanza",
+                "es": "Detecte el error de codificación del valor y no bloquee el adaptador (Sentry IOBROKER-MODBUS-1W)\nagregar un meta objeto como objeto de instancia",
+                "pl": "Błąd kodowania wartości przechwytywania i nie zawieszaj adaptera (Sentry IOBROKER-MODBUS-1W)\ndodaj obiekt meta jako obiekt instancji",
+                "zh-cn": "捕获值编码错误，并且不使适配器崩溃（Sentry IOBROKER-MODBUS-1W）\n添加一个元对象作为实例对象"
+            },
             "3.2.2": {
                 "en": "prevent a rash case (Sentry IOBROKER-MODBUS-1S)",
                 "de": "einen Hautausschlag verhindern (Sentry IOBROKER-MODBUS-1S)",
@@ -230,18 +242,6 @@
                 "es": "Correcciones para los tiempos de espera de serie realizados",
                 "pl": "Naprawiono szeregowe przekroczenia limitu czasu",
                 "zh-cn": "解决了串行超时问题"
-            },
-            "3.0.0": {
-                "en": "Support for nodejs 12 added, nodejs 4 is no longer supported!",
-                "de": "Unterstützung für NodeJS 12 hinzugefügt, NodeJS 4 wird nicht mehr unterstützt!",
-                "ru": "Добавлена ​​поддержка nodejs 12, nodejs 4 больше не поддерживается!",
-                "pt": "Suporte para nodejs 12 adicionado, nodejs 4 não é mais suportado!",
-                "nl": "Ondersteuning voor nodejs 12 toegevoegd, nodejs 4 wordt niet langer ondersteund!",
-                "fr": "Prise en charge de nodejs 12 ajoutée, nodejs 4 n'est plus prise en charge!",
-                "it": "Supporto per nodejs 12 aggiunto, nodejs 4 non è più supportato!",
-                "es": "Se agregó soporte para nodejs 12, ¡nodejs 4 ya no es compatible!",
-                "pl": "Dodano wsparcie dla nodejs 12, nodejs 4 nie jest już obsługiwany!",
-                "zh-cn": "添加了对nodejs 12的支持，不再支持nodejs 4！"
             }
         },
         "title": "ModBus",
