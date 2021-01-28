@@ -102,7 +102,7 @@ let enums      = {};
 function filterSerialPorts(path) {
     fs = fs || require('fs');
     // get only serial port names
-    if (!(/(tty(S|ACM|USB|AMA|MFD)|rfcomm)/).test(path)) return false;
+    if (!(/(tty(S|ACM|USB|AMA|MFD|XR)|rfcomm)/).test(path)) return false;
 
     return fs
         .statSync(path)
