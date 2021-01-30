@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.2.3",
+        "version": "3.2.4",
         "news": {
+            "3.2.4": {
+                "en": "also support ttyXRUSB0 style devices",
+                "de": "unterstützt auch Geräte im ttyXRUSB0-Stil",
+                "ru": "также поддерживает устройства в стиле ttyXRUSB0",
+                "pt": "também suporta dispositivos estilo ttyXRUSB0",
+                "nl": "ondersteunt ook ttyXRUSB0-stijl apparaten",
+                "fr": "prend également en charge les périphériques de style ttyXRUSB0",
+                "it": "supporta anche dispositivi in stile ttyXRUSB0",
+                "es": "también es compatible con dispositivos de estilo ttyXRUSB0",
+                "pl": "obsługuje również urządzenia w stylu ttyXRUSB0",
+                "zh-cn": "还支持ttyXRUSB0样式的设备"
+            },
             "3.2.3": {
                 "en": "Catch value encoding error and do not crash adapter (Sentry IOBROKER-MODBUS-1W)\nadd a meta object as instance object",
                 "de": "Catch-Wert-Codierungsfehler und Adapter nicht abstürzen (Sentry IOBROKER-MODBUS-1W)\nFügen Sie ein Metaobjekt als Instanzobjekt hinzu",
@@ -230,18 +242,6 @@
                 "es": "Decodifica 0xFF00 como bobina ENCENDIDA",
                 "pl": "Dekoduje 0xFF00 jako cewkę WŁĄCZONĄ",
                 "zh-cn": "将0xFF00解码为线圈ON"
-            },
-            "3.0.1": {
-                "en": "Fixes for Serial Timeouts done",
-                "de": "Korrekturen für serielle Timeouts durchgeführt",
-                "ru": "Исправлены ошибки серийного тайм-аута",
-                "pt": "Correções para tempos de série esgotados",
-                "nl": "Oplossingen voor seriële time-outs gedaan",
-                "fr": "Correctifs pour les délais d'attente série effectués",
-                "it": "Correzioni per timeout seriali eseguiti",
-                "es": "Correcciones para los tiempos de espera de serie realizados",
-                "pl": "Naprawiono szeregowe przekroczenia limitu czasu",
-                "zh-cn": "解决了串行超时问题"
             }
         },
         "title": "ModBus",
