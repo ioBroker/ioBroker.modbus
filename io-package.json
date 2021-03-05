@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.2.4",
+        "version": "3.2.5",
         "news": {
+            "3.2.5": {
+                "en": "Prevent a crash case (Sentry IOBROKER-MODBUS-20)\nBetter handle invalid responses",
+                "de": "Verhindern Sie einen Absturz (Sentry IOBROKER-MODBUS-20)\nBehandeln Sie ungültige Antworten besser",
+                "ru": "Предотвращение сбоя (Sentry IOBROKER-MODBUS-20)\nЛучше обрабатывать недействительные ответы",
+                "pt": "Previna um caso de travamento (Sentry IOBROKER-MODBUS-20)\nMelhor lidar com respostas inválidas",
+                "nl": "Voorkom een crashcase (Sentry IOBROKER-MODBUS-20)\nBeter omgaan met ongeldige reacties",
+                "fr": "Prévenir un cas de crash (Sentry IOBROKER-MODBUS-20)\nMieux gérer les réponses invalides",
+                "it": "Prevenire un crash case (Sentry IOBROKER-MODBUS-20)\nGestire meglio le risposte non valide",
+                "es": "Evitar un caso de accidente (Sentry IOBROKER-MODBUS-20)\nManeje mejor las respuestas no válidas",
+                "pl": "Zapobiegaj awariom (Sentry IOBROKER-MODBUS-20)\nLepiej radzić sobie z nieprawidłowymi odpowiedziami",
+                "zh-cn": "防止发生事故（Sentry IOBROKER-MODBUS-20）\n更好地处理无效回复"
+            },
             "3.2.4": {
                 "en": "also support ttyXRUSB0 style devices",
                 "de": "unterstützt auch Geräte im ttyXRUSB0-Stil",
@@ -230,18 +242,6 @@
                 "es": "Error corregido después de refactorizar",
                 "pl": "Poprawiony błąd po refaktoryzacji",
                 "zh-cn": "重构后纠正错误"
-            },
-            "3.0.2": {
-                "en": "Decodes 0xFF00 as coil ON",
-                "de": "Dekodiert 0xFF00 als Spule EIN",
-                "ru": "Декодирует 0xFF00 как катушка ВКЛ",
-                "pt": "Decodifica 0xFF00 como ON da bobina",
-                "nl": "Decodeert 0xFF00 als spoel AAN",
-                "fr": "Décode 0xFF00 comme bobine ON",
-                "it": "Decodifica 0xFF00 come bobina ON",
-                "es": "Decodifica 0xFF00 como bobina ENCENDIDA",
-                "pl": "Dekoduje 0xFF00 jako cewkę WŁĄCZONĄ",
-                "zh-cn": "将0xFF00解码为线圈ON"
             }
         },
         "title": "ModBus",
