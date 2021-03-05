@@ -239,7 +239,7 @@ There are some programs in folder *test' to test the TCP communication:
 -->
 ## Changelog
 
-### __WORK IN PROGRESS__
+### 3.2.5 (2021-03-05)
 * (Apollon77) Prevent a crash case (Sentry IOBROKER-MODBUS-20)
 * (Apollon77) Better handle invalid responses
 
