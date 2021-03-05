@@ -3,18 +3,6 @@
         "name": "modbus",
         "version": "3.2.5",
         "news": {
-            "3.2.5": {
-                "en": "Prevent a crash case (Sentry IOBROKER-MODBUS-20)\nBetter handle invalid responses",
-                "de": "Verhindern Sie einen Absturz (Sentry IOBROKER-MODBUS-20)\nBehandeln Sie ungültige Antworten besser",
-                "ru": "Предотвращение сбоя (Sentry IOBROKER-MODBUS-20)\nЛучше обрабатывать недействительные ответы",
-                "pt": "Previna um caso de travamento (Sentry IOBROKER-MODBUS-20)\nMelhor lidar com respostas inválidas",
-                "nl": "Voorkom een crashcase (Sentry IOBROKER-MODBUS-20)\nBeter omgaan met ongeldige reacties",
-                "fr": "Prévenir un cas de crash (Sentry IOBROKER-MODBUS-20)\nMieux gérer les réponses invalides",
-                "it": "Prevenire un crash case (Sentry IOBROKER-MODBUS-20)\nGestire meglio le risposte non valide",
-                "es": "Evitar un caso de accidente (Sentry IOBROKER-MODBUS-20)\nManeje mejor las respuestas no válidas",
-                "pl": "Zapobiegaj awariom (Sentry IOBROKER-MODBUS-20)\nLepiej radzić sobie z nieprawidłowymi odpowiedziami",
-                "zh-cn": "防止发生事故（Sentry IOBROKER-MODBUS-20）\n更好地处理无效回复"
-            },
             "3.2.4": {
                 "en": "also support ttyXRUSB0 style devices",
                 "de": "unterstützt auch Geräte im ttyXRUSB0-Stil",
