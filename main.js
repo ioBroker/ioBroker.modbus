@@ -503,7 +503,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
                     ((regs[i].type === 'string' || regs[i].type === 'stringle') ? 'string' : 'number'),
                 read:    true,
                 write:   regType === 'coils' || regType === 'holdingRegs',
-                def:     regType === 'coils' || regType === 'disInputs' ? false : 0
+                def:     regType === 'coils' || regType === 'disInputs' ? false : ((regs[i].type === 'string' || regs[i].type === 'stringle') ? '' : 0)
             },
             native: {
                 regType:  regType,
