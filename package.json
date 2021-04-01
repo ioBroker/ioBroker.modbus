@@ -42,7 +42,7 @@
     "@alcalzone/release-script": "^1.8.3",
     "gulp": "^4.0.2",
     "mocha": "^8.3.0",
-    "chai": "^4.3.0",
+    "chai": "^4.3.4",
     "nan": "2.14.2",
     "modbus-stack": "^0.2.1"
   },
