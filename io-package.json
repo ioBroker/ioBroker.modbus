@@ -254,7 +254,8 @@
             "fr": "Connexion ModBus Esclave ou Maître",
             "it": "Connessione ModBus Slave o Master",
             "es": "Conexión ModBus Slave o Master",
-            "pl": "Połączenie ModBus Slave lub Master"
+            "pl": "Połączenie ModBus Slave lub Master",
+            "zh-cn": "ModBus连接从站或主站"
         },
         "authors": [
             "bluefox <dogafox@gmail.com>"

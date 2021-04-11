@@ -490,6 +490,8 @@ function checkDeviceIds(options, config, deviceIds) {
 function checkObjects(options, regType, regName, regFullName, tasks, newObjects) {
     let regs = options[regType];
 
+    adapter.log.debug('Initialize Objects for ' + regType + ': ' + JSON.stringify(regs));
+
     for (let i = 0; regs.length > i; i++) {
         const id = adapter.namespace + '.' + regs[i].id;
         regs[i].fullId = id;
@@ -513,6 +515,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
         };
         if (regType === 'coils') {
             objects[id].native.poll = regs[i].poll;
+            objects[id].common.read = !!regs[i].poll;
             objects[id].native.wp   = regs[i].wp;
         } else
         if (regType === 'inputRegs' || regType === 'holdingRegs') {
@@ -524,6 +527,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
             objects[id].native.factor = regs[i].factor;
             if (regType === 'holdingRegs') {
                 objects[id].native.poll = regs[i].poll;
+                objects[id].common.read = !!regs[i].poll;
             }
         }
 
@@ -538,6 +542,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
             obj: regs[i].room
         });
         newObjects.push(id);
+        adapter.log.debug('Add ' + regs[i].id + ': ' + JSON.stringify(objects[id]));
     }
 
     if (regs.length) {
@@ -819,6 +824,7 @@ function parseConfig(callback) {
         // clear unused states
         for (let id_ in oldObjects) {
             if (oldObjects.hasOwnProperty(id_) && newObjects.indexOf(id_) === -1) {
+                adapter.log.debug('Remove old object ' + id_);
                 tasks.push({
                     id: id_,
                     name: 'del'
