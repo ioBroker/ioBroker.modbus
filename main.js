@@ -560,6 +560,43 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
     }
 }
 
+function assignIds(deviceId, config, result, regName, regType, localOptions) {
+    for (let i = config.length - 1; i >= 0; i--) {
+        if (config[i].deviceId !== deviceId) continue;
+        const address = config[i].address = parseInt(config[i].address, 10);
+
+        if (address < 0) {
+            continue;
+        }
+
+        if (localOptions.multiDeviceId) {
+            config[i].id = regName + '.' + deviceId + '.';
+        } else {
+            config[i].id = regName + '.';
+        }
+
+        if (localOptions.showAliases) {
+            config[i].id += address2alias(regType, address, localOptions.directAddresses, result.offset);
+        } else {
+            // add address if not disabled or name not empty
+            if (!localOptions.doNotIncludeAdrInId || !config[i].name) {
+                config[i].id += address;
+                if (localOptions.preserveDotsInId) {
+                    config[i].id += '_';
+                }
+            }
+        }
+        if (localOptions.preserveDotsInId) {
+            // preserve dots in name and add to ID
+            config[i].id += (config[i].name ? (config[i].name.replace(' ', '_')) : '');
+        } else {
+            // replace dots by underlines and add to ID
+            config[i].id += (config[i].name ? '_' + (config[i].name.replace('.', '_').replace(' ', '_')) : '');
+        }
+    }
+}
+
+
 // localOptions = {
 //      multiDeviceId
 //      showAliases
@@ -598,31 +635,6 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
                 config[i].len = config[i].len || 1;
             } else {
                 config[i].len = 1;
-            }
-
-            if (localOptions.multiDeviceId) {
-                config[i].id = regName + '.' + deviceId + '.';
-            } else {
-                config[i].id = regName + '.';
-            }
-
-            if (localOptions.showAliases) {
-                config[i].id += address2alias(regType, address, localOptions.directAddresses, result.offset);
-            } else {
-              // add address if not disabled or name not empty
-              if (!localOptions.doNotIncludeAdrInId || !config[i].name) {
-                config[i].id += address;
-                if (localOptions.preserveDotsInId) {
-                  config[i].id += '_';
-                }
-              }
-            }
-            if (localOptions.preserveDotsInId) {
-              // preserve dots in name and add to ID
-              config[i].id += (config[i].name ? (config[i].name.replace(' ', '_')) : '');
-            } else {
-              // replace dots by underlines and add to ID
-              config[i].id += (config[i].name ? '_' + (config[i].name.replace('.', '_').replace(' ', '_')) : '');
             }
 
             // collect cyclic write registers
@@ -689,7 +701,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
         }
 
         if (result.mapping) {
-            for (let i = 0; i <  config.length; i++) {
+            for (let i = 0; i < config.length; i++) {
                 result.mapping[config[i].address - result.addressLow] = adapter.namespace + '.' + config[i].id;
             }
         }
@@ -730,6 +742,13 @@ function parseConfig(callback) {
             let device = options.devices[_deviceId];
             let deviceId = parseInt(_deviceId, 10);
 
+
+            // Discrete inputs
+            assignIds(deviceId, adapter.config.disInputs, device.disInputs,   'discreteInputs',   'disInputs',   localOptions);
+            assignIds(deviceId, adapter.config.coils, device.coils,       'coils',            'coils',       localOptions);
+            assignIds(deviceId, adapter.config.inputRegs, device.inputRegs,   'inputRegisters',   'inputRegs',   localOptions);
+            assignIds(deviceId, adapter.config.holdingRegs, device.holdingRegs, 'holdingRegisters', 'holdingRegs', localOptions);
+
             device.disInputs.config   = adapter.config.disInputs.  filter(e =>           e.deviceId === deviceId);
             device.coils.config       = adapter.config.coils.      filter(e => e.poll && e.deviceId === deviceId);
             device.inputRegs.config   = adapter.config.inputRegs.  filter(e =>           e.deviceId === deviceId);
@@ -756,6 +775,7 @@ function parseConfig(callback) {
                 });
                 newObjects.push(adapter.namespace + '.info.pollTime');
             }
+
 
             // Discrete inputs
             iterateAddresses(true,  deviceId, device.disInputs,   'discreteInputs',   'disInputs',   localOptions);
