@@ -58,6 +58,7 @@ function startAdapter(options) {
             if (!modbus) {
                 adapter.log.warn('No connection')
             } else {
+                adapter.log.debug('state Changed ack=false: ' + id + ': ' + JSON.stringify(state));
                 if (objects[id]) {
                     modbus.write(id, state);
                 } else {
