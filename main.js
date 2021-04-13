@@ -644,7 +644,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
             }
 
             if (address < result.addressLow)  result.addressLow = address;
-            if (address + config[i].len > result.addressHigh) {
+            if (address + (config[i].len || 1) > result.addressHigh) {
                 result.addressHigh = address + (config[i].len || 1);
             }
         }
@@ -703,6 +703,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
 
         if (result.mapping) {
             for (let i = 0; i < config.length; i++) {
+                adapter.log.debug('Iterate ' + regType + ' ' + regName + ': ' + (config[i].address - result.addressLow) + ' = ' + config[i].id);
                 result.mapping[config[i].address - result.addressLow] = adapter.namespace + '.' + config[i].id;
             }
         }
