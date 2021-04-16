@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.2.6",
+        "version": "3.3.0",
         "news": {
+            "3.3.0": {
+                "en": "Allow to use write-only (no poll) states\n(Apollon77/TmShaz) F Write multiple registers\ncreate states of type string with default value of type string",
+                "de": "Erlauben Sie die Verwendung von Nur-Schreib-Zuständen (keine Abfrage)\n(Apollon77 / TmShaz) F Schreiben Sie mehrere Register\nErstellen Sie Zustände vom Typ Zeichenfolge mit dem Standardwert vom Typ Zeichenfolge",
+                "ru": "Разрешить использовать состояния только для записи (без опроса)\n(Apollon77 / TmShaz) F Запись нескольких регистров\nсоздавать состояния строки типа со значением по умолчанию строки типа",
+                "pt": "Permitir o uso de estados somente gravação (sem pesquisa)\n(Apollon77 / TmShaz) F Grava registros múltiplos\ncria estados do tipo string com o valor padrão do tipo string",
+                "nl": "Sta toe om alleen-schrijven (geen poll) staten te gebruiken\n(Apollon77 / TmShaz) F Schrijf meerdere registers\nmaak staten van het type string met de standaardwaarde van het type string",
+                "fr": "Autoriser à utiliser des états en écriture seule (pas d'interrogation)\n(Apollon77 / TmShaz) F Ecriture de plusieurs registres\ncréer des états de type string avec la valeur par défaut de type string",
+                "it": "Consenti l'utilizzo degli stati di sola scrittura (nessun sondaggio)\n(Apollon77 / TmShaz) F Scrive più registri\ncrea stati di tipo stringa con il valore predefinito di tipo stringa",
+                "es": "Permitir usar estados de solo escritura (sin encuesta)\n(Apollon77 / TmShaz) F Escribir varios registros\ncrear estados de tipo cadena con el valor predeterminado de tipo cadena",
+                "pl": "Zezwalaj na używanie stanów tylko do zapisu (bez ankiety)\n(Apollon77 / TmShaz) F Zapisz wiele rejestrów\nstwórz stany typu string z domyślną wartością typu string",
+                "zh-cn": "允许使用只写（无轮询）状态\n（Apollon77 / TmShaz）F写入多个寄存器\n使用默认类型的字符串创建字符串类型的状态"
+            },
             "3.2.6": {
                 "en": "Prevent a crash case (Sentry IOBROKER-MODBUS-20)\nBetter handle invalid responses",
                 "de": "Verhindern Sie einen Absturz (Sentry IOBROKER-MODBUS-20)\nBehandeln Sie ungültige Antworten besser",
@@ -230,18 +242,6 @@
                 "es": "ID de dispositivo agregado por exportación/importación\nSe agregó el parámetro de intervalo de escritura\nSe agregó la desactivación de escribir múltiples registros",
                 "pl": "Dodano identyfikator urządzenia według eksportu/importu\nDodano parametr interwału zapisu\nDodano wyłączenie zapisu wielu rejestrów",
                 "zh-cn": "通过导出/导入添加了设备ID\n添加了写入间隔参数\n添加了禁用写入多个寄存器的功能"
-            },
-            "3.0.3": {
-                "en": "Corrected error after refactoring",
-                "de": "Fehler nach dem Refactoring behoben",
-                "ru": "Исправлена ошибка после рефакторинга",
-                "pt": "Erro corrigido após refatoração",
-                "nl": "Gecorrigeerde fout na refactoring",
-                "fr": "Erreur corrigée après refactoring",
-                "it": "Errore corretto dopo il refactoring",
-                "es": "Error corregido después de refactorizar",
-                "pl": "Poprawiony błąd po refaktoryzacji",
-                "zh-cn": "重构后纠正错误"
             }
         },
         "title": "ModBus",

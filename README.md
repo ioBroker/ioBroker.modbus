@@ -239,7 +239,7 @@ There are some programs in folder *test' to test the TCP communication:
 -->
 ## Changelog
 
-### __WORK IN PROGRESS__
+### 3.3.0 (2021-04-16)
 * (Apollon77) Allow to use write-only (no poll) states
 * (Apollon77/TmShaz) F Write multiple registers
 * (prog42) create states of type string with default value of type string
