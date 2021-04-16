@@ -240,8 +240,9 @@ There are some programs in folder *test' to test the TCP communication:
 ## Changelog
 
 ### __WORK IN PROGRESS__
-* (Apollon77/TmShaz) Fix Write multiple registers
-* (prog42)  create states of type string with default value of type string
+* (Apollon77) Allow to use write-only (no poll) states
+* (Apollon77/TmShaz) F Write multiple registers
+* (prog42) create states of type string with default value of type string
 
 ### 3.2.6 (2021-03-05)
 * (Apollon77) Prevent a crash case (Sentry IOBROKER-MODBUS-20)
