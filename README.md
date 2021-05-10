@@ -238,7 +238,7 @@ There are some programs in folder *test' to test the TCP communication:
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
-### __WORK IN PROGRESS__
+### 3.3.1 (2021-05-10)
 * (bluefox) fixed the configuration dialog for "input registers" in slave mode 
 
 ### 3.3.0 (2021-04-16)

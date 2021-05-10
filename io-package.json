@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.3.0",
+        "version": "3.3.1",
         "news": {
+            "3.3.1": {
+                "en": "fixed the configuration dialog for \"input registers\" in slave mode",
+                "de": "Der Konfigurationsdialog für \"Eingangsregister\" im Slave-Modus wurde korrigiert",
+                "ru": "исправлен диалог конфигурации для \"входных регистров\" в ведомом режиме",
+                "pt": "corrigiu a caixa de diálogo de configuração para \"registros de entrada\" no modo escravo",
+                "nl": "de configuratiedialoog voor \"invoerregisters\" in slaafmodus gerepareerd",
+                "fr": "correction de la boîte de dialogue de configuration des \"registres d'entrée\" en mode esclave",
+                "it": "corretta la finestra di dialogo di configurazione per \"registri di ingresso\" in modalità slave",
+                "es": "Se corrigió el diálogo de configuración para \"registros de entrada\" en modo esclavo.",
+                "pl": "naprawiono okno dialogowe konfiguracji dla \"rejestrów wejściowych\" w trybie slave",
+                "zh-cn": "修复了从模式下“输入寄存器”的配置对话框"
+            },
             "3.3.0": {
                 "en": "Allow to use write-only (no poll) states\n(Apollon77/TmShaz) F Write multiple registers\ncreate states of type string with default value of type string",
                 "de": "Erlauben Sie die Verwendung von Nur-Schreib-Zuständen (keine Abfrage)\n(Apollon77 / TmShaz) F Schreiben Sie mehrere Register\nErstellen Sie Zustände vom Typ Zeichenfolge mit dem Standardwert vom Typ Zeichenfolge",
@@ -230,18 +242,6 @@
                 "es": "Asegúrese de que las paradas regulares del adaptador no terminen el proceso, de modo que los reinicios programados sigan funcionando\nactualizar serialport, soporte nodejs 12/14",
                 "pl": "Upewnij się, że zwykłe zatrzymania adaptera nie przerywają procesu, aby zaplanowane ponowne uruchomienie nadal działało\naktualizacja portu szeregowego, wsparcie nodejs 12/14",
                 "zh-cn": "确保常规适配器停止不会终止该过程，以便计划的重新启动仍然有效\n更新串行端口，支持nodejs 12/14"
-            },
-            "3.0.4": {
-                "en": "Added device ID by export/import\nAdded the write interval parameter\nAdded the disabling of write multiple registers",
-                "de": "Geräte-ID durch Export/Import hinzugefügt\nDer Parameter Schreibintervall wurde hinzugefügt\nDas Deaktivieren des Schreibens mehrerer Register wurde hinzugefügt",
-                "ru": "Добавлен идентификатор устройства при экспорте/импорте\nДобавлен параметр интервала записи\nДобавлено отключение записи нескольких регистров",
-                "pt": "ID do dispositivo adicionada por exportação/importação\nAdicionado o parâmetro de intervalo de gravação\nFoi adicionada a desativação de vários registros de gravação",
-                "nl": "Apparaat-ID toegevoegd door te exporteren/importeren\nDe parameter voor het schrijfinterval toegevoegd\nHet uitschakelen van het schrijven van meerdere registers toegevoegd",
-                "fr": "ID d'appareil ajouté par export/import\nAjout du paramètre d'intervalle d'écriture\nAjout de la désactivation de l'écriture de plusieurs registres",
-                "it": "Aggiunto ID dispositivo per esportazione/importazione\nAggiunto il parametro dell'intervallo di scrittura\nAggiunta la disabilitazione della scrittura di più registri",
-                "es": "ID de dispositivo agregado por exportación/importación\nSe agregó el parámetro de intervalo de escritura\nSe agregó la desactivación de escribir múltiples registros",
-                "pl": "Dodano identyfikator urządzenia według eksportu/importu\nDodano parametr interwału zapisu\nDodano wyłączenie zapisu wielu rejestrów",
-                "zh-cn": "通过导出/导入添加了设备ID\n添加了写入间隔参数\n添加了禁用写入多个寄存器的功能"
             }
         },
         "title": "ModBus",
