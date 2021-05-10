@@ -430,7 +430,6 @@
             });
         }
 
-
         getEnums('rooms', function (err, rooms) {
             $.each($('.modbus-grid'), function () {
                 var _id = $(this).attr('id');
@@ -500,32 +499,31 @@
                     }
                 }
                 var fields = [
-                    {name: '_address'   , title:  _('Address'),       type: 'text',       width: '60px', sorter: 'number'},
-                    {name: 'deviceId'   , title:  _('deviceId'),      type: 'text',       width: '60px',  sorter: 'number'},
-                    {name: 'name'       , title:  _('Name'),          type: 'text',       width: '*'},
-                    {name: 'description', title:  _('Description'),   type: 'text',       width: '*'},
-                    {name: 'unit'       , title:  _('Unit'),          type: 'text',       width: '50px'},
+                    {name: '_address'   , title:  _('Address'),       type: 'text',       width: '60px', sorter: 'number'}, // 0
+                    {name: 'deviceId'   , title:  _('deviceId'),      type: 'text',       width: '60px',  sorter: 'number'},// 1
+                    {name: 'name'       , title:  _('Name'),          type: 'text',       width: '*'},                      // 2
+                    {name: 'description', title:  _('Description'),   type: 'text',       width: '*'},                      // 3
+                    {name: 'unit'       , title:  _('Unit'),          type: 'text',       width: '50px'},                   // 4
                     {name: 'type'       , title:  _('Type'),          type: 'select',     width: '*', items: typeItems,  valueField: 'value', textField: 'text'},
-                    {name: 'len'        , title:  _('Length'),        type: 'text',       width: '50px'},
-                    {name: 'factor'     , title:  _('Factor'),        type: 'text',       width: '50px'},
-                    {name: 'offset'     , title:  _('Offset'),        type: 'text',       width: '50px'},
-                    {name: 'formula'    , title:  _('formula'),      type: 'text',       width: '*'},
+                    {name: 'len'        , title:  _('Length'),        type: 'text',       width: '50px'},                   // 6
+                    {name: 'factor'     , title:  _('Factor'),        type: 'text',       width: '50px'},                   // 7
+                    {name: 'offset'     , title:  _('Offset'),        type: 'text',       width: '50px'},                   // 8
+                    {name: 'formula'    , title:  _('formula'),       type: 'text',       width: '*'},                      // 9
                     {name: 'role'       , title:  _('Role'),          type: 'select',     width: '60px', items: roleItems,  valueField: 'value', textField: 'text'},
                     {name: 'room'       , title:  _('Room'),          type: 'select',     width: '60px', items: roomsItems, valueField: 'value', textField: 'text'},
-                    {name: 'poll'       , title:  _('poll'),          type: 'checkbox',   width: '30px'},
-                    {name: 'wp'         , title:  _('WP'),            type: 'checkbox',   width: '30px'},
-                    {name: 'cw'         , title:  _('CW'),            type: 'checkbox',   width: '30px'},
-                    {name: 'isScale'    , title:  _('SF'),            type: 'checkbox',   width: '30px'},
-                    {                                                 type: 'control',    width: '60px'}
+                    {name: 'poll'       , title:  _('poll'),          type: 'checkbox',   width: '30px'},                   // 12
+                    {name: 'wp'         , title:  _('WP'),            type: 'checkbox',   width: '30px'},                   // 13
+                    {name: 'cw'         , title:  _('CW'),            type: 'checkbox',   width: '30px'},                   // 14
+                    {name: 'isScale'    , title:  _('SF'),            type: 'checkbox',   width: '30px'},                   // 15
+                    {                                                 type: 'control',    width: '60px'}                    // 16
                 ];
                 if (_id === 'modbus_disInputs' || _id === 'modbus_inputRegs') {
-                    fields.splice(11, 3);
-                }
+                    fields.splice(12, 3);
+                } else
                 if (_id === 'modbus_coils' || _id === 'modbus_disInputs') {
                     fields.splice(4, 5);
                 }
                 if (parseInt($('#modbus_slave').val())) {
-                    fields.splice(13, 1);
                     fields.splice(1, 1);
                 } else if (!$('#modbus_multiDeviceId').prop('checked')) {
                     fields.splice(1, 1);

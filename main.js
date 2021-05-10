@@ -825,18 +825,18 @@ function parseConfig(callback) {
                         role:  'indicator.connected',
                         write: false,
                         read:  true,
-                        type:  options.config.slave ? 'number' : 'boolean'
+                        type:  options.config.slave ? 'number' : 'string'
                     },
                     native: {}
                 };
                 adapter.setObjectNotExists('info.connection', obj);
-            } else if (options.config.slave && obj.common.type !== 'number') {
-                obj.common.type = 'number';
-                obj.common.name = 'Number of connected masters';
+            } else if (options.config.slave && obj.common.type !== 'string') {
+                obj.common.type = 'string';
+                obj.common.name = 'Connected masters';
                 adapter.setObjectNotExists('info.connection', obj);
             } else if (!options.config.slave && obj.common.type !== 'boolean') {
                 obj.common.type = 'boolean';
-                obj.common.name = 'If master connected';
+                obj.common.name = 'If connected to slave';
                 adapter.setObjectNotExists('info.connection', obj);
             }
         });
