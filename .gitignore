@@ -7,3 +7,5 @@ test/Ananas64.exe
 iob_npm.done
 tmp
 package-lock.json
+/src/node_modules
+/src/.eslintcache
