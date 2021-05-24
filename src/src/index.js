@@ -10,7 +10,7 @@ import {version} from '../package.json';
 import theme from '@iobroker/adapter-react/Theme';
 import Utils from '@iobroker/adapter-react/Components/Utils';
 
-window.adapterName = 'scheduler';
+window.adapterName = 'modbus';
 let themeName = Utils.getThemeName();
 
 console.log(`iobroker.${window.adapterName}@${version} using theme "${themeName}"`);

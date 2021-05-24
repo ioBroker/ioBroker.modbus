@@ -10,6 +10,10 @@ import Loader from '@iobroker/adapter-react/Components/Loader'
 
 import I18n from '@iobroker/adapter-react/i18n';
 import TabOptions from './Tabs/Options';
+import TabInputRegisters from './Tabs/InputRegisters';
+import TabHoldingRegisters from './Tabs/HoldingRegisters';
+import TabDiscreteInputs from './Tabs/DiscreteInputs';
+import TabCoils from './Tabs/Coils';
 
 const styles = theme => ({
     root: {},
@@ -22,8 +26,48 @@ const styles = theme => ({
         padding: 10,
         height: 'calc(100% - 64px - 48px - 20px - 38px)',
         overflow: 'auto'
-    }
+    },
+    tab: {
+        width: '100%',
+        minHeight: '100%'
+    },
+    column: {
+        display: 'inline-block',
+        verticalAlign: 'top',
+        marginRight: 20
+    },
+    columnSettings: {
+        width: 'calc(100% - 370px)',
+    },
 });
+
+const tabs = [
+    {
+        name: 'general',
+        title: 'General',
+        component: TabOptions,
+    },
+    {
+        name: 'discrete-inputs',
+        title: 'Discrete inputs',
+        component: TabDiscreteInputs,
+    },
+    {
+        name: 'coils',
+        title: 'Coils',
+        component: TabCoils,
+    },
+    {
+        name: 'input-registers',
+        title: 'Input Registers',
+        component: TabInputRegisters,
+    },
+    {
+        name: 'holding-registers',
+        title: 'Holding Registers',
+        component: TabHoldingRegisters,
+    },
+]
 
 class App extends GenericApp {
     constructor(props) {
@@ -46,9 +90,11 @@ class App extends GenericApp {
     }
 
     getSelectedTab() {
-        const tab = this.state.selectedTab;
-        if (!tab || tab === 'options') {
+        const selectedTab = this.state.selectedTab;
+        if (!selectedTab) {
             return 0;
+        } else {
+            return tabs.findIndex(tab => tab.name === selectedTab);
         }
     }
 
@@ -59,27 +105,44 @@ class App extends GenericApp {
             </MuiThemeProvider>;
         }
 
+        console.log(this.state);
+
         return <MuiThemeProvider theme={this.state.theme}>
             <div className="App" style={{background: this.state.theme.palette.background.default, color: this.state.theme.palette.text.primary}}>
                 <AppBar position="static">
-                    <Tabs value={this.getSelectedTab()} onChange={(e, index) => this.selectTab(e.target.parentNode.dataset.name, index)} scrollButtons="auto">
-                        <Tab label={I18n.t('Options')} data-name="options" />
+                    <Tabs value={this.getSelectedTab()} onChange={(e, index) => this.selectTab(tabs[index].name, index)} scrollButtons="auto">
+                        {tabs.map(tab => 
+                            <Tab label={I18n.t(tab.title)} data-name={tab.name} key={tab.name} />
+                        )}
                     </Tabs>
                 </AppBar>
 
                 <div className={this.isIFrame ? this.props.classes.tabContentIFrame : this.props.classes.tabContent}>
-                    {(this.state.selectedTab === 'options' || !this.state.selectedTab) && <TabOptions
-                        key="options"
-                        common={this.common}
-                        socket={this.socket}
-                        native={this.state.native}
-                        onError={text => this.setState({errorText: (text || text === 0) && typeof text !== 'string' ? text.toString() : text})}
-                        onLoad={native => this.onLoadConfig(native)}
-                        instance={this.instance}
-                        adapterName={this.adapterName}
-                        changed={this.state.changed}
-                        onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
-                    />}
+                    {tabs.map((tab, index) => {
+                        const TabComponent = tab.component;
+                        if (this.state.selectedTab) {
+                            if (this.state.selectedTab !== tab.name) {
+                                return null;
+                            }
+                        } else {
+                            if (index !== 0) {
+                                return null;
+                            }
+                        }
+                        return <TabComponent
+                            key={tab.name}
+                            common={this.common}
+                            socket={this.socket}
+                            native={this.state.native}
+                            onError={text => this.setState({errorText: (text || text === 0) && typeof text !== 'string' ? text.toString() : text})}
+                            onLoad={native => this.onLoadConfig(native)}
+                            instance={this.instance}
+                            adapterName={this.adapterName}
+                            changed={this.state.changed}
+                            classes={this.props.classes}
+                            onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
+                        />
+                    })}
                 </div>
                 {this.renderError()}
                 {this.renderSaveCloseButtons()}
