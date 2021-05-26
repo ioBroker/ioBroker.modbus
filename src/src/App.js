@@ -105,8 +105,6 @@ class App extends GenericApp {
             </MuiThemeProvider>;
         }
 
-        console.log(this.state);
-
         return <MuiThemeProvider theme={this.state.theme}>
             <div className="App" style={{background: this.state.theme.palette.background.default, color: this.state.theme.palette.text.primary}}>
                 <AppBar position="static">
@@ -116,6 +114,7 @@ class App extends GenericApp {
                         )}
                     </Tabs>
                 </AppBar>
+                <pre style={{height: 200, overflowY: 'auto'}}>{JSON.stringify(this.state.native, null, 2)}</pre>
 
                 <div className={this.isIFrame ? this.props.classes.tabContentIFrame : this.props.classes.tabContent}>
                     {tabs.map((tab, index) => {

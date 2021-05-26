@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
+import TextField from '@material-ui/core/TextField';
+
 import I18n from '@iobroker/adapter-react/i18n';
 
 class Options extends Component {
@@ -14,7 +16,7 @@ class Options extends Component {
     render() {
         return <form className={ this.props.classes.tab }>
             <div className={clsx(this.props.classes.column, this.props.classes.columnSettings) }>
-                {I18n.t('Place your code here')}
+                <div><TextField value={this.props.native.params.type}/></div>
             </div>
         </form>;
     }
