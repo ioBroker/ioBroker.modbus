@@ -148,6 +148,11 @@ class App extends GenericApp {
             </div>
         </MuiThemeProvider>;
     }
+
+    componentWillUnmount() {
+        window.location.reload();
+        super.componentWillUnmount();
+    }
 }
 
 export default withStyles(styles)(App);
