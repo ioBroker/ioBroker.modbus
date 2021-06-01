@@ -150,8 +150,8 @@ class App extends GenericApp {
     }
 
     componentWillUnmount() {
-        window.location.reload();
         super.componentWillUnmount();
+        // window.location.reload();
     }
 }
 

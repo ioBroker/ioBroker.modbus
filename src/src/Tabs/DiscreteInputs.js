@@ -6,6 +6,8 @@ import Grid from '@material-ui/core/Grid';
 
 import I18n from '@iobroker/adapter-react/i18n';
 
+import RegisterTable from '../Components/RegisterTable';
+
 class Options extends Component {
     constructor(props) {
         super(props);
@@ -13,33 +15,21 @@ class Options extends Component {
         this.state = {
         };
     }
+    fields = [
+        {name: '_address', title: 'Address', type: 'text'},
+        {name: 'name', title: 'Name', type: 'text'},
+        {name: 'description', title: 'Description', type: 'text'},
+        {name: 'formula', title: 'formula', type: 'text'},
+        {name: 'role', title: 'Role', type: 'text'},
+        {name: 'cw', title: 'CW', type: 'checkbox'},
+        {name: 'isScale', title: 'SF', type: 'checkbox'},
+    ]
     render() {
-        return <form className={ this.props.classes.tab }>
-            <div className={clsx(this.props.classes.column, this.props.classes.columnSettings) }>
-                <Grid container spacing={2}>
-                    <Grid item xs>Address</Grid>
-                    <Grid item xs>Name</Grid>
-                    <Grid item xs>Description</Grid>
-                    <Grid item xs>formula</Grid>
-                    <Grid item xs>Role</Grid>
-                    <Grid item xs>CW</Grid>
-                    <Grid item xs>SF</Grid>
-                </Grid>
-                {
-                    this.props.native.disInputs.map((item, index) => 
-                        <Grid container key={index} spacing={2}>
-                            <Grid xs item>{item._address}</Grid>
-                            <Grid xs item>{item.name}</Grid>
-                            <Grid xs item>{item.description}</Grid>
-                            <Grid xs item>{item.formula}</Grid>
-                            <Grid xs item>{item.role}</Grid>
-                            <Grid xs item>{item.cw}</Grid>
-                            <Grid xs item>{item.sf}</Grid>
-                        </Grid>
-                    )
-                }
-            </div>
-        </form>;
+        return <RegisterTable
+            classes={this.props.classes}
+            fields={this.fields}
+            data={this.props.native.disInputs}
+        />
     }
 }
 
