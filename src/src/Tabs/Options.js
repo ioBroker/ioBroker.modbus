@@ -172,7 +172,7 @@ class Options extends Component {
     }
 
     inputDisplay = input => {
-        if (this.props.native.params.type === 'tcp') {
+        if (['tcp', 'tcprtu'].includes(this.props.native.params.type)) {
             if (['comName', 'baudRate', 'dataBits', 'stopBits', 'parity'].includes(input.name)) {
                 return false;
             }
@@ -244,9 +244,14 @@ class Options extends Component {
     }
 
     changeParam = (name, value) => {
-        let params = JSON.parse(JSON.stringify(this.props.native.params));
-        params[name] = value;
-        this.props.onChange('params', params);
+        let native = JSON.parse(JSON.stringify(this.props.native));
+        native.params[name] = value;
+        if (name === 'showAliases') {
+            native.disInputs.forEach(item => (value ? item._address += 10000 : item._address -= 10000))
+            native.inputRegs.forEach(item => (value ? item._address += 30000 : item._address -= 30000))
+            native.holdingRegs.forEach(item => (value ? item._address += 40000 : item._address -= 40000))
+        }
+        this.props.changeNative(native);
     }
 }
 

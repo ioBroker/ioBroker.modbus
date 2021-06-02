@@ -9,8 +9,6 @@ import TableCell from '@material-ui/core/TableCell';
 import Checkbox from '@material-ui/core/Checkbox';
 import Textfield from '@material-ui/core/Textfield';
 import IconButton from '@material-ui/core/IconButton';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -65,18 +63,15 @@ const RegisterTable = props => {
                                                 />
                                             }
                                             if (field.type === 'select') {
-                                                return <FormControl>
-                                                    <InputLabel>{I18n.t(field.title)}</InputLabel>
-                                                    <Select
-                                                        style={{width: 200}}
-                                                        value={item[field.name]} 
-                                                        onChange={e => props.changeParam(index, field.name, e.target.value)}
-                                                    >
-                                                        {field.options.map(option => 
-                                                            <MenuItem key={option.value} value={option.value}>{I18n.t(option.title)}</MenuItem>
-                                                        )}
-                                                    </Select>
-                                                </FormControl>
+                                                return <Select
+                                                    style={{width: 200}}
+                                                    value={item[field.name]} 
+                                                    onChange={e => props.changeParam(index, field.name, e.target.value)}
+                                                >
+                                                    {field.options.map(option => 
+                                                        <MenuItem key={option.value} value={option.value}>{option.title ? I18n.t(option.title) : <i>{I18n.t('Nothing')}</i>}</MenuItem>
+                                                    )}
+                                                </Select>
                                             }
                                             return <Textfield value={item[field.name]} style={{border: '0', width: '100%'}}
                                                 onChange={e => props.changeParam(index, field.name, e.target.value)}

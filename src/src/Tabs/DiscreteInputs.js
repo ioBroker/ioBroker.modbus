@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
+import roles from '../data/roles';
+
 import RegisterTable from '../Components/RegisterTable';
 
 class DiscreteInputs extends Component {
@@ -15,7 +17,7 @@ class DiscreteInputs extends Component {
         {name: 'name', title: 'Name', type: 'text'},
         {name: 'description', title: 'Description', type: 'text'},
         {name: 'formula', title: 'formula', type: 'text'},
-        {name: 'role', title: 'Role', type: 'text'},
+        {name: 'role', title: 'Role', type: 'select', options: roles},
         {name: 'cw', title: 'CW', type: 'checkbox'},
         {name: 'isScale', title: 'SF', type: 'checkbox'},
     ]

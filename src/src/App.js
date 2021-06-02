@@ -87,6 +87,15 @@ class App extends GenericApp {
         };
 
         super(props, extendedProps);
+        this.state.moreLoaded = false;
+        this.state.rooms = null;
+    }
+
+    onConnectionReady() {
+        super.onConnectionReady()
+        this.socket.getForeignObjects('enum.rooms.*', 'enum').then(rooms => {
+            this.setState({moreLoaded: true, rooms: Object.values(rooms)});
+        })
     }
 
     getSelectedTab() {
@@ -99,7 +108,7 @@ class App extends GenericApp {
     }
 
     render() {
-        if (!this.state.loaded) {
+        if (!this.state.loaded || !this.state.moreLoaded) {
             return <MuiThemeProvider theme={this.state.theme}>
                 <Loader theme={this.state.themeType} />
             </MuiThemeProvider>;
@@ -140,6 +149,8 @@ class App extends GenericApp {
                             changed={this.state.changed}
                             classes={this.props.classes}
                             onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
+                            changeNative={(value) => this.setState({native: value, changed: this.getIsChanged(value)})}
+                            rooms={this.state.rooms}
                         />
                     })}
                 </div>

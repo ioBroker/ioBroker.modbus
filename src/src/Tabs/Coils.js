@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
+import roles from '../data/roles';
+
 import RegisterTable from '../Components/RegisterTable';
 
 class Coils extends Component {
@@ -10,22 +12,29 @@ class Coils extends Component {
         this.state = {
         };
     }
-    fields = [
-        {name: '_address', title: 'Address', type: 'text'},
-        {name: 'name', title: 'Name', type: 'text'},
-        {name: 'description', title: 'Description', type: 'text'},
-        {name: 'formula', title: 'formula', type: 'text'},
-        {name: 'role', title: 'Role', type: 'text'},
-        {name: 'room', title: 'Room', type: 'text'},
-        {name: 'poll', title: 'Poll', type: 'checkbox'},
-        {name: 'wp', title: 'WP', type: 'checkbox'},
-        {name: 'cw', title: 'CW', type: 'checkbox'},
-        {name: 'isScale', title: 'SF', type: 'checkbox'},
-    ]
+
+    getFields() { 
+        let rooms = this.props.rooms.map(room => ({value: room._id, title: room._id}));
+        rooms.unshift({value: '', title: ''});
+
+        return [
+            {name: '_address', title: 'Address', type: 'text'},
+            {name: 'name', title: 'Name', type: 'text'},
+            {name: 'description', title: 'Description', type: 'text'},
+            {name: 'formula', title: 'formula', type: 'text'},
+            {name: 'role', title: 'Role', type: 'select', options: roles},
+            {name: 'room', title: 'Room', type: 'select', options: rooms},
+            {name: 'poll', title: 'Poll', type: 'checkbox'},
+            {name: 'wp', title: 'WP', type: 'checkbox'},
+            {name: 'cw', title: 'CW', type: 'checkbox'},
+            {name: 'isScale', title: 'SF', type: 'checkbox'},
+        ]
+    }
+
     render() {
         return <RegisterTable
             classes={this.props.classes}
-            fields={this.fields}
+            fields={this.getFields()}
             data={this.props.native.coils}
         />
     }
