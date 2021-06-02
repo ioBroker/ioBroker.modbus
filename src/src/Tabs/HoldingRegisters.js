@@ -1,26 +1,41 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 
-import I18n from '@iobroker/adapter-react/i18n';
+import RegisterTable from '../Components/RegisterTable';
 
-class Options extends Component {
+class HoldingRegisters extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
         };
     }
+    fields = [
+        {name: '_address', title: 'Address', type: 'text'},
+        {name: 'name', title: 'Name', type: 'text'},
+        {name: 'description', title: 'Description', type: 'text'},
+        {name: 'unit', title: 'Unit', type: 'text'},
+        {name: 'type', title: 'Type', type: 'text'},
+        {name: 'len', title: 'Length', type: 'text'},
+        {name: 'factor', title: 'Factor', type: 'text'},
+        {name: 'offset', title: 'Offset', type: 'text'},
+        {name: 'formula', title: 'formula', type: 'text'},
+        {name: 'role', title: 'Role', type: 'text'},
+        {name: 'poll', title: 'Poll', type: 'checkbox'},
+        {name: 'wp', title: 'WP', type: 'checkbox'},
+        {name: 'cw', title: 'CW', type: 'checkbox'},
+        {name: 'isScale', title: 'SF', type: 'checkbox'},
+    ]
     render() {
-        return <form className={ this.props.classes.tab }>
-            <div className={clsx(this.props.classes.column, this.props.classes.columnSettings) }>
-                {I18n.t('Place your code here')}
-            </div>
-        </form>;
+        return <RegisterTable
+            classes={this.props.classes}
+            fields={this.fields}
+            data={this.props.native.holdingRegs}
+        />
     }
 }
 
-Options.propTypes = {
+HoldingRegisters.propTypes = {
     common: PropTypes.object.isRequired,
     native: PropTypes.object.isRequired,
     instance: PropTypes.number.isRequired,
@@ -32,4 +47,4 @@ Options.propTypes = {
     socket: PropTypes.object.isRequired,
 };
 
-export default Options;
+export default HoldingRegisters;

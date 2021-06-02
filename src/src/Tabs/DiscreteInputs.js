@@ -1,14 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
-
-import Grid from '@material-ui/core/Grid';
-
-import I18n from '@iobroker/adapter-react/i18n';
 
 import RegisterTable from '../Components/RegisterTable';
 
-class Options extends Component {
+class DiscreteInputs extends Component {
     constructor(props) {
         super(props);
 
@@ -33,7 +28,7 @@ class Options extends Component {
     }
 }
 
-Options.propTypes = {
+DiscreteInputs.propTypes = {
     common: PropTypes.object.isRequired,
     native: PropTypes.object.isRequired,
     instance: PropTypes.number.isRequired,
@@ -45,4 +40,4 @@ Options.propTypes = {
     socket: PropTypes.object.isRequired,
 };
 
-export default Options;
+export default DiscreteInputs;

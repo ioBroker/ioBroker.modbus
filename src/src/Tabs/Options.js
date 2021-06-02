@@ -213,7 +213,7 @@ class Options extends Component {
                             onChange={e => this.changeParam(input.name, e.target.value)}
                         >
                             {input.options.map(option => 
-                                <MenuItem value={option.value}>{I18n.t(option.title)}</MenuItem>
+                                <MenuItem key={option.value} value={option.value}>{I18n.t(option.title)}</MenuItem>
                             )}
                         </Select>
                     </FormControl>
