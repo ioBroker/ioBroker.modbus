@@ -4,6 +4,7 @@ import { tsv2json, json2tsv } from 'tsv-json';
 import I18n from '@iobroker/adapter-react/i18n';
 
 import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -44,49 +45,51 @@ const RegisterTable = props => {
             </div>
             <div className={clsx(props.classes.column, props.classes.columnSettings) }>
                 <Table size="small">
-                    <TableRow>
-                        {props.fields.map(field => 
-                            <TableCell key={field.name}><b>{I18n.t(field.title)}</b></TableCell>
-                        )}
-                        <TableCell/>
-                    </TableRow>
-                    {
-                        props.data.map((item, index) => 
-                            <TableRow key={index}>
-                                {props.fields.map(field => 
-                                    <TableCell key={field.name}>{
-                                        (() => {
-                                            if (field.type === 'checkbox') {
-                                                return <Checkbox 
-                                                    checked={!!item[field.name]}
-                                                    onChange={e => props.changeParam(index, field.name, e.target.checked)}
-                                                />
-                                            }
-                                            if (field.type === 'select') {
-                                                return <Select
-                                                    style={{width: 200}}
-                                                    value={item[field.name]} 
+                    <TableBody>
+                        <TableRow>
+                            {props.fields.map(field => 
+                                <TableCell key={field.name}><b>{I18n.t(field.title)}</b></TableCell>
+                            )}
+                            <TableCell/>
+                        </TableRow>
+                        {
+                            props.data.map((item, index) => 
+                                <TableRow key={index}>
+                                    {props.fields.map(field => 
+                                        <TableCell key={field.name}>{
+                                            (() => {
+                                                if (field.type === 'checkbox') {
+                                                    return <Checkbox 
+                                                        checked={!!item[field.name]}
+                                                        onChange={e => props.changeParam(index, field.name, e.target.checked)}
+                                                    />
+                                                }
+                                                if (field.type === 'select') {
+                                                    return <Select
+                                                        style={{width: 200}}
+                                                        value={item[field.name]} 
+                                                        onChange={e => props.changeParam(index, field.name, e.target.value)}
+                                                    >
+                                                        {field.options.map(option => 
+                                                            <MenuItem key={option.value} value={option.value}>{option.title ? I18n.t(option.title) : <i>{I18n.t('Nothing')}</i>}</MenuItem>
+                                                        )}
+                                                    </Select>
+                                                }
+                                                return <Textfield value={item[field.name]} style={{border: '0', width: '100%'}}
                                                     onChange={e => props.changeParam(index, field.name, e.target.value)}
-                                                >
-                                                    {field.options.map(option => 
-                                                        <MenuItem key={option.value} value={option.value}>{option.title ? I18n.t(option.title) : <i>{I18n.t('Nothing')}</i>}</MenuItem>
-                                                    )}
-                                                </Select>
-                                            }
-                                            return <Textfield value={item[field.name]} style={{border: '0', width: '100%'}}
-                                                onChange={e => props.changeParam(index, field.name, e.target.value)}
-                                            />
-                                        })()
-                                    }</TableCell>
-                                )}
-                                <TableCell>
-                                    <IconButton onClick={e => props.deleteItem(index)}>
-                                        <ClearIcon/>
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
-                        )
-                    }
+                                                />
+                                            })()
+                                        }</TableCell>
+                                    )}
+                                    <TableCell>
+                                        <IconButton onClick={e => props.deleteItem(index)}>
+                                            <ClearIcon/>
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        }
+                    </TableBody>
                 </Table>
             </div>
         </form>;

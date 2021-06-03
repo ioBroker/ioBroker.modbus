@@ -1,32 +1,48 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import roles from '../data/roles';
 
-import RegisterTable from '../Components/RegisterTable';
+import BaseRegisters from './BaseRegisters';
 
-class DiscreteInputs extends Component {
-    constructor(props) {
-        super(props);
+class DiscreteInputs extends BaseRegisters {
+    nativeField = 'disInputs'
 
-        this.state = {
-        };
+    getFields() {
+        let result = [
+            {name: '_address', title: 'Address', type: 'text'},
+            {name: 'name', title: 'Name', type: 'text'},
+            {name: 'description', title: 'Description', type: 'text'},
+            {name: 'formula', title: 'formula', type: 'text'},
+            {name: 'role', title: 'Role', type: 'select', options: roles},
+            {name: 'cw', title: 'CW', type: 'checkbox'},
+            {name: 'isScale', title: 'SF', type: 'checkbox'},
+        ]
+
+        if (this.props.native.params.multiDeviceId) {
+            result.splice(1, 0, 
+                {name: 'deviceId', title: 'Slave ID', type: 'text'},
+            );
+        }
+
+        return result;
     }
-    fields = [
-        {name: '_address', title: 'Address', type: 'text'},
-        {name: 'name', title: 'Name', type: 'text'},
-        {name: 'description', title: 'Description', type: 'text'},
-        {name: 'formula', title: 'formula', type: 'text'},
-        {name: 'role', title: 'Role', type: 'select', options: roles},
-        {name: 'cw', title: 'CW', type: 'checkbox'},
-        {name: 'isScale', title: 'SF', type: 'checkbox'},
-    ]
-    render() {
-        return <RegisterTable
-            classes={this.props.classes}
-            fields={this.fields}
-            data={this.props.native.disInputs}
-        />
+
+    addItem = () => {
+        let data = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
+        let newItem = {}
+        this.getFields().forEach(field => newItem[field.name] = '')
+        if (data.length) {
+            let lastItem = data[data.length - 1];
+            newItem._address = parseInt(lastItem._address) + 1;
+            newItem.deviceId = lastItem.deviceId;
+            newItem.formula = lastItem.formula;
+            newItem.role = lastItem.role;
+            newItem.cw = lastItem.cw;
+            newItem.isScale = lastItem.isScale;
+        }
+        data.push(newItem);
+        this.props.onChange(this.nativeField, data);
     }
 }
 

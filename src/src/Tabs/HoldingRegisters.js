@@ -1,24 +1,19 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import RegisterTable from '../Components/RegisterTable';
+import BaseRegisters from './BaseRegisters';
 
 import roles from '../data/roles';
 import types from '../data/types';
 
-class HoldingRegisters extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-        };
-    }
+class HoldingRegisters extends BaseRegisters {
+    nativeField = 'holdingRegs'
 
     getFields() { 
         let rooms = this.props.rooms.map(room => ({value: room._id, title: room._id}));
         rooms.unshift({value: '', title: ''});
 
-        return [
+        let result = [
             {name: '_address', title: 'Address', type: 'text'},
             {name: 'name', title: 'Name', type: 'text'},
             {name: 'description', title: 'Description', type: 'text'},
@@ -35,14 +30,14 @@ class HoldingRegisters extends Component {
             {name: 'cw', title: 'CW', type: 'checkbox'},
             {name: 'isScale', title: 'SF', type: 'checkbox'},
         ];
-    }
 
-    render() {
-        return <RegisterTable
-            classes={this.props.classes}
-            fields={this.getFields()}
-            data={this.props.native.holdingRegs}
-        />
+        if (this.props.native.params.multiDeviceId) {
+            result.splice(1, 0, 
+                {name: 'deviceId', title: 'Slave ID', type: 'text'},
+            );
+        }
+
+        return result;
     }
 }
 
