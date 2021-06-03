@@ -33,6 +33,25 @@ class Coils extends BaseRegisters {
 
         return result;
     }
+
+    addItem = () => {
+        let data = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
+        let newItem = {}
+        this.getFields().forEach(field => newItem[field.name] = '')
+        if (data.length) {
+            let lastItem = data[data.length - 1];
+            newItem._address = parseInt(lastItem._address) + 1;
+            newItem.deviceId = lastItem.deviceId;
+            newItem.formula = lastItem.formula;
+            newItem.role = lastItem.role;
+            newItem.poll = lastItem.poll;
+            newItem.wp = lastItem.wp;
+            newItem.cw = lastItem.cw;
+            newItem.isScale = lastItem.isScale;
+        }
+        data.push(newItem);
+        this.props.onChange(this.nativeField, data);
+    }
 }
 
 Coils.propTypes = {

@@ -31,6 +31,10 @@ class BaseRegisters extends Component {
         this.props.onChange(this.nativeField, data);
     }
 
+    changeData = (data) => {
+        this.props.onChange(this.nativeField, data);
+    }
+
     render() {
         return <RegisterTable
             classes={this.props.classes}
@@ -39,6 +43,7 @@ class BaseRegisters extends Component {
             changeParam={this.changeParam}
             addItem={this.addItem}
             deleteItem={this.deleteItem}
+            changeData={this.changeData}
         />
     }
 }

@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import clsx from 'clsx';
-import { tsv2json, json2tsv } from 'tsv-json';
 
 import I18n from '@iobroker/adapter-react/i18n';
+
+import TsvDialog from './TsvDialog';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -15,32 +17,18 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import ClearIcon from '@material-ui/icons/Clear';
 import AddIcon from '@material-ui/icons/Add';
-import SaveIcon from '@material-ui/icons/Save';
-import FolderOpenIcon from '@material-ui/icons/FolderOpen';
+import ImportExport from '@material-ui/icons/ImportExport';
 
 const RegisterTable = props => {
-    const exportTsv = () => {
-        let tsvResult = [];
-        tsvResult.push(props.fields.map(field => field.name))
-        props.data.forEach(item => tsvResult.push(Object.values(item).map(value => value.toString())))
-        console.log(tsvResult)
-        console.log(json2tsv(tsvResult))
-    }
-
-    const importTsv = () => {
-
-    }
+    const [tsvDialogOpen, setTsvDialogOpen] = useState(false);
 
     return <form className={ props.classes.tab }>
             <div>
                 <IconButton onClick={e => props.addItem()}>
                     <AddIcon/>
                 </IconButton>
-                <IconButton onClick={exportTsv}>
-                    <SaveIcon/>
-                </IconButton>
-                <IconButton>
-                    <FolderOpenIcon/>
+                <IconButton onClick={() => setTsvDialogOpen(true)}>
+                    <ImportExport/>
                 </IconButton>
             </div>
             <div className={clsx(props.classes.column, props.classes.columnSettings) }>
@@ -92,6 +80,7 @@ const RegisterTable = props => {
                     </TableBody>
                 </Table>
             </div>
+            <TsvDialog open={tsvDialogOpen} save={props.changeData} onClose={() => setTsvDialogOpen(false)} data={props.data} fields={props.fields}/>
         </form>;
 }
 

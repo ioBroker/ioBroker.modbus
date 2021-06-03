@@ -39,7 +39,17 @@ class InputRegisters extends BaseRegisters {
         let newItem = {}
         this.getFields().forEach(field => newItem[field.name] = '')
         if (data.length) {
-            newItem._address = parseInt(data[data.length - 1]._address) + 1;
+            let lastItem = data[data.length - 1];
+            newItem._address = parseInt(lastItem._address) + 1;
+            newItem.deviceId = lastItem.deviceId;
+            newItem.type = lastItem.type;
+            newItem.len = lastItem.len;
+            newItem.factor = lastItem.factor;
+            newItem.offset = lastItem.offset;
+            newItem.formula = lastItem.formula;
+            newItem.role = lastItem.role;
+            newItem.cw = lastItem.cw;
+            newItem.isScale = lastItem.isScale;
         }
         data.push(newItem);
         this.props.onChange(this.nativeField, data);
