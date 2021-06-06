@@ -119,14 +119,14 @@ class App extends GenericApp {
             <SnackbarProvider>
                 <div className="App" style={{background: this.state.theme.palette.background.default, color: this.state.theme.palette.text.primary}}>
                     <AppBar position="static">
-                        <Tabs value={this.getSelectedTab()} onChange={(e, index) => this.selectTab(tabs[index].name, index)} scrollButtons="auto">
+                        <Tabs value={this.getSelectedTab()} onChange={(e, index) => this.selectTab(tabs[index].name, index)} variant="scrollable" scrollButtons="on">
                             {tabs.map(tab => 
                                 <Tab label={I18n.t(tab.title)} data-name={tab.name} key={tab.name} />
                             )}
                         </Tabs>
                     </AppBar>
                     <div className={this.isIFrame ? this.props.classes.tabContentIFrame : this.props.classes.tabContent}>
-                        <pre style={{height: 200, overflowY: 'auto'}}>{JSON.stringify(this.state.native, null, 2)}</pre>
+                        {/* <pre style={{height: 200, overflowY: 'auto'}}>{JSON.stringify(this.state.native, null, 2)}</pre> */}
                         {tabs.map((tab, index) => {
                             const TabComponent = tab.component;
                             if (this.state.selectedTab) {

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import I18n from '@iobroker/adapter-react/i18n';
+
 import roles from '../data/roles';
 
 import BaseRegisters from './BaseRegisters';
@@ -9,7 +11,7 @@ class Coils extends BaseRegisters {
     nativeField = 'coils'
 
     getFields() { 
-        let rooms = this.props.rooms.map(room => ({value: room._id, title: room._id}));
+        let rooms = this.props.rooms.map(room => ({value: room._id, title: typeof room.common.name === 'string' ? room.common.name : room.common.name[I18n.lang]}));
         rooms.unshift({value: '', title: ''});
 
         let result = [
