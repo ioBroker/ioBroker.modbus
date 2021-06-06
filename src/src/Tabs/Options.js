@@ -122,28 +122,28 @@ const generalInputs = [
         name: 'round', type: 'number', title: 'Round Real to'
     },
     {
-        name: 'poll', type: 'number', title: 'Poll delay'
+        name: 'poll', type: 'number', title: 'Poll delay', dimension: 'ms'
     },
     {
-        name: 'recon', type: 'number', title: 'Reconnect time'
+        name: 'recon', type: 'number', title: 'Reconnect time', dimension: 'ms'
     },
     {
-        name: 'timeout', type: 'number', title: 'Read timeout'
+        name: 'timeout', type: 'number', title: 'Read timeout', dimension: 'ms'
     },
     {
-        name: 'pulsetime', type: 'number', title: 'Pulse time'
+        name: 'pulsetime', type: 'number', title: 'Pulse time', dimension: 'ms'
     },
     {
-        name: 'waitTime', type: 'number', title: 'Wait time'
+        name: 'waitTime', type: 'number', title: 'Wait time', dimension: 'ms'
     },
     {
-        name: 'maxBlock', type: 'number', title: 'Max read request length (float)'
+        name: 'maxBlock', type: 'number', title: 'Max read request length (float)', dimension: 'registers'
     },
     {
-        name: 'maxBoolBlock', type: 'number', title: 'Max read request length (booleans)'
+        name: 'maxBoolBlock', type: 'number', title: 'Max read request length (booleans)', dimension: 'registers'
     },
     {
-        name: 'writeInterval', type: 'number', title: 'Write interval'
+        name: 'writeInterval', type: 'number', title: 'Write interval', dimension: 'ms'
     },
     {
         name: 'alwaysUpdate', type: 'checkbox', title: 'Update unchanged states'
@@ -168,11 +168,14 @@ class Options extends Component {
         if (input.name === 'slave' && this.props.native.params.type !== 'tcp') {
             return true;
         }
+        if (input.name === 'directAddresses' && !this.props.native.params.showAliases) {
+            return true;
+        }
         return false;
     }
 
     inputDisplay = input => {
-        if (this.props.native.params.type === 'tcp') {
+        if (['tcp', 'tcprtu'].includes(this.props.native.params.type)) {
             if (['comName', 'baudRate', 'dataBits', 'stopBits', 'parity'].includes(input.name)) {
                 return false;
             }
@@ -198,7 +201,7 @@ class Options extends Component {
                         disabled={this.inputDisabled(input)}
                         checked={this.props.native.params[input.name]} 
                         onChange={e => this.changeParam(input.name, e.target.checked)}
-                />}/></div>
+                />}/> {I18n.t(input.dimension)}</div>
             } else if (input.type === 'select') {
                 if (!this.inputDisplay(input)) {
                     return null;
@@ -213,10 +216,10 @@ class Options extends Component {
                             onChange={e => this.changeParam(input.name, e.target.value)}
                         >
                             {input.options.map(option => 
-                                <MenuItem value={option.value}>{I18n.t(option.title)}</MenuItem>
+                                <MenuItem key={option.value} value={option.value}>{I18n.t(option.title)}</MenuItem>
                             )}
                         </Select>
-                    </FormControl>
+                    </FormControl> {I18n.t(input.dimension)}
                 </div>
             } else {
                 if (!this.inputDisplay(input)) {
@@ -228,7 +231,7 @@ class Options extends Component {
                     disabled={this.inputDisabled(input)}
                     value={this.props.native.params[input.name]} 
                     onChange={e => this.changeParam(input.name, e.target.value)}
-                /></div>
+                /> {I18n.t(input.dimension)}</div>
             }
         })}
         </>
@@ -244,9 +247,17 @@ class Options extends Component {
     }
 
     changeParam = (name, value) => {
-        let params = JSON.parse(JSON.stringify(this.props.native.params));
-        params[name] = value;
-        this.props.onChange('params', params);
+        let native = JSON.parse(JSON.stringify(this.props.native));
+        native.params[name] = value;
+        if (name === 'showAliases') {
+            native.disInputs.forEach(item => (value ? item._address += 10000 : item._address -= 10000))
+            native.inputRegs.forEach(item => (value ? item._address += 30000 : item._address -= 30000))
+            native.holdingRegs.forEach(item => (value ? item._address += 40000 : item._address -= 40000))
+            if (!value) {
+                native.params.directAddresses = false;
+            }
+        }
+        this.props.changeNative(native);
     }
 }
 
