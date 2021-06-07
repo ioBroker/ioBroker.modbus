@@ -28,7 +28,7 @@
     "node": ">=8.0.0"
   },
   "optionalDependencies": {
-    "serialport": "^9.0.7"
+    "serialport": "^9.1.0"
   },
   "dependencies": {
     "stampit": "^2.1.2",
