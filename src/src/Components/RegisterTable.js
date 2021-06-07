@@ -16,6 +16,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import ClearIcon from '@material-ui/icons/Clear';
 import AddIcon from '@material-ui/icons/Add';
@@ -32,12 +33,16 @@ const RegisterTable = props => {
 
     return <form className={ props.classes.tab }>
             <div>
-                <IconButton onClick={e => props.addItem()}>
-                    <AddIcon/>
-                </IconButton>
-                <IconButton onClick={() => setTsvDialogOpen(true)}>
-                    <ImportExport/>
-                </IconButton>
+                <Tooltip title={I18n.t('Add')}>
+                    <IconButton onClick={e => props.addItem()}>
+                        <AddIcon/>
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title={I18n.t('Edit as TSV')}>
+                    <IconButton onClick={() => setTsvDialogOpen(true)}>
+                        <ImportExport/>
+                    </IconButton>
+                </Tooltip>
             </div>
             <div className={clsx(props.classes.column, props.classes.columnSettings) }>
                 <Table size="small" 
@@ -58,6 +63,31 @@ const RegisterTable = props => {
                             </TableCell>
                             {props.fields.map(field => 
                                 <TableCell key={field.name}>
+                                    {field.type === 'checkbox' ? 
+                                        <Tooltip title={I18n.t('Change all')}>
+                                            <Checkbox 
+                                                checked={(() => {
+                                                    let isChecked = false;
+                                                    for (let k in props.data) {
+                                                        if (props.data[k][field.name]) {
+                                                            isChecked = true;
+                                                        } else {
+                                                            isChecked = false;
+                                                            break;
+                                                        }
+                                                    }
+                                                    return isChecked;
+                                                })()}
+                                                onChange={e => {
+                                                    let newData = JSON.parse(JSON.stringify(props.data));
+                                                    newData.forEach(item => {
+                                                        item[field.name] = e.target.checked;
+                                                    })
+                                                    props.changeData(newData);
+                                                }}
+                                            />
+                                        </Tooltip>
+                                    : null}
                                     <TableSortLabel 
                                         active={field.name === orderBy} 
                                         direction={order}
@@ -109,9 +139,11 @@ const RegisterTable = props => {
                                         }</TableCell>
                                     )}
                                     <TableCell>
-                                        <IconButton onClick={e => props.deleteItem(item.$index)}>
-                                            <ClearIcon/>
-                                        </IconButton>
+                                        <Tooltip title={I18n.t('Delete')}>
+                                            <IconButton onClick={e => props.deleteItem(item.$index)}>
+                                                <ClearIcon/>
+                                            </IconButton>
+                                        </Tooltip>
                                     </TableCell>
                                 </TableRow>
                             )

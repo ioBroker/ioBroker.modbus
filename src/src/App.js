@@ -16,12 +16,15 @@ import TabHoldingRegisters from './Tabs/HoldingRegisters';
 import TabDiscreteInputs from './Tabs/DiscreteInputs';
 import TabCoils from './Tabs/Coils';
 
+import background from './img/plc_back_opacity.png'
+
 const styles = theme => ({
     root: {},
     tabContent: {
         padding: 10,
         height: 'calc(100% - 64px - 48px - 20px)',
         overflow: 'auto'
+        // backgroundImage: `url(${background})`
     },
     tabContentIFrame: {
         padding: 10,
@@ -164,7 +167,8 @@ class App extends GenericApp {
 
     componentWillUnmount() {
         super.componentWillUnmount();
-        // window.location.reload();
+        delete window.io;
+        window.io = new window.SocketClient();
     }
 }
 

@@ -3,7 +3,13 @@ import { useState, useEffect } from 'react';
 import { tsv2json, json2tsv } from 'tsv-json';
 import { useSnackbar } from 'notistack';
 
+import I18n from '@iobroker/adapter-react/i18n';
+
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
@@ -59,13 +65,17 @@ const TsvDialog = (props) => {
     };
 
     return <Dialog open={props.open} onClose={props.onClose} fullScreen>
-        <div>
-            <TextField onChange={e => setTsv(e.target.value)} multiline value={tsv} style={{width: '100%', height: '100%'}} inputProps={{style: {fontFamily: 'monospace'}}}/>
-        </div>
-        <div>
-            <Button onClick={saveTsv}>{'Save'}</Button>
-            <Button onClick={props.onClose}>{'Cancel'}</Button>
-        </div>
+        <DialogTitle>{I18n.t('Edit data as TSV')}</DialogTitle>
+        <DialogContent>
+            <DialogContentText>{I18n.t('You can copy, paste and edit data as TSV.')}</DialogContentText>
+            <div>
+                <TextField onChange={e => setTsv(e.target.value)} multiline value={tsv} style={{width: '100%', height: '100%'}} inputProps={{style: {fontFamily: 'monospace'}}}/>
+            </div>
+            <DialogActions>
+                <Button onClick={saveTsv}>{'Save'}</Button>
+                <Button onClick={props.onClose}>{'Cancel'}</Button>
+            </DialogActions>
+        </DialogContent>
     </Dialog>
 }
 

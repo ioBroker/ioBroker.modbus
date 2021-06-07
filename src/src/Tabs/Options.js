@@ -9,6 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
+import Grid from '@material-ui/core/Grid';
 
 import I18n from '@iobroker/adapter-react/i18n';
 
@@ -239,10 +240,10 @@ class Options extends Component {
 
     render() {
         return <form className={ this.props.classes.tab }>
-            <div className={clsx(this.props.classes.column, this.props.classes.columnSettings) }>
-                {this.getInputsBlock(connectionInputs, 'Connection parameters')}
-                {this.getInputsBlock(generalInputs, 'General')}
-            </div>
+            <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>{this.getInputsBlock(connectionInputs, 'Connection parameters')}</Grid>
+                <Grid item xs={12} md={6}>{this.getInputsBlock(generalInputs, 'General')}</Grid>
+            </Grid>
         </form>;
     }
 
