@@ -10,6 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
@@ -96,8 +97,9 @@ class Options extends Component {
                     className={this.props.classes.optionsTextfield}
                     disabled={this.inputDisabled(input)}
                     value={this.props.native.params[input.name]} 
+                    InputProps={{endAdornment: <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment>}}
                     onChange={e => this.changeParam(input.name, e.target.value)}
-                /><span> {I18n.t(input.dimension)}</span></Box>
+                /></Box>
             }
         })}
         </Paper></>
