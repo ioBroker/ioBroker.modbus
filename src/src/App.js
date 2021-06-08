@@ -35,14 +35,18 @@ const styles = theme => ({
         width: '100%',
         minHeight: '100%'
     },
-    column: {
-        display: 'inline-block',
-        verticalAlign: 'top',
-        marginRight: 20
+    tableHeader: {
+        whiteSpace: 'nowrap'
     },
-    columnSettings: {
-        width: 'calc(100% - 370px)',
+    optionsSelect: {
+        width: 200
     },
+    tsvEditor: {
+        width: '100%', height: '100%'
+    },
+    tsvEditorTextarea: {
+        fontFamily: 'monospace'
+    }
 });
 
 const tabs = [
@@ -75,6 +79,10 @@ const tabs = [
 
 class App extends GenericApp {
     constructor(props) {
+        if (window.io) {
+            delete window.io;
+            window.io = new window.SocketClient();
+        }
         const extendedProps = {...props};
         extendedProps.encryptedFields = ['pass'];
         extendedProps.translations = {
@@ -122,7 +130,10 @@ class App extends GenericApp {
             <SnackbarProvider>
                 <div className="App" style={{background: this.state.theme.palette.background.default, color: this.state.theme.palette.text.primary}}>
                     <AppBar position="static">
-                        <Tabs value={this.getSelectedTab()} onChange={(e, index) => this.selectTab(tabs[index].name, index)} variant="scrollable" scrollButtons="on">
+                        <Tabs 
+                            value={this.getSelectedTab()} 
+                            onChange={(e, index) => this.selectTab(tabs[index].name, index)} 
+                            variant="scrollable" scrollButtons="on">
                             {tabs.map(tab => 
                                 <Tab label={I18n.t(tab.title)} data-name={tab.name} key={tab.name} />
                             )}
@@ -163,12 +174,6 @@ class App extends GenericApp {
                 </div>
             </SnackbarProvider>
         </MuiThemeProvider>;
-    }
-
-    componentWillUnmount() {
-        super.componentWillUnmount();
-        delete window.io;
-        window.io = new window.SocketClient();
     }
 }
 

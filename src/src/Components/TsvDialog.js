@@ -69,7 +69,7 @@ const TsvDialog = (props) => {
         <DialogContent>
             <DialogContentText>{I18n.t('You can copy, paste and edit data as TSV.')}</DialogContentText>
             <div>
-                <TextField onChange={e => setTsv(e.target.value)} multiline value={tsv} style={{width: '100%', height: '100%'}} inputProps={{style: {fontFamily: 'monospace'}}}/>
+                <TextField onChange={e => setTsv(e.target.value)} multiline value={tsv} className={props.classes.tsvEditor} inputProps={{className: props.classes.tsvEditorTextarea}}/>
             </div>
             <DialogActions>
                 <Button onClick={saveTsv}>{'Save'}</Button>

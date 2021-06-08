@@ -195,10 +195,11 @@ class Options extends Component {
                 if (!this.inputDisplay(input)) {
                     return null;
                 }
-                return <div><FormControlLabel
+                return <div key={input.name}><FormControlLabel
                     label={I18n.t(input.title)}
                     control={<Checkbox
                         label={I18n.t(input.title)} 
+                        className={this.props.classes.optionsCheckbox}
                         disabled={this.inputDisabled(input)}
                         checked={this.props.native.params[input.name]} 
                         onChange={e => this.changeParam(input.name, e.target.checked)}
@@ -207,11 +208,11 @@ class Options extends Component {
                 if (!this.inputDisplay(input)) {
                     return null;
                 }
-                return <div>
+                return <div key={input.name}>
                     <FormControl>
                         <InputLabel>{I18n.t(input.title)}</InputLabel>
                         <Select
-                            style={{width: 200}}
+                            className={this.props.classes.optionsSelect}
                             disabled={this.inputDisabled(input)}
                             value={this.props.native.params[input.name]} 
                             onChange={e => this.changeParam(input.name, e.target.value)}
@@ -226,9 +227,10 @@ class Options extends Component {
                 if (!this.inputDisplay(input)) {
                     return null;
                 }
-                return <div><TextField 
+                return <div key={input.name}><TextField 
                     type={input.type} 
                     label={I18n.t(input.title)} 
+                    className={this.props.classes.optionsTextfield}
                     disabled={this.inputDisabled(input)}
                     value={this.props.native.params[input.name]} 
                     onChange={e => this.changeParam(input.name, e.target.value)}
