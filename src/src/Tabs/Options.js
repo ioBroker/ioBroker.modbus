@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
+import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import Select from '@material-ui/core/Select';
@@ -10,152 +11,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
 
 import I18n from '@iobroker/adapter-react/i18n';
 
-const connectionInputs = [
-    {
-        name: 'type', type: 'select', title: 'TCP/Serial RTU',
-        options: [
-            {
-                value: 'tcp', title: 'TCP'
-            },
-            {
-                value: 'serial', title: 'Serial'
-            },
-            {
-                value: 'tcprtu', title: 'RTU over TCP'
-            },
-        ]
-    },
-    {
-        name: 'comName', type: 'select', title: 'Port',
-        options: [
-            {value: '', title: 'Select port'},
-            {value: 'COM1', title: 'COM1'},
-        ]
-    },
-    {
-        name: 'baudRate', type: 'select', title: 'Baud rate',
-        options: [
-            {value: '110', title: '110'},
-            {value: '150', title: '150'},
-            {value: '300', title: '300'},
-            {value: '600', title: '600'},
-            {value: '1200', title: '1200'},
-            {value: '2400', title: '2400'},
-            {value: '4800', title: '4800'},
-            {value: '9600', title: '9600'},
-            {value: '19200', title: '19200'},
-            {value: '38400', title: '38400'},
-            {value: '56000', title: '56000'},
-            {value: '57600', title: '57600'},
-            {value: '115200', title: '115200'},
-        ]
-    },
-    {
-        name: 'dataBits', type: 'select', title: 'Data bits',
-        options: [
-            {value: '8', title: '8'},
-            {value: '7', title: '7'},
-            {value: '6', title: '6'},
-            {value: '5', title: '5'},
-        ]
-    },
-    {
-        name: 'stopBits', type: 'select', title: 'Stop bits',
-        options: [
-            {value: '1', title: '1'},
-            {value: '2', title: '2'},
-        ]
-    },
-    {
-        name: 'parity', type: 'select', title: 'Parity',
-        options: [
-            {value: 'none', title: 'none'},
-            {value: 'even', title: 'even'},
-            {value: 'mark', title: 'mark'},
-            {value: 'odd', title: 'odd'},
-            {value: 'space', title: 'space'},
-        ]
-    },
-    {
-        name: 'bind', type: 'text', title: 'Patner IP address'
-    },
-    {
-        name: 'port', type: 'number', title: 'Port'
-    },
-    {
-        name: 'deviceId', type: 'text', title: 'Device ID'
-    },
-    {
-        name: 'multiDeviceId', type: 'checkbox', title: 'Multi device ID'
-    },
-    {
-        name: 'slave', type: 'select', title: 'Type',
-        options: [
-            {
-                value: '0',
-                title: 'Master'
-            },
-            {
-                value: '1',
-                title: 'Slave'
-            }
-        ]
-    },
-]
-
-const generalInputs = [
-    {
-        name: 'showAliases', type: 'checkbox',title: 'Use aliases'
-    },
-    {
-        name: 'directAddresses', type: 'checkbox', title: 'Use direct addresses by aliases'
-    },
-    {
-        name: 'doNotRoundAddressToWord', type: 'checkbox', title: 'Do not align addresses to 16 bits'
-    },
-    {
-        name: 'doNotUseWriteMultipleRegisters', type: 'checkbox', title: 'Do not use Write multiple registers'
-    },
-    {
-        name: 'round', type: 'number', title: 'Round Real to'
-    },
-    {
-        name: 'poll', type: 'number', title: 'Poll delay', dimension: 'ms'
-    },
-    {
-        name: 'recon', type: 'number', title: 'Reconnect time', dimension: 'ms'
-    },
-    {
-        name: 'timeout', type: 'number', title: 'Read timeout', dimension: 'ms'
-    },
-    {
-        name: 'pulsetime', type: 'number', title: 'Pulse time', dimension: 'ms'
-    },
-    {
-        name: 'waitTime', type: 'number', title: 'Wait time', dimension: 'ms'
-    },
-    {
-        name: 'maxBlock', type: 'number', title: 'Max read request length (float)', dimension: 'registers'
-    },
-    {
-        name: 'maxBoolBlock', type: 'number', title: 'Max read request length (booleans)', dimension: 'registers'
-    },
-    {
-        name: 'writeInterval', type: 'number', title: 'Write interval', dimension: 'ms'
-    },
-    {
-        name: 'alwaysUpdate', type: 'checkbox', title: 'Update unchanged states'
-    },
-    {
-        name: 'doNotIncludeAdrInId', type: 'checkbox', title: 'do not include address in ID'
-    },
-    {
-        name: 'preserveDotsInId', type: 'checkbox', title: 'preserve dots in ID'
-    },
-]
+import connectionInputs from '../data/optionsConnection';
+import generalInputs from '../data/optionsGeneral';
 
 class Options extends Component {
     constructor(props) {
@@ -189,13 +51,14 @@ class Options extends Component {
     }
 
     getInputsBlock(inputs, title) {
-        return <><h2>{I18n.t(title)}</h2>
+        return <><Paper className={this.props.classes.optionsContainer} elevation={3}>
+            <Typography variant="h4" gutterBottom>{I18n.t(title)}</Typography>
             {inputs.map(input => {
             if (input.type === 'checkbox') {
                 if (!this.inputDisplay(input)) {
                     return null;
                 }
-                return <div key={input.name}><FormControlLabel
+                return <Box className={this.props.classes.optionContainer} key={input.name}><FormControlLabel
                     label={I18n.t(input.title)}
                     control={<Checkbox
                         label={I18n.t(input.title)} 
@@ -203,12 +66,12 @@ class Options extends Component {
                         disabled={this.inputDisabled(input)}
                         checked={this.props.native.params[input.name]} 
                         onChange={e => this.changeParam(input.name, e.target.checked)}
-                />}/> {I18n.t(input.dimension)}</div>
+                />}/> {I18n.t(input.dimension)}</Box>
             } else if (input.type === 'select') {
                 if (!this.inputDisplay(input)) {
                     return null;
                 }
-                return <div key={input.name}>
+                return <Box className={this.props.classes.optionContainer} key={input.name}>
                     <FormControl>
                         <InputLabel>{I18n.t(input.title)}</InputLabel>
                         <Select
@@ -222,29 +85,29 @@ class Options extends Component {
                             )}
                         </Select>
                     </FormControl> {I18n.t(input.dimension)}
-                </div>
+                </Box>
             } else {
                 if (!this.inputDisplay(input)) {
                     return null;
                 }
-                return <div key={input.name}><TextField 
+                return <Box className={this.props.classes.optionContainer} key={input.name}><TextField 
                     type={input.type} 
                     label={I18n.t(input.title)} 
                     className={this.props.classes.optionsTextfield}
                     disabled={this.inputDisabled(input)}
                     value={this.props.native.params[input.name]} 
                     onChange={e => this.changeParam(input.name, e.target.value)}
-                /> {I18n.t(input.dimension)}</div>
+                /><span> {I18n.t(input.dimension)}</span></Box>
             }
         })}
-        </>
+        </Paper></>
     }
 
     render() {
         return <form className={ this.props.classes.tab }>
             <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>{this.getInputsBlock(connectionInputs, 'Connection parameters')}</Grid>
-                <Grid item xs={12} md={6}>{this.getInputsBlock(generalInputs, 'General')}</Grid>
+                <Grid item xs={12} md={12} className={ this.props.classes.optionsGrid }>{this.getInputsBlock(connectionInputs, 'Connection parameters')}</Grid>
+                <Grid item xs={12} md={12} className={ this.props.classes.optionsGrid }>{this.getInputsBlock(generalInputs, 'General')}</Grid>
             </Grid>
         </form>;
     }

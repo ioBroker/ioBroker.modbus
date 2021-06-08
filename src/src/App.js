@@ -36,16 +36,48 @@ const styles = theme => ({
         minHeight: '100%'
     },
     tableHeader: {
-        whiteSpace: 'nowrap'
+        whiteSpace: 'nowrap',
+        fontWeight: 'bold',
+        fontSize: '80%',
+        padding: '0px 8px'
+    },
+    tableCell: {
+        whiteSpace: 'nowrap',
+        fontSize: '80%',
+        padding: '0px 8px'
+    },
+    tableTextfield: {
+        fontSize: '80%'
+    },
+    tableSelect: {
+        fontSize: '80%'
     },
     optionsSelect: {
-        width: 200
+        width: 280
+    },
+    optionsTextfield: {
+        width: 280
     },
     tsvEditor: {
         width: '100%', height: '100%'
     },
     tsvEditorTextarea: {
         fontFamily: 'monospace'
+    },
+    optionContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        paddingTop: 4,
+        paddingBottom: 4
+    },
+    optionsContainer: {
+        padding: 40,
+        margin: 10,
+        display: 'inline-block',
+        textAlign: 'left'
+    },
+    optionsGrid: {
+        textAlign: 'center'
     }
 });
 

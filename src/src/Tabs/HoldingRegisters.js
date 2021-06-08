@@ -14,7 +14,7 @@ class HoldingRegisters extends BaseRegisters {
         rooms.unshift({value: '', title: ''});
 
         let result = [
-            {name: '_address', title: 'Address', type: 'text'},
+            {name: '_address', title: 'Address', type: 'number'},
             {name: 'name', title: 'Name', type: 'text'},
             {name: 'description', title: 'Description', type: 'text'},
             {name: 'unit', title: 'Unit', type: 'text'},
@@ -33,7 +33,7 @@ class HoldingRegisters extends BaseRegisters {
 
         if (this.props.native.params.multiDeviceId) {
             result.splice(1, 0, 
-                {name: 'deviceId', title: 'Slave ID', type: 'text'},
+                {name: 'deviceId', title: 'Slave ID', type: 'number'},
             );
         }
 

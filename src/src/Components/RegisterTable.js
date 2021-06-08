@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 
 import I18n from '@iobroker/adapter-react/i18n';
 
 import TsvDialog from './TsvDialog';
+import DeleteDialog from './DeleteDialog';
 
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -15,17 +16,99 @@ import Textfield from '@material-ui/core/Textfield';
 import IconButton from '@material-ui/core/IconButton';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import ClearIcon from '@material-ui/icons/Clear';
+import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import ImportExport from '@material-ui/icons/ImportExport';
+
+const DataCell = props => {
+    const sortedItem = props.sortedItem;
+    const field = props.field;
+    const editMode = props.editMode;
+    const setEditMode = props.setEditMode;
+
+    const ref = useRef();
+    // useEffect(() => {
+    //     if (props.editMode) {
+    //         // ref.current && ref.current.focus()
+    //         //window.setTimeout(() => ref.current && ref.current.focus(), 1000);
+    //     }
+    // }, [props.editMode])
+
+    let item = sortedItem.item;
+    let result = null;
+    if (field.type === 'checkbox') {
+        if (!editMode) {
+            result = <Checkbox 
+                checked={!!item[field.name]}
+                disabled
+            />
+        } else {
+            result = <Checkbox
+                inputRef={ref}
+                className={props.classes.tableCheckbox}
+                checked={!!item[field.name]}
+                onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.checked)}
+            />
+        }
+    }
+    else if (field.type === 'select') {
+        if (!editMode) {
+            result = field.options.find(option => option.value === item[field.name]).title;
+        } else {
+            result = <Select
+                value={item[field.name]} 
+                inputProps={{ref: ref, className: props.classes.tableSelect}}
+                onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.value)}
+            >
+                {field.options.map(option => 
+                    <MenuItem key={option.value} value={option.value}>{option.title ? I18n.t(option.title) : <i>{I18n.t('Nothing')}</i>}</MenuItem>
+                )}
+            </Select>
+        }
+    } else {
+        if (!editMode) {
+            result = item[field.name] ? item[field.name] : null;
+        } else {
+            result = <Textfield value={item[field.name]}
+                inputProps={{ref: ref, className: props.classes.tableTextfield}}
+                type={field.type}
+                onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.value)}
+            />
+        }
+    }
+
+    return <TableCell
+        className={props.classes.tableCell}
+        onClick={e => {
+            setEditMode(true);
+            window.setTimeout(() => ref.current && ref.current.focus(), 100);
+        }}
+        style={{
+            cursor: editMode ? null : 'pointer'
+        }}
+        // style={{padding: '0px 4px', border: 0}}
+    >
+        {result}
+    </TableCell>
+}
 
 const RegisterTable = props => {
     const [tsvDialogOpen, setTsvDialogOpen] = useState(false);
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('$index');
+    const [editMode, setEditMode] = useState(false);
+    const [deleteDialog, setDeleteDialog] = useState({
+        open: false,
+        actionTitle: '',
+        action: null,
+        title: '',
+        text: ''
+    });
     
     let sortedData = []
     props.data.forEach((item, index) => {sortedData[index] = {item: item, $index: index}});
@@ -37,7 +120,7 @@ const RegisterTable = props => {
         }
     });
 
-    return <form className={ props.classes.tab }>
+    return <div>
             <div>
                 <Tooltip title={I18n.t('Add')}>
                     <IconButton onClick={e => props.addItem()}>
@@ -49,11 +132,15 @@ const RegisterTable = props => {
                         <ImportExport/>
                     </IconButton>
                 </Tooltip>
+                <FormControlLabel
+                    control={<Switch checked={editMode} onChange={e => setEditMode(e.target.checked)} />}
+                    label={I18n.t('Edit mode')}
+                />
             </div>
-            <div className={clsx(props.classes.column, props.classes.columnSettings) }>
+            <div>
                 <Table size="small" 
                     stickyHeader
-                    // padding="none"
+                    padding="none"
                 >
                     <TableHead>
                         <TableRow>
@@ -106,51 +193,41 @@ const RegisterTable = props => {
                                     >{I18n.t(field.title)}</TableSortLabel>
                                 </TableCell>
                             )}
-                            <TableCell/>
+                            <TableCell>
+                                <Tooltip title={I18n.t('Delete all')}>
+                                    <IconButton onClick={e => setDeleteDialog({
+                                        open: true,
+                                        actionTitle: 'Delete all items',
+                                        action: () => props.changeData([]),
+                                        title: 'Delete item',
+                                        text: `Are you sure to delete all items?`
+                                    })}>
+                                        <DeleteIcon/>
+                                    </IconButton>
+                                </Tooltip>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {
                             sortedData.map((sortedItem) => 
-                                <TableRow key={sortedItem.$index}>
-                                    <TableCell>
+                                <TableRow hover key={sortedItem.$index}>
+                                    <TableCell className={props.classes.tableCell}>
                                         {sortedItem.$index}
                                     </TableCell>
                                     {props.fields.map(field => 
-                                        <TableCell key={field.name} 
-                                            // style={{padding: '0px 4px', border: 0}}
-                                        >{
-                                            (() => {
-                                                let item = sortedItem.item;
-                                                // return item[field.name];
-                                                if (field.type === 'checkbox') {
-                                                    return <Checkbox 
-                                                        checked={!!item[field.name]}
-                                                        className={props.classes.tableCheckbox}
-                                                        onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.checked)}
-                                                    />
-                                                }
-                                                if (field.type === 'select') {
-                                                    return <Select
-                                                        className={props.classes.tableSelect}
-                                                        value={item[field.name]} 
-                                                        onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.value)}
-                                                    >
-                                                        {field.options.map(option => 
-                                                            <MenuItem key={option.value} value={option.value}>{option.title ? I18n.t(option.title) : <i>{I18n.t('Nothing')}</i>}</MenuItem>
-                                                        )}
-                                                    </Select>
-                                                }
-                                                return <Textfield value={item[field.name]} className={props.classes.tableTextfield}
-                                                    onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.value)}
-                                                />
-                                            })()
-                                        }</TableCell>
+                                        <DataCell sortedItem={sortedItem} field={field} editMode={editMode} setEditMode={setEditMode} key={field.name} {...props} />
                                     )}
                                     <TableCell>
                                         <Tooltip title={I18n.t('Delete')}>
-                                            <IconButton onClick={e => props.deleteItem(sortedItem.$index)}>
-                                                <ClearIcon/>
+                                            <IconButton onClick={e => setDeleteDialog({
+                                                open: true,
+                                                actionTitle: 'Delete',
+                                                action: () => props.deleteItem(sortedItem.$index),
+                                                title: 'Delete item',
+                                                text: `Are you sure to delete ${sortedItem.$index}?`
+                                            })}>
+                                                <DeleteIcon/>
                                             </IconButton>
                                         </Tooltip>
                                     </TableCell>
@@ -168,7 +245,22 @@ const RegisterTable = props => {
                 fields={props.fields}
                 classes={props.classes}
             />
-        </form>;
+            <DeleteDialog 
+                open={deleteDialog.open} 
+                action={deleteDialog.action} 
+                actionTitle={deleteDialog.actionTitle} 
+                onClose={() => setDeleteDialog({
+                    open: false,
+                    actionTitle: '',
+                    action: null,
+                    title: '',
+                    text: ''
+                })} 
+                title={deleteDialog.title} 
+                text={deleteDialog.text}
+                classes={props.classes}
+            />
+        </div>;
 }
 
 export default RegisterTable

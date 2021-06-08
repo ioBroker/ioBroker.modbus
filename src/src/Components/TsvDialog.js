@@ -72,8 +72,8 @@ const TsvDialog = (props) => {
                 <TextField onChange={e => setTsv(e.target.value)} multiline value={tsv} className={props.classes.tsvEditor} inputProps={{className: props.classes.tsvEditorTextarea}}/>
             </div>
             <DialogActions>
-                <Button onClick={saveTsv}>{'Save'}</Button>
-                <Button onClick={props.onClose}>{'Cancel'}</Button>
+                <Button variant="contained" color="primary" onClick={saveTsv}>{'Save'}</Button>
+                <Button variant="contained" onClick={props.onClose}>{'Cancel'}</Button>
             </DialogActions>
         </DialogContent>
     </Dialog>

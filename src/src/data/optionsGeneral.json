@@ -1,0 +1,90 @@
+[
+    {
+      "name":"showAliases",
+      "type":"checkbox",
+      "title":"Use aliases"
+    },
+    {
+      "name":"directAddresses",
+      "type":"checkbox",
+      "title":"Use direct addresses by aliases"
+    },
+    {
+      "name":"doNotRoundAddressToWord",
+      "type":"checkbox",
+      "title":"Do not align addresses to 16 bits"
+    },
+    {
+      "name":"doNotUseWriteMultipleRegisters",
+      "type":"checkbox",
+      "title":"Do not use Write multiple registers"
+    },
+    {
+      "name":"round",
+      "type":"number",
+      "title":"Round Real to"
+    },
+    {
+      "name":"poll",
+      "type":"number",
+      "title":"Poll delay",
+      "dimension":"ms"
+    },
+    {
+      "name":"recon",
+      "type":"number",
+      "title":"Reconnect time",
+      "dimension":"ms"
+    },
+    {
+      "name":"timeout",
+      "type":"number",
+      "title":"Read timeout",
+      "dimension":"ms"
+    },
+    {
+      "name":"pulsetime",
+      "type":"number",
+      "title":"Pulse time",
+      "dimension":"ms"
+    },
+    {
+      "name":"waitTime",
+      "type":"number",
+      "title":"Wait time",
+      "dimension":"ms"
+    },
+    {
+      "name":"maxBlock",
+      "type":"number",
+      "title":"Max read request length (float)",
+      "dimension":"registers"
+    },
+    {
+      "name":"maxBoolBlock",
+      "type":"number",
+      "title":"Max read request length (booleans)",
+      "dimension":"registers"
+    },
+    {
+      "name":"writeInterval",
+      "type":"number",
+      "title":"Write interval",
+      "dimension":"ms"
+    },
+    {
+      "name":"alwaysUpdate",
+      "type":"checkbox",
+      "title":"Update unchanged states"
+    },
+    {
+      "name":"doNotIncludeAdrInId",
+      "type":"checkbox",
+      "title":"do not include address in ID"
+    },
+    {
+      "name":"preserveDotsInId",
+      "type":"checkbox",
+      "title":"preserve dots in ID"
+    }
+  ]
