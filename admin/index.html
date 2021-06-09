@@ -594,7 +594,9 @@
                             obj.item.poll = true;
                             changed = true;
                         }
-                        if (parseInt(obj.item.address, 10).toString() !== obj.item.address.toString()) changed = true;
+                        if (parseInt(obj.item.address, 10).toString() !== obj.item.address.toString()) {
+                            changed = true;
+                        }
                         obj.item._address = parseInt(obj.item._address, 10);
 
                         if ($('#modbus_showAliases').prop('checked')) {
@@ -1157,14 +1159,16 @@
         14: 14,
         15: 15
     };
-    function address2alias(id, address, isDirect) {
+    function address2alias(id, address, isDirect, isOnlyDirect) {
         var oldAddr = address;
         if (typeof address     === 'string') address     = parseInt(address, 10);
         if (typeof offsets[id] === 'string') offsets[id] = parseInt(offsets[id], 10);
         address = parseInt(address, 10) || 0;
         if (id === 'disInputs' || id === 'coils') {
             address = Math.floor(address / 16) * 16 + (isDirect ? _dmap[address % 16] : _rmap[address % 16]);
-            address += offsets[id];
+            if (!isOnlyDirect) {
+                address += offsets[id];
+            }
             console.log('Convert addr: ' + oldAddr + ' => alias: ' + address);
             return address
         } else {
@@ -1172,13 +1176,15 @@
         }
     }
 
-    function alias2address(id, alias, isDirect) {
+    function alias2address(id, alias, isDirect, isOnlyDirect) {
         var oldAlias = alias;
         if (typeof alias       === 'string') alias       = parseInt(alias, 10);
         if (typeof offsets[id] === 'string') offsets[id] = parseInt(offsets[id], 10);
 
         if (id === 'disInputs' || id === 'coils') {
-            alias = alias - offsets[id];
+            if (!isOnlyDirect) {
+                alias = alias - offsets[id];
+            }
             alias = Math.floor(alias / 16) * 16 + (isDirect ? _dmap[alias % 16] : _rmap[alias % 16]);
             console.log('Convert alias: ' + oldAlias + ' => addr: ' + alias);
             return alias;

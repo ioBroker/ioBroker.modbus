@@ -71,6 +71,7 @@ const styles = theme => ({
         paddingBottom: 4
     },
     optionsContainer: {
+        width: 'calc(100% - 70px)',
         padding: 40,
         margin: 10,
         display: 'inline-block',
@@ -111,12 +112,16 @@ const tabs = [
 
 class App extends GenericApp {
     constructor(props) {
-        if (window.io) {
+        // TODO: delete it after adapter-react 1.0.27 (BF: 2021.06.09)
+        if (window.io && window.location.port === '3000') {
+            console.log('Reaload!');
             delete window.io;
             window.io = new window.SocketClient();
         }
         const extendedProps = {...props};
         extendedProps.encryptedFields = ['pass'];
+
+
         extendedProps.translations = {
             'en': require('./i18n/en'),
             'de': require('./i18n/de'),
@@ -162,11 +167,11 @@ class App extends GenericApp {
             <SnackbarProvider>
                 <div className="App" style={{background: this.state.theme.palette.background.default, color: this.state.theme.palette.text.primary}}>
                     <AppBar position="static">
-                        <Tabs 
-                            value={this.getSelectedTab()} 
-                            onChange={(e, index) => this.selectTab(tabs[index].name, index)} 
+                        <Tabs
+                            value={this.getSelectedTab()}
+                            onChange={(e, index) => this.selectTab(tabs[index].name, index)}
                             variant="scrollable" scrollButtons="on">
-                            {tabs.map(tab => 
+                            {tabs.map(tab =>
                                 <Tab label={I18n.t(tab.title)} data-name={tab.name} key={tab.name} />
                             )}
                         </Tabs>

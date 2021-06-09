@@ -61,10 +61,10 @@ class Options extends Component {
                 return <Box className={this.props.classes.optionContainer} key={input.name}><FormControlLabel
                     label={I18n.t(input.title)}
                     control={<Checkbox
-                        label={I18n.t(input.title)} 
+                        label={I18n.t(input.title)}
                         className={this.props.classes.optionsCheckbox}
                         disabled={this.inputDisabled(input)}
-                        checked={this.props.native.params[input.name]} 
+                        checked={this.props.native.params[input.name]}
                         onChange={e => this.changeParam(input.name, e.target.checked)}
                 />}/> {I18n.t(input.dimension)}</Box>
             } else if (input.type === 'select') {
@@ -77,10 +77,10 @@ class Options extends Component {
                         <Select
                             className={this.props.classes.optionsSelect}
                             disabled={this.inputDisabled(input)}
-                            value={this.props.native.params[input.name]} 
+                            value={this.props.native.params[input.name]}
                             onChange={e => this.changeParam(input.name, e.target.value)}
                         >
-                            {input.options.map(option => 
+                            {input.options.map(option =>
                                 <MenuItem key={option.value} value={option.value}>{I18n.t(option.title)}</MenuItem>
                             )}
                         </Select>
@@ -90,12 +90,12 @@ class Options extends Component {
                 if (!this.inputDisplay(input)) {
                     return null;
                 }
-                return <Box className={this.props.classes.optionContainer} key={input.name}><TextField 
-                    type={input.type} 
-                    label={I18n.t(input.title)} 
+                return <Box className={this.props.classes.optionContainer} key={input.name}><TextField
+                    type={input.type}
+                    label={I18n.t(input.title)}
                     className={this.props.classes.optionsTextfield}
                     disabled={this.inputDisabled(input)}
-                    value={this.props.native.params[input.name]} 
+                    value={this.props.native.params[input.name]}
                     InputProps={{endAdornment: <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment>}}
                     onChange={e => this.changeParam(input.name, e.target.value)}
                 /></Box>
@@ -106,9 +106,9 @@ class Options extends Component {
 
     render() {
         return <form className={ this.props.classes.tab }>
-            <Grid container spacing={2}>
-                <Grid item xs={12} md={12} className={ this.props.classes.optionsGrid }>{this.getInputsBlock(connectionInputs, 'Connection parameters')}</Grid>
-                <Grid item xs={12} md={12} className={ this.props.classes.optionsGrid }>{this.getInputsBlock(generalInputs, 'General')}</Grid>
+            <Grid container spacing={2} >
+                <Grid item xs={12} md={6} className={ this.props.classes.optionsGrid }>{this.getInputsBlock(connectionInputs, 'Connection parameters')}</Grid>
+                <Grid item xs={12} md={6} className={ this.props.classes.optionsGrid }>{this.getInputsBlock(generalInputs, 'General')}</Grid>
             </Grid>
         </form>;
     }
