@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import I18n from '@iobroker/adapter-react/i18n';
 
 import Dialog from '@material-ui/core/Dialog';
@@ -21,6 +23,16 @@ const DeleteDialog = (props) => {
             </DialogActions>
         </DialogContent>
     </Dialog>
+}
+
+DeleteDialog.propTypes = {
+    open: PropTypes.bool,
+    onClose: PropTypes.func,
+    classes: PropTypes.object,
+    action: PropTypes.func,
+    title: PropTypes.string,
+    text: PropTypes.string,
+    actionTitle: PropTypes.string
 }
 
 export default DeleteDialog;

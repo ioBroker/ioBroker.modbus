@@ -16,7 +16,7 @@ import TabHoldingRegisters from './Tabs/HoldingRegisters';
 import TabDiscreteInputs from './Tabs/DiscreteInputs';
 import TabCoils from './Tabs/Coils';
 
-import background from './img/plc_back_opacity.png'
+// import background from './img/plc_back_opacity.png'
 
 const styles = theme => ({
     root: {},

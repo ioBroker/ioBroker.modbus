@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import clsx from 'clsx';
+import { useState, useRef } from 'react';
+import PropTypes from 'prop-types';
 
 import I18n from '@iobroker/adapter-react/i18n';
 
@@ -261,6 +261,15 @@ const RegisterTable = props => {
                 classes={props.classes}
             />
         </div>;
+}
+
+RegisterTable.propTypes = {
+    data: PropTypes.array,
+    fields: PropTypes.array,
+    classes: PropTypes.object,
+    addItem: PropTypes.func,
+    changeData: PropTypes.func,
+    deleteItem: PropTypes.func
 }
 
 export default RegisterTable

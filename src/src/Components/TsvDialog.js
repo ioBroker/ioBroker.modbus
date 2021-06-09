@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import { tsv2json, json2tsv } from 'tsv-json';
 import { useSnackbar } from 'notistack';
@@ -77,6 +78,15 @@ const TsvDialog = (props) => {
             </DialogActions>
         </DialogContent>
     </Dialog>
+}
+
+TsvDialog.propTypes = {
+    open: PropTypes.bool,
+    onClose: PropTypes.func,
+    classes: PropTypes.object,
+    save: PropTypes.func,
+    fields: PropTypes.array,
+    data: PropTypes.array
 }
 
 export default TsvDialog;
