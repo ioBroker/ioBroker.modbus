@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { tsv2json, json2tsv } from 'tsv-json';
 import { useSnackbar } from 'notistack';
+import AceEditor from "react-ace";
 
 import I18n from '@iobroker/adapter-react/i18n';
 
@@ -70,7 +71,7 @@ const TsvDialog = (props) => {
         <DialogContent>
             <DialogContentText>{I18n.t('You can copy, paste and edit data as TSV.')}</DialogContentText>
             <div>
-                <TextField onChange={e => setTsv(e.target.value)} multiline value={tsv} className={props.classes.tsvEditor} inputProps={{className: props.classes.tsvEditorTextarea}}/>
+                <AceEditor onChange={e => setTsv(e)} showPrintMargin={false} value={tsv} className={props.classes.tsvEditor} width="100%" setOptions={{firstLineNumber: 0}}/>
             </div>
             <DialogActions>
                 <Button variant="contained" color="primary" onClick={saveTsv}>{'Save'}</Button>

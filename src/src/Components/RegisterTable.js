@@ -58,7 +58,8 @@ const DataCell = props => {
     }
     else if (field.type === 'select') {
         if (!editMode) {
-            result = field.options.find(option => option.value === item[field.name]).title;
+            let option = field.options.find(option => option.value === item[field.name]);
+            result = option ? option.title : '';
         } else {
             result = <Select
                 value={item[field.name]} 

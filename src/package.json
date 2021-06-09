@@ -10,6 +10,7 @@
         "@sentry/integrations": "^6.3.6",
         "notistack": "^1.0.9",
         "react": "^17.0.2",
+        "react-ace": "^9.4.1",
         "react-dom": "^17.0.2",
         "react-icons": "^4.2.0",
         "react-scripts": "^4.0.3",
