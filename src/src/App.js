@@ -71,6 +71,7 @@ const styles = theme => ({
         paddingBottom: 4
     },
     optionsContainer: {
+        width: 'calc(100% - 70px)',
         padding: 40,
         margin: 10,
         display: 'inline-block',
@@ -162,11 +163,11 @@ class App extends GenericApp {
             <SnackbarProvider>
                 <div className="App" style={{background: this.state.theme.palette.background.default, color: this.state.theme.palette.text.primary}}>
                     <AppBar position="static">
-                        <Tabs 
-                            value={this.getSelectedTab()} 
-                            onChange={(e, index) => this.selectTab(tabs[index].name, index)} 
+                        <Tabs
+                            value={this.getSelectedTab()}
+                            onChange={(e, index) => this.selectTab(tabs[index].name, index)}
                             variant="scrollable" scrollButtons="on">
-                            {tabs.map(tab => 
+                            {tabs.map(tab =>
                                 <Tab label={I18n.t(tab.title)} data-name={tab.name} key={tab.name} />
                             )}
                         </Tabs>

@@ -43,7 +43,7 @@ const DataCell = props => {
     let result = null;
     if (field.type === 'checkbox') {
         if (!editMode) {
-            result = <Checkbox 
+            result = <Checkbox
                 checked={!!item[field.name]}
                 disabled
             />
@@ -62,11 +62,11 @@ const DataCell = props => {
             result = option ? option.title : '';
         } else {
             result = <Select
-                value={item[field.name]} 
+                value={item[field.name]}
                 inputProps={{ref: ref, className: props.classes.tableSelect}}
                 onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.value)}
             >
-                {field.options.map(option => 
+                {field.options.map(option =>
                     <MenuItem key={option.value} value={option.value}>{option.title ? I18n.t(option.title) : <i>{I18n.t('Nothing')}</i>}</MenuItem>
                 )}
             </Select>
@@ -110,14 +110,14 @@ const RegisterTable = props => {
         title: '',
         text: ''
     });
-    
+
     let sortedData = []
     props.data.forEach((item, index) => {sortedData[index] = {item: item, $index: index}});
     sortedData.sort((sortedItem1, sortedItem2) => {
         if (orderBy === '$index') {
-            return (order === 'asc' ? sortedItem1[orderBy] > sortedItem2[orderBy] : sortedItem1[orderBy] < sortedItem2[orderBy]) ? 1 : -1;            
+            return (order === 'asc' ? sortedItem1[orderBy] > sortedItem2[orderBy] : sortedItem1[orderBy] < sortedItem2[orderBy]) ? 1 : -1;
         } else {
-            return (order === 'asc' ? sortedItem1.item[orderBy] > sortedItem2.item[orderBy] : sortedItem1.item[orderBy] < sortedItem2.item[orderBy]) ? 1 : -1;            
+            return (order === 'asc' ? sortedItem1.item[orderBy] > sortedItem2.item[orderBy] : sortedItem1.item[orderBy] < sortedItem2.item[orderBy]) ? 1 : -1;
         }
     });
 
@@ -139,15 +139,15 @@ const RegisterTable = props => {
                 />
             </div>
             <div>
-                <Table size="small" 
+                <Table size="small"
                     stickyHeader
                     padding="none"
                 >
                     <TableHead>
                         <TableRow>
                             <TableCell className={props.classes.tableHeader}>
-                                <TableSortLabel 
-                                    active={orderBy === '$index'} 
+                                <TableSortLabel
+                                    active={orderBy === '$index'}
                                     direction={order}
                                     onClick={e => {
                                         const isAsc = orderBy === '$index' && order === 'asc';
@@ -156,11 +156,11 @@ const RegisterTable = props => {
                                     }}
                                 >{I18n.t('Index')}</TableSortLabel>
                             </TableCell>
-                            {props.fields.map(field => 
+                            {props.fields.map(field =>
                                 <TableCell key={field.name} className={props.classes.tableHeader}>
-                                    {field.type === 'checkbox' ? 
+                                    {field.type === 'checkbox' ?
                                         <Tooltip title={I18n.t('Change all')}>
-                                            <Checkbox 
+                                            <Checkbox
                                                 checked={(() => {
                                                     let isChecked = false;
                                                     for (let k in props.data) {
@@ -183,8 +183,8 @@ const RegisterTable = props => {
                                             />
                                         </Tooltip>
                                     : null}
-                                    <TableSortLabel 
-                                        active={field.name === orderBy} 
+                                    <TableSortLabel
+                                        active={field.name === orderBy}
                                         direction={order}
                                         onClick={e => {
                                             const isAsc = orderBy === field.name && order === 'asc';
@@ -196,7 +196,7 @@ const RegisterTable = props => {
                             )}
                             <TableCell>
                                 <Tooltip title={I18n.t('Delete all')}>
-                                    <IconButton onClick={e => setDeleteDialog({
+                                    <IconButton size="small" onClick={e => setDeleteDialog({
                                         open: true,
                                         actionTitle: 'Delete all items',
                                         action: () => props.changeData([]),
@@ -211,17 +211,17 @@ const RegisterTable = props => {
                     </TableHead>
                     <TableBody>
                         {
-                            sortedData.map((sortedItem) => 
+                            sortedData.map((sortedItem) =>
                                 <TableRow hover key={sortedItem.$index}>
                                     <TableCell className={props.classes.tableCell}>
                                         {sortedItem.$index}
                                     </TableCell>
-                                    {props.fields.map(field => 
+                                    {props.fields.map(field =>
                                         <DataCell sortedItem={sortedItem} field={field} editMode={editMode} setEditMode={setEditMode} key={field.name} {...props} />
                                     )}
                                     <TableCell>
                                         <Tooltip title={I18n.t('Delete')}>
-                                            <IconButton onClick={e => setDeleteDialog({
+                                            <IconButton size="small" onClick={e => setDeleteDialog({
                                                 open: true,
                                                 actionTitle: 'Delete',
                                                 action: () => props.deleteItem(sortedItem.$index),
@@ -238,26 +238,26 @@ const RegisterTable = props => {
                     </TableBody>
                 </Table>
             </div>
-            <TsvDialog 
-                open={tsvDialogOpen} 
-                save={props.changeData} 
-                onClose={() => setTsvDialogOpen(false)} 
-                data={props.data} 
+            <TsvDialog
+                open={tsvDialogOpen}
+                save={props.changeData}
+                onClose={() => setTsvDialogOpen(false)}
+                data={props.data}
                 fields={props.fields}
                 classes={props.classes}
             />
-            <DeleteDialog 
-                open={deleteDialog.open} 
-                action={deleteDialog.action} 
-                actionTitle={deleteDialog.actionTitle} 
+            <DeleteDialog
+                open={deleteDialog.open}
+                action={deleteDialog.action}
+                actionTitle={deleteDialog.actionTitle}
                 onClose={() => setDeleteDialog({
                     open: false,
                     actionTitle: '',
                     action: null,
                     title: '',
                     text: ''
-                })} 
-                title={deleteDialog.title} 
+                })}
+                title={deleteDialog.title}
                 text={deleteDialog.text}
                 classes={props.classes}
             />
@@ -270,7 +270,7 @@ RegisterTable.propTypes = {
     classes: PropTypes.object,
     addItem: PropTypes.func,
     changeData: PropTypes.func,
-    deleteItem: PropTypes.func
+    deleteItem: PropTypes.func,
 }
 
 export default RegisterTable

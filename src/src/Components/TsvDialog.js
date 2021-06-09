@@ -20,7 +20,7 @@ const TsvDialog = (props) => {
     useEffect(() => {
         let tsvResult = [];
         tsvResult.push(props.fields.map(field => field.name));
-        props.data.forEach(item => 
+        props.data.forEach(item =>
             tsvResult.push(props.fields.map(field => item[field.name] !== undefined ? item[field.name].toString() : ''))
         );
         setTsv(json2tsv(tsvResult));
@@ -66,11 +66,11 @@ const TsvDialog = (props) => {
         props.onClose();
     };
 
-    return <Dialog open={props.open} onClose={props.onClose} fullScreen>
+    return <Dialog open={props.open} onClose={props.onClose} maxWidth="lg" fullWidth>
         <DialogTitle>{I18n.t('Edit data as TSV')}</DialogTitle>
         <DialogContent>
             <DialogContentText>{I18n.t('You can copy, paste and edit data as TSV.')}</DialogContentText>
-            <div>
+            <div style={{height: 'calc(100% - 20px)'}}>
                 <AceEditor onChange={e => setTsv(e)} showPrintMargin={false} value={tsv} className={props.classes.tsvEditor} width="100%" setOptions={{firstLineNumber: 0}}/>
             </div>
             <DialogActions>
