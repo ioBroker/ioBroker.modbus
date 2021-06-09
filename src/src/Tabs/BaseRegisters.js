@@ -2,6 +2,7 @@ import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import RegisterTable from '../Components/RegisterTable';
+import Paper from '@material-ui/core/Paper';
 
 class BaseRegisters extends Component {
 
@@ -36,7 +37,7 @@ class BaseRegisters extends Component {
     }
 
     render() {
-        return <RegisterTable
+        return <Paper><RegisterTable
             classes={this.props.classes}
             fields={this.getFields()}
             data={this.props.native[this.nativeField]}
@@ -44,7 +45,7 @@ class BaseRegisters extends Component {
             addItem={this.addItem}
             deleteItem={this.deleteItem}
             changeData={this.changeData}
-        />
+        /></Paper>
     }
 }
 
