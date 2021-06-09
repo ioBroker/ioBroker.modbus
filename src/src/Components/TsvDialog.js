@@ -57,7 +57,7 @@ const TsvDialog = (props) => {
             }
             return item;
         });
-        console.log(data);
+
         if (!success) {
             enqueueSnackbar(<div>{errors.map((error, index) => <div key={index}>{error}</div>)}</div>, { variant: 'error' });
             return;

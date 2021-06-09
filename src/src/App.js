@@ -112,12 +112,16 @@ const tabs = [
 
 class App extends GenericApp {
     constructor(props) {
-        if (window.io) {
+        // TODO: delete it after adapter-react 1.0.27 (BF: 2021.06.09)
+        if (window.io && window.location.port === '3000') {
+            console.log('Reaload!');
             delete window.io;
             window.io = new window.SocketClient();
         }
         const extendedProps = {...props};
         extendedProps.encryptedFields = ['pass'];
+
+
         extendedProps.translations = {
             'en': require('./i18n/en'),
             'de': require('./i18n/de'),
