@@ -24,15 +24,13 @@ const DeleteDialog = (props) => {
     return props.open ? <Dialog open={props.open} onClose={props.onClose}>
         <DialogTitle>{I18n.t('Delete item')}</DialogTitle>
         <DialogContent>
-            <DialogContentText>
-                <p>{I18n.t('Are you sure to delete item with address "%s"?', props.item._address)}</p>
-                <p><FormControlLabel
-                    label={I18n.t('Don\'t show this message in 5 minutes')}
-                    control={<Checkbox
-                        checked={disableWarnings}
-                        onChange={e => setDisableWarnings(e.target.checked)}
-                />}/></p>
-            </DialogContentText>
+            <DialogContentText>{I18n.t('Are you sure to delete item with address "%s"?', props.item._address)}</DialogContentText>
+            <DialogContentText><FormControlLabel
+                label={I18n.t('Don\'t show this message in 5 minutes')}
+                control={<Checkbox
+                    checked={disableWarnings}
+                    onChange={e => setDisableWarnings(e.target.checked)}
+            />}/></DialogContentText>
             <DialogActions>
                 <Button variant="contained" color="secondary" startIcon={<DeleteIcon />} onClick={() => {
                     props.action(disableWarnings);

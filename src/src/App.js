@@ -170,7 +170,6 @@ class App extends GenericApp {
                                 instance={this.instance}
                                 adapterName={this.adapterName}
                                 changed={this.state.changed}
-                                classes={this.props.classes}
                                 onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
                                 changeNative={(value) => this.setState({native: value, changed: this.getIsChanged(value)})}
                                 rooms={this.state.rooms}

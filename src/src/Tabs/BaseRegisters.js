@@ -52,7 +52,6 @@ class BaseRegisters extends Component {
     render() {
         return <Paper>
             <RegisterTable
-                classes={this.props.classes}
                 fields={this.getFields()}
                 data={this.props.native[this.nativeField]}
                 changeParam={this.changeParam}

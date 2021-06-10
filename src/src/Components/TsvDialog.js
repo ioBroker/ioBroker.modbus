@@ -91,7 +91,16 @@ const TsvDialog = (props) => {
         <DialogContent>
             <DialogContentText>{I18n.t('You can copy, paste and edit data as TSV.')}</DialogContentText>
             <div>
-                <AceEditor onChange={e => setTsv(e)} height="400px" showPrintMargin={false} value={tsv} className={props.classes.tsvEditor} width="100%" setOptions={{firstLineNumber: 0}}/>
+                <AceEditor 
+                    onChange={e => setTsv(e)} 
+                    height="400px" 
+                    showPrintMargin={false} 
+                    value={tsv} 
+                    className={props.classes.tsvEditor} 
+                    width="100%" 
+                    setOptions={{firstLineNumber: 0}}
+                    mode={null}
+                />
             </div>
         </DialogContent>
         <DialogActions>

@@ -158,11 +158,19 @@ const RegisterTable = props => {
     let sortedData = []
     props.data.forEach((item, index) => {sortedData[index] = {item: item, $index: index}});
     sortedData.sort((sortedItem1, sortedItem2) => {
+        let sort1;
+        let sort2;
         if (orderBy === '$index') {
-            return (order === 'asc' ? sortedItem1[orderBy] > sortedItem2[orderBy] : sortedItem1[orderBy] < sortedItem2[orderBy]) ? 1 : -1;
+            sort1 = sortedItem1[orderBy];
+            sort2 = sortedItem2[orderBy];
+        } else if (props.fields[orderBy] && props.fields[orderBy].type === 'number') {
+            sort1 = parseInt(sortedItem1.item[orderBy]);
+            sort2 = parseInt(sortedItem2.item[orderBy]);
         } else {
-            return (order === 'asc' ? sortedItem1.item[orderBy] > sortedItem2.item[orderBy] : sortedItem1.item[orderBy] < sortedItem2.item[orderBy]) ? 1 : -1;
+            sort1 = sortedItem1.item[orderBy];
+            sort2 = sortedItem2.item[orderBy];
         }
+        return (order === 'asc' ? sort1 > sort2 : sort1 < sort2) ? 1 : -1;
     });
 
     return <div>
@@ -312,7 +320,6 @@ const RegisterTable = props => {
             onClose={() => setTsvDialogOpen(false)}
             data={props.data}
             fields={props.fields}
-            classes={props.classes}
         />
         <DeleteAllDialog
             open={deleteAllDialog.open}
@@ -321,7 +328,6 @@ const RegisterTable = props => {
                 open: false,
                 action: null,
             })}
-            classes={props.classes}
         />
         <DeleteDialog
             open={deleteDialog.open}
@@ -332,7 +338,6 @@ const RegisterTable = props => {
                 item: null
             })}
             item={deleteDialog.item}
-            classes={props.classes}
         />
     </div>;
 }
