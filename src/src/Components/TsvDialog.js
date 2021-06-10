@@ -81,7 +81,12 @@ const TsvDialog = (props) => {
         props.onClose();
     };
 
-    return <Dialog open={props.open} onClose={props.onClose} maxWidth="lg" fullWidth>
+    return <Dialog
+        open={props.open}
+        onClose={props.onClose}
+        maxWidth="lg"
+        fullWidth
+    >
         <DialogTitle>{I18n.t('Edit data as TSV')}</DialogTitle>
         <DialogContent>
             <DialogContentText>{I18n.t('You can copy, paste and edit data as TSV.')}</DialogContentText>
@@ -90,12 +95,12 @@ const TsvDialog = (props) => {
             </div>
         </DialogContent>
         <DialogActions>
-            <Button variant="contained" color="primary" onClick={() => {
+            <Button variant="outlined" color="primary" onClick={() => {
                 copy(tsv);
                 enqueueSnackbar(I18n.t('TSV was copied to clipboard'));
-            }} startIcon={<FileCopyIcon />}>{'Copy to clipboard'}</Button>
-            <Button variant="contained" color="primary" onClick={saveTsv} startIcon={<SaveIcon />}>{'Save'}</Button>
-            <Button variant="contained" onClick={props.onClose} startIcon={<ClearIcon />}>{'Cancel'}</Button>
+            }} startIcon={<FileCopyIcon />}>{I18n.t('Copy to clipboard')}</Button>
+            <Button variant="contained" color="primary" onClick={saveTsv} startIcon={<SaveIcon />}>{I18n.t('Import')}</Button>
+            <Button variant="contained" onClick={props.onClose} startIcon={<ClearIcon />}>{I18n.t('Close')}</Button>
         </DialogActions>
     </Dialog>
 }

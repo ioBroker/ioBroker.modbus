@@ -6,9 +6,9 @@ import roles from '../data/roles';
 import types from '../data/types';
 
 class HoldingRegisters extends BaseRegisters {
-    nativeField = 'holdingRegs'
+    nativeField = 'holdingRegs';
 
-    getFields() { 
+    getFields() {
         let rooms = this.getRooms();
         rooms.unshift({value: '', title: ''});
 
@@ -16,22 +16,22 @@ class HoldingRegisters extends BaseRegisters {
             {name: '_address', title: 'Address', type: 'number', sorted: true, width: 20},
             {name: 'name', title: 'Name', type: 'text', sorted: true},
             {name: 'description', title: 'Description', type: 'text', sorted: true},
-            {name: 'unit', title: 'Unit', type: 'text'},
+            {name: 'unit', title: 'Unit', type: 'text', width: 30},
             {name: 'type', title: 'Type', type: 'select', options: types, sorted: true},
             {name: 'len', title: 'Length', type: 'text', width: 20},
-            {name: 'factor', title: 'Factor', type: 'text', width: 20},
-            {name: 'offset', title: 'Offset', type: 'text', width: 20},
-            {name: 'formula', title: 'formula', type: 'text'},
+            {name: 'factor', title: 'Factor', type: 'text', width: 20, expert: true},
+            {name: 'offset', title: 'Offset', type: 'text', width: 20, expert: true},
+            {name: 'formula', title: 'Formula', type: 'text', expert: true},
             {name: 'role', title: 'Role', type: 'select', options: roles, sorted: true},
             {name: 'room', title: 'Room', type: 'select', options: rooms, sorted: true},
-            {name: 'poll', title: 'Poll', type: 'checkbox'},
-            {name: 'wp', title: 'WP', type: 'checkbox'},
-            {name: 'cw', title: 'CW', type: 'checkbox'},
-            {name: 'isScale', title: 'SF', type: 'checkbox'},
+            {name: 'poll', title: 'Poll', type: 'checkbox', tooltip: 'Enable polling of data point'},
+            {name: 'wp', title: 'WP', type: 'checkbox', tooltip: 'Write pulses (true → false edge)', expert: true},
+            {name: 'cw', title: 'CW', type: 'checkbox', tooltip: 'Cyclic write'},
+            {name: 'isScale', title: 'SF', type: 'checkbox', tooltip: 'Store this value as scaling factor', expert: true},
         ];
 
         if (this.props.native.params.multiDeviceId) {
-            result.splice(1, 0, 
+            result.splice(1, 0,
                 {name: 'deviceId', title: 'Slave ID', type: 'number', sorted: true, width: 20},
             );
         }
@@ -42,7 +42,7 @@ class HoldingRegisters extends BaseRegisters {
     addItem = () => {
         let data = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
         let newItem = {}
-        this.getFields().forEach(field => newItem[field.name] = '')
+        this.getFields().forEach(field => newItem[field.name] = '');
         if (data.length) {
             let sortedData = JSON.parse(JSON.stringify(data));
             sortedData.sort((item1, item2) => item1._address > item2._address ? 1 : -1);
@@ -70,12 +70,8 @@ class HoldingRegisters extends BaseRegisters {
     }
 
     getDisable = (index, name) => {
-        if (name === 'len') {
-            if (!['string', 'stringle'].includes(this.props.native[this.nativeField][index].type)) {
-                return true;
-            }
-        }
-        return false;
+        return name === 'len' &&
+            !['string', 'stringle'].includes(this.props.native[this.nativeField][index].type);
     }
 
     changeParam = (index, name, value) => {
@@ -84,10 +80,10 @@ class HoldingRegisters extends BaseRegisters {
         if (name === 'type') {
             if (['', 'uint16be', 'uint16le', 'int16be', 'int16le', 'uint8be', 'uint8le', 'int8be', 'int8le'].includes(value)) {
                 data[index].len = 1;
-            }
+            } else
             if (['uint32be', 'uint32le', 'uint32sw', 'uint32sb', 'int32be', 'int32le', 'int32sw', 'int32sb', 'floatbe', 'floatle', 'floatsw', 'floatsb', 'string', 'stringle'].includes(value)) {
                 data[index].len = 2;
-            }
+            } else
             if (['uint64be', 'uint64le', 'doublebe', 'doublele'].includes(value)) {
                 data[index].len = 4;
             }

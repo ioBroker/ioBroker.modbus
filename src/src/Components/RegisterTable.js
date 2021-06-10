@@ -2,12 +2,6 @@ import { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 
-import I18n from '@iobroker/adapter-react/i18n';
-
-import TsvDialog from './TsvDialog';
-import DeleteAllDialog from './DeleteAllDialog';
-import DeleteDialog from './DeleteDialog';
-
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
@@ -26,6 +20,15 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import ImportExport from '@material-ui/icons/ImportExport';
+
+import I18n from '@iobroker/adapter-react/i18n';
+
+import ExpertIcon from '@iobroker/adapter-react/icons/IconExpert';
+
+import TsvDialog from './TsvDialog';
+import DeleteAllDialog from './DeleteAllDialog';
+import DeleteDialog from './DeleteDialog';
+
 
 const styles = theme => ({
     tableHeader: {
@@ -72,7 +75,7 @@ const DataCell = props => {
     // }, [props.editMode])
 
     let item = sortedItem.item;
-    let result = null;
+    let result;
     if (field.type === 'checkbox') {
         if (!editMode) {
             result = <Checkbox
@@ -141,6 +144,7 @@ const RegisterTable = props => {
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('_address');
     const [editMode, setEditMode] = useState(true);
+    const [extendedMode, setExtendedMode] = useState(window.localStorage.getItem('Modbus.extendedMode') === 'true');
     const [deleteAllDialog, setDeleteAllDialog] = useState({
         open: false,
         action: null,
@@ -162,105 +166,118 @@ const RegisterTable = props => {
     });
 
     return <div>
-            <div>
-                <Tooltip title={I18n.t('Add')}>
-                    <IconButton onClick={e => props.addItem()}>
-                        <AddIcon/>
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title={I18n.t('Edit as TSV')}>
-                    <IconButton onClick={() => setTsvDialogOpen(true)}>
-                        <ImportExport/>
-                    </IconButton>
-                </Tooltip>
-                <FormControlLabel
-                    control={<Switch checked={editMode} onChange={e => setEditMode(e.target.checked)} />}
-                    label={I18n.t('Edit mode')}
-                />
-            </div>
-            <div className={props.classes.tableContainer}>
-                <Table size="small"
-                    stickyHeader
-                    padding="none"
-                >
-                    <TableHead>
-                        <TableRow>
-                            {props.fields.map(field => {
-                                let isChecked = false;
-                                let indeterminate = false;
-                                let trueFound = false;
-                                let falseFound = false;
-                                for (let k in props.data) {
-                                    if (props.data[k][field.name]) {
-                                        isChecked = true;
-                                        trueFound = true;
-                                    } else {
-                                        isChecked = false;
-                                        falseFound = true;
-                                    }
-
-                                    if (trueFound && falseFound) {
-                                        indeterminate = true;
-                                        isChecked = false;
-                                        break;
-                                    }
+        <div>
+            <Tooltip title={I18n.t('Add line')}>
+                <IconButton onClick={e => props.addItem()}>
+                    <AddIcon/>
+                </IconButton>
+            </Tooltip>
+            <Tooltip title={I18n.t('Edit as TSV (Tab separated values)')}>
+                <IconButton onClick={() => setTsvDialogOpen(true)}>
+                    <ImportExport/>
+                </IconButton>
+            </Tooltip>
+            <FormControlLabel
+                control={<Switch checked={editMode} onChange={e => setEditMode(e.target.checked)}/>}
+                label={I18n.t('Edit mode')}
+            />
+            <Tooltip title={I18n.t('Toggle extended mode')}>
+                <IconButton
+                    color={extendedMode ? 'primary' : 'inherit'}
+                    onClick={() => {
+                        window.localStorage.setItem('Modbus.extendedMode', extendedMode ? 'false' : 'true');
+                        setExtendedMode(!extendedMode);
+                    }}>
+                    <ExpertIcon/>
+                </IconButton>
+            </Tooltip>
+        </div>
+        <div className={props.classes.tableContainer}>
+            <Table size="small"
+                   stickyHeader
+                   padding="none"
+            >
+                <TableHead>
+                    <TableRow>
+                        {props.fields.filter(item => extendedMode || !item.expert).map(field => {
+                            let isChecked = false;
+                            let indeterminate = false;
+                            let trueFound = false;
+                            let falseFound = false;
+                            for (let k in props.data) {
+                                if (props.data[k][field.name]) {
+                                    isChecked = true;
+                                    trueFound = true;
+                                } else {
+                                    isChecked = false;
+                                    falseFound = true;
                                 }
 
-                                return <TableCell 
-                                    key={field.name} 
-                                    style={{width: field.type === 'checkbox' ? 20 : field.width}} 
-                                    className={props.classes.tableHeader}
-                                >
-                                    {field.type === 'checkbox' ?
-                                        <Tooltip title={I18n.t('Change all')}>
-                                            <Checkbox
-                                                indeterminate={indeterminate}
-                                                checked={isChecked}
-                                                onChange={e => {
-                                                    let newData = JSON.parse(JSON.stringify(props.data));
-                                                    newData.forEach(item => {
-                                                        item[field.name] = e.target.checked;
-                                                    })
-                                                    props.changeData(newData);
-                                                }}
-                                            />
-                                        </Tooltip>
+                                if (trueFound && falseFound) {
+                                    indeterminate = true;
+                                    isChecked = false;
+                                    break;
+                                }
+                            }
+
+                            return <TableCell
+                                key={field.name}
+                                style={{width: field.type === 'checkbox' ? 20 : field.width}}
+                                className={props.classes.tableHeader}
+                                title={field.tooltip ? I18n.t(field.tooltip) : null}
+                            >
+                                {field.type === 'checkbox' ?
+                                    <Tooltip title={I18n.t('Change all')}>
+                                        <Checkbox
+                                            indeterminate={indeterminate}
+                                            checked={isChecked}
+                                            onChange={e => {
+                                                let newData = JSON.parse(JSON.stringify(props.data));
+                                                newData.forEach(item => {
+                                                    item[field.name] = e.target.checked;
+                                                })
+                                                props.changeData(newData);
+                                            }}
+                                        />
+                                    </Tooltip>
                                     : null}
-                                    {field.sorted ? <TableSortLabel
-                                        active={field.name === orderBy}
-                                        direction={order}
-                                        onClick={e => {
-                                            const isAsc = orderBy === field.name && order === 'asc';
-                                            setOrder(isAsc ? 'desc' : 'asc');
-                                            setOrderBy(field.name);
-                                        }}
-                                    >{I18n.t(field.title)}</TableSortLabel> : I18n.t(field.title)}
-                                </TableCell>
-                            })}
-                            <TableCell>
-                                <Tooltip title={I18n.t('Delete all')}>
-                                    <IconButton size="small" 
-                                        onClick={e => setDeleteAllDialog({
-                                            open: true,
-                                            action: () => props.changeData([]),
-                                        })}
-                                        disabled={!props.data.length}
-                                    >
-                                        <DeleteIcon/>
-                                    </IconButton>
-                                </Tooltip>
+                                {field.sorted ? <TableSortLabel
+                                    active={field.name === orderBy}
+                                    direction={order}
+                                    onClick={e => {
+                                        const isAsc = orderBy === field.name && order === 'asc';
+                                        setOrder(isAsc ? 'desc' : 'asc');
+                                        setOrderBy(field.name);
+                                    }}
+                                >{I18n.t(field.title)}</TableSortLabel> : I18n.t(field.title)}
                             </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {
-                            sortedData.map((sortedItem) =>
-                                <TableRow hover key={sortedItem.$index}>
-                                    {props.fields.map(field =>
-                                        <DataCell sortedItem={sortedItem} field={field} editMode={editMode} setEditMode={setEditMode} key={field.name} {...props} />
-                                    )}
-                                    <TableCell>
-                                        <Tooltip title={I18n.t('Delete')}>
+                        })}
+                        <TableCell>
+                            <Tooltip title={I18n.t('Delete all')}>
+                                <IconButton size="small"
+                                            onClick={e => setDeleteAllDialog({
+                                                open: true,
+                                                action: () => props.changeData([]),
+                                            })}
+                                            disabled={!props.data.length}
+                                >
+                                    <DeleteIcon/>
+                                </IconButton>
+                            </Tooltip>
+                        </TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {
+                        sortedData.map((sortedItem) =>
+                            <TableRow hover key={sortedItem.$index}>
+                                {props.fields.filter(item => extendedMode || !item.expert).map(field =>
+                                    <DataCell sortedItem={sortedItem} field={field} editMode={editMode}
+                                              setEditMode={setEditMode} key={field.name} {...props} />
+                                )}
+                                <TableCell>
+                                    <Tooltip title={I18n.t('Delete')}>
+                                        <div>
                                             <IconButton size="small" onClick={e => {
                                                 let lastTime = window.sessionStorage.getItem('disableDeleteDialogs');
                                                 if (lastTime && (new Date() - new Date(lastTime)) < 1000 * 60 * 5) {
@@ -280,43 +297,44 @@ const RegisterTable = props => {
                                             }}>
                                                 <DeleteIcon/>
                                             </IconButton>
-                                        </Tooltip>
-                                    </TableCell>
-                                </TableRow>
-                            )
-                        }
-                    </TableBody>
-                </Table>
-            </div>
-            <TsvDialog
-                open={tsvDialogOpen}
-                save={props.changeData}
-                onClose={() => setTsvDialogOpen(false)}
-                data={props.data}
-                fields={props.fields}
-                classes={props.classes}
-            />
-            <DeleteAllDialog
-                open={deleteAllDialog.open}
-                action={deleteAllDialog.action}
-                onClose={() => setDeleteAllDialog({
-                    open: false,
-                    action: null,
-                })}
-                classes={props.classes}
-            />
-            <DeleteDialog
-                open={deleteDialog.open}
-                action={deleteDialog.action}
-                onClose={() => setDeleteDialog({
-                    open: false,
-                    action: null,
-                    item: null
-                })}
-                item={deleteDialog.item}
-                classes={props.classes}
-            />
-        </div>;
+                                        </div>
+                                    </Tooltip>
+                                </TableCell>
+                            </TableRow>
+                        )
+                    }
+                </TableBody>
+            </Table>
+        </div>
+        <TsvDialog
+            open={tsvDialogOpen}
+            save={props.changeData}
+            onClose={() => setTsvDialogOpen(false)}
+            data={props.data}
+            fields={props.fields}
+            classes={props.classes}
+        />
+        <DeleteAllDialog
+            open={deleteAllDialog.open}
+            action={deleteAllDialog.action}
+            onClose={() => setDeleteAllDialog({
+                open: false,
+                action: null,
+            })}
+            classes={props.classes}
+        />
+        <DeleteDialog
+            open={deleteDialog.open}
+            action={deleteDialog.action}
+            onClose={() => setDeleteDialog({
+                open: false,
+                action: null,
+                item: null
+            })}
+            item={deleteDialog.item}
+            classes={props.classes}
+        />
+    </div>;
 }
 
 RegisterTable.propTypes = {

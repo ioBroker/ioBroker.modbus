@@ -12,7 +12,7 @@ class BaseRegisters extends Component {
 
     getRooms() {
         return this.props.rooms.map(room => ({
-            value: room._id, 
+            value: room._id,
             title: typeof room.common.name === 'object' ? room.common.name[I18n.lang] : room.common.name
         }));
     }
@@ -20,7 +20,7 @@ class BaseRegisters extends Component {
     getFields() {
         return [];
     }
-    
+
     changeParam = (index, name, value) => {
         let data = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
         data[index][name] = value;
@@ -50,16 +50,18 @@ class BaseRegisters extends Component {
     }
 
     render() {
-        return <Paper><RegisterTable
-            classes={this.props.classes}
-            fields={this.getFields()}
-            data={this.props.native[this.nativeField]}
-            changeParam={this.changeParam}
-            addItem={this.addItem}
-            deleteItem={this.deleteItem}
-            changeData={this.changeData}
-            getDisable={this.getDisable}
-        /></Paper>
+        return <Paper>
+            <RegisterTable
+                classes={this.props.classes}
+                fields={this.getFields()}
+                data={this.props.native[this.nativeField]}
+                changeParam={this.changeParam}
+                addItem={this.addItem}
+                deleteItem={this.deleteItem}
+                changeData={this.changeData}
+                getDisable={this.getDisable}
+            />
+        </Paper>
     }
 }
 

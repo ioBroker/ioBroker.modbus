@@ -13,19 +13,19 @@ class InputRegisters extends BaseRegisters {
             {name: '_address', title: 'Address', type: 'number', sorted: true, width: 20},
             {name: 'name', title: 'Name', type: 'text', sorted: true},
             {name: 'description', title: 'Description', type: 'text', sorted: true},
-            {name: 'unit', title: 'Unit', type: 'text'},
+            {name: 'unit', title: 'Unit', type: 'text', width: 30},
             {name: 'type', title: 'Type', type: 'select', options: types, sorted: true},
             {name: 'len', title: 'Length', type: 'text', width: 20},
-            {name: 'factor', title: 'Factor', type: 'text', width: 20},
+            {name: 'factor', title: 'Factor', type: 'text', width: 20, expert: true},
             {name: 'offset', title: 'Offset', type: 'text', width: 20},
-            {name: 'formula', title: 'formula', type: 'text'},
+            {name: 'formula', title: 'Formula', type: 'text'},
             {name: 'role', title: 'Role', type: 'select', options: roles, sorted: true},
-            {name: 'cw', title: 'CW', type: 'checkbox'},
-            {name: 'isScale', title: 'SF', type: 'checkbox'},
+            {name: 'cw', title: 'CW', type: 'checkbox', tooltip: 'Cyclic write'},
+            {name: 'isScale', title: 'SF', type: 'checkbox', tooltip: 'Store this value as scaling factor', expert: true},
         ]
 
         if (this.props.native.params.multiDeviceId) {
-            result.splice(1, 0, 
+            result.splice(1, 0,
                 {name: 'deviceId', title: 'Slave ID', type: 'number', sorted: true, width: 20},
             );
         }

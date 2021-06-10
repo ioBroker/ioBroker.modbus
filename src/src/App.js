@@ -6,17 +6,22 @@ import { SnackbarProvider } from 'notistack';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+
+import {AiOutlineFieldBinary as BinaryIcon} from 'react-icons/all';
+import {TiSortNumerically as DigitsIcon} from 'react-icons/all';
+
 import GenericApp from '@iobroker/adapter-react/GenericApp';
 import Loader from '@iobroker/adapter-react/Components/Loader'
-
 import I18n from '@iobroker/adapter-react/i18n';
+
 import TabOptions from './Tabs/Options';
 import TabInputRegisters from './Tabs/InputRegisters';
 import TabHoldingRegisters from './Tabs/HoldingRegisters';
 import TabDiscreteInputs from './Tabs/DiscreteInputs';
 import TabCoils from './Tabs/Coils';
 
-import background from './img/plc_back_opacity.png'
+
+import background from './img/plc_back_opacity.png';
 
 const styles = theme => ({
     root: {},
@@ -47,21 +52,29 @@ const tabs = [
         name: 'discrete-inputs',
         title: 'Discrete inputs',
         component: TabDiscreteInputs,
+        icon: <BinaryIcon style={{width: 18, height: 18, marginRight: 4, display: 'inline-block'}}/>,
+        tooltip: 'Binary inputs (read-only)'
     },
     {
         name: 'coils',
         title: 'Coils',
         component: TabCoils,
+        icon: <BinaryIcon style={{width: 18, height: 18, marginRight: 4, display: 'inline-block'}}/>,
+        tooltip: 'Binary inputs and outputs'
     },
     {
         name: 'input-registers',
         title: 'Input Registers',
         component: TabInputRegisters,
+        icon: <DigitsIcon style={{width: 18, height: 18, marginRight: 4, display: 'inline-block'}}/>,
+        tooltip: 'Input registers (8-64 bit values, read-only)'
     },
     {
         name: 'holding-registers',
         title: 'Holding Registers',
         component: TabHoldingRegisters,
+        icon: <DigitsIcon style={{width: 18, height: 18, marginRight: 4, display: 'inline-block'}}/>,
+        tooltip: 'Input/output registers (8-64 bit values)'
     },
 ]
 
@@ -75,7 +88,6 @@ class App extends GenericApp {
         }
         const extendedProps = {...props};
         extendedProps.encryptedFields = ['pass'];
-
 
         extendedProps.translations = {
             'en': require('./i18n/en'),
@@ -125,14 +137,18 @@ class App extends GenericApp {
                         <Tabs
                             value={this.getSelectedTab()}
                             onChange={(e, index) => this.selectTab(tabs[index].name, index)}
-                            variant="scrollable" scrollButtons="on">
-                            {tabs.map(tab =>
-                                <Tab label={I18n.t(tab.title)} data-name={tab.name} key={tab.name} />
-                            )}
+                            variant="scrollable" scrollButtons="auto">
+                            {tabs.map(tab => {
+                                return <Tab
+                                    label={tab.icon ? <>{tab.icon}{I18n.t(tab.title)}</> : I18n.t(tab.title)}
+                                    data-name={tab.name}
+                                    key={tab.name}
+                                    title={tab.tooltip ? I18n.t(tab.tooltip) : undefined}
+                                />
+                            })}
                         </Tabs>
                     </AppBar>
                     <div className={this.isIFrame ? this.props.classes.tabContentIFrame : this.props.classes.tabContent}>
-                        {/* <pre style={{height: 200, overflowY: 'auto'}}>{JSON.stringify(this.state.native, null, 2)}</pre> */}
                         {tabs.map((tab, index) => {
                             const TabComponent = tab.component;
                             if (this.state.selectedTab) {

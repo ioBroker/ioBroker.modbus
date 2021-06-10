@@ -2,7 +2,7 @@
     {
       "name":"showAliases",
       "type":"checkbox",
-      "title":"Use aliases"
+      "title":"Use aliases as address"
     },
     {
       "name":"directAddresses",
@@ -12,7 +12,7 @@
     {
       "name":"doNotRoundAddressToWord",
       "type":"checkbox",
-      "title":"Do not align addresses to 16 bits"
+      "title":"Do not align addresses to word"
     },
     {
       "name":"doNotUseWriteMultipleRegisters",
@@ -57,7 +57,7 @@
     {
       "name":"maxBlock",
       "type":"number",
-      "title":"Max read request length (float)",
+      "title":"Max read request length",
       "dimension":"registers"
     },
     {

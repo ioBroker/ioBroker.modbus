@@ -25,7 +25,7 @@ const DeleteDialog = (props) => {
         <DialogTitle>{I18n.t('Delete item')}</DialogTitle>
         <DialogContent>
             <DialogContentText>
-                <p>{I18n.t('Are you sure to delete')} {props.item._address}?</p>
+                <p>{I18n.t('Are you sure to delete item with address "%s"?', props.item._address)}</p>
                 <p><FormControlLabel
                     label={I18n.t('Don\'t show this message in 5 minutes')}
                     control={<Checkbox

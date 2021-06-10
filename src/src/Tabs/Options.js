@@ -34,14 +34,17 @@ const styles = theme => ({
         paddingBottom: 4
     },
     optionsContainer: {
-        width: 'calc(100% - 70px)',
-        padding: 10,
-        margin: 10,
+        width: `calc(100% - ${theme.spacing(4)}px)`,
+        padding: theme.spacing(2),
         display: 'inline-block',
         textAlign: 'left'
     },
     optionsGrid: {
-        textAlign: 'center'
+        textAlign: 'center',
+        padding: theme.spacing(2),
+    },
+    header: {
+        fontSize: 24,
     }
 });
 
@@ -77,8 +80,8 @@ class Options extends Component {
     }
 
     getInputsBlock(inputs, title) {
-        return <><Paper className={this.props.classes.optionsContainer} elevation={3}>
-            <Typography variant="h4" gutterBottom>{I18n.t(title)}</Typography>
+        return <><Paper className={this.props.classes.optionsContainer}>
+            <Typography variant="h4" gutterBottom className={this.props.classes.header}>{I18n.t(title)}</Typography>
             {inputs.map(input => {
             if (input.type === 'checkbox') {
                 if (!this.inputDisplay(input)) {
