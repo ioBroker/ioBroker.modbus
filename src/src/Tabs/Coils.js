@@ -26,7 +26,7 @@ class Coils extends BaseRegisters {
 
         if (this.props.native.params.multiDeviceId) {
             result.splice(1, 0, 
-                {name: 'deviceId', title: 'Slave ID', type: 'number'},
+                {name: 'deviceId', title: 'Slave ID', type: 'number', sorted: true, width: 20},
             );
         }
 

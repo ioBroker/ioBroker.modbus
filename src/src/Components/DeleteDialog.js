@@ -13,7 +13,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import DeleteIcon from '@material-ui/icons/Delete';
-import UndoIcon from '@material-ui/icons/Undo';
+import ClearIcon from '@material-ui/icons/Clear';
 
 const DeleteDialog = (props) => {
     const [disableWarnings, setDisableWarnings] = useState(false);
@@ -38,7 +38,7 @@ const DeleteDialog = (props) => {
                     props.action(disableWarnings);
                     props.onClose();
                 }}>{I18n.t('Delete')}</Button>
-                <Button variant="contained" onClick={props.onClose} startIcon={<UndoIcon />}>{I18n.t('Cancel')}</Button>
+                <Button variant="contained" onClick={props.onClose} startIcon={<ClearIcon />}>{I18n.t('Cancel')}</Button>
             </DialogActions>
         </DialogContent>
     </Dialog> : null;

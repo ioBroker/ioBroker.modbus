@@ -5,6 +5,7 @@ import {withStyles} from '@material-ui/core/styles';
 import { tsv2json, json2tsv } from 'tsv-json';
 import { useSnackbar } from 'notistack';
 import AceEditor from "react-ace";
+import copy from 'copy-to-clipboard';
 
 import I18n from '@iobroker/adapter-react/i18n';
 
@@ -13,11 +14,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import UndoIcon from '@material-ui/icons/Undo';
+import ClearIcon from '@material-ui/icons/Clear';
 import SaveIcon from '@material-ui/icons/Save';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 
 const styles = theme => ({
     tsvEditor: {
@@ -38,7 +39,7 @@ const TsvDialog = (props) => {
             tsvResult.push(props.fields.map(field => item[field.name] !== undefined ? item[field.name].toString() : ''))
         );
         setTsv(json2tsv(tsvResult));
-    }, [props.open]);
+    }, [props.open]); // eslint-disable-line react-hooks/exhaustive-deps
     const { enqueueSnackbar } = useSnackbar();
 
     if (!props.open) {
@@ -89,8 +90,12 @@ const TsvDialog = (props) => {
             </div>
         </DialogContent>
         <DialogActions>
+            <Button variant="contained" color="primary" onClick={() => {
+                copy(tsv);
+                enqueueSnackbar(I18n.t('TSV was copied to clipboard'));
+            }} startIcon={<FileCopyIcon />}>{'Copy to clipboard'}</Button>
             <Button variant="contained" color="primary" onClick={saveTsv} startIcon={<SaveIcon />}>{'Save'}</Button>
-            <Button variant="contained" onClick={props.onClose} startIcon={<UndoIcon />}>{'Cancel'}</Button>
+            <Button variant="contained" onClick={props.onClose} startIcon={<ClearIcon />}>{'Cancel'}</Button>
         </DialogActions>
     </Dialog>
 }

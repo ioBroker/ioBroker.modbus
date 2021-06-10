@@ -80,13 +80,15 @@ const DataCell = props => {
                 disabled
             />
         } else {
-            result = <Checkbox
-                inputRef={ref}
-                className={props.classes.tableCheckbox}
-                checked={!!item[field.name]}
-                disabled={props.getDisable(sortedItem.$index, field.name)}
-                onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.checked)}
-            />
+            result = <Tooltip title={I18n.t(field.title)}>
+                <Checkbox
+                    inputRef={ref}
+                    className={props.classes.tableCheckbox}
+                    checked={!!item[field.name]}
+                    disabled={props.getDisable(sortedItem.$index, field.name)}
+                    onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.checked)}
+                />
+            </Tooltip>
         }
     }
     else if (field.type === 'select') {
