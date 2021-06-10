@@ -1,5 +1,6 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
+import {withStyles} from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -18,6 +19,31 @@ import I18n from '@iobroker/adapter-react/i18n';
 
 import connectionInputs from '../data/optionsConnection';
 import generalInputs from '../data/optionsGeneral';
+
+const styles = theme => ({
+    optionsSelect: {
+        width: 280
+    },
+    optionsTextfield: {
+        width: 280
+    },
+    optionContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        paddingTop: 4,
+        paddingBottom: 4
+    },
+    optionsContainer: {
+        width: 'calc(100% - 70px)',
+        padding: 10,
+        margin: 10,
+        display: 'inline-block',
+        textAlign: 'left'
+    },
+    optionsGrid: {
+        textAlign: 'center'
+    }
+});
 
 class Options extends Component {
     constructor(props) {
@@ -81,7 +107,7 @@ class Options extends Component {
                             onChange={e => this.changeParam(input.name, e.target.value)}
                         >
                             {input.options.map(option =>
-                                <MenuItem key={option.value} value={option.value}>{I18n.t(option.title)}</MenuItem>
+                                <MenuItem key={option.value} value={option.value}>{option.title}</MenuItem>
                             )}
                         </Select>
                     </FormControl> {I18n.t(input.dimension)}
@@ -140,4 +166,4 @@ Options.propTypes = {
     socket: PropTypes.object.isRequired,
 };
 
-export default Options;
+export default withStyles(styles)(Options);

@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types';
 
-import I18n from '@iobroker/adapter-react/i18n';
-
 import roles from '../data/roles';
 
 import BaseRegisters from './BaseRegisters';
@@ -10,16 +8,16 @@ class Coils extends BaseRegisters {
     nativeField = 'coils'
 
     getFields() { 
-        let rooms = this.props.rooms.map(room => ({value: room._id, title: typeof room.common.name === 'string' ? room.common.name : room.common.name[I18n.lang]}));
+        let rooms = this.getRooms();
         rooms.unshift({value: '', title: ''});
 
         let result = [
-            {name: '_address', title: 'Address', type: 'number'},
-            {name: 'name', title: 'Name', type: 'text'},
-            {name: 'description', title: 'Description', type: 'text'},
+            {name: '_address', title: 'Address', type: 'number', sorted: true, width: 20},
+            {name: 'name', title: 'Name', type: 'text', sorted: true},
+            {name: 'description', title: 'Description', type: 'text', sorted: true},
             {name: 'formula', title: 'formula', type: 'text'},
-            {name: 'role', title: 'Role', type: 'select', options: roles},
-            {name: 'room', title: 'Room', type: 'select', options: rooms},
+            {name: 'role', title: 'Role', type: 'select', options: roles, sorted: true},
+            {name: 'room', title: 'Room', type: 'select', options: rooms, sorted: true},
             {name: 'poll', title: 'Poll', type: 'checkbox'},
             {name: 'wp', title: 'WP', type: 'checkbox'},
             {name: 'cw', title: 'CW', type: 'checkbox'},
@@ -40,7 +38,9 @@ class Coils extends BaseRegisters {
         let newItem = {}
         this.getFields().forEach(field => newItem[field.name] = '')
         if (data.length) {
-            let lastItem = data[data.length - 1];
+            let sortedData = JSON.parse(JSON.stringify(data));
+            sortedData.sort((item1, item2) => item1._address > item2._address ? 1 : -1);
+            let lastItem = sortedData[sortedData.length - 1];
             newItem._address = parseInt(lastItem._address) + 1;
             newItem.deviceId = lastItem.deviceId;
             newItem.formula = lastItem.formula;
@@ -49,6 +49,8 @@ class Coils extends BaseRegisters {
             newItem.wp = lastItem.wp;
             newItem.cw = lastItem.cw;
             newItem.isScale = lastItem.isScale;
+        } else {
+            newItem.role = 'level';
         }
         data.push(newItem);
         this.props.onChange(this.nativeField, data);

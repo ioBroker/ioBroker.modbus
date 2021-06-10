@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import {withStyles} from '@material-ui/core/styles';
 
 import { tsv2json, json2tsv } from 'tsv-json';
 import { useSnackbar } from 'notistack';
@@ -14,6 +15,19 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+
+import UndoIcon from '@material-ui/icons/Undo';
+import SaveIcon from '@material-ui/icons/Save';
+
+const styles = theme => ({
+    tsvEditor: {
+        width: '100%',
+        height: 400
+    },
+    tsvEditorTextarea: {
+        fontFamily: 'monospace'
+    }
+});
 
 const TsvDialog = (props) => {
     const [tsv, setTsv] = useState('');
@@ -70,14 +84,14 @@ const TsvDialog = (props) => {
         <DialogTitle>{I18n.t('Edit data as TSV')}</DialogTitle>
         <DialogContent>
             <DialogContentText>{I18n.t('You can copy, paste and edit data as TSV.')}</DialogContentText>
-            <div style={{height: 'calc(100% - 20px)'}}>
-                <AceEditor onChange={e => setTsv(e)} showPrintMargin={false} value={tsv} className={props.classes.tsvEditor} width="100%" setOptions={{firstLineNumber: 0}}/>
+            <div>
+                <AceEditor onChange={e => setTsv(e)} height="400px" showPrintMargin={false} value={tsv} className={props.classes.tsvEditor} width="100%" setOptions={{firstLineNumber: 0}}/>
             </div>
-            <DialogActions>
-                <Button variant="contained" color="primary" onClick={saveTsv}>{'Save'}</Button>
-                <Button variant="contained" onClick={props.onClose}>{'Cancel'}</Button>
-            </DialogActions>
         </DialogContent>
+        <DialogActions>
+            <Button variant="contained" color="primary" onClick={saveTsv} startIcon={<SaveIcon />}>{'Save'}</Button>
+            <Button variant="contained" onClick={props.onClose} startIcon={<UndoIcon />}>{'Cancel'}</Button>
+        </DialogActions>
     </Dialog>
 }
 
@@ -90,4 +104,4 @@ TsvDialog.propTypes = {
     data: PropTypes.array
 }
 
-export default TsvDialog;
+export default withStyles(styles)(TsvDialog);

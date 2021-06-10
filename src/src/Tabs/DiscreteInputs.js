@@ -9,11 +9,11 @@ class DiscreteInputs extends BaseRegisters {
 
     getFields() {
         let result = [
-            {name: '_address', title: 'Address', type: 'number'},
-            {name: 'name', title: 'Name', type: 'text'},
-            {name: 'description', title: 'Description', type: 'text'},
+            {name: '_address', title: 'Address', type: 'number', sorted: true, width: 20},
+            {name: 'name', title: 'Name', type: 'text', sorted: true},
+            {name: 'description', title: 'Description', type: 'text', sorted: true},
             {name: 'formula', title: 'formula', type: 'text'},
-            {name: 'role', title: 'Role', type: 'select', options: roles},
+            {name: 'role', title: 'Role', type: 'select', options: roles, sorted: true},
             {name: 'cw', title: 'CW', type: 'checkbox'},
             {name: 'isScale', title: 'SF', type: 'checkbox'},
         ]
@@ -32,13 +32,18 @@ class DiscreteInputs extends BaseRegisters {
         let newItem = {}
         this.getFields().forEach(field => newItem[field.name] = '')
         if (data.length) {
-            let lastItem = data[data.length - 1];
+            let sortedData = JSON.parse(JSON.stringify(data));
+            sortedData.sort((item1, item2) => item1._address > item2._address ? 1 : -1);
+            let lastItem = sortedData[sortedData.length - 1];
             newItem._address = parseInt(lastItem._address) + 1;
             newItem.deviceId = lastItem.deviceId;
             newItem.formula = lastItem.formula;
             newItem.role = lastItem.role;
             newItem.cw = lastItem.cw;
             newItem.isScale = lastItem.isScale;
+        } else {
+            newItem.role = 'level';
+            newItem._address = this.props.native.params.showAliases ? 10001 : 0;
         }
         data.push(newItem);
         this.props.onChange(this.nativeField, data);
