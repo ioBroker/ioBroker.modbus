@@ -1,14 +1,14 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
+import Paper from '@material-ui/core/Paper';
+
 import I18n from '@iobroker/adapter-react/i18n';
 
 import RegisterTable from '../Components/RegisterTable';
-import Paper from '@material-ui/core/Paper';
 
 class BaseRegisters extends Component {
-
-    nativeField = ''
+    nativeField = '';
 
     getRooms() {
         return this.props.rooms.map(room => ({

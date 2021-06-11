@@ -59,8 +59,11 @@ class Options extends Component {
     inputDisabled = input => {
         if (input.name === 'slave' && this.props.native.params.type !== 'tcp') {
             return true;
-        }
+        } else
         if (input.name === 'directAddresses' && !this.props.native.params.showAliases) {
+            return true;
+        } else
+        if (input.name === 'multiDeviceId' && (this.props.native.params.slave === '1' || this.props.native.params.slave === 1)) {
             return true;
         }
         return false;
@@ -95,7 +98,7 @@ class Options extends Component {
                         disabled={this.inputDisabled(input)}
                         checked={this.props.native.params[input.name]}
                         onChange={e => this.changeParam(input.name, e.target.checked)}
-                />}/> {I18n.t(input.dimension)}</Box>
+                />}/> {input.dimension ? I18n.t(input.dimension) : null}</Box>
             } else if (input.type === 'select') {
                 if (!this.inputDisplay(input)) {
                     return null;
@@ -106,14 +109,14 @@ class Options extends Component {
                         <Select
                             className={this.props.classes.optionsSelect}
                             disabled={this.inputDisabled(input)}
-                            value={this.props.native.params[input.name]}
+                            value={this.props.native.params[input.name] || ''}
                             onChange={e => this.changeParam(input.name, e.target.value)}
                         >
                             {input.options.map(option =>
                                 <MenuItem key={option.value} value={option.value}>{option.title}</MenuItem>
                             )}
                         </Select>
-                    </FormControl> {I18n.t(input.dimension)}
+                    </FormControl> {input.dimension ? I18n.t(input.dimension) : null}
                 </Box>
             } else {
                 if (!this.inputDisplay(input)) {
@@ -125,7 +128,7 @@ class Options extends Component {
                     className={this.props.classes.optionsTextfield}
                     disabled={this.inputDisabled(input)}
                     value={this.props.native.params[input.name]}
-                    InputProps={{endAdornment: <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment>}}
+                    InputProps={{endAdornment: input.dimension ? <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment> : null}}
                     onChange={e => this.changeParam(input.name, e.target.value)}
                 /></Box>
             }
@@ -145,6 +148,16 @@ class Options extends Component {
     changeParam = (name, value) => {
         let native = JSON.parse(JSON.stringify(this.props.native));
         native.params[name] = value;
+        if (name === 'slave') {
+            if (value === '1' || value === 1) {
+                native.params.multiDeviceId = false;
+            }
+        } else
+        if (name === 'type') {
+            if (value !== 'tcp' && (native.params.slave === 1 || native.params.slave === '1')) {
+                native.params.slave = '0';
+            }
+        } else
         if (name === 'showAliases') {
             native.disInputs.forEach(item => (value ? item._address += 10000 : item._address -= 10000))
             native.inputRegs.forEach(item => (value ? item._address += 30000 : item._address -= 30000))

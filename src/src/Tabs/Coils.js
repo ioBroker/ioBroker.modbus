@@ -5,7 +5,7 @@ import roles from '../data/roles';
 import BaseRegisters from './BaseRegisters';
 
 class Coils extends BaseRegisters {
-    nativeField = 'coils'
+    nativeField = 'coils';
 
     getFields() {
         let rooms = this.getRooms();

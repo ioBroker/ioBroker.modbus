@@ -5,7 +5,7 @@ import roles from '../data/roles';
 import BaseRegisters from './BaseRegisters';
 
 class DiscreteInputs extends BaseRegisters {
-    nativeField = 'disInputs'
+    nativeField = 'disInputs';
 
     getFields() {
         let result = [

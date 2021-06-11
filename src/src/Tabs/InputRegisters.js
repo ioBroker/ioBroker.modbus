@@ -6,7 +6,7 @@ import roles from '../data/roles';
 import BaseRegisters from './BaseRegisters';
 
 class InputRegisters extends BaseRegisters {
-    nativeField = 'inputRegs'
+    nativeField = 'inputRegs';
 
     getFields() {
         let result = [
