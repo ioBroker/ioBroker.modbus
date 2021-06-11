@@ -821,23 +821,23 @@ function parseConfig(callback) {
                 obj = {
                     type: 'state',
                     common: {
-                        name:  'Number of connected partners',
+                        name:  options.config.slave ? 'Number of connected partners' : 'If connected to slave',
                         role:  'indicator.connected',
                         write: false,
                         read:  true,
-                        type:  options.config.slave ? 'number' : 'string'
+                        type:  options.config.slave ? 'number' : 'boolean'
                     },
                     native: {}
                 };
-                adapter.setObjectNotExists('info.connection', obj);
+                adapter.setObject('info.connection', obj);
             } else if (options.config.slave && obj.common.type !== 'string') {
                 obj.common.type = 'string';
                 obj.common.name = 'Connected masters';
-                adapter.setObjectNotExists('info.connection', obj);
+                adapter.setObject('info.connection', obj);
             } else if (!options.config.slave && obj.common.type !== 'boolean') {
                 obj.common.type = 'boolean';
                 obj.common.name = 'If connected to slave';
-                adapter.setObjectNotExists('info.connection', obj);
+                adapter.setObject('info.connection', obj);
             }
         });
 

@@ -222,7 +222,7 @@ const RegisterTable = props => {
             >
                 <TableHead>
                     <TableRow>
-                        {props.fields.filter(item => extendedMode || !item.expert).map(field => {
+                        {props.fields.filter(item => (extendedMode || !item.expert) && (!props.formulaDisabled || !item.formulaDisabled)).map(field => {
                             let isChecked = false;
                             let indeterminate = false;
                             let trueFound = false;
@@ -296,7 +296,7 @@ const RegisterTable = props => {
                     {
                         sortedData.map((sortedItem) =>
                             <TableRow hover key={sortedItem.$index}>
-                                {props.fields.filter(item => extendedMode || !item.expert).map(field =>
+                                {props.fields.filter(item => (extendedMode || !item.expert) && (!props.formulaDisabled || !item.formulaDisabled)).map(field =>
                                     <DataCell sortedItem={sortedItem} field={field} editMode={editMode} rooms={props.rooms}
                                               setEditMode={setEditMode} key={field.name} {...props} />
                                 )}
@@ -367,6 +367,7 @@ RegisterTable.propTypes = {
     changeData: PropTypes.func,
     deleteItem: PropTypes.func,
     rooms: PropTypes.object,
+    formulaDisabled: PropTypes.bool,
 }
 
 export default withStyles(styles)(RegisterTable);

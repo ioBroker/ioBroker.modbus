@@ -158,6 +158,7 @@ class App extends GenericApp {
                             }
                             return <TabComponent
                                 key={tab.name}
+                                formulaDisabled={this.state.native.params.slave === '1' || this.state.native.params.slave === 1}
                                 common={this.common}
                                 socket={this.socket}
                                 native={this.state.native}

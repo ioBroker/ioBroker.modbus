@@ -18,11 +18,11 @@ class InputRegisters extends BaseRegisters {
             {name: 'len', title: 'Length', type: 'text', width: 20},
             {name: 'factor', title: 'Factor', type: 'text', width: 20, expert: true},
             {name: 'offset', title: 'Offset', type: 'text', width: 20},
-            {name: 'formula', title: 'Formula', type: 'text'},
+            {name: 'formula', title: 'Formula', type: 'text', formulaDisabled: true},
             {name: 'role', title: 'Role', type: 'select', options: roles, sorted: true},
             {name: 'room', title: 'Room', type: 'rooms'},
             {name: 'cw', title: 'CW', type: 'checkbox', tooltip: 'Cyclic write'},
-            {name: 'isScale', title: 'SF', type: 'checkbox', tooltip: 'Store this value as scaling factor', expert: true},
+            {name: 'isScale', title: 'SF', type: 'checkbox', tooltip: 'Store this value as scaling factor', expert: true, formulaDisabled: true},
         ]
 
         if (this.props.native.params.multiDeviceId) {

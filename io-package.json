@@ -280,8 +280,12 @@
                 "dsn": "https://0c7b6d766435448cbf4908f615efe683@sentry.iobroker.net/84"
             }
         },
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "materialize": true,
         "adminUI": {
-            "config": "html"
+            "config": "materialize"
         },
         "dependencies": [
             {

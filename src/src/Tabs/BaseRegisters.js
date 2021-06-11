@@ -49,6 +49,7 @@ class BaseRegisters extends Component {
                 deleteItem={this.deleteItem}
                 changeData={this.changeData}
                 getDisable={this.getDisable}
+                formulaDisabled={this.props.formulaDisabled}
                 rooms={this.props.rooms}
             />
         </Paper>
@@ -66,6 +67,7 @@ BaseRegisters.propTypes = {
     changed: PropTypes.bool,
     socket: PropTypes.object.isRequired,
     rooms: PropTypes.object,
+    formulaDisabled: PropTypes.bool,
 };
 
 export default BaseRegisters;

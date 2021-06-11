@@ -12,11 +12,11 @@ class DiscreteInputs extends BaseRegisters {
             {name: '_address', title: 'Address', type: 'number', sorted: true, width: 20},
             {name: 'name', title: 'Name', type: 'text', sorted: true},
             {name: 'description', title: 'Description', type: 'text', sorted: true},
-            {name: 'formula', title: 'Formula', type: 'text', expert: true},
+            {name: 'formula', title: 'Formula', type: 'text', expert: true, formulaDisabled: true},
             {name: 'role', title: 'Role', type: 'select', options: roles, sorted: true},
             {name: 'room', title: 'Room', type: 'rooms'},
             {name: 'cw', title: 'CW', type: 'checkbox', tooltip: 'Cyclic write'},
-            {name: 'isScale', title: 'SF', type: 'checkbox', tooltip: 'Store this value as scaling factor', expert: true},
+            {name: 'isScale', title: 'SF', type: 'checkbox', tooltip: 'Store this value as scaling factor', expert: true, formulaDisabled: true},
         ];
 
         if (this.props.native.params.multiDeviceId) {
