@@ -3,12 +3,11 @@
     "version": "1.8.22",
     "private": true,
     "dependencies": {
-        "@iobroker/adapter-react": "^1.6.27",
+        "@iobroker/adapter-react": "^1.6.28",
         "@material-ui/core": "^4.11.4",
         "@material-ui/icons": "^4.11.2",
         "@sentry/browser": "^6.3.6",
         "@sentry/integrations": "^6.3.6",
-        "copy-to-clipboard": "^3.3.1",
         "notistack": "^1.0.9",
         "react": "^17.0.2",
         "react-ace": "^9.4.1",

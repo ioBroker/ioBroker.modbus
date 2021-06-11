@@ -180,6 +180,7 @@ Options.propTypes = {
     onChange: PropTypes.func,
     changed: PropTypes.bool,
     socket: PropTypes.object.isRequired,
+    rooms: PropTypes.object,
 };
 
 export default withStyles(styles)(Options);

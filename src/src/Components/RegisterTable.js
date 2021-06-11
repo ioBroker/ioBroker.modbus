@@ -94,26 +94,21 @@ const DataCell = props => {
                 />
             </Tooltip>;
         }
-    } else if (field.type === 'room') {
-        /*if (!editMode) {
-            let option = field.options.find(option => option.value === item[field.name]);
-
-            result = <TextWithIcon />
-            let option = field.options.find(option => option.value === item[field.name]);
-            result = option ? option.title : '';
+    } else if (field.type === 'rooms') {
+        if (!editMode) {
+            result = <TextWithIcon list={props.rooms} value={item[field.name]}/>;
         } else {
-            result = <Select
+            result = <SelectWithIcon
+                list={props.rooms}
+                allowNone={true}
                 value={item[field.name]}
-                inputProps={{ref: ref, className: props.classes.tableSelect}}
+                dense={true}
+                inputProps={{ref, className: props.classes.tableSelect}}
                 disabled={props.getDisable(sortedItem.$index, field.name)}
-                onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.value)}
+                onChange={value => props.changeParam(sortedItem.$index, field.name, value)}
                 className={props.classes.tableSelectContainer}
-            >
-                {field.options.map(option =>
-                    <MenuItem key={option.value} value={option.value}>{option.title ? option.title : <i>{I18n.t('Nothing')}</i>}</MenuItem>
-                )}
-            </Select>;
-        }*/
+            />;
+        }
     } else if (field.type === 'select') {
         if (!editMode) {
             let option = field.options.find(option => option.value === item[field.name]);
@@ -121,7 +116,7 @@ const DataCell = props => {
         } else {
             result = <Select
                 value={item[field.name]}
-                inputProps={{ref: ref, className: props.classes.tableSelect}}
+                inputProps={{ref, className: props.classes.tableSelect}}
                 disabled={props.getDisable(sortedItem.$index, field.name)}
                 onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.value)}
                 className={props.classes.tableSelectContainer}
@@ -302,7 +297,7 @@ const RegisterTable = props => {
                         sortedData.map((sortedItem) =>
                             <TableRow hover key={sortedItem.$index}>
                                 {props.fields.filter(item => extendedMode || !item.expert).map(field =>
-                                    <DataCell sortedItem={sortedItem} field={field} editMode={editMode}
+                                    <DataCell sortedItem={sortedItem} field={field} editMode={editMode} rooms={props.rooms}
                                               setEditMode={setEditMode} key={field.name} {...props} />
                                 )}
                                 <TableCell>
@@ -371,6 +366,7 @@ RegisterTable.propTypes = {
     addItem: PropTypes.func,
     changeData: PropTypes.func,
     deleteItem: PropTypes.func,
+    rooms: PropTypes.object,
 }
 
 export default withStyles(styles)(RegisterTable);

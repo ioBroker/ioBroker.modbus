@@ -2,20 +2,10 @@ import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import Paper from '@material-ui/core/Paper';
-
-import I18n from '@iobroker/adapter-react/i18n';
-
 import RegisterTable from '../Components/RegisterTable';
 
 class BaseRegisters extends Component {
     nativeField = '';
-
-    getRooms() {
-        return this.props.rooms.map(room => ({
-            value: room._id,
-            title: typeof room.common.name === 'object' ? room.common.name[I18n.lang] : room.common.name
-        }));
-    }
 
     getFields() {
         return [];
@@ -59,6 +49,7 @@ class BaseRegisters extends Component {
                 deleteItem={this.deleteItem}
                 changeData={this.changeData}
                 getDisable={this.getDisable}
+                rooms={this.props.rooms}
             />
         </Paper>
     }
@@ -74,6 +65,7 @@ BaseRegisters.propTypes = {
     onChange: PropTypes.func,
     changed: PropTypes.bool,
     socket: PropTypes.object.isRequired,
+    rooms: PropTypes.object,
 };
 
 export default BaseRegisters;

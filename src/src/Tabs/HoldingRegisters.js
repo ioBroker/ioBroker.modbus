@@ -9,8 +9,8 @@ class HoldingRegisters extends BaseRegisters {
     nativeField = 'holdingRegs';
 
     getFields() {
-        let rooms = this.getRooms();
-        rooms.unshift({value: '', title: ''});
+        //let rooms = this.getRooms();
+        //rooms.unshift({value: '', title: ''});
 
         let result = [
             {name: '_address', title: 'Address', type: 'number', sorted: true, width: 20},
@@ -23,7 +23,7 @@ class HoldingRegisters extends BaseRegisters {
             {name: 'offset', title: 'Offset', type: 'text', width: 20, expert: true},
             {name: 'formula', title: 'Formula', type: 'text', expert: true},
             {name: 'role', title: 'Role', type: 'select', options: roles, sorted: true},
-            {name: 'room', title: 'Room', type: 'select', options: rooms, sorted: true},
+            {name: 'room', title: 'Room', type: 'rooms'},
             {name: 'poll', title: 'Poll', type: 'checkbox', tooltip: 'Enable polling of data point'},
             {name: 'wp', title: 'WP', type: 'checkbox', tooltip: 'Write pulses (true → false edge)', expert: true},
             {name: 'cw', title: 'CW', type: 'checkbox', tooltip: 'Cyclic write'},
@@ -102,6 +102,7 @@ HoldingRegisters.propTypes = {
     onChange: PropTypes.func,
     changed: PropTypes.bool,
     socket: PropTypes.object.isRequired,
+    rooms: PropTypes.object,
 };
 
 export default HoldingRegisters;

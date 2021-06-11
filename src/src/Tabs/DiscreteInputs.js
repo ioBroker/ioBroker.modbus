@@ -14,6 +14,7 @@ class DiscreteInputs extends BaseRegisters {
             {name: 'description', title: 'Description', type: 'text', sorted: true},
             {name: 'formula', title: 'Formula', type: 'text', expert: true},
             {name: 'role', title: 'Role', type: 'select', options: roles, sorted: true},
+            {name: 'room', title: 'Room', type: 'rooms'},
             {name: 'cw', title: 'CW', type: 'checkbox', tooltip: 'Cyclic write'},
             {name: 'isScale', title: 'SF', type: 'checkbox', tooltip: 'Store this value as scaling factor', expert: true},
         ];
@@ -60,6 +61,7 @@ DiscreteInputs.propTypes = {
     onChange: PropTypes.func,
     changed: PropTypes.bool,
     socket: PropTypes.object.isRequired,
+    rooms: PropTypes.object,
 };
 
 export default DiscreteInputs;

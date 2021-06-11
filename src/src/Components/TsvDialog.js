@@ -4,10 +4,10 @@ import {withStyles} from '@material-ui/core/styles';
 
 import { tsv2json, json2tsv } from 'tsv-json';
 import { useSnackbar } from 'notistack';
-import AceEditor from "react-ace";
-import copy from 'copy-to-clipboard';
+import AceEditor from 'react-ace';
 
 import I18n from '@iobroker/adapter-react/i18n';
+import Utils from '@iobroker/adapter-react/Components/Utils';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -91,21 +91,21 @@ const TsvDialog = (props) => {
         <DialogContent>
             <DialogContentText>{I18n.t('You can copy, paste and edit data as TSV.')}</DialogContentText>
             <div>
-                <AceEditor 
-                    onChange={e => setTsv(e)} 
-                    height="400px" 
-                    showPrintMargin={false} 
-                    value={tsv} 
-                    className={props.classes.tsvEditor} 
-                    width="100%" 
+                <AceEditor
+                    onChange={e => setTsv(e)}
+                    height="400px"
+                    showPrintMargin={false}
+                    value={tsv}
+                    className={props.classes.tsvEditor}
+                    width="100%"
                     setOptions={{firstLineNumber: 0}}
                     mode={null}
                 />
             </div>
         </DialogContent>
         <DialogActions>
-            <Button variant="outlined" color="primary" onClick={() => {
-                copy(tsv);
+            <Button variant="outlined" color="primary" onClick={e => {
+                Utils.copyToClipboard(tsv, e);
                 enqueueSnackbar(I18n.t('TSV was copied to clipboard'));
             }} startIcon={<FileCopyIcon />}>{I18n.t('Copy to clipboard')}</Button>
             <Button variant="contained" color="primary" onClick={saveTsv} startIcon={<SaveIcon />}>{I18n.t('Import')}</Button>

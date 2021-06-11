@@ -8,8 +8,8 @@ class Coils extends BaseRegisters {
     nativeField = 'coils';
 
     getFields() {
-        let rooms = this.getRooms();
-        rooms.unshift({value: '', title: ''});
+        //let rooms = this.getRooms();
+        //rooms.unshift({value: '', title: ''});
 
         let result = [
             {name: '_address', title: 'Address', type: 'number', sorted: true, width: 20},
@@ -17,7 +17,7 @@ class Coils extends BaseRegisters {
             {name: 'description', title: 'Description', type: 'text', sorted: true},
             {name: 'formula', title: 'Formula', type: 'text', expert: true},
             {name: 'role', title: 'Role', type: 'select', options: roles, sorted: true},
-            {name: 'room', title: 'Room', type: 'select', options: rooms, sorted: true},
+            {name: 'room', title: 'Room', type: 'rooms'},
             {name: 'poll', title: 'Poll', type: 'checkbox'},
             {name: 'wp', title: 'WP', type: 'checkbox', expert: true},
             {name: 'cw', title: 'CW', type: 'checkbox'},
@@ -67,6 +67,7 @@ Coils.propTypes = {
     onChange: PropTypes.func,
     changed: PropTypes.bool,
     socket: PropTypes.object.isRequired,
+    rooms: PropTypes.object,
 };
 
 export default Coils;
