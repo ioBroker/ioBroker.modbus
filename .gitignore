@@ -9,3 +9,4 @@ tmp
 package-lock.json
 /src/node_modules
 /src/.eslintcache
+.DS_Store
