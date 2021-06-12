@@ -1,10 +1,13 @@
 ![Logo](admin/modbus.png)
 # iobroker.modbus
 
-![Number of Installations](http://iobroker.live/badges/modbus-installed.svg) ![Number of Installations](http://iobroker.live/badges/modbus-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.modbus.svg)](https://www.npmjs.com/package/iobroker.modbus)
-[![Downloads](https://img.shields.io/npm/dm/iobroker.modbus.svg)](https://www.npmjs.com/package/iobroker.modbus)
+![Number of Installations](http://iobroker.live/badges/modbus-installed.svg)
+![Number of Installations](http://iobroker.live/badges/modbus-stable.svg)
+[![NPM version](http://img.shields.io/npm/v/iobroker.modbus.svg)](https://www.npmjs.com/package/iobroker.modbus)
 
-[![NPM](https://nodei.co/npm/iobroker.modbus.png?downloads=true)](https://nodei.co/npm/iobroker.modbus/)
+![Test and Release](https://github.com/ioBroker/iobroker.modbus/workflows/Test%20and%20Release/badge.svg)
+[![Translation status](https://weblate.iobroker.net/widgets/adapters/-/modbus/svg-badge.svg)](https://weblate.iobroker.net/engage/adapters/?utm_source=widget)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.modbus.svg)](https://www.npmjs.com/package/iobroker.modbus)
 
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
@@ -105,6 +108,10 @@ The Formula is executed by the eval() function. Therefore all common functions a
 In the formula, "x" has to be used for the read value from Modbus. E.g. `x * Math.pow(10, sf['40065'])`
 
 If the formula cannot evaluated during runtime, then the Adapter writes a warning message to the log.
+
+Another usecase for fomulas could also be to prevent unplausible data with a formula like "x > 2000000 ? null : x"
+
+
 
 ### Role
 ioBroker role to assign.

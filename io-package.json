@@ -244,6 +244,7 @@
                 "zh-cn": "确保常规适配器停止不会终止该过程，以便计划的重新启动仍然有效\n更新串行端口，支持nodejs 12/14"
             }
         },
+        "title": "ModBus",
         "titleLang": {
             "en": "ModBus"
         },
@@ -284,6 +285,7 @@
         "connectionType": "local",
         "dataSource": "poll",
         "materialize": true,
+        "tier": 2,
         "adminUI": {
             "config": "materialize"
         },
