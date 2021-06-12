@@ -17,7 +17,6 @@
   "Description": "Opis",
   "Device ID": "Identyfikator urzadzenia",
   "Do not align addresses to word": "Nie wyrównaj adresów do 16 bitów",
-  "Do not use Write multiple registers": "Nie używaj zapisu wielu rejestrów",
   "Enable polling of data point": "Włącz odpytywanie punktu danych",
   "Export": "Eksport",
   "Export to CSV": "Eksportuj do pliku CSV",
@@ -107,5 +106,9 @@
   "Edit data as TSV": "Edytuj dane jako TSV",
   "You can copy, paste and edit data as TSV.": "Możesz kopiować, wklejać i edytować dane jako TSV.",
   "Copy to clipboard": "Skopiuj do schowka",
-  "TSV was copied to clipboard": "Dane zostały skopiowane do schowka"
+  "TSV was copied to clipboard": "Dane zostały skopiowane do schowka",
+  "Do not use \"Write multiple registers\"": "Nie używaj opcji „Zapisz wiele rejestrów”",
+  "Use only \"Write multiple registers\"": "Używaj tylko \"Zapisz wiele rejestrów\"",
+  "Write only with FC5/FC6": "Zapisuj tylko za pomocą FC5/FC6",
+  "Write only with FC15/FC16": "Zapis tylko za pomocą FC15/FC16"
 }

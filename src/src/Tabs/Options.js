@@ -14,6 +14,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 import I18n from '@iobroker/adapter-react/i18n';
 
@@ -29,9 +30,14 @@ const styles = theme => ({
     },
     optionContainer: {
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'start',
         paddingTop: 4,
         paddingBottom: 4
+    },
+    helperText: {
+        marginTop: -8,
+        marginLeft: 32,
+        marginBottom: 10
     },
     optionsContainer: {
         width: `calc(100% - ${theme.spacing(4)}px)`,
@@ -65,8 +71,15 @@ class Options extends Component {
         } else
         if (input.name === 'multiDeviceId' && (this.props.native.params.slave === '1' || this.props.native.params.slave === 1)) {
             return true;
+        } else
+        if (input.name === 'doNotUseWriteMultipleRegisters' && this.props.native.params.onlyUseWriteMultipleRegisters) {
+            return true;
+        } else
+        if (input.name === 'onlyUseWriteMultipleRegisters' && this.props.native.params.doNotUseWriteMultipleRegisters) {
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     inputDisplay = input => {
@@ -90,15 +103,20 @@ class Options extends Component {
                 if (!this.inputDisplay(input)) {
                     return null;
                 }
-                return <Box className={this.props.classes.optionContainer} key={input.name}><FormControlLabel
-                    label={I18n.t(input.title)}
-                    control={<Checkbox
+                return <FormControl className={this.props.classes.optionContainer} key={input.name}>
+                    <FormControlLabel
                         label={I18n.t(input.title)}
-                        className={this.props.classes.optionsCheckbox}
-                        disabled={this.inputDisabled(input)}
-                        checked={this.props.native.params[input.name]}
-                        onChange={e => this.changeParam(input.name, e.target.checked)}
-                />}/> {input.dimension ? I18n.t(input.dimension) : null}</Box>
+                        control={<Checkbox
+                            label={I18n.t(input.title)}
+                            className={this.props.classes.optionsCheckbox}
+                            disabled={this.inputDisabled(input)}
+                            checked={this.props.native.params[input.name]}
+                            onChange={e => this.changeParam(input.name, e.target.checked)}
+                        />}
+                    />
+                    {input.help ? <FormHelperText className={this.props.classes.helperText}>{I18n.t(input.help)}</FormHelperText> : null}
+                    {input.dimension ? I18n.t(input.dimension) : null}
+                </FormControl>
             } else if (input.type === 'select') {
                 if (!this.inputDisplay(input)) {
                     return null;
@@ -122,15 +140,18 @@ class Options extends Component {
                 if (!this.inputDisplay(input)) {
                     return null;
                 }
-                return <Box className={this.props.classes.optionContainer} key={input.name}><TextField
-                    type={input.type}
-                    label={I18n.t(input.title)}
-                    className={this.props.classes.optionsTextfield}
-                    disabled={this.inputDisabled(input)}
-                    value={this.props.native.params[input.name]}
-                    InputProps={{endAdornment: input.dimension ? <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment> : null}}
-                    onChange={e => this.changeParam(input.name, e.target.value)}
-                /></Box>
+                return <Box className={this.props.classes.optionContainer} key={input.name}>
+                    <TextField
+                        type={input.type}
+                        label={I18n.t(input.title)}
+                        className={this.props.classes.optionsTextfield}
+                        disabled={this.inputDisabled(input)}
+                        helperText={input.help ? I18n.t(input.help) : ''}
+                        value={this.props.native.params[input.name]}
+                        InputProps={{endAdornment: input.dimension ? <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment> : null}}
+                        onChange={e => this.changeParam(input.name, e.target.value)}
+                    />
+                </Box>
             }
         })}
         </Paper></>

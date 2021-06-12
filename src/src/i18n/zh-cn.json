@@ -17,7 +17,6 @@
   "Description": "描述",
   "Device ID": "设备编号：",
   "Do not align addresses to word": "不要将地址对齐为16位：",
-  "Do not use Write multiple registers": "不要使用写多个寄存器：",
   "Enable polling of data point": "启用数据点轮询",
   "Export": "出口",
   "Export to CSV": "导出为CSV",
@@ -107,5 +106,9 @@
   "Edit data as TSV": "将数据编辑为 TSV",
   "You can copy, paste and edit data as TSV.": "您可以将数据复制、粘贴和编辑为 TSV。",
   "Copy to clipboard": "复制到剪贴板",
-  "TSV was copied to clipboard": "数据已复制到剪贴板"
+  "TSV was copied to clipboard": "数据已复制到剪贴板",
+  "Do not use \"Write multiple registers\"": "不要使用“写入多个寄存器”",
+  "Use only \"Write multiple registers\"": "仅使用“写入多个寄存器”",
+  "Write only with FC5/FC6": "仅使用 FC5/FC6 写入",
+  "Write only with FC15/FC16": "仅使用 FC15/FC16 写入"
 }

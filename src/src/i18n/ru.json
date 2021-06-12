@@ -17,7 +17,6 @@
   "Description": "Описание",
   "Device ID": "ID устройства",
   "Do not align addresses to word": "Не выравнивать адреса до 16 бит",
-  "Do not use Write multiple registers": "Не используйте запись нескольких регистров",
   "Enable polling of data point": "Постоянный опрос переменной в каждом цикле",
   "Export": "Экспорт",
   "Export to CSV": "Экспорт в CSV",
@@ -107,5 +106,9 @@
   "Edit data as TSV": "Редактировать данные как TSV",
   "You can copy, paste and edit data as TSV.": "Вы можете копировать, вставлять и редактировать данные как TSV.",
   "Copy to clipboard": "Скопировать в буфер обмена",
-  "TSV was copied to clipboard": "Данные были скопированы в буфер обмена"
+  "TSV was copied to clipboard": "Данные были скопированы в буфер обмена",
+  "Do not use \"Write multiple registers\"": "Не использовать «Write multiple registers»",
+  "Use only \"Write multiple registers\"": "Использовать только «Write multiple registers»",
+  "Write only with FC5/FC6": "Запись только с FC5 / FC6",
+  "Write only with FC15/FC16": "Запись только с FC15 / FC16"
 }

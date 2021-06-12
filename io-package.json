@@ -324,6 +324,7 @@
             "round": 2,
             "doNotRoundAddressToWord": false,
             "doNotUseWriteMultipleRegisters": false,
+            "onlyUseWriteMultipleRegisters": false,
             "writeInterval": 0
         },
         "disInputs": [],

@@ -102,7 +102,7 @@ This offset is added to the read value after above multiplication. So the calcul
 This field can be used for advanced calculations if Factor and Offset is not sufficient. If this field is set, then the Factor and Offset field is ignored.
 The Formula is executed by the eval() function. Therefore all common functions are supported. Especially the Math functions. The formula must comply with Javascript syntax, therefore also take care about uper and lower cases.
 
-In the formula, "x" has to be used for the read value from Modbus. E.g. "x * Math.pow(10,sf['40065']);"
+In the formula, "x" has to be used for the read value from Modbus. E.g. `x * Math.pow(10, sf['40065'])`
 
 If the formula cannot evaluated during runtime, then the Adapter writes a warning message to the log.
 
@@ -250,6 +250,11 @@ There are some programs in folder *test' to test the TCP communication:
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
+### __WORK IN PROGRESS__
+* (nkleber78) Corrected issue with the scale factors
+* (bluefox) New react GUI added
+* (bluefox) Add new option: Use only Write multiple registers
+
 ### 3.3.1 (2021-05-10)
 * (bluefox) fixed the configuration dialog for "input registers" in slave mode 
 

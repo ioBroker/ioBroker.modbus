@@ -491,10 +491,10 @@ function checkDeviceIds(options, config, deviceIds) {
 function checkObjects(options, regType, regName, regFullName, tasks, newObjects) {
     let regs = options[regType];
 
-    adapter.log.debug('Initialize Objects for ' + regType + ': ' + JSON.stringify(regs));
+    adapter.log.debug(`Initialize Objects for ${regType}: ${JSON.stringify(regs)}`);
 
     for (let i = 0; regs.length > i; i++) {
-        const id = adapter.namespace + '.' + regs[i].id;
+        const id = adapter.namespace + '.' + (regs[i].id || i);
         regs[i].fullId = id;
         objects[id] = {
             _id: regs[i].id,
@@ -724,6 +724,7 @@ function parseConfig(callback) {
         doNotIncludeAdrInId:            (params.doNotIncludeAdrInId            === true || params.doNotIncludeAdrInId            === 'true'),
         preserveDotsInId:               (params.preserveDotsInId               === true || params.preserveDotsInId               === 'true'),
         doNotUseWriteMultipleRegisters: (params.doNotUseWriteMultipleRegisters === true || params.doNotUseWriteMultipleRegisters === 'true'),
+        onlyUseWriteMultipleRegisters:  (params.onlyUseWriteMultipleRegisters  === true || params.onlyUseWriteMultipleRegisters  === 'true'),
     };
 
     adapter.getForeignObjects(adapter.namespace + '.*', (err, list) => {

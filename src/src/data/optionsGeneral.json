@@ -17,7 +17,14 @@
     {
         "name": "doNotUseWriteMultipleRegisters",
         "type": "checkbox",
-        "title": "Do not use Write multiple registers"
+        "title": "Do not use \"Write multiple registers\"",
+        "help": "Write only with FC5/FC6"
+    },
+    {
+        "name": "onlyUseWriteMultipleRegisters",
+        "type": "checkbox",
+        "title": "Use only \"Write multiple registers\"",
+        "help": "Write only with FC15/FC16"
     },
     {
         "name": "round",

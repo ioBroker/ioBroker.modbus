@@ -17,7 +17,6 @@
   "Description": "Descripción",
   "Device ID": "ID del dispositivo",
   "Do not align addresses to word": "No alinee las direcciones a 16 bits",
-  "Do not use Write multiple registers": "No use Escribir registros múltiples",
   "Enable polling of data point": "Habilitar el sondeo del punto de datos",
   "Export": "Exportar",
   "Export to CSV": "Exportar a CSV",
@@ -107,5 +106,9 @@
   "Edit data as TSV": "Editar datos como TSV",
   "You can copy, paste and edit data as TSV.": "Puede copiar, pegar y editar datos como TSV.",
   "Copy to clipboard": "Copiar al portapapeles",
-  "TSV was copied to clipboard": "Los datos se copiaron al portapapeles"
+  "TSV was copied to clipboard": "Los datos se copiaron al portapapeles",
+  "Do not use \"Write multiple registers\"": "No utilice \"Escribir varios registros\"",
+  "Use only \"Write multiple registers\"": "Utilice solo \"Escribir varios registros\"",
+  "Write only with FC5/FC6": "Escribir solo con FC5 / FC6",
+  "Write only with FC15/FC16": "Escribir solo con FC15 / FC16"
 }

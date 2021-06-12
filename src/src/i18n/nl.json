@@ -17,7 +17,6 @@
   "Description": "Beschrijving",
   "Device ID": "Apparaat ID",
   "Do not align addresses to word": "Lijn adressen niet uit met 16 bits",
-  "Do not use Write multiple registers": "Gebruik niet meerdere registers schrijven",
   "Enable polling of data point": "Polling van gegevenspunt inschakelen",
   "Export": "Exporteren",
   "Export to CSV": "Exporteren naar CSV",
@@ -107,5 +106,9 @@
   "Edit data as TSV": "Gegevens bewerken als TSV",
   "You can copy, paste and edit data as TSV.": "U kunt gegevens kopiëren, plakken en bewerken als TSV.",
   "Copy to clipboard": "Kopieer naar klembord",
-  "TSV was copied to clipboard": "Gegevens zijn naar het klembord gekopieerd"
+  "TSV was copied to clipboard": "Gegevens zijn naar het klembord gekopieerd",
+  "Do not use \"Write multiple registers\"": "Gebruik \"Meerdere registers schrijven\" niet",
+  "Use only \"Write multiple registers\"": "Gebruik alleen \"Meerdere registers schrijven\"",
+  "Write only with FC5/FC6": "Schrijf alleen met FC5/FC6",
+  "Write only with FC15/FC16": "Schrijf alleen met FC15/FC16"
 }

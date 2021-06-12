@@ -17,7 +17,6 @@
   "Description": "Description",
   "Device ID": "Device ID",
   "Do not align addresses to word": "Do not align addresses to 16 bits",
-  "Do not use Write multiple registers": "Do not use Write multiple registers",
   "Enable polling of data point": "Poll this data point periodically",
   "Export": "Export",
   "Export to CSV": "Export to CSV",
@@ -107,5 +106,9 @@
   "Edit data as TSV": "Edit data as TSV",
   "You can copy, paste and edit data as TSV.": "You can copy, paste and edit data as TSV.",
   "Copy to clipboard": "Copy to clipboard",
-  "TSV was copied to clipboard": "Data was copied to clipboard"
+  "TSV was copied to clipboard": "Data was copied to clipboard",
+  "Do not use \"Write multiple registers\"": "Do not use \"Write multiple registers\"",
+  "Use only \"Write multiple registers\"": "Use only \"Write multiple registers\"",
+  "Write only with FC5/FC6": "Write only with FC5/FC6",
+  "Write only with FC15/FC16": "Write only with FC15/FC16"
 }
