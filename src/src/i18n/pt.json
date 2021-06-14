@@ -110,5 +110,7 @@
   "Do not use \"Write multiple registers\"": "Não use \"Gravar registros múltiplos\"",
   "Use only \"Write multiple registers\"": "Use apenas \"Gravar registros múltiplos\"",
   "Write only with FC5/FC6": "Escreva apenas com FC5 / FC6",
-  "Write only with FC15/FC16": "Escreva apenas com FC15 / FC16"
+  "Write only with FC15/FC16": "Escreva apenas com FC15 / FC16",
+  "Slave IP address": "Endereço IP escravo",
+  "Listen on all IPs": "Ouça em todos os IPs"
 }

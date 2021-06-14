@@ -63,12 +63,13 @@ class Options extends Component {
 
         this.state = {
             ports: null,
-            customPort: false
+            customPort: false,
+            ips: null,
         };
     }
 
     readPorts() {
-        return this.props.socket.getState('system.adapter.' + this.props.adapterName + '.' + this.props.instance + '.alive')
+        return this.props.socket.getState(`system.adapter.${this.props.adapterName}.${this.props.instance}.alive`)
             .then(state => {
                 if (state && state.val) {
                     return this.props.socket.sendTo(this.props.adapterName + '.' + this.props.instance, 'listUart', null)
@@ -91,9 +92,24 @@ class Options extends Component {
             .catch(e => console.error('Cannot read alive: ' + e));
     }
 
+    readIPs() {
+        return this.props.socket.getIpAddresses(this.props.common.host)
+            .then(ips => {
+                ips = ips || [];
+                ips = ips.map(ip => ({value: ip, title: ip}));
+                ips.unshift({value: '0.0.0.0', title: 'Listen on all IPs'});
+                ips.unshift({value: '127.0.0.1', title: '127.0.0.1 (Localhost)'});
+                this.setState({ips});
+            })
+            .catch(e => console.error('Cannot read IP addresses: ' + e));
+    }
+
     componentDidMount() {
         if (this.props.native.params.type === 'serial') {
             this.readPorts();
+        }
+        if (this.props.native.params.type !== 'serial' && (this.props.native.params.slave === '1' || this.props.native.params.slave === 1)) {
+            this.readIPs();
         }
     }
 
@@ -136,7 +152,35 @@ class Options extends Component {
             {inputs.map(input => {
                 if (!this.inputDisplay(input)) {
                     return null;
-                } else
+                } else if (input.name === 'bind' && this.props.native.params.type !== 'serial' && (this.props.native.params.slave === '1' || this.props.native.params.slave === 1)) {
+                    return <Box className={this.props.classes.optionContainer} key={input.name}>
+                        {this.state.ips ?
+                            <FormControl>
+                                <InputLabel>{I18n.t('Slave IP address')}</InputLabel>
+                                <Select
+                                    className={this.props.classes.optionsSelect}
+                                    disabled={this.inputDisabled(input)}
+                                    value={this.props.native.params[input.name] || ''}
+                                    onChange={e => this.changeParam(input.name, e.target.value)}
+                                >
+                                    {this.state.ips.map(option =>
+                                        <MenuItem key={option.value} value={option.value}>{option.title}</MenuItem>
+                                    )}
+                                </Select>
+                            </FormControl>
+                            :
+                            <TextField
+                                type={input.type}
+                                label={I18n.t('Slave IP address')}
+                                className={this.props.classes.optionsTextfield}
+                                disabled={this.inputDisabled(input)}
+                                helperText={input.help ? I18n.t(input.help) : ''}
+                                value={this.props.native.params[input.name]}
+                                InputProps={{endAdornment: input.dimension ? <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment> : null}}
+                                onChange={e => this.changeParam(input.name, e.target.value)}
+                            />}
+                    </Box>;
+                }
                 if (input.type === 'checkbox') {
                     return <FormControl className={this.props.classes.optionContainer} key={input.name}>
                         <FormControlLabel
@@ -151,7 +195,7 @@ class Options extends Component {
                         />
                         {input.help ? <FormHelperText className={this.props.classes.helperText}>{I18n.t(input.help)}</FormHelperText> : null}
                         {input.dimension ? I18n.t(input.dimension) : null}
-                    </FormControl>
+                    </FormControl>;
                 } else if (input.type === 'select') {
                     return <Box className={this.props.classes.optionContainer} key={input.name}>
                         <FormControl>
@@ -167,7 +211,7 @@ class Options extends Component {
                                 )}
                             </Select>
                         </FormControl> {input.dimension ? I18n.t(input.dimension) : null}
-                    </Box>
+                    </Box>;
                 }  else if (input.type === 'ports') {
                     return <Box className={this.props.classes.optionContainer} key={input.name}>
                         {this.state.ports && !this.state.customPort ?
@@ -196,7 +240,7 @@ class Options extends Component {
                                 onChange={e => this.changeParam(input.name, e.target.value)}
                             />}
                             {this.state.ports ? <IconButton onClick={() => this.setState({customPort: !this.state.customPort})}><EditIcon/></IconButton> : null}
-                    </Box>
+                    </Box>;
                 } else {
                     return <Box className={this.props.classes.optionContainer} key={input.name}>
                         <TextField
@@ -209,7 +253,7 @@ class Options extends Component {
                             InputProps={{endAdornment: input.dimension ? <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment> : null}}
                             onChange={e => this.changeParam(input.name, e.target.value)}
                         />
-                    </Box>
+                    </Box>;
                 }
             })
             }
@@ -231,6 +275,9 @@ class Options extends Component {
         if (name === 'slave') {
             if (value === '1' || value === 1) {
                 native.params.multiDeviceId = false;
+                if (this.props.native.params.type !== 'serial') {
+                    this.readIPs();
+                }
             }
         } else
         if (name === 'type') {
@@ -240,6 +287,9 @@ class Options extends Component {
 
             if (value === 'serial') {
                 this.readPorts();
+            }
+            if (value === 'serial' && (this.props.native.params.slave === '1' || this.props.native.params.slave === 1)) {
+                this.readIPs();
             }
         } else
         if (name === 'showAliases') {

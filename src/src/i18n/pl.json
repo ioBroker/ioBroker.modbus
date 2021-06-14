@@ -110,5 +110,7 @@
   "Do not use \"Write multiple registers\"": "Nie używaj opcji „Zapisz wiele rejestrów”",
   "Use only \"Write multiple registers\"": "Używaj tylko \"Zapisz wiele rejestrów\"",
   "Write only with FC5/FC6": "Zapisuj tylko za pomocą FC5/FC6",
-  "Write only with FC15/FC16": "Zapis tylko za pomocą FC15/FC16"
+  "Write only with FC15/FC16": "Zapis tylko za pomocą FC15/FC16",
+  "Slave IP address": "Adres IP urządzenia podrzędnego",
+  "Listen on all IPs": "Słuchaj na wszystkich adresach IP"
 }
