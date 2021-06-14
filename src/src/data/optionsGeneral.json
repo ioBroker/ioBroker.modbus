@@ -74,6 +74,12 @@
         "dimension": "registers"
     },
     {
+        "name": "readInterval",
+        "type": "number",
+        "title": "Read interval",
+        "dimension": "ms"
+    },
+    {
         "name": "writeInterval",
         "type": "number",
         "title": "Write interval",

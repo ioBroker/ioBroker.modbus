@@ -112,5 +112,6 @@
   "Write only with FC5/FC6": "仅使用 FC5/FC6 写入",
   "Write only with FC15/FC16": "仅使用 FC15/FC16 写入",
   "Slave IP address": "从IP地址",
-  "Listen on all IPs": "侦听所有 IP"
+  "Listen on all IPs": "侦听所有 IP",
+  "Read interval": "读取间隔"
 }

@@ -112,5 +112,6 @@
   "Write only with FC5/FC6": "Escreva apenas com FC5 / FC6",
   "Write only with FC15/FC16": "Escreva apenas com FC15 / FC16",
   "Slave IP address": "Endereço IP escravo",
-  "Listen on all IPs": "Ouça em todos os IPs"
+  "Listen on all IPs": "Ouça em todos os IPs",
+  "Read interval": "Intervalo de leitura"
 }

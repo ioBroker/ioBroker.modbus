@@ -276,7 +276,7 @@ There are some programs in folder *test' to test the TCP communication:
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
-### 3.4.0 (2021-06-14)
+### 3.4.1 (2021-06-14)
 * (nkleber78) Corrected issue with the scale factors
 * (bluefox) New react GUI added
 * (bluefox) Add new option: Use only Write multiple registers, read interval

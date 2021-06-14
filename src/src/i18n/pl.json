@@ -112,5 +112,6 @@
   "Write only with FC5/FC6": "Zapisuj tylko za pomocą FC5/FC6",
   "Write only with FC15/FC16": "Zapis tylko za pomocą FC15/FC16",
   "Slave IP address": "Adres IP urządzenia podrzędnego",
-  "Listen on all IPs": "Słuchaj na wszystkich adresach IP"
+  "Listen on all IPs": "Słuchaj na wszystkich adresach IP",
+  "Read interval": "Interwał odczytu"
 }
