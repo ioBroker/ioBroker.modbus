@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.3.1",
+        "version": "3.4.0",
         "news": {
+            "3.4.0": {
+                "en": "Corrected issue with the scale factors\nNew react GUI added\nAdd new option: Use only Write multiple registers, read interval",
+                "de": "Problem mit den Skalierungsfaktoren behoben\nNeue Reaktions-GUI hinzugefügt\nNeue Option hinzufügen: Use only Write multiple registers, read interval",
+                "ru": "Исправлена проблема с масштабными коэффициентами.\nДобавлен новый графический интерфейс реакции\nДобавить новую опцию: использовать только запись нескольких регистров, интервал чтения",
+                "pt": "Problema corrigido com os fatores de escala\nNova GUI de reação adicionada\nAdicionar nova opção: usar apenas registros múltiplos de gravação, intervalo de leitura",
+                "nl": "Probleem opgelost met de schaalfactoren\nNieuwe reactie-GUI toegevoegd\nNieuwe optie toevoegen: Alleen gebruiken Schrijf meerdere registers, lees interval",
+                "fr": "Correction d'un problème avec les facteurs d'échelle\nNouvelle interface graphique de réaction ajoutée\nAjouter une nouvelle option : utiliser uniquement Écrire plusieurs registres, intervalle de lecture",
+                "it": "Problema corretto con i fattori di scala\nAggiunta una nuova GUI di reazione\nAggiungi nuova opzione: usa solo Scrivi più registri, intervallo di lettura",
+                "es": "Problema corregido con los factores de escala.\nSe agregó una nueva GUI de reacción\nAgregar nueva opción: use solo Escribir múltiples registros, leer intervalo",
+                "pl": "Poprawiony problem ze współczynnikami skali\nDodano nowe GUI React\nDodaj nową opcję: Użyj tylko zapisu wielu rejestrów, interwał odczytu read",
+                "zh-cn": "更正了比例因子的问题\n添加了新的反应 GUI\n添加新选项：仅使用写入多个寄存器，读取间隔"
+            },
             "3.3.1": {
                 "en": "fixed the configuration dialog for \"input registers\" in slave mode",
                 "de": "Der Konfigurationsdialog für \"Eingangsregister\" im Slave-Modus wurde korrigiert",
@@ -230,18 +242,6 @@
                 "es": "Agregue informes de fallas de Sentry cuando se use con js-controller> = 3.x",
                 "pl": "Dodaj raportowanie awarii Sentry, jeśli jest używane z js-controller> = 3.x",
                 "zh-cn": "与js-controller> = 3.x一起使用时添加Sentry崩溃报告"
-            },
-            "3.1.0": {
-                "en": "Make sure that regular adapter stops do not terminate the process, so that scheduled restarts still work\nupdate serialport, support nodejs 12/14",
-                "de": "Stellen Sie sicher, dass regelmäßige Adapterstopps den Prozess nicht beenden, damit geplante Neustarts weiterhin funktionieren\nSerialport aktualisieren, NodeJJ 12/14 unterstützen",
-                "ru": "Убедитесь, что обычные остановки адаптера не завершают процесс, чтобы запланированные перезапуски все еще работали\nобновить серийный порт, поддержка nodejs 12/14",
-                "pt": "Verifique se as paradas regulares do adaptador não encerram o processo, para que as reinicializações agendadas ainda funcionem\natualizar serialport, support nodejs 12/14",
-                "nl": "Zorg ervoor dat regelmatige adapterstops het proces niet beëindigen, zodat geplande herstarts nog steeds werken\nupdate seriële poort, ondersteuning nodejs 12/14",
-                "fr": "Assurez-vous que les arrêts réguliers de l'adaptateur ne mettent pas fin au processus, de sorte que les redémarrages planifiés fonctionnent toujours\nmise à jour du port série, prise en charge de nodejs 12/14",
-                "it": "Assicurarsi che i fermi dell'adattatore regolari non terminino il processo, in modo che i riavvi pianificati continuino a funzionare\naggiornamento porta seriale, supporto nodejs 12/14",
-                "es": "Asegúrese de que las paradas regulares del adaptador no terminen el proceso, de modo que los reinicios programados sigan funcionando\nactualizar serialport, soporte nodejs 12/14",
-                "pl": "Upewnij się, że zwykłe zatrzymania adaptera nie przerywają procesu, aby zaplanowane ponowne uruchomienie nadal działało\naktualizacja portu szeregowego, wsparcie nodejs 12/14",
-                "zh-cn": "确保常规适配器停止不会终止该过程，以便计划的重新启动仍然有效\n更新串行端口，支持nodejs 12/14"
             }
         },
         "title": "ModBus",
@@ -327,7 +327,8 @@
             "doNotRoundAddressToWord": false,
             "doNotUseWriteMultipleRegisters": false,
             "onlyUseWriteMultipleRegisters": false,
-            "writeInterval": 0
+            "writeInterval": 0,
+            "readInterval": 0
         },
         "disInputs": [],
         "coils": [],

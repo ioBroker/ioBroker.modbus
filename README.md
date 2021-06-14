@@ -38,21 +38,33 @@ Normally all registers can have address from 0 to 65535. By using of aliases you
 
 Every alias will be mapped internally to address, e.g. 30011 will be mapped to input register 10. and so on.
 
-### Do not align addresses to word
+### Do not align addresses to 16 bits (word)
 Normally the coils and the discrete inputs addresses are aligned to 16 bit. Like addresses from 3 to 20 will be aligned to 0 up 32.
 If this option is active the addresses will not be aligned.
+
+### Do not use multiple registers
+If slave does not support "write multiple registers" command, you can activate it to get warnings, when the multiple registers will be written.
+
+### Use only multiple write registers
+If slave only supports "write multiple registers" command, you can activate so the registers will be written always with FC15/FC16 command.
 
 ### Round Real to
 How many digits after comma for float and doubles.
 
-### Poll delay
+### Data polling interval
 Cyclic poll interval (Only relevant for master)
 
-### Reconnect time
+### Reconnect delay
 Reconnection interval (Only relevant for master)
 
+### Read timeout
+Timeout for read requests in milliseconds.
+
 ### Pulse time
-if pulse used for coils, this define the interval how long is pulse.
+If pulse used for coils, this define the interval how long is the pulse.
+
+### Wait time
+Wait time between polling of two different device IDs in milliseconds.
 
 ### Max read request length
 Maximal length of command READ_MULTIPLE_REGISTERS as number of registers to read.
@@ -67,11 +79,20 @@ There is a software [**Modbus RTU <-> Modbus RTU over TCP**](http://mbus.sourcef
 
 Both solutions **RTU over TCP** and **TCP** works well.
 
-### Do not use multiple registers
-If slave does not support "write multiple registers" command, you can activate it to get warnings, when the multiple registers will be written.
+### Read interval
+Delay between two read requests in ms. Default 0.
 
 ### Write interval
 Delay between two write requests in ms. Default 0.
+
+### Update unchanged states
+Normally if the value has not changed it will not be written into ioBroker. This flag allows to update the value's timestamp by every cycle.
+
+### Do not include addesses in ID
+Do not add addres in the generated ioBroker iD. `10_Input10` vs `Input10`.
+
+### Preserve dots in ID
+With this flag the Name will be `Inputs.Input10`. Without => `Inputs_Input10` 
 
 ## Parameters for single address line in config
 ### Address
@@ -110,8 +131,6 @@ In the formula, "x" has to be used for the read value from Modbus. E.g. `x * Mat
 If the formula cannot evaluated during runtime, then the Adapter writes a warning message to the log.
 
 Another usecase for fomulas could also be to prevent unplausible data with a formula like "x > 2000000 ? null : x"
-
-
 
 ### Role
 ioBroker role to assign.
@@ -257,10 +276,10 @@ There are some programs in folder *test' to test the TCP communication:
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
-### __WORK IN PROGRESS__
+### 3.4.0 (2021-06-14)
 * (nkleber78) Corrected issue with the scale factors
 * (bluefox) New react GUI added
-* (bluefox) Add new option: Use only Write multiple registers
+* (bluefox) Add new option: Use only Write multiple registers, read interval
 
 ### 3.3.1 (2021-05-10)
 * (bluefox) fixed the configuration dialog for "input registers" in slave mode 

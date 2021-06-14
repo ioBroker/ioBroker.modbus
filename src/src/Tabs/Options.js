@@ -15,6 +15,9 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import IconButton from '@material-ui/core/IconButton';
+
+import EditIcon from '@material-ui/icons/Edit';
 
 import I18n from '@iobroker/adapter-react/i18n';
 
@@ -59,7 +62,39 @@ class Options extends Component {
         super(props);
 
         this.state = {
+            ports: null,
+            customPort: false
         };
+    }
+
+    readPorts() {
+        return this.props.socket.getState('system.adapter.' + this.props.adapterName + '.' + this.props.instance + '.alive')
+            .then(state => {
+                if (state && state.val) {
+                    return this.props.socket.sendTo(this.props.adapterName + '.' + this.props.instance, 'listUart', null)
+                        .then(list => {
+                            if (list && list.error) {
+                                console.error('Cannot read ports: ' + list.error);
+                            } else
+                            if (list && list.length === 1 && list[0] && list[0].path === 'Not available') {
+                                console.warn('Cannot read ports');
+                            } else {
+                                const ports = list.map(item => ({value: item.path, title: item.path + (item.manufacturer ? ' [' + item.manufacturer + ']' : '')}));
+                                const customPort = this.props.native.params.comName && !ports.find(item => item.value === this.props.native.params.comName);
+
+                                this.setState({ports, customPort});
+                            }
+                        })
+                        .catch(e => console.error('Cannot read ports: ' + e));
+                }
+            })
+            .catch(e => console.error('Cannot read alive: ' + e));
+    }
+
+    componentDidMount() {
+        if (this.props.native.params.type === 'serial') {
+            this.readPorts();
+        }
     }
 
     inputDisabled = input => {
@@ -99,61 +134,85 @@ class Options extends Component {
         return <><Paper className={this.props.classes.optionsContainer}>
             <Typography variant="h4" gutterBottom className={this.props.classes.header}>{I18n.t(title)}</Typography>
             {inputs.map(input => {
-            if (input.type === 'checkbox') {
                 if (!this.inputDisplay(input)) {
                     return null;
-                }
-                return <FormControl className={this.props.classes.optionContainer} key={input.name}>
-                    <FormControlLabel
-                        label={I18n.t(input.title)}
-                        control={<Checkbox
+                } else
+                if (input.type === 'checkbox') {
+                    return <FormControl className={this.props.classes.optionContainer} key={input.name}>
+                        <FormControlLabel
                             label={I18n.t(input.title)}
-                            className={this.props.classes.optionsCheckbox}
+                            control={<Checkbox
+                                label={I18n.t(input.title)}
+                                className={this.props.classes.optionsCheckbox}
+                                disabled={this.inputDisabled(input)}
+                                checked={this.props.native.params[input.name]}
+                                onChange={e => this.changeParam(input.name, e.target.checked)}
+                            />}
+                        />
+                        {input.help ? <FormHelperText className={this.props.classes.helperText}>{I18n.t(input.help)}</FormHelperText> : null}
+                        {input.dimension ? I18n.t(input.dimension) : null}
+                    </FormControl>
+                } else if (input.type === 'select') {
+                    return <Box className={this.props.classes.optionContainer} key={input.name}>
+                        <FormControl>
+                            <InputLabel>{I18n.t(input.title)}</InputLabel>
+                            <Select
+                                className={this.props.classes.optionsSelect}
+                                disabled={this.inputDisabled(input)}
+                                value={this.props.native.params[input.name] || ''}
+                                onChange={e => this.changeParam(input.name, e.target.value)}
+                            >
+                                {input.options.map(option =>
+                                    <MenuItem key={option.value} value={option.value}>{option.title}</MenuItem>
+                                )}
+                            </Select>
+                        </FormControl> {input.dimension ? I18n.t(input.dimension) : null}
+                    </Box>
+                }  else if (input.type === 'ports') {
+                    return <Box className={this.props.classes.optionContainer} key={input.name}>
+                        {this.state.ports && !this.state.customPort ?
+                            <FormControl>
+                                <InputLabel>{I18n.t(input.title)}</InputLabel>
+                                <Select
+                                    className={this.props.classes.optionsSelect}
+                                    disabled={this.inputDisabled(input)}
+                                    value={this.props.native.params[input.name] || ''}
+                                    onChange={e => this.changeParam(input.name, e.target.value)}
+                                >
+                                    {this.state.ports.map(option =>
+                                        <MenuItem key={option.value} value={option.value}>{option.title}</MenuItem>
+                                    )}
+                                </Select>
+                            </FormControl>
+                            :
+                            <TextField
+                                type={input.type}
+                                label={I18n.t(input.title)}
+                                className={this.props.classes.optionsTextfield}
+                                disabled={this.inputDisabled(input)}
+                                helperText={input.help ? I18n.t(input.help) : ''}
+                                value={this.props.native.params[input.name]}
+                                InputProps={{endAdornment: input.dimension ? <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment> : null}}
+                                onChange={e => this.changeParam(input.name, e.target.value)}
+                            />}
+                            {this.state.ports ? <IconButton onClick={() => this.setState({customPort: !this.state.customPort})}><EditIcon/></IconButton> : null}
+                    </Box>
+                } else {
+                    return <Box className={this.props.classes.optionContainer} key={input.name}>
+                        <TextField
+                            type={input.type}
+                            label={I18n.t(input.title)}
+                            className={this.props.classes.optionsTextfield}
                             disabled={this.inputDisabled(input)}
-                            checked={this.props.native.params[input.name]}
-                            onChange={e => this.changeParam(input.name, e.target.checked)}
-                        />}
-                    />
-                    {input.help ? <FormHelperText className={this.props.classes.helperText}>{I18n.t(input.help)}</FormHelperText> : null}
-                    {input.dimension ? I18n.t(input.dimension) : null}
-                </FormControl>
-            } else if (input.type === 'select') {
-                if (!this.inputDisplay(input)) {
-                    return null;
-                }
-                return <Box className={this.props.classes.optionContainer} key={input.name}>
-                    <FormControl>
-                        <InputLabel>{I18n.t(input.title)}</InputLabel>
-                        <Select
-                            className={this.props.classes.optionsSelect}
-                            disabled={this.inputDisabled(input)}
-                            value={this.props.native.params[input.name] || ''}
+                            helperText={input.help ? I18n.t(input.help) : ''}
+                            value={this.props.native.params[input.name]}
+                            InputProps={{endAdornment: input.dimension ? <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment> : null}}
                             onChange={e => this.changeParam(input.name, e.target.value)}
-                        >
-                            {input.options.map(option =>
-                                <MenuItem key={option.value} value={option.value}>{option.title}</MenuItem>
-                            )}
-                        </Select>
-                    </FormControl> {input.dimension ? I18n.t(input.dimension) : null}
-                </Box>
-            } else {
-                if (!this.inputDisplay(input)) {
-                    return null;
+                        />
+                    </Box>
                 }
-                return <Box className={this.props.classes.optionContainer} key={input.name}>
-                    <TextField
-                        type={input.type}
-                        label={I18n.t(input.title)}
-                        className={this.props.classes.optionsTextfield}
-                        disabled={this.inputDisabled(input)}
-                        helperText={input.help ? I18n.t(input.help) : ''}
-                        value={this.props.native.params[input.name]}
-                        InputProps={{endAdornment: input.dimension ? <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment> : null}}
-                        onChange={e => this.changeParam(input.name, e.target.value)}
-                    />
-                </Box>
+            })
             }
-        })}
         </Paper></>
     }
 
@@ -177,6 +236,10 @@ class Options extends Component {
         if (name === 'type') {
             if (value !== 'tcp' && (native.params.slave === 1 || native.params.slave === '1')) {
                 native.params.slave = '0';
+            }
+
+            if (value === 'serial') {
+                this.readPorts();
             }
         } else
         if (name === 'showAliases') {

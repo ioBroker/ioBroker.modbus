@@ -20,18 +20,8 @@
     },
     {
         "name": "comName",
-        "type": "select",
-        "title": "Port",
-        "options": [
-            {
-                "value": "",
-                "title": "Select port"
-            },
-            {
-                "value": "COM1",
-                "title": "COM1"
-            }
-        ]
+        "type": "ports",
+        "title": "Port"
     },
     {
         "name": "baudRate",

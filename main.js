@@ -366,8 +366,8 @@ function prepareConfig(config) {
         options.config.maxBoolBlock = parseInt(params.maxBoolBlock, 10) || 128;
         options.config.pulsetime    = parseInt(params.pulsetime            || 1000);
         options.config.waitTime     = parseInt(params.waitTime, 10)     || 50;
+        options.config.readInterval = parseInt(params.readInterval, 10) || 0;
     }
-
 
     if (params.type === 'tcp' || params.type === 'tcprtu') {
         options.config.tcp = {
@@ -563,7 +563,13 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
 
 function assignIds(deviceId, config, result, regName, regType, localOptions) {
     for (let i = config.length - 1; i >= 0; i--) {
-        if (config[i].deviceId !== deviceId) continue;
+        if (config[i].deviceId !== deviceId) {
+            continue;
+        }
+        if (config[i].address === undefined && config[i]._address !== undefined) {
+            config[i].address = config[i]._address;
+        }
+
         const address = config[i].address = parseInt(config[i].address, 10);
 
         if (address < 0) {
@@ -778,7 +784,6 @@ function parseConfig(callback) {
                 });
                 newObjects.push(adapter.namespace + '.info.pollTime');
             }
-
 
             // Discrete inputs
             iterateAddresses(true,  deviceId, device.disInputs,   'discreteInputs',   'disInputs',   localOptions);
