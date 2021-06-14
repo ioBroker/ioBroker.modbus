@@ -8,7 +8,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Checkbox from '@material-ui/core/Checkbox';
-import Textfield from '@material-ui/core/Textfield';
+import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -47,13 +47,13 @@ const styles = theme => ({
         overflow: 'auto',
         maxHeight: 'calc(100vh - 180px)'
     },
-    tableTextfield: {
+    tableTextField: {
         fontSize: '80%'
     },
     tableSelect: {
         fontSize: '80%'
     },
-    tableTextfieldContainer: {
+    tableTextFieldContainer: {
         width: '100%'
     },
     tableSelectContainer: {
@@ -130,8 +130,8 @@ const DataCell = props => {
         if (!editMode) {
             result = item[field.name] ? item[field.name] : null;
         } else {
-            result = <Textfield value={item[field.name]} className={props.classes.tableTextfieldContainer}
-                inputProps={{ref: ref, className: props.classes.tableTextfield}}
+            result = <TextField value={item[field.name]} className={props.classes.tableTextFieldContainer}
+                inputProps={{ref: ref, className: props.classes.tableTextField}}
                 type={field.type}
                 onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.value)}
                 disabled={props.getDisable(sortedItem.$index, field.name)}
