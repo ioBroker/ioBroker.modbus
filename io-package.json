@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.4.1",
+        "version": "3.4.2",
         "news": {
+            "3.4.2": {
+                "en": "Corrected issue with the scale factors\nNew react GUI added\nAdd new option: Use only Write multiple registers, read interval",
+                "de": "Problem mit den Skalierungsfaktoren behoben\nNeue Reaktions-GUI hinzugefügt\nNeue Option hinzufügen: Use only Write multiple registers, read interval",
+                "ru": "Исправлена проблема с масштабными коэффициентами.\nДобавлен новый графический интерфейс реакции\nДобавить новую опцию: использовать только запись нескольких регистров, интервал чтения",
+                "pt": "Problema corrigido com os fatores de escala\nNova GUI de reação adicionada\nAdicionar nova opção: usar apenas registros múltiplos de gravação, intervalo de leitura",
+                "nl": "Probleem opgelost met de schaalfactoren\nNieuwe reactie-GUI toegevoegd\nNieuwe optie toevoegen: Alleen gebruiken Schrijf meerdere registers, lees interval",
+                "fr": "Correction d'un problème avec les facteurs d'échelle\nNouvelle interface graphique de réaction ajoutée\nAjouter une nouvelle option : utiliser uniquement Écrire plusieurs registres, intervalle de lecture",
+                "it": "Problema corretto con i fattori di scala\nAggiunta una nuova GUI di reazione\nAggiungi una nuova opzione: usa solo Scrivi più registri, leggi l'intervallo",
+                "es": "Problema corregido con los factores de escala.\nSe agregó una nueva GUI de reacción\nAgregar nueva opción: use solo Escribir múltiples registros, leer intervalo",
+                "pl": "Poprawiony problem ze współczynnikami skali\nDodano nowe GUI React\nDodaj nową opcję: Używaj tylko zapisu wielu rejestrów, interwał odczytu",
+                "zh-cn": "更正了比例因子的问题\n添加了新的反应 GUI\n添加新选项：仅使用写入多个寄存器，读取间隔"
+            },
             "3.4.1": {
                 "en": "Corrected issue with the scale factors\nNew react GUI added\nAdd new option: Use only Write multiple registers, read interval",
                 "de": "Problem mit den Skalierungsfaktoren behoben\nNeue Reaktions-GUI hinzugefügt\nNeue Option hinzufügen: Use only Write multiple registers, read interval",
@@ -230,18 +242,6 @@
                 "es": "arreglar el reinicio programado",
                 "pl": "napraw zaplanowane ponowne uruchomienie",
                 "zh-cn": "修复计划的重启"
-            },
-            "3.1.2": {
-                "en": "fix serialport list for Admin",
-                "de": "Korrigieren Sie die Serialport-Liste für Admin",
-                "ru": "исправить список последовательных портов для администратора",
-                "pt": "corrigir lista serialport para Admin",
-                "nl": "seriële poortlijst voor Admin repareren",
-                "fr": "correction de la liste des ports série pour l'administrateur",
-                "it": "correzione dell'elenco delle porte seriali per l'amministratore",
-                "es": "arreglar la lista de puerto serie para Admin",
-                "pl": "napraw listę portów szeregowych dla administratora",
-                "zh-cn": "修复管理员的串行端口列表"
             }
         },
         "title": "ModBus",
