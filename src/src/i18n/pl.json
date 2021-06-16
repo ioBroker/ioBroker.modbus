@@ -113,5 +113,6 @@
   "Write only with FC15/FC16": "Zapis tylko za pomocą FC15/FC16",
   "Slave IP address": "Adres IP urządzenia podrzędnego",
   "Listen on all IPs": "Słuchaj na wszystkich adresach IP",
-  "Read interval": "Interwał odczytu"
+  "Read interval": "Interwał odczytu",
+  "Slave ID": "Identyfikator niewolnika"
 }

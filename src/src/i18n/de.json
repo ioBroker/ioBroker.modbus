@@ -98,13 +98,13 @@
   "Nothing": "Nichts",
   "Delete item": "Item löschen",
   "Don't show this message in 5 minutes": "Diese Nachricht 5 Minuten lang nicht anzeigen",
-  "Are you sure to delete item with address \"%s\"?": "Möchten Sie das Element mit der Adresse \"%s\" wirklich löschen?",
-  "Store this value as scaling factor": "Speichern Sie diesen Wert als Skalierungsfaktor",
+  "Are you sure to delete item with address \"%s\"?": "Das Element mit der Adresse \"%s\" wirklich löschen?",
+  "Store this value as scaling factor": "Diesen Wert als Skalierungsfaktor speichern",
   "Write pulses (true → false edge)": "Schreibimpulse (wahr → falsche Flanke)",
   "Delete all items": "Alle Elemente löschen",
-  "Are you sure to delete all items?": "Möchten Sie wirklich alle Elemente löschen?",
+  "Are you sure to delete all items?": "Alle Elemente löschen?",
   "Edit data as TSV": "Daten als TSV bearbeiten",
-  "You can copy, paste and edit data as TSV.": "Sie können Daten als TSV kopieren, einfügen und bearbeiten.",
+  "You can copy, paste and edit data as TSV.": "Man kann die Daten als TSV kopieren, einfügen und bearbeiten.",
   "Copy to clipboard": "In die Zwischenablage kopieren",
   "TSV was copied to clipboard": "Daten wurden in die Zwischenablage kopiert",
   "Do not use \"Write multiple registers\"": "\"Mehrere Register schreiben\" nicht verwenden",
@@ -113,5 +113,6 @@
   "Write only with FC15/FC16": "Nur mit FC15/FC16 schreiben",
   "Slave IP address": "Slave-IP-Adresse",
   "Listen on all IPs": "Zugriff von allen IPs zulassen",
-  "Read interval": "Leseintervall"
+  "Read interval": "Leseintervall",
+  "Slave ID": "Slave-ID"
 }

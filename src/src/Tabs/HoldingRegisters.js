@@ -44,10 +44,9 @@ class HoldingRegisters extends BaseRegisters {
         let newItem = {}
         this.getFields().forEach(field => newItem[field.name] = '');
         if (data.length) {
-            let sortedData = JSON.parse(JSON.stringify(data));
-            sortedData.sort((item1, item2) => item1._address > item2._address ? 1 : -1);
-            let lastItem = sortedData[sortedData.length - 1];
-            newItem._address = parseInt(lastItem._address) + (lastItem.len ? parseInt(lastItem.len) : 1);
+            let sortedData = this.getSortedData();
+            let lastItem = sortedData[sortedData.length - 1].item;
+            newItem._address = parseInt(lastItem._address, 10) + (lastItem.len ? parseInt(lastItem.len, 10) : 1);
             newItem.deviceId = lastItem.deviceId;
             newItem.type = lastItem.type;
             newItem.len = (lastItem.len ? parseInt(lastItem.len) : 1);
@@ -76,7 +75,9 @@ class HoldingRegisters extends BaseRegisters {
 
     changeParam = (index, name, value) => {
         let data = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
+
         data[index][name] = value;
+
         if (name === 'type') {
             if (['', 'uint16be', 'uint16le', 'int16be', 'int16le', 'uint8be', 'uint8le', 'int8be', 'int8le'].includes(value)) {
                 data[index].len = 1;
@@ -88,6 +89,7 @@ class HoldingRegisters extends BaseRegisters {
                 data[index].len = 4;
             }
         }
+
         this.props.onChange(this.nativeField, data);
     }
 }

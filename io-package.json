@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.4.2",
+        "version": "3.4.3",
         "news": {
+            "3.4.3": {
+                "en": "GUI bugs were corrected\nAdded output of error codes",
+                "de": "GUI-Fehler wurden behoben\nAusgabe von Fehlercodes hinzugefügt",
+                "ru": "Исправлены ошибки графического интерфейса.\nДобавлен вывод кодов ошибок",
+                "pt": "Bugs GUI foram corrigidos\nAdicionada saída de códigos de erro",
+                "nl": "GUI-bugs zijn gecorrigeerd\nToegevoegde output van foutcodes",
+                "fr": "Les bogues de l'interface graphique ont été corrigés\nAjout de la sortie des codes d'erreur",
+                "it": "I bug della GUI sono stati corretti\nAggiunto output di codici di errore",
+                "es": "Se corrigieron los errores de la GUI\nSalida agregada de códigos de error",
+                "pl": "Poprawiono błędy GUI\nDodano wyjście kodów błędów",
+                "zh-cn": "GUI错误已得到纠正\n添加了错误代码的输出"
+            },
             "3.4.2": {
                 "en": "Corrected issue with the scale factors\nNew react GUI added\nAdd new option: Use only Write multiple registers, read interval",
                 "de": "Problem mit den Skalierungsfaktoren behoben\nNeue Reaktions-GUI hinzugefügt\nNeue Option hinzufügen: Use only Write multiple registers, read interval",
@@ -230,18 +242,6 @@
                 "es": "Solucione algunos informes de bloqueo de Sentry (IOBROKER-MODBUS-4, IOBROKER-MODBUS-7, IOBROKER-MODBUS-6)\nCambie la forma en que se reinicia el adaptador cuando las reconexiones no ayudan",
                 "pl": "Napraw niektóre raporty o awariach Sentry (IOBROKER-MODBUS-4, IOBROKER-MODBUS-7, IOBROKER-MODBUS-6)\nZmień sposób ponownego uruchamiania adaptera, gdy ponowne połączenia nie pomogą",
                 "zh-cn": "修复一些Sentry崩溃报告（IOBROKER-MODBUS-4，IOBROKER-MODBUS-7，IOBROKER-MODBUS-6）\n更改重新连接无济于事时适配器重新启动的方式"
-            },
-            "3.1.3": {
-                "en": "fix scheduled restart",
-                "de": "Beheben Sie den geplanten Neustart",
-                "ru": "исправить запланированный перезапуск",
-                "pt": "corrigir reinicialização programada",
-                "nl": "repareer geplande herstart",
-                "fr": "correction du redémarrage planifié",
-                "it": "correggere il riavvio programmato",
-                "es": "arreglar el reinicio programado",
-                "pl": "napraw zaplanowane ponowne uruchomienie",
-                "zh-cn": "修复计划的重启"
             }
         },
         "title": "ModBus",

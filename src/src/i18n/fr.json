@@ -113,5 +113,6 @@
   "Write only with FC15/FC16": "Écrire uniquement avec FC15/FC16",
   "Slave IP address": "Adresse IP esclave",
   "Listen on all IPs": "Écouter sur toutes les IP",
-  "Read interval": "Intervalle de lecture"
+  "Read interval": "Intervalle de lecture",
+  "Slave ID": "ID d'esclave"
 }

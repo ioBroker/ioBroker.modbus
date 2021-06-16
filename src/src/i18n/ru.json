@@ -113,5 +113,6 @@
   "Write only with FC15/FC16": "Запись только с FC15 / FC16",
   "Slave IP address": "Собственный IP-адрес",
   "Listen on all IPs": "Слушайте все IP",
-  "Read interval": "Интервал чтения"
+  "Read interval": "Интервал чтения",
+  "Slave ID": "ID ведомого"
 }

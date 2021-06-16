@@ -22,7 +22,6 @@ function startAdapter(options) {
             adapter.log.warn('Serial is not available');
         }
 
-        adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
         main();
     });
 
@@ -733,7 +732,7 @@ function parseConfig(callback) {
         onlyUseWriteMultipleRegisters:  (params.onlyUseWriteMultipleRegisters  === true || params.onlyUseWriteMultipleRegisters  === 'true'),
     };
 
-    adapter.getForeignObjects(adapter.namespace + '.*', (err, list) => {
+    adapter.getForeignObjects(adapter.namespace + '.*', async (err, list) => {
         let oldObjects = list;
         let newObjects = [];
 
@@ -822,30 +821,30 @@ function parseConfig(callback) {
         });
 
         // create/ update 'info.connection' object
-        adapter.getObject('info.connection', (err, obj) => {
-            if (!obj) {
-                obj = {
-                    type: 'state',
-                    common: {
-                        name:  options.config.slave ? 'Number of connected partners' : 'If connected to slave',
-                        role:  'indicator.connected',
-                        write: false,
-                        read:  true,
-                        type:  options.config.slave ? 'number' : 'boolean'
-                    },
-                    native: {}
-                };
-                adapter.setObject('info.connection', obj);
-            } else if (options.config.slave && obj.common.type !== 'string') {
-                obj.common.type = 'string';
-                obj.common.name = 'Connected masters';
-                adapter.setObject('info.connection', obj);
-            } else if (!options.config.slave && obj.common.type !== 'boolean') {
-                obj.common.type = 'boolean';
-                obj.common.name = 'If connected to slave';
-                adapter.setObject('info.connection', obj);
-            }
-        });
+        let obj = await adapter.getObjectAsync('info.connection');
+        if (!obj) {
+            obj = {
+                type: 'state',
+                common: {
+                    name:  options.config.slave ? 'Number of connected partners' : 'If connected to slave',
+                    role:  'indicator.connected',
+                    write: false,
+                    read:  true,
+                    type:  options.config.slave ? 'number' : 'boolean'
+                },
+                native: {}
+            };
+            await adapter.setObjectAsync('info.connection', obj);
+        } else if (options.config.slave && obj.common.type !== 'string') {
+            obj.common.type = 'string';
+            obj.common.name = 'Connected masters';
+            await adapter.setObjectAsync('info.connection', obj);
+        } else if (!options.config.slave && obj.common.type !== 'boolean') {
+            obj.common.type = 'boolean';
+            obj.common.name = 'If connected to slave';
+            await adapter.setObjectAsync('info.connection', obj);
+        }
+        await adapter.setStateAsync('info.connection', adapter.config.params.slave ? 0 : false, true);
 
         newObjects.push(adapter.namespace + '.info.connection');
 

@@ -113,5 +113,6 @@
   "Write only with FC15/FC16": "Schrijf alleen met FC15/FC16",
   "Slave IP address": "Slave IP-adres",
   "Listen on all IPs": "Luister op alle IP's",
-  "Read interval": "Lees interval"
+  "Read interval": "Lees interval",
+  "Slave ID": "Slave-ID"
 }

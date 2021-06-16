@@ -19,7 +19,7 @@ class Coils extends BaseRegisters {
             {name: 'wp', title: 'WP', type: 'checkbox', expert: true},
             {name: 'cw', title: 'CW', type: 'checkbox'},
             {name: 'isScale', title: 'SF', type: 'checkbox', tooltip: 'Store this value as scaling factor', expert: true, formulaDisabled: true},
-        ]
+        ];
 
         if (this.props.native.params.multiDeviceId) {
             result.splice(1, 0,
@@ -33,12 +33,11 @@ class Coils extends BaseRegisters {
     addItem = () => {
         let data = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
         let newItem = {}
-        this.getFields().forEach(field => newItem[field.name] = '')
+        this.getFields().forEach(field => newItem[field.name] = '');
         if (data.length) {
-            let sortedData = JSON.parse(JSON.stringify(data));
-            sortedData.sort((item1, item2) => item1._address > item2._address ? 1 : -1);
-            let lastItem = sortedData[sortedData.length - 1];
-            newItem._address = parseInt(lastItem._address) + 1;
+            let sortedData = this.getSortedData();
+            let lastItem = sortedData[sortedData.length - 1].item;
+            newItem._address = parseInt(lastItem._address, 10) + 1;
             newItem.deviceId = lastItem.deviceId;
             newItem.formula = lastItem.formula;
             newItem.role = lastItem.role;
@@ -48,6 +47,7 @@ class Coils extends BaseRegisters {
             newItem.isScale = lastItem.isScale;
         } else {
             newItem.role = 'level';
+            newItem._address = this.props.native.params.showAliases ? 1 : 0;
         }
         data.push(newItem);
         this.props.onChange(this.nativeField, data);

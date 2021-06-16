@@ -28,15 +28,18 @@ class DiscreteInputs extends BaseRegisters {
         return result;
     }
 
+    isShowExtendedModeSwitch() {
+        return this.props.native.params.slave !== 1 && this.props.native.params.slave !== '1';
+    }
+
     addItem = () => {
         let data = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
         let newItem = {}
         this.getFields().forEach(field => newItem[field.name] = '')
         if (data.length) {
-            let sortedData = JSON.parse(JSON.stringify(data));
-            sortedData.sort((item1, item2) => item1._address > item2._address ? 1 : -1);
-            let lastItem = sortedData[sortedData.length - 1];
-            newItem._address = parseInt(lastItem._address) + 1;
+            let sortedData = this.getSortedData();
+            let lastItem = sortedData[sortedData.length - 1].item;
+            newItem._address = parseInt(lastItem._address, 10) + 1;
             newItem.deviceId = lastItem.deviceId;
             newItem.formula = lastItem.formula;
             newItem.role = lastItem.role;

@@ -17,13 +17,13 @@ class InputRegisters extends BaseRegisters {
             {name: 'type', title: 'Type', type: 'select', options: types, sorted: true},
             {name: 'len', title: 'Length', type: 'text', width: 20},
             {name: 'factor', title: 'Factor', type: 'text', width: 20, expert: true},
-            {name: 'offset', title: 'Offset', type: 'text', width: 20},
-            {name: 'formula', title: 'Formula', type: 'text', formulaDisabled: true},
+            {name: 'offset', title: 'Offset', type: 'text', width: 20, expert: true},
+            {name: 'formula', title: 'Formula', type: 'text', formulaDisabled: true, expert: true},
             {name: 'role', title: 'Role', type: 'select', options: roles, sorted: true},
             {name: 'room', title: 'Room', type: 'rooms'},
             {name: 'cw', title: 'CW', type: 'checkbox', tooltip: 'Cyclic write'},
             {name: 'isScale', title: 'SF', type: 'checkbox', tooltip: 'Store this value as scaling factor', expert: true, formulaDisabled: true},
-        ]
+        ];
 
         if (this.props.native.params.multiDeviceId) {
             result.splice(1, 0,
@@ -39,10 +39,9 @@ class InputRegisters extends BaseRegisters {
         let newItem = {}
         this.getFields().forEach(field => newItem[field.name] = '')
         if (data.length) {
-            let sortedData = JSON.parse(JSON.stringify(data));
-            sortedData.sort((item1, item2) => item1._address > item2._address ? 1 : -1);
-            let lastItem = sortedData[sortedData.length - 1];
-            newItem._address = parseInt(lastItem._address) + (lastItem.len ? parseInt(lastItem.len) : 1);
+            let sortedData = this.getSortedData();
+            let lastItem = sortedData[sortedData.length - 1].item;
+            newItem._address = parseInt(lastItem._address, 10) + (lastItem.len ? parseInt(lastItem.len, 10) : 1);
             newItem.deviceId = lastItem.deviceId;
             newItem.type = lastItem.type;
             newItem.len = lastItem.len;
