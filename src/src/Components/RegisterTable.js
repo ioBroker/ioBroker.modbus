@@ -64,7 +64,7 @@ const styles = theme => ({
         width: '100%'
     },
     nonEditMode: {
-        cusrsor: 'pointer'
+        cursor: 'pointer'
     }
 });
 
@@ -75,12 +75,6 @@ const DataCell = props => {
     const setEditMode = props.setEditMode;
 
     const ref = useRef();
-    // useEffect(() => {
-    //     if (props.editMode) {
-    //         // ref.current && ref.current.focus()
-    //         //window.setTimeout(() => ref.current && ref.current.focus(), 1000);
-    //     }
-    // }, [props.editMode])
 
     let item = sortedItem.item;
     let result;
