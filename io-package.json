@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.4.4",
+        "version": "3.4.5",
         "news": {
+            "3.4.5": {
+                "en": "Corrected the \"write multiple registers\" option",
+                "de": "Die Option \"Mehrere Register schreiben\" wurde korrigiert",
+                "ru": "Исправлена опция \"запись нескольких регистров\".",
+                "pt": "Corrigida a opção \"escrever registros múltiplos\"",
+                "nl": "De optie \"schrijf meerdere registers\" gecorrigeerd",
+                "fr": "Correction de l'option \"écrire plusieurs registres\"",
+                "it": "Corretta l'opzione \"scrivi più registri\"",
+                "es": "Se corrigió la opción \"escribir varios registros\".",
+                "pl": "Poprawiono opcję „zapisz wiele rejestrów”",
+                "zh-cn": "更正了“写入多个寄存器”选项"
+            },
             "3.4.4": {
                 "en": "GUI bugs were corrected\nAdded output of error codes",
                 "de": "GUI-Fehler wurden behoben\nAusgabe von Fehlercodes hinzugefügt",
@@ -230,18 +242,6 @@
                 "es": "Arreglar algunos informes de bloqueo de Centinela (IOBROKER-MODBUS-О)",
                 "pl": "Napraw niektóre raporty o awariach Sentry (IOBROKER-MODBUS-О)",
                 "zh-cn": "修复了一些Sentry崩溃报告（IOBROKER-MODBUS-О）"
-            },
-            "3.1.5": {
-                "en": "Fix some Sentry crash reports (IOBROKER-MODBUS-F)",
-                "de": "Behebung einiger Sentry-Absturzberichte (IOBROKER-MODBUS-F)",
-                "ru": "Исправлены некоторые сообщения о сбоях в Sentry (IOBROKER-MODBUS-F)",
-                "pt": "Corrigir alguns relatórios de falha do Sentry (IOBROKER-MODBUS-F)",
-                "nl": "Enkele Sentry-crashrapporten repareren (IOBROKER-MODBUS-F)",
-                "fr": "Correction de certains rapports d'erreur Sentry (IOBROKER-MODBUS-F)",
-                "it": "Risolti alcuni rapporti sugli arresti anomali di Sentry (IOBROKER-MODBUS-F)",
-                "es": "Arreglar algunos informes de bloqueo de Centinela (IOBROKER-MODBUS-F)",
-                "pl": "Napraw niektóre raporty o awariach Sentry (IOBROKER-MODBUS-F)",
-                "zh-cn": "修复了一些Sentry崩溃报告（IOBROKER-MODBUS-F）"
             }
         },
         "title": "ModBus",

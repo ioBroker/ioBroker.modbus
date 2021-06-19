@@ -140,7 +140,7 @@ function listSerial(ports) {
             });
     } catch (e) {
         if (require('os').platform() !== 'win32') {
-            adapter.log.error('Cannot read "' + devDirName + '": ' + e);
+            adapter.log.error(`Cannot read "${devDirName}": ${e}`);
         }
         result = ports;
     }
@@ -149,14 +149,10 @@ function listSerial(ports) {
 
 function addToEnum(enumName, id, callback) {
     adapter.getForeignObject(enumName, (err, obj) => {
-        if (!err && obj) {
-            let pos = obj.common.members.indexOf(id);
-            if (pos === -1) {
-                obj.common.members.push(id);
-                adapter.setForeignObject(obj._id, obj, err => callback && callback(err));
-            } else {
-                callback && callback(err);
-            }
+        if (!err && obj && !obj.common.members.includes(id)) {
+            obj.common.members.push(id);
+            obj.common.members.sort();
+            adapter.setForeignObject(obj._id, obj, err => callback && callback(err));
         } else {
             callback && callback(err);
         }
@@ -195,7 +191,7 @@ function syncEnums(enumGroup, id, newEnumName, callback) {
         if (enums[enumGroup].hasOwnProperty(e) &&
             enums[enumGroup][e].common &&
             enums[enumGroup][e].common.members &&
-            enums[enumGroup][e].common.members.indexOf(id) !== -1) {
+            enums[enumGroup][e].common.members.includes(id)) {
             if (enums[enumGroup][e]._id !== newEnumName) {
                 count++;
                 removeFromEnum(enums[enumGroup][e]._id, id, () =>
@@ -332,18 +328,21 @@ function prepareConfig(config) {
 
     let options = {
         config: {
-            type:               params.type || 'tcp',
-            slave:              params.slave,
-            alwaysUpdate:       params.alwaysUpdate,
-            round:              parseInt(params.round, 10) || 0,
-            timeout:            parseInt(params.timeout, 10) || 5000,
-            defaultDeviceId:   (params.deviceId === undefined || params.deviceId === null) ? 1 : (parseInt(params.deviceId, 10) || 0),
+            type:                params.type || 'tcp',
+            slave:               params.slave,
+            alwaysUpdate:        params.alwaysUpdate,
+            round:               parseInt(params.round, 10) || 0,
+            timeout:             parseInt(params.timeout, 10) || 5000,
+            defaultDeviceId:     (params.deviceId === undefined || params.deviceId === null) ? 1 : (parseInt(params.deviceId, 10) || 0),
             doNotIncludeAdrInId: params.doNotIncludeAdrInId,
-            preserveDotsInId:   params.preserveDotsInId,
-            writeInterval:      parseInt(params.writeInterval, 10) || 0,
+            preserveDotsInId:    params.preserveDotsInId,
+            writeInterval:       parseInt(params.writeInterval, 10) || 0,
+            doNotUseWriteMultipleRegisters: params.doNotUseWriteMultipleRegisters === true || params.doNotUseWriteMultipleRegisters === 'true',
+            onlyUseWriteMultipleRegisters:  params.onlyUseWriteMultipleRegisters  === true || params.onlyUseWriteMultipleRegisters  === 'true',
         },
         devices: {}
     };
+
     options.config.round = Math.pow(10, options.config.round);
 
     if (!options.config.slave) {
@@ -481,7 +480,7 @@ function checkDeviceIds(options, config, deviceIds) {
             config[i].deviceId = options.config.defaultDeviceId;
         }
 
-        if (deviceIds.indexOf(config[i].deviceId) === -1) {
+        if (!deviceIds.includes(config[i].deviceId)) {
             deviceIds.push(config[i].deviceId);
         }
     }
@@ -566,7 +565,15 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
             continue;
         }
         if (config[i].address === undefined && config[i]._address !== undefined) {
-            config[i].address = config[i]._address;
+            if (localOptions.showAliases) {
+                config[i].address = config[i]._address - result.offset;
+                if (localOptions.directAddresses && (regType === 'disInputs' || regType === 'coils')) {
+                    const address = config[i].address;
+                    config[i].address = Math.floor(address / 16) * 16 + (localOptions.directAddresses ? _dmap[address % 16] : _rmap[address % 16]);
+                }
+            } else {
+                config[i].address = config[i]._address;
+            }
         }
 
         const address = config[i].address = parseInt(config[i].address, 10);
@@ -592,6 +599,7 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
                 }
             }
         }
+
         if (localOptions.preserveDotsInId) {
             // preserve dots in name and add to ID
             config[i].id += (config[i].name ? (config[i].name.replace(' ', '_')) : '');
@@ -671,7 +679,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
             // try to detect next block
             if (result.blocks) {
                 if ((config[i].address - lastAddress > 10 && config[i].len < 10) || (lastAddress - blockStart >= maxBlock)) {
-                    if (result.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
+                    if (!result.blocks.map(obj => obj.start).includes(blockStart)) {
                         result.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
                     }
                     blockStart  = config[i].address;
@@ -680,7 +688,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
             }
             lastAddress = config[i].address + config[i].len;
         }
-        if (lastAddress && lastAddress - blockStart && result.blocks && result.blocks.map(obj => obj.start).indexOf(blockStart) === -1) {
+        if (lastAddress && lastAddress - blockStart && result.blocks && !result.blocks.map(obj => obj.start).includes(blockStart)) {
             result.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
         }
 
@@ -719,17 +727,16 @@ function parseConfig(callback) {
     let options = prepareConfig(adapter.config);
     const params = adapter.config.params;
 
+    // not for master or slave
     const localOptions = {
-        multiDeviceId:                  options.config.multiDeviceId,
-        showAliases:                    (params.showAliases                    === true || params.showAliases                    === 'true'),
-        doNotRoundAddressToWord:        (params.doNotRoundAddressToWord        === true || params.doNotRoundAddressToWord        === 'true'),
-        directAddresses:                (params.directAddresses                === true || params.directAddresses                === 'true'),
-        maxBlock:                       options.config.maxBlock,
-        maxBoolBlock:                   options.config.maxBoolBlock,
-        doNotIncludeAdrInId:            (params.doNotIncludeAdrInId            === true || params.doNotIncludeAdrInId            === 'true'),
-        preserveDotsInId:               (params.preserveDotsInId               === true || params.preserveDotsInId               === 'true'),
-        doNotUseWriteMultipleRegisters: (params.doNotUseWriteMultipleRegisters === true || params.doNotUseWriteMultipleRegisters === 'true'),
-        onlyUseWriteMultipleRegisters:  (params.onlyUseWriteMultipleRegisters  === true || params.onlyUseWriteMultipleRegisters  === 'true'),
+        multiDeviceId:           options.config.multiDeviceId,
+        showAliases:             params.showAliases             === true || params.showAliases             === 'true',
+        doNotRoundAddressToWord: params.doNotRoundAddressToWord === true || params.doNotRoundAddressToWord === 'true',
+        directAddresses:         params.directAddresses         === true || params.directAddresses         === 'true',
+        maxBlock:                options.config.maxBlock,
+        maxBoolBlock:            options.config.maxBoolBlock,
+        doNotIncludeAdrInId:     params.doNotIncludeAdrInId     === true || params.doNotIncludeAdrInId     === 'true',
+        preserveDotsInId:        params.preserveDotsInId        === true || params.preserveDotsInId        === 'true',
     };
 
     adapter.getForeignObjects(adapter.namespace + '.*', async (err, list) => {
@@ -850,7 +857,7 @@ function parseConfig(callback) {
 
         // clear unused states
         for (let id_ in oldObjects) {
-            if (oldObjects.hasOwnProperty(id_) && newObjects.indexOf(id_) === -1) {
+            if (oldObjects.hasOwnProperty(id_) && !newObjects.includes(id_)) {
                 adapter.log.debug('Remove old object ' + id_);
                 tasks.push({
                     id: id_,
