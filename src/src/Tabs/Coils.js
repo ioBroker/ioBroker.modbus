@@ -49,6 +49,7 @@ class Coils extends BaseRegisters {
             newItem.role = 'level';
             newItem._address = this.props.native.params.showAliases ? 1 : 0;
         }
+        newItem.address = this.addressToCanonical(newItem._address);
         data.push(newItem);
         this.props.onChange(this.nativeField, data);
     }

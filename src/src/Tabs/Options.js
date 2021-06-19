@@ -17,6 +17,8 @@ import Box from '@material-ui/core/Box';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import IconButton from '@material-ui/core/IconButton';
 
+import Utils from '../Components/Utils';
+
 import EditIcon from '@material-ui/icons/Edit';
 
 import I18n from '@iobroker/adapter-react/i18n';
@@ -293,12 +295,32 @@ class Options extends Component {
             }
         } else
         if (name === 'showAliases') {
-            native.disInputs.forEach(item => (value ? item._address += 10000 : item._address -= 10000))
-            native.inputRegs.forEach(item => (value ? item._address += 30000 : item._address -= 30000))
-            native.holdingRegs.forEach(item => (value ? item._address += 40000 : item._address -= 40000))
-            if (!value) {
-                native.params.directAddresses = false;
-            }
+            ['disInputs', 'inputRegs', 'holdingRegs'].forEach(nativeParam => {
+                native[nativeParam].forEach(item => {
+                    if (value) {
+                        item._address = Utils.address2alias(nativeParam, item._address);
+                        if (native.params.directAddresses) {
+                            item._address = Utils.nonDirect2direct(nativeParam, item._address);
+                        }
+                    } else {
+                        if (native.params.directAddresses) {
+                            item._address = Utils.direct2nonDirect(nativeParam, item._address);
+                        }
+                        item._address = Utils.alias2address(nativeParam, item._address);
+                    }
+                });
+            });
+        }
+        if (name === 'directAddresses' && native.params.showAliases) {
+            ['disInputs', 'inputRegs', 'holdingRegs'].forEach(nativeParam => {
+                native[nativeParam].forEach(item => {
+                    if (value) {
+                        item._address = Utils.nonDirect2direct(nativeParam, item._address);
+                    } else {
+                        item._address = Utils.direct2nonDirect(nativeParam, item._address);
+                    }
+                });
+            });
         }
         this.props.changeNative(native);
     }

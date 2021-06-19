@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Paper from '@material-ui/core/Paper';
 import RegisterTable from '../Components/RegisterTable';
+import Utils from '../Components/Utils';
 
 class BaseRegisters extends Component {
     constructor(props) {
@@ -34,9 +35,24 @@ class BaseRegisters extends Component {
         return null;
     }
 
+    addressToCanonical(_address) {
+        let address = _address;
+        let params = this.props.native.params;
+        if (params.showAliases) {
+            if (params.directAddresses) {
+                address = Utils.direct2nonDirect(this.nativeField, address);
+            }
+            address = Utils.alias2address(this.nativeField, address);
+        }
+        return address;
+    }
+
     changeParam = (index, name, value) => {
         let data = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
         data[index][name] = value;
+        if (name === '_address') {
+            data[index]['address'] = this.addressToCanonical(value);
+        }
         this.props.onChange(this.nativeField, data);
     }
 

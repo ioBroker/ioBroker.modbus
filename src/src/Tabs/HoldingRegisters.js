@@ -64,6 +64,7 @@ class HoldingRegisters extends BaseRegisters {
             newItem.offset = 0;
             newItem._address = this.props.native.params.showAliases ? 40001 : 0;
         }
+        newItem.address = this.addressToCanonical(newItem._address);
         data.push(newItem);
         this.props.onChange(this.nativeField, data);
     }
@@ -88,6 +89,10 @@ class HoldingRegisters extends BaseRegisters {
             if (['uint64be', 'uint64le', 'doublebe', 'doublele'].includes(value)) {
                 data[index].len = 4;
             }
+        }
+
+        if (name === '_address') {
+            data[index]['address'] = this.addressToCanonical(value);
         }
 
         this.props.onChange(this.nativeField, data);

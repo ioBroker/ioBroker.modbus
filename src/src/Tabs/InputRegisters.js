@@ -57,6 +57,7 @@ class InputRegisters extends BaseRegisters {
             newItem.offset = 0;
             newItem._address = this.props.native.params.showAliases ? 30001 : 0;
         }
+        newItem.address = this.addressToCanonical(newItem._address);
         data.push(newItem);
         this.props.onChange(this.nativeField, data);
     }
@@ -84,6 +85,11 @@ class InputRegisters extends BaseRegisters {
                 data[index].len = 4;
             }
         }
+        
+        if (name === '_address') {
+            data[index]['address'] = this.addressToCanonical(value);
+        }
+
         this.props.onChange(this.nativeField, data);
     }
 }
