@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.4.5",
+        "version": "3.4.6",
         "news": {
+            "3.4.6": {
+                "en": "Corrected addressing with aliases",
+                "de": "Adressierung mit Aliasen korrigiert",
+                "ru": "Исправлена адресация с псевдонимами",
+                "pt": "Endereçamento corrigido com aliases",
+                "nl": "Adressering gecorrigeerd met aliassen",
+                "fr": "Adressage corrigé avec alias",
+                "it": "Indirizzamento corretto con alias",
+                "es": "Direccionamiento corregido con alias",
+                "pl": "Poprawione adresowanie za pomocą aliasów",
+                "zh-cn": "用别名更正了寻址"
+            },
             "3.4.5": {
                 "en": "Corrected the \"write multiple registers\" option",
                 "de": "Die Option \"Mehrere Register schreiben\" wurde korrigiert",
@@ -230,18 +242,6 @@
                 "es": "Repare algunos informes de bloqueo de Sentry (IOBROKER-MODBUS-N)",
                 "pl": "Napraw niektóre raporty o awariach Sentry (IOBROKER-MODBUS-N)",
                 "zh-cn": "修复一些Sentry崩溃报告（IOBROKER-MODBUS-N）"
-            },
-            "3.1.6": {
-                "en": "Fix some Sentry crash reports (IOBROKER-MODBUS-О)",
-                "de": "Behebung einiger Sentry-Absturzberichte (IOBROKER-MODBUS-О)",
-                "ru": "Исправлены некоторые сообщения о сбоях в Sentry (IOBROKER-MODBUS-О)",
-                "pt": "Corrigir alguns relatórios de falha do Sentry (IOBROKER-MODBUS-О)",
-                "nl": "Enkele Sentry-crashrapporten repareren (IOBROKER-MODBUS-О)",
-                "fr": "Correction de certains rapports d'erreur Sentry (IOBROKER-MODBUS-О)",
-                "it": "Risolti alcuni rapporti sugli arresti anomali di Sentry (IOBROKER-MODBUS-О)",
-                "es": "Arreglar algunos informes de bloqueo de Centinela (IOBROKER-MODBUS-О)",
-                "pl": "Napraw niektóre raporty o awariach Sentry (IOBROKER-MODBUS-О)",
-                "zh-cn": "修复了一些Sentry崩溃报告（IOBROKER-MODBUS-О）"
             }
         },
         "title": "ModBus",

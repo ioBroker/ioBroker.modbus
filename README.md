@@ -276,6 +276,9 @@ There are some programs in folder *test' to test the TCP communication:
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
+### 3.4.6 (2021-06-21)
+* (bluefox) Corrected addressing with aliases
+
 ### 3.4.5 (2021-06-19)
 * (bluefox) Corrected the "write multiple registers" option
 

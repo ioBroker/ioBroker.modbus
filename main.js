@@ -285,7 +285,7 @@ function address2alias(id, address, isDirect, offset) {
     }
 
     if (id === 'disInputs' || id === 'coils') {
-        address = Math.floor(address / 16) * 16 + (isDirect ? _dmap[address % 16] : _rmap[address % 16]);
+        address = ((address >> 4) << 4) + (isDirect ? _dmap[address % 16] : _rmap[address % 16]);
         address += offset;
         return address;
     } else {
@@ -566,10 +566,13 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
         }
         if (config[i].address === undefined && config[i]._address !== undefined) {
             if (localOptions.showAliases) {
-                config[i].address = config[i]._address - result.offset;
-                if (localOptions.directAddresses && (regType === 'disInputs' || regType === 'coils')) {
-                    const address = config[i].address;
-                    config[i].address = Math.floor(address / 16) * 16 + (localOptions.directAddresses ? _dmap[address % 16] : _rmap[address % 16]);
+                if (config[i]._address >= result.offset) {
+                    config[i].address = config[i]._address - result.offset;
+
+                    if (localOptions.directAddresses && (regType === 'disInputs' || regType === 'coils')) {
+                        const address = config[i].address;
+                        config[i].address = ((address >> 4) << 4) + (localOptions.directAddresses ? _dmap[address % 16] : _rmap[address % 16]);
+                    }
                 }
             } else {
                 config[i].address = config[i]._address;
@@ -609,7 +612,6 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
         }
     }
 }
-
 
 // localOptions = {
 //      multiDeviceId
@@ -695,17 +697,17 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
         if (config.length) {
             result.length = result.addressHigh - result.addressLow;
             if (isBools && !localOptions.doNotRoundAddressToWord) {
-                result.addressLow = Math.floor(result.addressLow / 16) * 16;
+                result.addressLow = (result.addressLow >> 4) << 4;
 
                 if (result.length % 16) {
-                    result.length = (Math.floor(result.length / 16) + 1) * 16;
+                    result.length = ((result.length >> 4) + 1) << 4;
                 }
                 if (result.blocks) {
                     for (let b = 0; b < result.blocks.length; b++) {
-                        result.blocks[b].start = Math.floor(result.blocks[b].start / 16) * 16;
+                        result.blocks[b].start = (result.blocks[b].start >> 4) << 4;
 
                         if (result.blocks[b].count % 16) {
-                            result.blocks[b].count = (Math.floor(result.blocks[b].count / 16) + 1) * 16;
+                            result.blocks[b].count = ((result.blocks[b].count >> 4) + 1) << 4;
                         }
                     }
                 }
