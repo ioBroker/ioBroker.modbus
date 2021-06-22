@@ -295,7 +295,7 @@ class Options extends Component {
             }
         } else
         if (name === 'showAliases') {
-            ['disInputs', 'inputRegs', 'holdingRegs'].forEach(nativeParam => {
+            ['disInputs', 'inputRegs', 'holdingRegs', 'coils'].forEach(nativeParam => {
                 native[nativeParam].forEach(item => {
                     if (value) {
                         item._address = Utils.address2alias(nativeParam, item._address);
@@ -310,9 +310,9 @@ class Options extends Component {
                     }
                 });
             });
-        }
+        } else
         if (name === 'directAddresses' && native.params.showAliases) {
-            ['disInputs', 'inputRegs', 'holdingRegs'].forEach(nativeParam => {
+            ['disInputs', 'coils'].forEach(nativeParam => {
                 native[nativeParam].forEach(item => {
                     if (value) {
                         item._address = Utils.nonDirect2direct(nativeParam, item._address);

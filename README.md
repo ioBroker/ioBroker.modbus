@@ -276,6 +276,9 @@ There are some programs in folder *test' to test the TCP communication:
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
+### 3.4.7 (2021-06-22)
+* (bluefox) Corrected addressing with aliases in GUI
+
 ### 3.4.6 (2021-06-21)
 * (bluefox) Corrected addressing with aliases
 

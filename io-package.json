@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.4.6",
+        "version": "3.4.7",
         "news": {
+            "3.4.7": {
+                "en": "Corrected addressing with aliases in GUI",
+                "de": "Korrigierte Adressierung mit Aliasen in der GUI",
+                "ru": "Исправлена адресация с псевдонимами в графическом интерфейсе.",
+                "pt": "Endereçamento corrigido com aliases na GUI",
+                "nl": "Adressering gecorrigeerd met aliassen in GUI",
+                "fr": "Adressage corrigé avec des alias dans l'interface graphique",
+                "it": "Indirizzamento corretto con alias nella GUI",
+                "es": "Direccionamiento corregido con alias en GUI",
+                "pl": "Poprawiono adresowanie za pomocą aliasów w GUI",
+                "zh-cn": "更正了 GUI 中的别名寻址"
+            },
             "3.4.6": {
                 "en": "Corrected addressing with aliases",
                 "de": "Adressierung mit Aliasen korrigiert",
@@ -230,18 +242,6 @@
                 "es": "Caso de prevención de accidentes (Sentry IOBROKER-MODBUS-1C)",
                 "pl": "Zapobiegaj awariom (Sentry IOBROKER-MODBUS-1C)",
                 "zh-cn": "防止崩溃情况（Sentry IOBROKER-MODBUS-1C）"
-            },
-            "3.1.7": {
-                "en": "Fix some Sentry crash reports (IOBROKER-MODBUS-N)",
-                "de": "Behebung einiger Sentry-Absturzberichte (IOBROKER-MODBUS-N)",
-                "ru": "Исправлены некоторые отчеты о сбоях в Sentry (IOBROKER-MODBUS-N)",
-                "pt": "Corrigir alguns relatórios de falha do Sentry (IOBROKER-MODBUS-N)",
-                "nl": "Enkele Sentry-crashrapporten repareren (IOBROKER-MODBUS-N)",
-                "fr": "Correction de certains rapports de plantage Sentry (IOBROKER-MODBUS-N)",
-                "it": "Risolti alcuni rapporti sugli arresti anomali di Sentry (IOBROKER-MODBUS-N)",
-                "es": "Repare algunos informes de bloqueo de Sentry (IOBROKER-MODBUS-N)",
-                "pl": "Napraw niektóre raporty o awariach Sentry (IOBROKER-MODBUS-N)",
-                "zh-cn": "修复一些Sentry崩溃报告（IOBROKER-MODBUS-N）"
             }
         },
         "title": "ModBus",

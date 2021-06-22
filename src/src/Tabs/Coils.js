@@ -38,6 +38,9 @@ class Coils extends BaseRegisters {
             let sortedData = this.getSortedData();
             let lastItem = sortedData[sortedData.length - 1].item;
             newItem._address = parseInt(lastItem._address, 10) + 1;
+            while(sortedData.find(item => item.item._address === newItem._address)) {
+                newItem._address++;
+            }
             newItem.deviceId = lastItem.deviceId;
             newItem.formula = lastItem.formula;
             newItem.role = lastItem.role;

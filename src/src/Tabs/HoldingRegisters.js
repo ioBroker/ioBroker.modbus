@@ -47,6 +47,9 @@ class HoldingRegisters extends BaseRegisters {
             let sortedData = this.getSortedData();
             let lastItem = sortedData[sortedData.length - 1].item;
             newItem._address = parseInt(lastItem._address, 10) + (lastItem.len ? parseInt(lastItem.len, 10) : 1);
+            while(sortedData.find(item => item.item._address >= newItem._address && item.item._address + parseInt(item.item.len || 1, 10) < newItem._address)) {
+                newItem._address++;
+            }
             newItem.deviceId = lastItem.deviceId;
             newItem.type = lastItem.type;
             newItem.len = (lastItem.len ? parseInt(lastItem.len) : 1);
