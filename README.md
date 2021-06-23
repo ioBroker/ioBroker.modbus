@@ -276,6 +276,10 @@ There are some programs in folder *test' to test the TCP communication:
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
+
+### __WORK IN PROGRESS__
+* (Apollon77) Fix crash case on writing floats (Sentry IOBROKER-MODBUS-2D)
+
 ### 3.4.7 (2021-06-22)
 * (bluefox) Corrected addressing with aliases in GUI
 
