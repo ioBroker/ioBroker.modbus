@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.4.7",
+        "version": "3.4.8",
         "news": {
+            "3.4.8": {
+                "en": "Fix crash case on writing floats (Sentry IOBROKER-MODBUS-2D)",
+                "de": "Absturzfall beim Schreiben von Floats behoben (Sentry IOBROKER-MODBUS-2D)",
+                "ru": "Исправить сбой при записи поплавков (Sentry IOBROKER-MODBUS-2D)",
+                "pt": "Corrigir caso de falha na gravação de flutuadores (Sentry IOBROKER-MODBUS-2D)",
+                "nl": "Crashgeval bij schrijven van drijvers repareren (Sentry IOBROKER-MODBUS-2D)",
+                "fr": "Correction d'un crash sur les flotteurs d'écriture (Sentry IOBROKER-MODBUS-2D)",
+                "it": "Risolto il crash case sui float di scrittura (Sentry IOBROKER-MODBUS-2D)",
+                "es": "Reparar caso de bloqueo en la escritura de flotadores (Sentry IOBROKER-MODBUS-2D)",
+                "pl": "Napraw przypadek awarii podczas pisania pływaków (Sentry IOBROKER-MODBUS-2D)",
+                "zh-cn": "修复写入浮点数的崩溃案例 (Sentry IOBROKER-MODBUS-2D)"
+            },
             "3.4.7": {
                 "en": "Corrected addressing with aliases in GUI",
                 "de": "Korrigierte Adressierung mit Aliasen in der GUI",
@@ -230,18 +242,6 @@
                 "es": "Corregido: los datos exportados no se pueden importar sin modificación",
                 "pl": "Poprawiono: wyeksportowanych danych nie można importować bez modyfikacji",
                 "zh-cn": "已更正：导出的数据未经修改就无法导入"
-            },
-            "3.1.9": {
-                "en": "Prevent crash case (Sentry IOBROKER-MODBUS-1C)",
-                "de": "Absturz verhindern (Sentry IOBROKER-MODBUS-1C)",
-                "ru": "Предотвращение сбоя (Sentry IOBROKER-MODBUS-1C)",
-                "pt": "Prevenir caso de travamento (Sentry IOBROKER-MODBUS-1C)",
-                "nl": "Voorkom crash case (Sentry IOBROKER-MODBUS-1C)",
-                "fr": "Prévenir les cas de crash (Sentry IOBROKER-MODBUS-1C)",
-                "it": "Prevenire il crash case (Sentry IOBROKER-MODBUS-1C)",
-                "es": "Caso de prevención de accidentes (Sentry IOBROKER-MODBUS-1C)",
-                "pl": "Zapobiegaj awariom (Sentry IOBROKER-MODBUS-1C)",
-                "zh-cn": "防止崩溃情况（Sentry IOBROKER-MODBUS-1C）"
             }
         },
         "title": "ModBus",
