@@ -12,8 +12,6 @@ import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -79,31 +77,25 @@ const DataCell = props => {
     let item = sortedItem.item;
     let result;
     if (field.type === 'checkbox') {
-        if (!editMode) {
-            result = <Checkbox
+        result = <Tooltip title={I18n.t(field.title)}>
+            <Checkbox
+                inputRef={ref}
+                className={props.classes.tableCheckbox}
                 checked={!!item[field.name]}
-                disabled
-            />;
-        } else {
-            result = <Tooltip title={I18n.t(field.title)}>
-                <Checkbox
-                    inputRef={ref}
-                    className={props.classes.tableCheckbox}
-                    checked={!!item[field.name]}
-                    disabled={props.getDisable(sortedItem.$index, field.name)}
-                    onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.checked)}
-                />
-            </Tooltip>;
-        }
+                disabled={props.getDisable(sortedItem.$index, field.name)}
+                onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.checked)}
+            />
+        </Tooltip>;
     } else if (field.type === 'rooms') {
         if (!editMode) {
-            result = <TextWithIcon list={props.rooms} value={item[field.name]}/>;
+            result = <TextWithIcon list={props.rooms} value={item[field.name]} themeType={props.themeType}/>;
         } else {
             result = <SelectWithIcon
                 list={props.rooms}
                 allowNone={true}
                 value={item[field.name] === undefined || item[field.name] === null ? '' : item[field.name]}
                 dense={true}
+                themeType={props.themeType}
                 inputProps={{ref, className: props.classes.tableSelect}}
                 disabled={props.getDisable(sortedItem.$index, field.name)}
                 onChange={value => props.changeParam(sortedItem.$index, field.name, value)}
@@ -156,7 +148,7 @@ const DataCell = props => {
 
 const RegisterTable = props => {
     const [tsvDialogOpen, setTsvDialogOpen] = useState(false);
-    const [editMode, setEditMode] = useState(window.localStorage.getItem('Modbus.editMode') !== 'false');
+    const [editMode, setEditMode] = useState(parseInt(window.localStorage.getItem('Modbus.editMode'), 10) || 0);
     const [extendedMode, setExtendedMode] = useState(window.localStorage.getItem('Modbus.extendedMode') === 'true');
     const [deleteAllDialog, setDeleteAllDialog] = useState({
         open: false,
@@ -173,7 +165,9 @@ const RegisterTable = props => {
     return <div>
         <div>
             <Tooltip title={I18n.t('Add line')}>
-                <IconButton onClick={e => props.addItem()}>
+                <IconButton onClick={e => {
+                    props.addItem();
+                }}>
                     <AddIcon/>
                 </IconButton>
             </Tooltip>
@@ -182,14 +176,7 @@ const RegisterTable = props => {
                     <ImportExport/>
                 </IconButton>
             </Tooltip>
-            <FormControlLabel
-                control={<Switch checked={editMode} onChange={e => {
-                    setEditMode(e.target.checked);
-                    window.localStorage.setItem('Modbus.editMode', e.target.checked);
-                }}/>}
-                label={I18n.t('Edit mode')}
-            />
-            {props.showExtendedModeSwitch && <Tooltip title={I18n.t('Toggle extended mode')}>
+            <Tooltip title={I18n.t('Toggle extended mode')}>
                 <IconButton
                     color={extendedMode ? 'primary' : 'inherit'}
                     onClick={() => {
@@ -198,7 +185,7 @@ const RegisterTable = props => {
                     }}>
                     <ExpertIcon/>
                 </IconButton>
-            </Tooltip>}
+            </Tooltip>
         </div>
         <div className={props.classes.tableContainer}>
             <Table size="small"
@@ -282,12 +269,13 @@ const RegisterTable = props => {
                             <TableRow hover key={sortedItem.$index}>
                                 {props.fields.filter(item => (extendedMode || !item.expert) && (!props.formulaDisabled || !item.formulaDisabled)).map(field =>
                                     <DataCell
+                                        key={field.name}
+                                        themeType={props.themeType}
                                         sortedItem={sortedItem}
                                         field={field}
-                                        editMode={editMode}
+                                        editMode={editMode === sortedItem.$index}
                                         rooms={props.rooms}
-                                        setEditMode={setEditMode}
-                                        key={field.name}
+                                        setEditMode={() => setEditMode(sortedItem.$index)}
                                         {...props}
                                     />
                                 )}
@@ -361,6 +349,7 @@ RegisterTable.propTypes = {
     formulaDisabled: PropTypes.bool,
     onChangeOrder: PropTypes.func,
     getSortedData: PropTypes.func,
+    themeType: PropTypes.string,
     showExtendedModeSwitch: PropTypes.bool,
 }
 

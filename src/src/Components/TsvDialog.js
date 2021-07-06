@@ -5,9 +5,9 @@ import {withStyles} from '@material-ui/core/styles';
 import { tsv2json, json2tsv } from 'tsv-json';
 import { useSnackbar } from 'notistack';
 import AceEditor from 'react-ace';
+import copy from 'copy-to-clipboard';
 
 import I18n from '@iobroker/adapter-react/i18n';
-import Utils from '@iobroker/adapter-react/Components/Utils';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -30,13 +30,13 @@ const styles = theme => ({
     }
 });
 
-const TsvDialog = (props) => {
+const TsvDialog = props => {
     const [tsv, setTsv] = useState('');
     useEffect(() => {
         let tsvResult = [];
         tsvResult.push(props.fields.map(field => field.name));
         props.data.forEach(item =>
-            tsvResult.push(props.fields.map(field => item[field.name] !== undefined ? item[field.name].toString() : ''))
+            tsvResult.push(props.fields.map(field => item[field.name] !== undefined && item[field.name] !== null ? item[field.name].toString() : ''))
         );
         setTsv(json2tsv(tsvResult));
     }, [props.open]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -66,7 +66,7 @@ const TsvDialog = (props) => {
                     success = false;
                 }
                 if (props.fields[index].type === 'checkbox') {
-                    itemValues[index] = itemValues[index] === 'true' ? true : false;
+                    itemValues[index] = itemValues[index] === 'true';
                 }
                 item[props.fields[index].name] = itemValues[index];
             }
@@ -104,15 +104,16 @@ const TsvDialog = (props) => {
             </div>
         </DialogContent>
         <DialogActions>
-            <Button variant="outlined" color="primary" onClick={e => {
-                Utils.copyToClipboard(tsv, e);
+            <Button variant="outlined" color="primary" onClick={() => {
+                //Utils.copyToClipboard(tsv);
+                copy(tsv);
                 enqueueSnackbar(I18n.t('TSV was copied to clipboard'));
             }} startIcon={<FileCopyIcon />}>{I18n.t('Copy to clipboard')}</Button>
             <Button variant="contained" color="primary" onClick={saveTsv} startIcon={<SaveIcon />}>{I18n.t('Import')}</Button>
             <Button variant="contained" onClick={props.onClose} startIcon={<ClearIcon />}>{I18n.t('Close')}</Button>
         </DialogActions>
     </Dialog>
-}
+};
 
 TsvDialog.propTypes = {
     open: PropTypes.bool,
@@ -121,6 +122,6 @@ TsvDialog.propTypes = {
     save: PropTypes.func,
     fields: PropTypes.array,
     data: PropTypes.array
-}
+};
 
 export default withStyles(styles)(TsvDialog);

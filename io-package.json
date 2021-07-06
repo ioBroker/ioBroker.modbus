@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.4.8",
+        "version": "3.4.9",
         "news": {
+            "3.4.9": {
+                "en": "Changed edit behaviour",
+                "de": "Bearbeitungsverhalten geändert",
+                "ru": "Изменено поведение при редактировании",
+                "pt": "Comportamento de edição alterado",
+                "nl": "Gewijzigd bewerkingsgedrag",
+                "fr": "Comportement d'édition modifié",
+                "it": "Comportamento di modifica modificato",
+                "es": "Comportamiento de edición modificado",
+                "pl": "Zmieniono zachowanie edycji",
+                "zh-cn": "更改了编辑行为"
+            },
             "3.4.8": {
                 "en": "Fix crash case on writing floats (Sentry IOBROKER-MODBUS-2D)",
                 "de": "Absturzfall beim Schreiben von Floats behoben (Sentry IOBROKER-MODBUS-2D)",
@@ -230,18 +242,6 @@
                 "es": "arreglar la selección del puerto serial del administrador",
                 "pl": "naprawić wybór portu szeregowego administratora",
                 "zh-cn": "修复管理员串行端口选择"
-            },
-            "3.1.10": {
-                "en": "Corrected: the exported data cannot be imported without modification",
-                "de": "Korrigiert: Die exportierten Daten können nicht ohne Änderung importiert werden",
-                "ru": "Исправлено: экспортированные данные нельзя импортировать без изменений.",
-                "pt": "Corrigido: os dados exportados não podem ser importados sem modificação",
-                "nl": "Gecorrigeerd: de geëxporteerde gegevens kunnen niet zonder wijziging worden geïmporteerd",
-                "fr": "Corrigé: les données exportées ne peuvent pas être importées sans modification",
-                "it": "Corretto: i dati esportati non possono essere importati senza modifiche",
-                "es": "Corregido: los datos exportados no se pueden importar sin modificación",
-                "pl": "Poprawiono: wyeksportowanych danych nie można importować bez modyfikacji",
-                "zh-cn": "已更正：导出的数据未经修改就无法导入"
             }
         },
         "title": "ModBus",
