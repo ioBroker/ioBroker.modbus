@@ -362,6 +362,10 @@ function prepareConfig(config) {
     if (!options.config.slave) {
         options.config.poll         = parseInt(params.poll, 10)         || 1000; // default is 1 second
         options.config.recon        = parseInt(params.recon, 10)        || 60000;
+        if (options.config.recon < 1000) {
+           adapter.log.info('Slave Reconnect time set to 1000ms because was too small (' + options.config.recon + ')');
+            options.config.recon = 1000;
+        }
         options.config.maxBlock     = parseInt(params.maxBlock, 10)     || 100;
         options.config.maxBoolBlock = parseInt(params.maxBoolBlock, 10) || 128;
         options.config.pulsetime    = parseInt(params.pulsetime            || 1000);
