@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.4.9",
+        "version": "3.4.10",
         "news": {
+            "3.4.10": {
+                "en": "Make sure that slave reconnections at least wait 1000ms to allow old connectio to close properly\nCorrected the error with write single registers",
+                "de": "Stellen Sie sicher, dass Slave-Neuverbindungen mindestens 1000 ms warten, damit die alte Verbindung ordnungsgemäß geschlossen werden kann\nFehler beim Schreiben einzelner Register behoben",
+                "ru": "Убедитесь, что повторные подключения подчиненного устройства ждут не менее 1000 мс, чтобы старое соединение закрылось должным образом.\nИсправлена ошибка записи одиночных регистров.",
+                "pt": "Certifique-se de que as reconexões escravas esperem pelo menos 1000 ms para permitir que a conexão antiga feche corretamente\nCorrigido o erro com gravação de registros únicos",
+                "nl": "Zorg ervoor dat slave-herverbindingen minstens 1000 ms wachten om de oude verbinding goed te laten sluiten\nDe fout gecorrigeerd met enkele registers schrijven",
+                "fr": "Assurez-vous que les reconnexions esclaves attendent au moins 1000 ms pour permettre à l'ancienne connexion de se fermer correctement\nCorrection de l'erreur avec l'écriture de registres uniques",
+                "it": "Assicurati che le riconnessioni slave attendano almeno 1000 ms per consentire la chiusura corretta della vecchia connessione\nCorretto l'errore con la scrittura dei singoli registri",
+                "es": "Asegúrese de que las reconexiones esclavas esperen al menos 1000 ms para permitir que la conexión anterior se cierre correctamente\nSe corrigió el error con la escritura de registros únicos.",
+                "pl": "Upewnij się, że ponowne połączenie urządzenia podrzędnego odczeka co najmniej 1000 ms, aby stare połączenie mogło się poprawnie zamknąć\nPoprawiono błąd przy zapisie pojedynczych rejestrów",
+                "zh-cn": "确保从站重新连接至少等待 1000 毫秒以允许旧连接正确关闭\n更正了写入单个寄存器的错误"
+            },
             "3.4.9": {
                 "en": "Changed edit behaviour",
                 "de": "Bearbeitungsverhalten geändert",
@@ -230,18 +242,6 @@
                 "es": "Se agregó la posibilidad de usar fórmulas para valores.",
                 "pl": "Dodano możliwość używania formuł dla wartości",
                 "zh-cn": "增加了将公式用于值的可能性"
-            },
-            "3.1.12": {
-                "en": "fix admin serial port selection",
-                "de": "Korrektur der Auswahl der seriellen Admin-Schnittstelle",
-                "ru": "исправить выбор последовательного порта администратора",
-                "pt": "corrigir seleção de porta serial de administrador",
-                "nl": "reparatie seriële poort selectie",
-                "fr": "correction de la sélection du port série administrateur",
-                "it": "correggere la selezione della porta seriale dell'amministratore",
-                "es": "arreglar la selección del puerto serial del administrador",
-                "pl": "naprawić wybór portu szeregowego administratora",
-                "zh-cn": "修复管理员串行端口选择"
             }
         },
         "title": "ModBus",
