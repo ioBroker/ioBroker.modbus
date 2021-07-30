@@ -547,7 +547,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
             obj: regs[i].room
         });
         newObjects.push(id);
-        adapter.log.debug('Add ' + regs[i].id + ': ' + JSON.stringify(objects[id]));
+        adapter.log.debug(`Add ${regs[i].id}: ${JSON.stringify(objects[id])}`);
     }
 
     if (regs.length) {
