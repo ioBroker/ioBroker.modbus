@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.4.10",
+        "version": "3.4.11",
         "news": {
+            "3.4.11": {
+                "en": "Corrected import of last line",
+                "de": "Korrigierter Import der letzten Zeile",
+                "ru": "Исправлен импорт последней строки",
+                "pt": "Importação corrigida da última linha",
+                "nl": "Gecorrigeerde import van laatste regel",
+                "fr": "Importation corrigée de la dernière ligne",
+                "it": "Importazione corretta dell'ultima riga",
+                "es": "Importación corregida de la última línea",
+                "pl": "Poprawiony import ostatniej linii",
+                "zh-cn": "更正了最后一行的导入"
+            },
             "3.4.10": {
                 "en": "Make sure that slave reconnections at least wait 1000ms to allow old connectio to close properly\nCorrected the error with write single registers",
                 "de": "Stellen Sie sicher, dass Slave-Neuverbindungen mindestens 1000 ms warten, damit die alte Verbindung ordnungsgemäß geschlossen werden kann\nFehler beim Schreiben einzelner Register behoben",
@@ -230,18 +242,6 @@
                 "es": "Fórmula fija donde faltaba la palabra clave de retorno",
                 "pl": "Naprawiono formułę, w której brakowało słowa kluczowego return",
                 "zh-cn": "修复了缺少返回关键字的公式"
-            },
-            "3.1.13": {
-                "en": "Added the possibility to use formulas for values",
-                "de": "Es wurde die Möglichkeit hinzugefügt, Formeln für Werte zu verwenden",
-                "ru": "Добавлена возможность использовать формулы для значений",
-                "pt": "Adicionada a possibilidade de usar fórmulas para valores",
-                "nl": "De mogelijkheid toegevoegd om formules voor waarden te gebruiken",
-                "fr": "Ajout de la possibilité d'utiliser des formules pour les valeurs",
-                "it": "Aggiunta la possibilità di utilizzare formule per i valori",
-                "es": "Se agregó la posibilidad de usar fórmulas para valores.",
-                "pl": "Dodano możliwość używania formuł dla wartości",
-                "zh-cn": "增加了将公式用于值的可能性"
             }
         },
         "title": "ModBus",

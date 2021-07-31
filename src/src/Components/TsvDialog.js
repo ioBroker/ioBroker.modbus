@@ -32,6 +32,7 @@ const styles = theme => ({
 
 const TsvDialog = props => {
     const [tsv, setTsv] = useState('');
+
     useEffect(() => {
         let tsvResult = [];
         tsvResult.push(props.fields.map(field => field.name));
@@ -40,6 +41,7 @@ const TsvDialog = props => {
         );
         setTsv(json2tsv(tsvResult));
     }, [props.open]); // eslint-disable-line react-hooks/exhaustive-deps
+
     const { enqueueSnackbar } = useSnackbar();
 
     if (!props.open) {
@@ -47,7 +49,7 @@ const TsvDialog = props => {
     }
 
     const saveTsv = () => {
-        let data = tsv2json(tsv);
+        let data = tsv2json(tsv.endsWith('\n') ? tsv : tsv + '\n');
         let fields = data.shift();
         let success = true;
         let errors = [];

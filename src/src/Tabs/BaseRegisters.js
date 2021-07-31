@@ -133,7 +133,7 @@ class BaseRegisters extends Component {
                     window.localStorage.setItem('Modbus.order', order);
                 }}
             />
-        </Paper>
+        </Paper>;
     }
 }
 
