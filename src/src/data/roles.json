@@ -20,5 +20,6 @@
     {"value": "level.valve", "title": "level.valve"},
     {"value": "level.blind", "title": "level.blind"},
     {"value": "level.temperature", "title": "level.temperature"},
-    {"value": "level.interval", "title": "level.interval"}
+    {"value": "level.interval", "title": "level.interval"},
+    {"value": "value.power.consumption", "title": "value.power.consumption"}
 ]
