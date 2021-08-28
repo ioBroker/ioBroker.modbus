@@ -897,8 +897,8 @@ function main() {
 }
 
 function sortByAddress(a, b) {
-    let ad = parseFloat(a.address);
-    let bd = parseFloat(b.address);
+    let ad = parseFloat(a._address);
+    let bd = parseFloat(b._address);
     return ((ad < bd) ? -1 : ((ad > bd) ? 1 : 0));
 }
 
