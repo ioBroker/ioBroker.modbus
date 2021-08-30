@@ -1,0 +1,7 @@
+{
+    "beautify.ignore": [
+        "*/words.js"
+    ],
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "HookyQR.beautify"
+}
