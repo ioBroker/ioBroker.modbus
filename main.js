@@ -647,6 +647,12 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
 
             if (!isBools) {
                 config[i].type   = config[i].type || 'uint16be';
+                if (typeof config[i].offset === 'string') {
+                    config[i].offset = config[i].offset.replace(',', '.');
+                }
+                if (typeof config[i].factor === 'string') {
+                    config[i].factor = config[i].factor.replace(',', '.');
+                }
                 config[i].offset = parseFloat(config[i].offset) || 0;
                 config[i].factor = parseFloat(config[i].factor) || 1;
                 if ((config[i].type === 'string') || (config[i].type === 'stringle')) {
