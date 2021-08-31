@@ -80,8 +80,6 @@ function sort(data) {
         item2.deviceId = parseInt(item2.deviceId, 10) || 1;
         item1._address = parseInt(item1._address, 10) || 0;
         item2._address = parseInt(item2._address, 10) || 0;
-        item1.address = parseInt(item1.address, 10) || 0;
-        item2.address = parseInt(item2.address, 10) || 0;
         const sort1 = (parseInt(item1.deviceId, 10) << 16) | parseInt(item1._address, 10);
         const sort2 = (parseInt(item2.deviceId, 10) << 16) | parseInt(item2._address, 10);
         return sort1 < sort2 ? -1 : (sort1 > sort2 ? 1 : 0);

@@ -509,7 +509,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
                 type:    regType === 'coils' || regType === 'disInputs' ? 'boolean' :
                     ((regs[i].type === 'string' || regs[i].type === 'stringle') ? 'string' : 'number'),
                 read:    true,
-                write:   regType === 'coils' || regType === 'holdingRegs',
+                write:   options.params.slave || regType === 'coils' || regType === 'holdingRegs',
                 def:     regType === 'coils' || regType === 'disInputs' ? false : ((regs[i].type === 'string' || regs[i].type === 'stringle') ? '' : 0)
             },
             native: {
@@ -518,6 +518,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
                 deviceId: regs[i].deviceId
             }
         };
+
         if (regType === 'coils') {
             objects[id].native.poll = regs[i].poll;
             objects[id].common.read = !!regs[i].poll;
@@ -636,7 +637,9 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
         result.addressHigh = 0;
 
         for (let i = config.length - 1; i >= 0; i--) {
-            if (config[i].deviceId !== deviceId) continue;
+            if (config[i].deviceId !== deviceId) {
+                continue;
+            }
             const address = config[i].address = parseInt(config[i].address, 10);
 
             if (address < 0) {
@@ -670,7 +673,9 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
                 result.cyclicWrite.push(adapter.namespace + '.' + config[i].id);
             }
 
-            if (address < result.addressLow)  result.addressLow = address;
+            if (address < result.addressLow) {
+                result.addressLow = address;
+            }
             if (address + (config[i].len || 1) > result.addressHigh) {
                 result.addressHigh = address + (config[i].len || 1);
             }

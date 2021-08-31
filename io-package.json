@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.4.12",
+        "version": "3.4.13",
         "news": {
+            "3.4.13": {
+                "en": "Fixed issue with sorting\nCorrected the calculations with scaling factor",
+                "de": "Problem beim Sortieren behoben\nBerechnungen mit Skalierungsfaktor korrigiert",
+                "ru": "Исправлена проблема с сортировкой\nИсправлены расчеты с коэффициентом масштабирования.",
+                "pt": "Problema corrigido com classificação\nCorrigiu os cálculos com fator de escala",
+                "nl": "Probleem opgelost met sorteren\nDe berekeningen gecorrigeerd met schaalfactor",
+                "fr": "Correction d'un problème de tri\nCorrection des calculs avec facteur d'échelle",
+                "it": "Risolto problema con l'ordinamento\nCorretti i calcoli con il fattore di scala",
+                "es": "Problema solucionado con la clasificación\nSe corrigieron los cálculos con factor de escala.",
+                "pl": "Naprawiono problem z sortowaniem\nPoprawiono obliczenia o współczynnik skalowania",
+                "zh-cn": "修复了排序问题\n用比例因子更正了计算"
+            },
             "3.4.12": {
                 "en": "Fixed issue with sorting",
                 "de": "Problem beim Sortieren behoben",
@@ -230,18 +242,6 @@
                 "es": "prevenir un caso de erupción (Sentry IOBROKER-MODBUS-1S)",
                 "pl": "zapobiegać przypadkom wysypki (Sentry IOBROKER-MODBUS-1S)",
                 "zh-cn": "防止出现皮疹的情况（Sentry IOBROKER-MODBUS-1S）"
-            },
-            "3.2.1": {
-                "en": "prevent a crash case (Sentry IOBROKER-MODBUS-1R)",
-                "de": "einen Absturz verhindern (Sentry IOBROKER-MODBUS-1R)",
-                "ru": "предотвращение сбоя (Sentry IOBROKER-MODBUS-1R)",
-                "pt": "evitar um caso de travamento (Sentry IOBROKER-MODBUS-1R)",
-                "nl": "een crashgeval voorkomen (Sentry IOBROKER-MODBUS-1R)",
-                "fr": "éviter un cas de crash (Sentry IOBROKER-MODBUS-1R)",
-                "it": "prevenire un crash case (Sentry IOBROKER-MODBUS-1R)",
-                "es": "prevenir un caso de accidente (Sentry IOBROKER-MODBUS-1R)",
-                "pl": "zapobiec awariom (Sentry IOBROKER-MODBUS-1R)",
-                "zh-cn": "防止发生崩溃情况（Sentry IOBROKER-MODBUS-1R）"
             }
         },
         "title": "ModBus",
