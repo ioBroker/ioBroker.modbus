@@ -72,16 +72,24 @@ const tabs = [
         icon: <DigitsIcon style={{width: 18, height: 18, marginRight: 4, display: 'inline-block'}}/>,
         tooltip: 'Input/output registers (8-64 bit values)'
     },
-]
+];
+
+function sort(data) {
+    data.sort((item1, item2) => {
+        item1.deviceId = parseInt(item1.deviceId, 10) || 1;
+        item2.deviceId = parseInt(item2.deviceId, 10) || 1;
+        item1._address = parseInt(item1._address, 10) || 0;
+        item2._address = parseInt(item2._address, 10) || 0;
+        item1.address = parseInt(item1.address, 10) || 0;
+        item2.address = parseInt(item2.address, 10) || 0;
+        const sort1 = (parseInt(item1.deviceId, 10) << 16) | parseInt(item1._address, 10);
+        const sort2 = (parseInt(item2.deviceId, 10) << 16) | parseInt(item2._address, 10);
+        return sort1 < sort2 ? -1 : (sort1 > sort2 ? 1 : 0);
+    });
+}
 
 class App extends GenericApp {
     constructor(props) {
-        // TODO: delete it after adapter-react 1.0.27 (BF: 2021.06.09)
-        if (window.io && window.location.port === '3000') {
-            console.log('Reaload!');
-            delete window.io;
-            window.io = new window.SocketClient();
-        }
         const extendedProps = {...props};
         extendedProps.encryptedFields = ['pass'];
 
@@ -103,8 +111,19 @@ class App extends GenericApp {
         this.state.rooms = null;
     }
 
+    onPrepareSave(native) {
+        // sort all arraysby device:address
+        native.disInputs && sort(native.disInputs);
+        native.coils && sort(native.coils);
+        native.inputRegs && sort(native.inputRegs);
+        native.holdingRegs && sort(native.holdingRegs);
+
+        return native;
+    }
+
     onConnectionReady() {
         super.onConnectionReady();
+
         this.socket.getEnums('rooms')
             .then(rooms =>
                 this.setState({moreLoaded: true, rooms}));
@@ -134,14 +153,13 @@ class App extends GenericApp {
                             value={this.getSelectedTab()}
                             onChange={(e, index) => this.selectTab(tabs[index].name, index)}
                             variant="scrollable" scrollButtons="auto">
-                            {tabs.map(tab => {
-                                return <Tab
+                            {tabs.map(tab => <Tab
                                     label={tab.icon ? <>{tab.icon}{I18n.t(tab.title)}</> : I18n.t(tab.title)}
                                     data-name={tab.name}
                                     key={tab.name}
                                     title={tab.tooltip ? I18n.t(tab.tooltip) : undefined}
                                 />
-                            })}
+                            )}
                         </Tabs>
                     </AppBar>
                     <div className={this.isIFrame ? this.props.classes.tabContentIFrame : this.props.classes.tabContent}>

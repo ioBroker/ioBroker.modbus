@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.4.11",
+        "version": "3.4.12",
         "news": {
+            "3.4.12": {
+                "en": "Fixed issue with sorting",
+                "de": "Problem beim Sortieren behoben",
+                "ru": "Исправлена проблема с сортировкой",
+                "pt": "Problema corrigido com classificação",
+                "nl": "Probleem opgelost met sorteren",
+                "fr": "Correction d'un problème de tri",
+                "it": "Risolto problema con l'ordinamento",
+                "es": "Problema solucionado con la clasificación",
+                "pl": "Naprawiono problem z sortowaniem",
+                "zh-cn": "修复了排序问题"
+            },
             "3.4.11": {
                 "en": "Corrected import of last line",
                 "de": "Korrigierter Import der letzten Zeile",
@@ -230,18 +242,6 @@
                 "es": "prevenir un caso de accidente (Sentry IOBROKER-MODBUS-1R)",
                 "pl": "zapobiec awariom (Sentry IOBROKER-MODBUS-1R)",
                 "zh-cn": "防止发生崩溃情况（Sentry IOBROKER-MODBUS-1R）"
-            },
-            "3.2.0": {
-                "en": "Fixed formula where return keyword was missing",
-                "de": "Formel behoben, bei der das Schlüsselwort return fehlte",
-                "ru": "Исправлена формула, в которой отсутствовало ключевое слово возврата",
-                "pt": "Fórmula fixa em que a palavra-chave de retorno estava faltando",
-                "nl": "Vaste formule waarbij het retourzoekwoord ontbrak",
-                "fr": "Formule fixe où le mot-clé de retour était manquant",
-                "it": "Correzione della formula in cui mancava la parola chiave di ritorno",
-                "es": "Fórmula fija donde faltaba la palabra clave de retorno",
-                "pl": "Naprawiono formułę, w której brakowało słowa kluczowego return",
-                "zh-cn": "修复了缺少返回关键字的公式"
             }
         },
         "title": "ModBus",
