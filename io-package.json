@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "modbus",
-        "version": "3.4.13",
+        "version": "3.4.14",
         "news": {
+            "3.4.14": {
+                "en": "Fixed issue with sorting\nCorrected the calculations with scaling factor\nRead times were optimized",
+                "de": "Problem beim Sortieren behoben\nBerechnungen mit Skalierungsfaktor korrigiert\nLesezeiten wurden optimiert",
+                "ru": "Исправлена проблема с сортировкой\nИсправлены расчеты с коэффициентом масштабирования.\nОптимизировано время чтения",
+                "pt": "Problema corrigido com classificação\nCorrigiu os cálculos com fator de escala\nOs tempos de leitura foram otimizados",
+                "nl": "Probleem opgelost met sorteren\nDe berekeningen gecorrigeerd met schaalfactor\nLeestijden zijn geoptimaliseerd",
+                "fr": "Correction d'un problème de tri\nCorrection des calculs avec facteur d'échelle\nLes temps de lecture ont été optimisés",
+                "it": "Risolto problema con l'ordinamento\nCorretti i calcoli con il fattore di scala\nI tempi di lettura sono stati ottimizzati",
+                "es": "Problema solucionado con la clasificación\nSe corrigieron los cálculos con factor de escala.\nSe optimizaron los tiempos de lectura",
+                "pl": "Naprawiono problem z sortowaniem\nPoprawiono obliczenia o współczynnik skalowania\nZoptymalizowano czasy odczytu",
+                "zh-cn": "修复了排序问题\n用比例因子更正了计算\n优化了读取时间"
+            },
             "3.4.13": {
                 "en": "Fixed issue with sorting\nCorrected the calculations with scaling factor",
                 "de": "Problem beim Sortieren behoben\nBerechnungen mit Skalierungsfaktor korrigiert",
@@ -230,18 +242,6 @@
                 "es": "Detecte el error de codificación del valor y no bloquee el adaptador (Sentry IOBROKER-MODBUS-1W)\nagregar un meta objeto como objeto de instancia",
                 "pl": "Błąd kodowania wartości przechwytywania i nie zawieszaj adaptera (Sentry IOBROKER-MODBUS-1W)\ndodaj obiekt meta jako obiekt instancji",
                 "zh-cn": "捕获值编码错误，并且不使适配器崩溃（Sentry IOBROKER-MODBUS-1W）\n添加一个元对象作为实例对象"
-            },
-            "3.2.2": {
-                "en": "prevent a rash case (Sentry IOBROKER-MODBUS-1S)",
-                "de": "einen Hautausschlag verhindern (Sentry IOBROKER-MODBUS-1S)",
-                "ru": "предотвратить сыпь (Sentry IOBROKER-MODBUS-1S)",
-                "pt": "prevenir uma erupção cutânea (Sentry IOBROKER-MODBUS-1S)",
-                "nl": "voorkomen van uitslag (Sentry IOBROKER-MODBUS-1S)",
-                "fr": "prévenir une éruption cutanée (Sentry IOBROKER-MODBUS-1S)",
-                "it": "prevenire un caso avventato (Sentry IOBROKER-MODBUS-1S)",
-                "es": "prevenir un caso de erupción (Sentry IOBROKER-MODBUS-1S)",
-                "pl": "zapobiegać przypadkom wysypki (Sentry IOBROKER-MODBUS-1S)",
-                "zh-cn": "防止出现皮疹的情况（Sentry IOBROKER-MODBUS-1S）"
             }
         },
         "title": "ModBus",

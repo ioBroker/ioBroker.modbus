@@ -369,7 +369,7 @@ function prepareConfig(config) {
         options.config.maxBlock     = parseInt(params.maxBlock, 10)     || 100;
         options.config.maxBoolBlock = parseInt(params.maxBoolBlock, 10) || 128;
         options.config.pulsetime    = parseInt(params.pulsetime         || 1000);
-        options.config.waitTime     = parseInt(params.waitTime, 10)     || 50;
+        options.config.waitTime     = (params.waitTime === undefined) ? 50 : (parseInt(params.waitTime, 10) || 0);
         options.config.readInterval = parseInt(params.readInterval, 10) || 0;
     }
 
