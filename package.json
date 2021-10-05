@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "del": "^6.0.0",
-    "@alcalzone/release-script": "^2.2.1",
+    "@alcalzone/release-script": "^3.4.0",
     "axios": "^0.21.4",
     "gulp": "^4.0.2",
     "mocha": "^9.1.2",
