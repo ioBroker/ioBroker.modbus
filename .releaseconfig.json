@@ -1,8 +1,6 @@
 {
-  "all": true,
-  "lerna": false,
-
-  "scripts": {
-    "beforePush": "npm run build"
+  "plugins": ["iobroker", "license"],
+  "exec": {
+    "before_commit": "npm run build"
   }
 }
