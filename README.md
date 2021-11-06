@@ -275,6 +275,11 @@ There are some programs in folder *test' to test the TCP communication:
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
+
+### __WORK IN PROGRESS__
+* (Apollon77) Catch errors in tasks processing to prevent crashes
+* (Apollon77) make sure generated IDs do not end with "."
+
 ### 3.4.14 (2021-08-31)
 * (nkleber78) Fixed issue with sorting
 * (bluefox) Corrected the calculations with scaling factor

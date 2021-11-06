@@ -310,17 +310,22 @@ function processTasks(tasks, callback) {
         return callback();
     }
     let task = tasks.shift();
-    if (task.name === 'add') {
-        createExtendObject(task.id, task.obj, () =>
-            setImmediate(processTasks, tasks, callback));
-    } else if (task.name === 'del') {
-        adapter.delObject(task.id, () =>
-            setImmediate(processTasks, tasks, callback));
-    } else if (task.name === 'syncEnums') {
-        syncEnums('rooms', task.id, task.obj, () =>
-            setImmediate(processTasks, tasks, callback));
-    } else {
-        throw 'Unknown task';
+    try {
+        if (task.name === 'add') {
+            createExtendObject(task.id, task.obj, () =>
+                setImmediate(processTasks, tasks, callback));
+        } else if (task.name === 'del') {
+            adapter.delObject(task.id, () =>
+                setImmediate(processTasks, tasks, callback));
+        } else if (task.name === 'syncEnums') {
+            syncEnums('rooms', task.id, task.obj, () =>
+                setImmediate(processTasks, tasks, callback));
+        } else {
+            throw new Error('Unknown task');
+        }
+    } catch (err) {
+        adapter.log.info(`Can not execute task ${task.name} for ID ${task.id}: ${err.message}`);
+        setImmediate(processTasks, tasks, callback);
     }
 }
 
@@ -616,6 +621,9 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
         } else {
             // replace dots by underlines and add to ID
             config[i].id += (config[i].name ? '_' + (config[i].name.replace('.', '_').replace(' ', '_')) : '');
+        }
+        if (config[i].id.endsWith('.')) {
+            config[i].id += config[i].id.substr(0,config[i].id.length - 1);
         }
     }
 }
