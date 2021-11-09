@@ -1,369 +1,213 @@
 {
-    "common": {
-        "name": "modbus",
-        "version": "3.4.14",
-        "news": {
-            "3.4.14": {
-                "en": "Fixed issue with sorting\nCorrected the calculations with scaling factor\nRead times were optimized",
-                "de": "Problem beim Sortieren behoben\nBerechnungen mit Skalierungsfaktor korrigiert\nLesezeiten wurden optimiert",
-                "ru": "Исправлена проблема с сортировкой\nИсправлены расчеты с коэффициентом масштабирования.\nОптимизировано время чтения",
-                "pt": "Problema corrigido com classificação\nCorrigiu os cálculos com fator de escala\nOs tempos de leitura foram otimizados",
-                "nl": "Probleem opgelost met sorteren\nDe berekeningen gecorrigeerd met schaalfactor\nLeestijden zijn geoptimaliseerd",
-                "fr": "Correction d'un problème de tri\nCorrection des calculs avec facteur d'échelle\nLes temps de lecture ont été optimisés",
-                "it": "Risolto problema con l'ordinamento\nCorretti i calcoli con il fattore di scala\nI tempi di lettura sono stati ottimizzati",
-                "es": "Problema solucionado con la clasificación\nSe corrigieron los cálculos con factor de escala.\nSe optimizaron los tiempos de lectura",
-                "pl": "Naprawiono problem z sortowaniem\nPoprawiono obliczenia o współczynnik skalowania\nZoptymalizowano czasy odczytu",
-                "zh-cn": "修复了排序问题\n用比例因子更正了计算\n优化了读取时间"
-            },
-            "3.4.13": {
-                "en": "Fixed issue with sorting\nCorrected the calculations with scaling factor",
-                "de": "Problem beim Sortieren behoben\nBerechnungen mit Skalierungsfaktor korrigiert",
-                "ru": "Исправлена проблема с сортировкой\nИсправлены расчеты с коэффициентом масштабирования.",
-                "pt": "Problema corrigido com classificação\nCorrigiu os cálculos com fator de escala",
-                "nl": "Probleem opgelost met sorteren\nDe berekeningen gecorrigeerd met schaalfactor",
-                "fr": "Correction d'un problème de tri\nCorrection des calculs avec facteur d'échelle",
-                "it": "Risolto problema con l'ordinamento\nCorretti i calcoli con il fattore di scala",
-                "es": "Problema solucionado con la clasificación\nSe corrigieron los cálculos con factor de escala.",
-                "pl": "Naprawiono problem z sortowaniem\nPoprawiono obliczenia o współczynnik skalowania",
-                "zh-cn": "修复了排序问题\n用比例因子更正了计算"
-            },
-            "3.4.12": {
-                "en": "Fixed issue with sorting",
-                "de": "Problem beim Sortieren behoben",
-                "ru": "Исправлена проблема с сортировкой",
-                "pt": "Problema corrigido com classificação",
-                "nl": "Probleem opgelost met sorteren",
-                "fr": "Correction d'un problème de tri",
-                "it": "Risolto problema con l'ordinamento",
-                "es": "Problema solucionado con la clasificación",
-                "pl": "Naprawiono problem z sortowaniem",
-                "zh-cn": "修复了排序问题"
-            },
-            "3.4.11": {
-                "en": "Corrected import of last line",
-                "de": "Korrigierter Import der letzten Zeile",
-                "ru": "Исправлен импорт последней строки",
-                "pt": "Importação corrigida da última linha",
-                "nl": "Gecorrigeerde import van laatste regel",
-                "fr": "Importation corrigée de la dernière ligne",
-                "it": "Importazione corretta dell'ultima riga",
-                "es": "Importación corregida de la última línea",
-                "pl": "Poprawiony import ostatniej linii",
-                "zh-cn": "更正了最后一行的导入"
-            },
-            "3.4.10": {
-                "en": "Make sure that slave reconnections at least wait 1000ms to allow old connectio to close properly\nCorrected the error with write single registers",
-                "de": "Stellen Sie sicher, dass Slave-Neuverbindungen mindestens 1000 ms warten, damit die alte Verbindung ordnungsgemäß geschlossen werden kann\nFehler beim Schreiben einzelner Register behoben",
-                "ru": "Убедитесь, что повторные подключения подчиненного устройства ждут не менее 1000 мс, чтобы старое соединение закрылось должным образом.\nИсправлена ошибка записи одиночных регистров.",
-                "pt": "Certifique-se de que as reconexões escravas esperem pelo menos 1000 ms para permitir que a conexão antiga feche corretamente\nCorrigido o erro com gravação de registros únicos",
-                "nl": "Zorg ervoor dat slave-herverbindingen minstens 1000 ms wachten om de oude verbinding goed te laten sluiten\nDe fout gecorrigeerd met enkele registers schrijven",
-                "fr": "Assurez-vous que les reconnexions esclaves attendent au moins 1000 ms pour permettre à l'ancienne connexion de se fermer correctement\nCorrection de l'erreur avec l'écriture de registres uniques",
-                "it": "Assicurati che le riconnessioni slave attendano almeno 1000 ms per consentire la chiusura corretta della vecchia connessione\nCorretto l'errore con la scrittura dei singoli registri",
-                "es": "Asegúrese de que las reconexiones esclavas esperen al menos 1000 ms para permitir que la conexión anterior se cierre correctamente\nSe corrigió el error con la escritura de registros únicos.",
-                "pl": "Upewnij się, że ponowne połączenie urządzenia podrzędnego odczeka co najmniej 1000 ms, aby stare połączenie mogło się poprawnie zamknąć\nPoprawiono błąd przy zapisie pojedynczych rejestrów",
-                "zh-cn": "确保从站重新连接至少等待 1000 毫秒以允许旧连接正确关闭\n更正了写入单个寄存器的错误"
-            },
-            "3.4.9": {
-                "en": "Changed edit behaviour",
-                "de": "Bearbeitungsverhalten geändert",
-                "ru": "Изменено поведение при редактировании",
-                "pt": "Comportamento de edição alterado",
-                "nl": "Gewijzigd bewerkingsgedrag",
-                "fr": "Comportement d'édition modifié",
-                "it": "Comportamento di modifica modificato",
-                "es": "Comportamiento de edición modificado",
-                "pl": "Zmieniono zachowanie edycji",
-                "zh-cn": "更改了编辑行为"
-            },
-            "3.4.8": {
-                "en": "Fix crash case on writing floats (Sentry IOBROKER-MODBUS-2D)",
-                "de": "Absturzfall beim Schreiben von Floats behoben (Sentry IOBROKER-MODBUS-2D)",
-                "ru": "Исправить сбой при записи поплавков (Sentry IOBROKER-MODBUS-2D)",
-                "pt": "Corrigir caso de falha na gravação de flutuadores (Sentry IOBROKER-MODBUS-2D)",
-                "nl": "Crashgeval bij schrijven van drijvers repareren (Sentry IOBROKER-MODBUS-2D)",
-                "fr": "Correction d'un crash sur les flotteurs d'écriture (Sentry IOBROKER-MODBUS-2D)",
-                "it": "Risolto il crash case sui float di scrittura (Sentry IOBROKER-MODBUS-2D)",
-                "es": "Reparar caso de bloqueo en la escritura de flotadores (Sentry IOBROKER-MODBUS-2D)",
-                "pl": "Napraw przypadek awarii podczas pisania pływaków (Sentry IOBROKER-MODBUS-2D)",
-                "zh-cn": "修复写入浮点数的崩溃案例 (Sentry IOBROKER-MODBUS-2D)"
-            },
-            "3.4.7": {
-                "en": "Corrected addressing with aliases in GUI",
-                "de": "Korrigierte Adressierung mit Aliasen in der GUI",
-                "ru": "Исправлена адресация с псевдонимами в графическом интерфейсе.",
-                "pt": "Endereçamento corrigido com aliases na GUI",
-                "nl": "Adressering gecorrigeerd met aliassen in GUI",
-                "fr": "Adressage corrigé avec des alias dans l'interface graphique",
-                "it": "Indirizzamento corretto con alias nella GUI",
-                "es": "Direccionamiento corregido con alias en GUI",
-                "pl": "Poprawiono adresowanie za pomocą aliasów w GUI",
-                "zh-cn": "更正了 GUI 中的别名寻址"
-            },
-            "3.4.6": {
-                "en": "Corrected addressing with aliases",
-                "de": "Adressierung mit Aliasen korrigiert",
-                "ru": "Исправлена адресация с псевдонимами",
-                "pt": "Endereçamento corrigido com aliases",
-                "nl": "Adressering gecorrigeerd met aliassen",
-                "fr": "Adressage corrigé avec alias",
-                "it": "Indirizzamento corretto con alias",
-                "es": "Direccionamiento corregido con alias",
-                "pl": "Poprawione adresowanie za pomocą aliasów",
-                "zh-cn": "用别名更正了寻址"
-            },
-            "3.4.5": {
-                "en": "Corrected the \"write multiple registers\" option",
-                "de": "Die Option \"Mehrere Register schreiben\" wurde korrigiert",
-                "ru": "Исправлена опция \"запись нескольких регистров\".",
-                "pt": "Corrigida a opção \"escrever registros múltiplos\"",
-                "nl": "De optie \"schrijf meerdere registers\" gecorrigeerd",
-                "fr": "Correction de l'option \"écrire plusieurs registres\"",
-                "it": "Corretta l'opzione \"scrivi più registri\"",
-                "es": "Se corrigió la opción \"escribir varios registros\".",
-                "pl": "Poprawiono opcję „zapisz wiele rejestrów”",
-                "zh-cn": "更正了“写入多个寄存器”选项"
-            },
-            "3.4.4": {
-                "en": "GUI bugs were corrected\nAdded output of error codes",
-                "de": "GUI-Fehler wurden behoben\nAusgabe von Fehlercodes hinzugefügt",
-                "ru": "Исправлены ошибки графического интерфейса.\nДобавлен вывод кодов ошибок",
-                "pt": "Bugs GUI foram corrigidos\nAdicionada saída de códigos de erro",
-                "nl": "GUI-bugs zijn gecorrigeerd\nToegevoegde output van foutcodes",
-                "fr": "Les bogues de l'interface graphique ont été corrigés\nAjout de la sortie des codes d'erreur",
-                "it": "I bug della GUI sono stati corretti\nAggiunto output di codici di errore",
-                "es": "Se corrigieron los errores de la GUI\nSalida agregada de códigos de error",
-                "pl": "Poprawiono błędy GUI\nDodano wyjście kodów błędów",
-                "zh-cn": "GUI错误已得到纠正\n添加了错误代码的输出"
-            },
-            "3.4.3": {
-                "en": "GUI bugs were corrected\nAdded output of error codes",
-                "de": "GUI-Fehler wurden behoben\nAusgabe von Fehlercodes hinzugefügt",
-                "ru": "Исправлены ошибки графического интерфейса.\nДобавлен вывод кодов ошибок",
-                "pt": "Bugs GUI foram corrigidos\nAdicionada saída de códigos de erro",
-                "nl": "GUI-bugs zijn gecorrigeerd\nToegevoegde output van foutcodes",
-                "fr": "Les bogues de l'interface graphique ont été corrigés\nAjout de la sortie des codes d'erreur",
-                "it": "I bug della GUI sono stati corretti\nAggiunto output di codici di errore",
-                "es": "Se corrigieron los errores de la GUI\nSalida agregada de códigos de error",
-                "pl": "Poprawiono błędy GUI\nDodano wyjście kodów błędów",
-                "zh-cn": "GUI错误已得到纠正\n添加了错误代码的输出"
-            },
-            "3.4.2": {
-                "en": "Corrected issue with the scale factors\nNew react GUI added\nAdd new option: Use only Write multiple registers, read interval",
-                "de": "Problem mit den Skalierungsfaktoren behoben\nNeue Reaktions-GUI hinzugefügt\nNeue Option hinzufügen: Use only Write multiple registers, read interval",
-                "ru": "Исправлена проблема с масштабными коэффициентами.\nДобавлен новый графический интерфейс реакции\nДобавить новую опцию: использовать только запись нескольких регистров, интервал чтения",
-                "pt": "Problema corrigido com os fatores de escala\nNova GUI de reação adicionada\nAdicionar nova opção: usar apenas registros múltiplos de gravação, intervalo de leitura",
-                "nl": "Probleem opgelost met de schaalfactoren\nNieuwe reactie-GUI toegevoegd\nNieuwe optie toevoegen: Alleen gebruiken Schrijf meerdere registers, lees interval",
-                "fr": "Correction d'un problème avec les facteurs d'échelle\nNouvelle interface graphique de réaction ajoutée\nAjouter une nouvelle option : utiliser uniquement Écrire plusieurs registres, intervalle de lecture",
-                "it": "Problema corretto con i fattori di scala\nAggiunta una nuova GUI di reazione\nAggiungi una nuova opzione: usa solo Scrivi più registri, leggi l'intervallo",
-                "es": "Problema corregido con los factores de escala.\nSe agregó una nueva GUI de reacción\nAgregar nueva opción: use solo Escribir múltiples registros, leer intervalo",
-                "pl": "Poprawiony problem ze współczynnikami skali\nDodano nowe GUI React\nDodaj nową opcję: Używaj tylko zapisu wielu rejestrów, interwał odczytu",
-                "zh-cn": "更正了比例因子的问题\n添加了新的反应 GUI\n添加新选项：仅使用写入多个寄存器，读取间隔"
-            },
-            "3.4.1": {
-                "en": "Corrected issue with the scale factors\nNew react GUI added\nAdd new option: Use only Write multiple registers, read interval",
-                "de": "Problem mit den Skalierungsfaktoren behoben\nNeue Reaktions-GUI hinzugefügt\nNeue Option hinzufügen: Use only Write multiple registers, read interval",
-                "ru": "Исправлена проблема с масштабными коэффициентами.\nДобавлен новый графический интерфейс реакции\nДобавить новую опцию: использовать только запись нескольких регистров, интервал чтения",
-                "pt": "Problema corrigido com os fatores de escala\nNova GUI de reação adicionada\nAdicionar nova opção: usar apenas registros múltiplos de gravação, intervalo de leitura",
-                "nl": "Probleem opgelost met de schaalfactoren\nNieuwe reactie-GUI toegevoegd\nNieuwe optie toevoegen: Alleen gebruiken Schrijf meerdere registers, lees interval",
-                "fr": "Correction d'un problème avec les facteurs d'échelle\nNouvelle interface graphique de réaction ajoutée\nAjouter une nouvelle option : utiliser uniquement Écrire plusieurs registres, intervalle de lecture",
-                "it": "Problema corretto con i fattori di scala\nAggiunta una nuova GUI di reazione\nAggiungi nuova opzione: usa solo Scrivi più registri, intervallo di lettura",
-                "es": "Problema corregido con los factores de escala.\nSe agregó una nueva GUI de reacción\nAgregar nueva opción: use solo Escribir múltiples registros, leer intervalo",
-                "pl": "Poprawiony problem ze współczynnikami skali\nDodano nowe GUI React\nDodaj nową opcję: Użyj tylko zapisu wielu rejestrów, interwał odczytu read",
-                "zh-cn": "更正了比例因子的问题\n添加了新的反应 GUI\n添加新选项：仅使用写入多个寄存器，读取间隔"
-            },
-            "3.4.0": {
-                "en": "Corrected issue with the scale factors\nNew react GUI added\nAdd new option: Use only Write multiple registers, read interval",
-                "de": "Problem mit den Skalierungsfaktoren behoben\nNeue Reaktions-GUI hinzugefügt\nNeue Option hinzufügen: Use only Write multiple registers, read interval",
-                "ru": "Исправлена проблема с масштабными коэффициентами.\nДобавлен новый графический интерфейс реакции\nДобавить новую опцию: использовать только запись нескольких регистров, интервал чтения",
-                "pt": "Problema corrigido com os fatores de escala\nNova GUI de reação adicionada\nAdicionar nova opção: usar apenas registros múltiplos de gravação, intervalo de leitura",
-                "nl": "Probleem opgelost met de schaalfactoren\nNieuwe reactie-GUI toegevoegd\nNieuwe optie toevoegen: Alleen gebruiken Schrijf meerdere registers, lees interval",
-                "fr": "Correction d'un problème avec les facteurs d'échelle\nNouvelle interface graphique de réaction ajoutée\nAjouter une nouvelle option : utiliser uniquement Écrire plusieurs registres, intervalle de lecture",
-                "it": "Problema corretto con i fattori di scala\nAggiunta una nuova GUI di reazione\nAggiungi nuova opzione: usa solo Scrivi più registri, intervallo di lettura",
-                "es": "Problema corregido con los factores de escala.\nSe agregó una nueva GUI de reacción\nAgregar nueva opción: use solo Escribir múltiples registros, leer intervalo",
-                "pl": "Poprawiony problem ze współczynnikami skali\nDodano nowe GUI React\nDodaj nową opcję: Użyj tylko zapisu wielu rejestrów, interwał odczytu read",
-                "zh-cn": "更正了比例因子的问题\n添加了新的反应 GUI\n添加新选项：仅使用写入多个寄存器，读取间隔"
-            },
-            "3.3.1": {
-                "en": "fixed the configuration dialog for \"input registers\" in slave mode",
-                "de": "Der Konfigurationsdialog für \"Eingangsregister\" im Slave-Modus wurde korrigiert",
-                "ru": "исправлен диалог конфигурации для \"входных регистров\" в ведомом режиме",
-                "pt": "corrigiu a caixa de diálogo de configuração para \"registros de entrada\" no modo escravo",
-                "nl": "de configuratiedialoog voor \"invoerregisters\" in slaafmodus gerepareerd",
-                "fr": "correction de la boîte de dialogue de configuration des \"registres d'entrée\" en mode esclave",
-                "it": "corretta la finestra di dialogo di configurazione per \"registri di ingresso\" in modalità slave",
-                "es": "Se corrigió el diálogo de configuración para \"registros de entrada\" en modo esclavo.",
-                "pl": "naprawiono okno dialogowe konfiguracji dla \"rejestrów wejściowych\" w trybie slave",
-                "zh-cn": "修复了从模式下“输入寄存器”的配置对话框"
-            },
-            "3.3.0": {
-                "en": "Allow to use write-only (no poll) states\n(Apollon77/TmShaz) F Write multiple registers\ncreate states of type string with default value of type string",
-                "de": "Erlauben Sie die Verwendung von Nur-Schreib-Zuständen (keine Abfrage)\n(Apollon77 / TmShaz) F Schreiben Sie mehrere Register\nErstellen Sie Zustände vom Typ Zeichenfolge mit dem Standardwert vom Typ Zeichenfolge",
-                "ru": "Разрешить использовать состояния только для записи (без опроса)\n(Apollon77 / TmShaz) F Запись нескольких регистров\nсоздавать состояния строки типа со значением по умолчанию строки типа",
-                "pt": "Permitir o uso de estados somente gravação (sem pesquisa)\n(Apollon77 / TmShaz) F Grava registros múltiplos\ncria estados do tipo string com o valor padrão do tipo string",
-                "nl": "Sta toe om alleen-schrijven (geen poll) staten te gebruiken\n(Apollon77 / TmShaz) F Schrijf meerdere registers\nmaak staten van het type string met de standaardwaarde van het type string",
-                "fr": "Autoriser à utiliser des états en écriture seule (pas d'interrogation)\n(Apollon77 / TmShaz) F Ecriture de plusieurs registres\ncréer des états de type string avec la valeur par défaut de type string",
-                "it": "Consenti l'utilizzo degli stati di sola scrittura (nessun sondaggio)\n(Apollon77 / TmShaz) F Scrive più registri\ncrea stati di tipo stringa con il valore predefinito di tipo stringa",
-                "es": "Permitir usar estados de solo escritura (sin encuesta)\n(Apollon77 / TmShaz) F Escribir varios registros\ncrear estados de tipo cadena con el valor predeterminado de tipo cadena",
-                "pl": "Zezwalaj na używanie stanów tylko do zapisu (bez ankiety)\n(Apollon77 / TmShaz) F Zapisz wiele rejestrów\nstwórz stany typu string z domyślną wartością typu string",
-                "zh-cn": "允许使用只写（无轮询）状态\n（Apollon77 / TmShaz）F写入多个寄存器\n使用默认类型的字符串创建字符串类型的状态"
-            },
-            "3.2.6": {
-                "en": "Prevent a crash case (Sentry IOBROKER-MODBUS-20)\nBetter handle invalid responses",
-                "de": "Verhindern Sie einen Absturz (Sentry IOBROKER-MODBUS-20)\nBehandeln Sie ungültige Antworten besser",
-                "ru": "Предотвращение сбоя (Sentry IOBROKER-MODBUS-20)\nЛучше обрабатывать недействительные ответы",
-                "pt": "Previna um caso de travamento (Sentry IOBROKER-MODBUS-20)\nMelhor lidar com respostas inválidas",
-                "nl": "Voorkom een crashcase (Sentry IOBROKER-MODBUS-20)\nBeter omgaan met ongeldige reacties",
-                "fr": "Prévenir un cas de crash (Sentry IOBROKER-MODBUS-20)\nMieux gérer les réponses invalides",
-                "it": "Prevenire un crash case (Sentry IOBROKER-MODBUS-20)\nGestire meglio le risposte non valide",
-                "es": "Evitar un caso de accidente (Sentry IOBROKER-MODBUS-20)\nManeje mejor las respuestas no válidas",
-                "pl": "Zapobiegaj awariom (Sentry IOBROKER-MODBUS-20)\nLepiej radzić sobie z nieprawidłowymi odpowiedziami",
-                "zh-cn": "防止发生事故（Sentry IOBROKER-MODBUS-20）\n更好地处理无效回复"
-            },
-            "3.2.4": {
-                "en": "also support ttyXRUSB0 style devices",
-                "de": "unterstützt auch Geräte im ttyXRUSB0-Stil",
-                "ru": "также поддерживает устройства в стиле ttyXRUSB0",
-                "pt": "também suporta dispositivos estilo ttyXRUSB0",
-                "nl": "ondersteunt ook ttyXRUSB0-stijl apparaten",
-                "fr": "prend également en charge les périphériques de style ttyXRUSB0",
-                "it": "supporta anche dispositivi in stile ttyXRUSB0",
-                "es": "también es compatible con dispositivos de estilo ttyXRUSB0",
-                "pl": "obsługuje również urządzenia w stylu ttyXRUSB0",
-                "zh-cn": "还支持ttyXRUSB0样式的设备"
-            },
-            "3.2.3": {
-                "en": "Catch value encoding error and do not crash adapter (Sentry IOBROKER-MODBUS-1W)\nadd a meta object as instance object",
-                "de": "Catch-Wert-Codierungsfehler und Adapter nicht abstürzen (Sentry IOBROKER-MODBUS-1W)\nFügen Sie ein Metaobjekt als Instanzobjekt hinzu",
-                "ru": "Выявить ошибку кодирования значения и не вызывать сбой адаптера (Sentry IOBROKER-MODBUS-1W)\nдобавить мета-объект как объект-экземпляр",
-                "pt": "Capture o erro de codificação do valor e não bloqueie o adaptador (Sentry IOBROKER-MODBUS-1W)\nadicione um meta-objeto como objeto de instância",
-                "nl": "Vang waarde coderingsfout en crash adapter niet (Sentry IOBROKER-MODBUS-1W)\nvoeg een meta-object toe als instantieobject",
-                "fr": "Erreur de codage de valeur de capture et ne plante pas l'adaptateur (Sentry IOBROKER-MODBUS-1W)\najouter un objet méta comme objet d'instance",
-                "it": "Rilevare l'errore di codifica del valore e non bloccare l'adattatore (Sentry IOBROKER-MODBUS-1W)\naggiungi un meta oggetto come oggetto istanza",
-                "es": "Detecte el error de codificación del valor y no bloquee el adaptador (Sentry IOBROKER-MODBUS-1W)\nagregar un meta objeto como objeto de instancia",
-                "pl": "Błąd kodowania wartości przechwytywania i nie zawieszaj adaptera (Sentry IOBROKER-MODBUS-1W)\ndodaj obiekt meta jako obiekt instancji",
-                "zh-cn": "捕获值编码错误，并且不使适配器崩溃（Sentry IOBROKER-MODBUS-1W）\n添加一个元对象作为实例对象"
-            }
-        },
-        "title": "ModBus",
-        "titleLang": {
-            "en": "ModBus"
-        },
-        "desc": {
-            "en": "ModBus connection Slave or Master",
-            "de": "ModBus Verbindung Slave oder Master",
-            "ru": "ModBus соединение Slave или Master",
-            "pt": "Conexão ModBus Escravo ou Mestre",
-            "nl": "ModBus-verbinding Slave of Master",
-            "fr": "Connexion ModBus Esclave ou Maître",
-            "it": "Connessione ModBus Slave o Master",
-            "es": "Conexión ModBus Slave o Master",
-            "pl": "Połączenie ModBus Slave lub Master",
-            "zh-cn": "ModBus连接从站或主站"
-        },
-        "authors": [
-            "bluefox <dogafox@gmail.com>"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "mode": "daemon",
-        "loglevel": "info",
-        "messagebox": true,
-        "icon": "modbus.png",
-        "keywords": [
-            "ModBus"
-        ],
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.modbus/master/admin/modbus.png",
-        "readme": "https://github.com/ioBroker/ioBroker.modbus/blob/master/README.md",
-        "type": "protocols",
-        "plugins": {
-            "sentry": {
-                "dsn": "https://0c7b6d766435448cbf4908f615efe683@sentry.iobroker.net/84"
-            }
-        },
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "materialize": true,
-        "tier": 2,
-        "adminUI": {
-            "config": "materialize"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=2.0.0"
-            }
-        ]
+  "common": {
+    "name": "modbus",
+    "version": "3.4.15",
+    "news": {
+      "3.4.15": {
+        "en": "Catch errors in tasks processing to prevent crashes\nmake sure generated IDs do not end with \".\"",
+        "de": "Fehler bei der Aufgabenverarbeitung abfangen, um Abstürze zu vermeiden\nStellen Sie sicher, dass generierte IDs nicht mit \".\" enden.",
+        "ru": "Выявление ошибок при обработке задач для предотвращения сбоев\nубедитесь, что сгенерированные идентификаторы не заканчиваются на \".\"",
+        "pt": "Capture erros no processamento de tarefas para evitar travamentos\ncertifique-se de que os IDs gerados não terminem com \".\"",
+        "nl": "Vang fouten bij het verwerken van taken op om crashes te voorkomen\nzorg ervoor dat gegenereerde ID's niet eindigen op \".\"",
+        "fr": "Détectez les erreurs dans le traitement des tâches pour éviter les plantages\nassurez-vous que les ID générés ne se terminent pas par \".\"",
+        "it": "Rileva gli errori nell'elaborazione delle attività per evitare arresti anomali\nassicurati che gli ID generati non terminino con \".\"",
+        "es": "Detecte errores en el procesamiento de tareas para evitar bloqueos\nasegúrese de que los ID generados no terminen en \".\"",
+        "pl": "Wyłap błędy w przetwarzaniu zadań, aby zapobiec awariom\nupewnij się, że wygenerowane identyfikatory nie kończą się na „.”",
+        "zh-cn": "捕获任务处理中的错误以防止崩溃\n确保生成的 ID 不以“.”结尾。"
+      },
+      "3.4.14": {
+        "en": "Fixed issue with sorting\nCorrected the calculations with scaling factor\nRead times were optimized",
+        "de": "Problem beim Sortieren behoben\nBerechnungen mit Skalierungsfaktor korrigiert\nLesezeiten wurden optimiert",
+        "ru": "Исправлена проблема с сортировкой\nИсправлены расчеты с коэффициентом масштабирования.\nОптимизировано время чтения",
+        "pt": "Problema corrigido com classificação\nCorrigiu os cálculos com fator de escala\nOs tempos de leitura foram otimizados",
+        "nl": "Probleem opgelost met sorteren\nDe berekeningen gecorrigeerd met schaalfactor\nLeestijden zijn geoptimaliseerd",
+        "fr": "Correction d'un problème de tri\nCorrection des calculs avec facteur d'échelle\nLes temps de lecture ont été optimisés",
+        "it": "Risolto problema con l'ordinamento\nCorretti i calcoli con il fattore di scala\nI tempi di lettura sono stati ottimizzati",
+        "es": "Problema solucionado con la clasificación\nSe corrigieron los cálculos con factor de escala.\nSe optimizaron los tiempos de lectura",
+        "pl": "Naprawiono problem z sortowaniem\nPoprawiono obliczenia o współczynnik skalowania\nZoptymalizowano czasy odczytu",
+        "zh-cn": "修复了排序问题\n用比例因子更正了计算\n优化了读取时间"
+      },
+      "3.4.13": {
+        "en": "Fixed issue with sorting\nCorrected the calculations with scaling factor",
+        "de": "Problem beim Sortieren behoben\nBerechnungen mit Skalierungsfaktor korrigiert",
+        "ru": "Исправлена проблема с сортировкой\nИсправлены расчеты с коэффициентом масштабирования.",
+        "pt": "Problema corrigido com classificação\nCorrigiu os cálculos com fator de escala",
+        "nl": "Probleem opgelost met sorteren\nDe berekeningen gecorrigeerd met schaalfactor",
+        "fr": "Correction d'un problème de tri\nCorrection des calculs avec facteur d'échelle",
+        "it": "Risolto problema con l'ordinamento\nCorretti i calcoli con il fattore di scala",
+        "es": "Problema solucionado con la clasificación\nSe corrigieron los cálculos con factor de escala.",
+        "pl": "Naprawiono problem z sortowaniem\nPoprawiono obliczenia o współczynnik skalowania",
+        "zh-cn": "修复了排序问题\n用比例因子更正了计算"
+      },
+      "3.4.12": {
+        "en": "Fixed issue with sorting",
+        "de": "Problem beim Sortieren behoben",
+        "ru": "Исправлена проблема с сортировкой",
+        "pt": "Problema corrigido com classificação",
+        "nl": "Probleem opgelost met sorteren",
+        "fr": "Correction d'un problème de tri",
+        "it": "Risolto problema con l'ordinamento",
+        "es": "Problema solucionado con la clasificación",
+        "pl": "Naprawiono problem z sortowaniem",
+        "zh-cn": "修复了排序问题"
+      },
+      "3.4.11": {
+        "en": "Corrected import of last line",
+        "de": "Korrigierter Import der letzten Zeile",
+        "ru": "Исправлен импорт последней строки",
+        "pt": "Importação corrigida da última linha",
+        "nl": "Gecorrigeerde import van laatste regel",
+        "fr": "Importation corrigée de la dernière ligne",
+        "it": "Importazione corretta dell'ultima riga",
+        "es": "Importación corregida de la última línea",
+        "pl": "Poprawiony import ostatniej linii",
+        "zh-cn": "更正了最后一行的导入"
+      },
+      "3.4.10": {
+        "en": "Make sure that slave reconnections at least wait 1000ms to allow old connectio to close properly\nCorrected the error with write single registers",
+        "de": "Stellen Sie sicher, dass Slave-Neuverbindungen mindestens 1000 ms warten, damit die alte Verbindung ordnungsgemäß geschlossen werden kann\nFehler beim Schreiben einzelner Register behoben",
+        "ru": "Убедитесь, что повторные подключения подчиненного устройства ждут не менее 1000 мс, чтобы старое соединение закрылось должным образом.\nИсправлена ошибка записи одиночных регистров.",
+        "pt": "Certifique-se de que as reconexões escravas esperem pelo menos 1000 ms para permitir que a conexão antiga feche corretamente\nCorrigido o erro com gravação de registros únicos",
+        "nl": "Zorg ervoor dat slave-herverbindingen minstens 1000 ms wachten om de oude verbinding goed te laten sluiten\nDe fout gecorrigeerd met enkele registers schrijven",
+        "fr": "Assurez-vous que les reconnexions esclaves attendent au moins 1000 ms pour permettre à l'ancienne connexion de se fermer correctement\nCorrection de l'erreur avec l'écriture de registres uniques",
+        "it": "Assicurati che le riconnessioni slave attendano almeno 1000 ms per consentire la chiusura corretta della vecchia connessione\nCorretto l'errore con la scrittura dei singoli registri",
+        "es": "Asegúrese de que las reconexiones esclavas esperen al menos 1000 ms para permitir que la conexión anterior se cierre correctamente\nSe corrigió el error con la escritura de registros únicos.",
+        "pl": "Upewnij się, że ponowne połączenie urządzenia podrzędnego odczeka co najmniej 1000 ms, aby stare połączenie mogło się poprawnie zamknąć\nPoprawiono błąd przy zapisie pojedynczych rejestrów",
+        "zh-cn": "确保从站重新连接至少等待 1000 毫秒以允许旧连接正确关闭\n更正了写入单个寄存器的错误"
+      },
+      "3.4.9": {
+        "en": "Changed edit behaviour",
+        "de": "Bearbeitungsverhalten geändert",
+        "ru": "Изменено поведение при редактировании",
+        "pt": "Comportamento de edição alterado",
+        "nl": "Gewijzigd bewerkingsgedrag",
+        "fr": "Comportement d'édition modifié",
+        "it": "Comportamento di modifica modificato",
+        "es": "Comportamiento de edición modificado",
+        "pl": "Zmieniono zachowanie edycji",
+        "zh-cn": "更改了编辑行为"
+      }
     },
-    "native": {
-        "params": {
-            "type": "tcp",
-            "bind": "127.0.0.1",
-            "port": 502,
-            "comName": "",
-            "baudRate": 9600,
-            "dataBits": 8,
-            "stopBits": 1,
-            "parity": "none",
-            "deviceId": 1,
-            "timeout": 5000,
-            "slave": 0,
-            "poll": 1000,
-            "recon": 60000,
-            "maxBlock": 100,
-            "maxBoolBlock": 128,
-            "multiDeviceId": false,
-            "pulsetime": 1000,
-            "waitTime": 50,
-            "disInputsOffset": 10001,
-            "coilsOffset": 1,
-            "inputRegsOffset": 30001,
-            "holdingRegsOffset": 40001,
-            "showAliases": true,
-            "directAddresses": false,
-            "doNotIncludeAdrInId": false,
-            "preserveDotsInId": false,
-            "round": 2,
-            "doNotRoundAddressToWord": false,
-            "doNotUseWriteMultipleRegisters": false,
-            "onlyUseWriteMultipleRegisters": false,
-            "writeInterval": 0,
-            "readInterval": 0
-        },
-        "disInputs": [],
-        "coils": [],
-        "inputRegs": [],
-        "holdingRegs": []
+    "title": "ModBus",
+    "titleLang": {
+      "en": "ModBus"
     },
-    "instanceObjects": [
-        {
-            "_id": "",
-            "type": "meta",
-            "common": {
-                "type": "meta"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "role": "indicator.connected",
-                "name": "If master connected",
-                "type": "boolean",
-                "read": true,
-                "write": false,
-                "def": false
-            },
-            "native": {}
-        }
+    "desc": {
+      "en": "ModBus connection Slave or Master",
+      "de": "ModBus Verbindung Slave oder Master",
+      "ru": "ModBus соединение Slave или Master",
+      "pt": "Conexão ModBus Escravo ou Mestre",
+      "nl": "ModBus-verbinding Slave of Master",
+      "fr": "Connexion ModBus Esclave ou Maître",
+      "it": "Connessione ModBus Slave o Master",
+      "es": "Conexión ModBus Slave o Master",
+      "pl": "Połączenie ModBus Slave lub Master",
+      "zh-cn": "ModBus连接从站或主站"
+    },
+    "authors": [
+      "bluefox <dogafox@gmail.com>"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "mode": "daemon",
+    "loglevel": "info",
+    "messagebox": true,
+    "icon": "modbus.png",
+    "keywords": [
+      "ModBus"
+    ],
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.modbus/master/admin/modbus.png",
+    "readme": "https://github.com/ioBroker/ioBroker.modbus/blob/master/README.md",
+    "type": "protocols",
+    "plugins": {
+      "sentry": {
+        "dsn": "https://0c7b6d766435448cbf4908f615efe683@sentry.iobroker.net/84"
+      }
+    },
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "materialize": true,
+    "tier": 2,
+    "adminUI": {
+      "config": "materialize"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=2.0.0"
+      }
     ]
+  },
+  "native": {
+    "params": {
+      "type": "tcp",
+      "bind": "127.0.0.1",
+      "port": 502,
+      "comName": "",
+      "baudRate": 9600,
+      "dataBits": 8,
+      "stopBits": 1,
+      "parity": "none",
+      "deviceId": 1,
+      "timeout": 5000,
+      "slave": 0,
+      "poll": 1000,
+      "recon": 60000,
+      "maxBlock": 100,
+      "maxBoolBlock": 128,
+      "multiDeviceId": false,
+      "pulsetime": 1000,
+      "waitTime": 50,
+      "disInputsOffset": 10001,
+      "coilsOffset": 1,
+      "inputRegsOffset": 30001,
+      "holdingRegsOffset": 40001,
+      "showAliases": true,
+      "directAddresses": false,
+      "doNotIncludeAdrInId": false,
+      "preserveDotsInId": false,
+      "round": 2,
+      "doNotRoundAddressToWord": false,
+      "doNotUseWriteMultipleRegisters": false,
+      "onlyUseWriteMultipleRegisters": false,
+      "writeInterval": 0,
+      "readInterval": 0
+    },
+    "disInputs": [],
+    "coils": [],
+    "inputRegs": [],
+    "holdingRegs": []
+  },
+  "instanceObjects": [
+    {
+      "_id": "",
+      "type": "meta",
+      "common": {
+        "type": "meta"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "If master connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
 }
