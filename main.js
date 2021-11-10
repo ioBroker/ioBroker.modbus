@@ -312,14 +312,20 @@ function processTasks(tasks, callback) {
     let task = tasks.shift();
     try {
         if (task.name === 'add') {
-            createExtendObject(task.id, task.obj, () =>
-                setImmediate(processTasks, tasks, callback));
+            createExtendObject(task.id, task.obj, (err) => {
+                adapter.log.info(`Can not execute task ${task.name} for ID ${task.id}: ${err.message}`);
+                setImmediate(processTasks, tasks, callback);
+            });
         } else if (task.name === 'del') {
-            adapter.delObject(task.id, () =>
-                setImmediate(processTasks, tasks, callback));
+            adapter.delObject(task.id, (err) => {
+                adapter.log.info(`Can not execute task ${task.name} for ID ${task.id}: ${err.message}`);
+                setImmediate(processTasks, tasks, callback);
+            });
         } else if (task.name === 'syncEnums') {
-            syncEnums('rooms', task.id, task.obj, () =>
-                setImmediate(processTasks, tasks, callback));
+            syncEnums('rooms', task.id, task.obj, (err) => {
+                adapter.log.info(`Can not execute task ${task.name} for ID ${task.id}: ${err.message}`);
+                setImmediate(processTasks, tasks, callback);
+            });
         } else {
             throw new Error('Unknown task');
         }
