@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "modbus",
-    "version": "3.4.15",
+    "version": "3.4.16",
     "news": {
+      "3.4.16": {
+        "en": "Catch errors in tasks processing to prevent crashes",
+        "de": "Fehler bei der Aufgabenverarbeitung abfangen, um Abstürze zu vermeiden",
+        "ru": "Выявление ошибок при обработке задач для предотвращения сбоев",
+        "pt": "Capture erros no processamento de tarefas para evitar travamentos",
+        "nl": "Vang fouten bij het verwerken van taken op om crashes te voorkomen",
+        "fr": "Détectez les erreurs dans le traitement des tâches pour éviter les plantages",
+        "it": "Rileva gli errori nell'elaborazione delle attività per evitare arresti anomali",
+        "es": "Detecte errores en el procesamiento de tareas para evitar bloqueos",
+        "pl": "Wyłap błędy w przetwarzaniu zadań, aby zapobiec awariom",
+        "zh-cn": "捕获任务处理中的错误以防止崩溃"
+      },
       "3.4.15": {
         "en": "Catch errors in tasks processing to prevent crashes\nmake sure generated IDs do not end with \".\"",
         "de": "Fehler bei der Aufgabenverarbeitung abfangen, um Abstürze zu vermeiden\nStellen Sie sicher, dass generierte IDs nicht mit \".\" enden.",
@@ -74,18 +86,6 @@
         "es": "Asegúrese de que las reconexiones esclavas esperen al menos 1000 ms para permitir que la conexión anterior se cierre correctamente\nSe corrigió el error con la escritura de registros únicos.",
         "pl": "Upewnij się, że ponowne połączenie urządzenia podrzędnego odczeka co najmniej 1000 ms, aby stare połączenie mogło się poprawnie zamknąć\nPoprawiono błąd przy zapisie pojedynczych rejestrów",
         "zh-cn": "确保从站重新连接至少等待 1000 毫秒以允许旧连接正确关闭\n更正了写入单个寄存器的错误"
-      },
-      "3.4.9": {
-        "en": "Changed edit behaviour",
-        "de": "Bearbeitungsverhalten geändert",
-        "ru": "Изменено поведение при редактировании",
-        "pt": "Comportamento de edição alterado",
-        "nl": "Gewijzigd bewerkingsgedrag",
-        "fr": "Comportement d'édition modifié",
-        "it": "Comportamento di modifica modificato",
-        "es": "Comportamiento de edición modificado",
-        "pl": "Zmieniono zachowanie edycji",
-        "zh-cn": "更改了编辑行为"
       }
     },
     "title": "ModBus",
