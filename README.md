@@ -275,7 +275,8 @@ There are some programs in folder *test' to test the TCP communication:
 	### __WORK IN PROGRESS__
 -->
 ## Changelog
-### 3.4.16 (2021-11-10)
+
+### __WORK IN PROGRESS__
 * (Apollon77) Catch errors in tasks processing to prevent crashes
 
 ### 3.4.15 (2021-11-09)

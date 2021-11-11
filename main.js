@@ -313,17 +313,17 @@ function processTasks(tasks, callback) {
     try {
         if (task.name === 'add') {
             createExtendObject(task.id, task.obj, (err) => {
-                adapter.log.info(`Can not execute task ${task.name} for ID ${task.id}: ${err.message}`);
+                err && adapter.log.info(`Can not execute task ${task.name} for ID ${task.id}: ${err.message}`);
                 setImmediate(processTasks, tasks, callback);
             });
         } else if (task.name === 'del') {
             adapter.delObject(task.id, (err) => {
-                adapter.log.info(`Can not execute task ${task.name} for ID ${task.id}: ${err.message}`);
+                err && adapter.log.info(`Can not execute task ${task.name} for ID ${task.id}: ${err.message}`);
                 setImmediate(processTasks, tasks, callback);
             });
         } else if (task.name === 'syncEnums') {
             syncEnums('rooms', task.id, task.obj, (err) => {
-                adapter.log.info(`Can not execute task ${task.name} for ID ${task.id}: ${err.message}`);
+                err && adapter.log.info(`Can not execute task ${task.name} for ID ${task.id}: ${err.message}`);
                 setImmediate(processTasks, tasks, callback);
             });
         } else {
