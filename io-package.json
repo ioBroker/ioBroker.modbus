@@ -130,6 +130,7 @@
     "dataSource": "poll",
     "materialize": true,
     "tier": 2,
+    "eraseOnUpload": true,
     "adminUI": {
       "config": "materialize"
     },
