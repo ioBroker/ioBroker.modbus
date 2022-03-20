@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "modbus",
-    "version": "4.0.0",
+    "version": "4.0.1",
     "news": {
+      "4.0.1": {
+        "en": "Updated serial port package\nMinimal node.js version is 12",
+        "de": "Aktualisiertes Paket für die serielle Schnittstelle\nDie minimale Version von node.js ist 12",
+        "ru": "Обновленный пакет последовательного порта\nМинимальная версия node.js — 12.",
+        "pt": "Pacote de porta serial atualizado\nA versão mínima do node.js é 12",
+        "nl": "Bijgewerkt pakket voor seriële poorten\nMinimale node.js-versie is 12",
+        "fr": "Package de port série mis à jour\nLa version minimale de node.js est 12",
+        "it": "Pacchetto porta seriale aggiornato\nLa versione minima di node.js è 12",
+        "es": "Paquete de puerto serie actualizado\nLa versión mínima de node.js es 12",
+        "pl": "Zaktualizowany pakiet portu szeregowego\nMinimalna wersja node.js to 12",
+        "zh-cn": "更新串口包\n最小的 node.js 版本是 12"
+      },
       "4.0.0": {
         "en": "Updated serial port package\nMinimal node.js version is 12",
         "de": "Aktualisiertes Paket für die serielle Schnittstelle\nDie minimale Version von node.js ist 12",
@@ -74,18 +86,6 @@
         "es": "Problema solucionado con la clasificación\nSe corrigieron los cálculos con factor de escala.",
         "pl": "Naprawiono problem z sortowaniem\nPoprawiono obliczenia o współczynnik skalowania",
         "zh-cn": "修复了排序问题\n用比例因子更正了计算"
-      },
-      "3.4.12": {
-        "en": "Fixed issue with sorting",
-        "de": "Problem beim Sortieren behoben",
-        "ru": "Исправлена проблема с сортировкой",
-        "pt": "Problema corrigido com classificação",
-        "nl": "Probleem opgelost met sorteren",
-        "fr": "Correction d'un problème de tri",
-        "it": "Risolto problema con l'ordinamento",
-        "es": "Problema solucionado con la clasificación",
-        "pl": "Naprawiono problem z sortowaniem",
-        "zh-cn": "修复了排序问题"
       }
     },
     "title": "ModBus",

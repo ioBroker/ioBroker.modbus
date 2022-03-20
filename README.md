@@ -275,7 +275,7 @@ There are some programs in folder *test' to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 4.0.1 (2022-03-20)
 * (bluefox) Updated serial port package
 * (bluefox) Minimal node.js version is 12
 
