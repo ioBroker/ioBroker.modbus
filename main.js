@@ -6,7 +6,7 @@
 const utils       = require('@iobroker/adapter-core');
 const adapterName = require('./package.json').name.split('.').pop();
 let modbus        = null;
-let serialport    = null;
+let SerialPort    = null;
 let fs;
 let adapter;
 
@@ -17,7 +17,7 @@ function startAdapter(options) {
 
     adapter.on('ready', () => {
         try {
-            serialport = require('serialport');
+            SerialPort = require('serialport').SerialPort;
         } catch (err) {
             adapter.log.warn('Serial is not available');
         }
@@ -30,9 +30,9 @@ function startAdapter(options) {
             switch (obj.command) {
                 case 'listUart':
                     if (obj.callback) {
-                        if (serialport) {
+                        if (SerialPort) {
                             // read all found serial ports
-                            serialport.list().then(ports => {
+                            SerialPort.list().then(ports => {
                                 ports = listSerial(ports);
                                 adapter.log.info('List of port: ' + JSON.stringify(ports));
                                 adapter.sendTo(obj.from, obj.command, ports, obj.callback);
