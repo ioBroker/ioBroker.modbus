@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "modbus",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "news": {
+      "4.0.2": {
+        "en": "Updated serial port package\nMinimal node.js version is 12",
+        "de": "Aktualisiertes Paket für die serielle Schnittstelle\nDie minimale Version von node.js ist 12",
+        "ru": "Обновленный пакет последовательного порта\nМинимальная версия node.js — 12.",
+        "pt": "Pacote de porta serial atualizado\nA versão mínima do node.js é 12",
+        "nl": "Bijgewerkt seriële poortpakket\nMinimale node.js-versie is 12",
+        "fr": "Package de port série mis à jour\nLa version minimale de node.js est 12",
+        "it": "Pacchetto porta seriale aggiornato\nLa versione minima di node.js è 12",
+        "es": "Paquete de puerto serie actualizado\nLa versión mínima de node.js es 12",
+        "pl": "Zaktualizowany pakiet portu szeregowego\nMinimalna wersja node.js to 12",
+        "zh-cn": "更新串口包\n最小的 node.js 版本是 12"
+      },
       "4.0.1": {
         "en": "Updated serial port package\nMinimal node.js version is 12",
         "de": "Aktualisiertes Paket für die serielle Schnittstelle\nDie minimale Version von node.js ist 12",
@@ -74,18 +86,6 @@
         "es": "Problema solucionado con la clasificación\nSe corrigieron los cálculos con factor de escala.\nSe optimizaron los tiempos de lectura",
         "pl": "Naprawiono problem z sortowaniem\nPoprawiono obliczenia o współczynnik skalowania\nZoptymalizowano czasy odczytu",
         "zh-cn": "修复了排序问题\n用比例因子更正了计算\n优化了读取时间"
-      },
-      "3.4.13": {
-        "en": "Fixed issue with sorting\nCorrected the calculations with scaling factor",
-        "de": "Problem beim Sortieren behoben\nBerechnungen mit Skalierungsfaktor korrigiert",
-        "ru": "Исправлена проблема с сортировкой\nИсправлены расчеты с коэффициентом масштабирования.",
-        "pt": "Problema corrigido com classificação\nCorrigiu os cálculos com fator de escala",
-        "nl": "Probleem opgelost met sorteren\nDe berekeningen gecorrigeerd met schaalfactor",
-        "fr": "Correction d'un problème de tri\nCorrection des calculs avec facteur d'échelle",
-        "it": "Risolto problema con l'ordinamento\nCorretti i calcoli con il fattore di scala",
-        "es": "Problema solucionado con la clasificación\nSe corrigieron los cálculos con factor de escala.",
-        "pl": "Naprawiono problem z sortowaniem\nPoprawiono obliczenia o współczynnik skalowania",
-        "zh-cn": "修复了排序问题\n用比例因子更正了计算"
       }
     },
     "title": "ModBus",
