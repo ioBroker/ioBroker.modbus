@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "modbus",
-    "version": "4.0.3",
+    "version": "4.0.4",
     "news": {
+      "4.0.4": {
+        "en": "Prevent invalid state log",
+        "de": "Ungültiges Zustandsprotokoll verhindern",
+        "ru": "Предотвратить неверный журнал состояний",
+        "pt": "Impedir registro de estado inválido",
+        "nl": "Voorkom ongeldig statuslogboek",
+        "fr": "Empêcher le journal d'état invalide",
+        "it": "Impedisci registro di stato non valido",
+        "es": "Evitar registro de estado no válido",
+        "pl": "Zapobiegaj nieprawidłowemu dziennikowi stanu",
+        "zh-cn": "防止无效状态日志"
+      },
       "4.0.3": {
         "en": "Updated serial port package\nMinimal node.js version is 12",
         "de": "Aktualisiertes Paket für die serielle Schnittstelle\nDie minimale Version von node.js ist 12",
@@ -74,18 +86,6 @@
         "es": "Detecte errores en el procesamiento de tareas para evitar bloqueos",
         "pl": "Wyłap błędy w przetwarzaniu zadań, aby zapobiec awariom",
         "zh-cn": "捕获任务处理中的错误以防止崩溃"
-      },
-      "3.4.15": {
-        "en": "Catch errors in tasks processing to prevent crashes\nmake sure generated IDs do not end with \".\"",
-        "de": "Fehler bei der Aufgabenverarbeitung abfangen, um Abstürze zu vermeiden\nStellen Sie sicher, dass generierte IDs nicht mit \".\" enden.",
-        "ru": "Выявление ошибок при обработке задач для предотвращения сбоев\nубедитесь, что сгенерированные идентификаторы не заканчиваются на \".\"",
-        "pt": "Capture erros no processamento de tarefas para evitar travamentos\ncertifique-se de que os IDs gerados não terminem com \".\"",
-        "nl": "Vang fouten bij het verwerken van taken op om crashes te voorkomen\nzorg ervoor dat gegenereerde ID's niet eindigen op \".\"",
-        "fr": "Détectez les erreurs dans le traitement des tâches pour éviter les plantages\nassurez-vous que les ID générés ne se terminent pas par \".\"",
-        "it": "Rileva gli errori nell'elaborazione delle attività per evitare arresti anomali\nassicurati che gli ID generati non terminino con \".\"",
-        "es": "Detecte errores en el procesamiento de tareas para evitar bloqueos\nasegúrese de que los ID generados no terminen en \".\"",
-        "pl": "Wyłap błędy w przetwarzaniu zadań, aby zapobiec awariom\nupewnij się, że wygenerowane identyfikatory nie kończą się na „.”",
-        "zh-cn": "捕获任务处理中的错误以防止崩溃\n确保生成的 ID 不以“.”结尾。"
       }
     },
     "title": "ModBus",
