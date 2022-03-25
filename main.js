@@ -91,9 +91,7 @@ function stop(callback) {
         return void callback();
     }
 
-    adapter.terminate ?
-        adapter.terminate() :
-        setTimeout(() => process.exit(), 5000);
+    adapter.terminate ? adapter.terminate() : process.exit()
 }
 
 let objects    = {};
@@ -520,7 +518,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
                 type:    regType === 'coils' || regType === 'disInputs' ? 'boolean' :
                     ((regs[i].type === 'string' || regs[i].type === 'stringle') ? 'string' : 'number'),
                 read:    true,
-                write:   options.params.slave || regType === 'coils' || regType === 'holdingRegs',
+                write:   !!options.params.slave || regType === 'coils' || regType === 'holdingRegs',
                 def:     regType === 'coils' || regType === 'disInputs' ? false : ((regs[i].type === 'string' || regs[i].type === 'stringle') ? '' : 0)
             },
             native: {
