@@ -275,6 +275,10 @@ There are some programs in folder *test' to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
+
+### __WORK IN PROGRESS__
+* (Apollon77) Catch error reported by sentry when invalid Master port is entered
+
 ### 4.0.4 (2022-03-25)
 * (Apollon77/UncleSamSwiss) Prevent invalid state log
 
