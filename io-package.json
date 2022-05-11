@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "modbus",
-    "version": "4.0.4",
+    "version": "5.0.0",
     "news": {
+      "5.0.0": {
+        "en": "BREAKING: All space characters will be replaced with underscores now in the Objects IDs, not only the first one.\nCatch error reported by sentry when invalid Master port is entered\nGUI migrated to mui-v5",
+        "de": "BREAKING: Alle Leerzeichen werden jetzt in den Objekt-IDs durch Unterstriche ersetzt, nicht nur die erste.\nVom Sentry gemeldeter Fangfehler, wenn ein ungültiger Master-Port eingegeben wird\nGUI auf mui-v5 migriert",
+        "ru": "ВАЖНО: теперь в идентификаторах объектов все символы пробела будут заменены символами подчеркивания, а не только первый.\nОшибка перехвата, о которой сообщает часовой, когда введен неверный главный порт\nГрафический интерфейс перенесен на mui-v5",
+        "pt": "QUEBRA: Todos os caracteres de espaço serão substituídos por sublinhados agora nos IDs de objetos, não apenas o primeiro.\nErro de captura relatado pela sentinela quando a porta mestre inválida é inserida\nGUI migrada para mui-v5",
+        "nl": "BREAKING: alle spatietekens worden nu vervangen door onderstrepingstekens in de object-ID's, niet alleen de eerste.\nVangfout gerapporteerd door schildwacht wanneer ongeldige hoofdpoort wordt ingevoerd\nGUI gemigreerd naar mui-v5",
+        "fr": "BREAKING : Tous les caractères d'espacement seront désormais remplacés par des traits de soulignement dans les ID d'objets, et pas seulement le premier.\nErreur de capture signalée par la sentinelle lorsque le port maître invalide est entré\nInterface graphique migrée vers mui-v5",
+        "it": "INTERRUZIONE: tutti i caratteri spazio verranno sostituiti con trattini bassi ora negli ID oggetti, non solo il primo.\nErrore di cattura segnalato dalla sentinella quando viene immessa una porta master non valida\nLa GUI è migrata a mui-v5",
+        "es": "ÚLTIMA HORA: Todos los caracteres de espacio serán reemplazados con guiones bajos ahora en las ID de objetos, no solo el primero.\nError de captura informado por centinela cuando se ingresa un puerto maestro no válido\nGUI migrada a mui-v5",
+        "pl": "ŁAMANIE: Wszystkie znaki spacji zostaną teraz zastąpione podkreśleniami w identyfikatorach obiektów, nie tylko pierwszy.\nBłąd wyłapania zgłoszony przez wartę po wprowadzeniu nieprawidłowego portu głównego\nGUI migrowane do mui-v5",
+        "zh-cn": "BREAKING：现在，对象 ID 中的所有空格字符都将替换为下划线，而不仅仅是第一个。\n输入无效的主端口时，哨兵报告的捕获错误\nGUI 迁移到 mui-v5"
+      },
       "4.0.4": {
         "en": "Prevent invalid state log",
         "de": "Ungültiges Zustandsprotokoll verhindern",
@@ -64,18 +76,6 @@
         "zh-cn": "更新串口包\n最小的 node.js 版本是 12"
       },
       "3.4.17": {
-        "en": "Catch errors in tasks processing to prevent crashes",
-        "de": "Fehler bei der Aufgabenverarbeitung abfangen, um Abstürze zu vermeiden",
-        "ru": "Выявление ошибок при обработке задач для предотвращения сбоев",
-        "pt": "Capture erros no processamento de tarefas para evitar travamentos",
-        "nl": "Vang fouten bij het verwerken van taken op om crashes te voorkomen",
-        "fr": "Détectez les erreurs dans le traitement des tâches pour éviter les plantages",
-        "it": "Rileva gli errori nell'elaborazione delle attività per evitare arresti anomali",
-        "es": "Detecte errores en el procesamiento de tareas para evitar bloqueos",
-        "pl": "Wyłap błędy w przetwarzaniu zadań, aby zapobiec awariom",
-        "zh-cn": "捕获任务处理中的错误以防止崩溃"
-      },
-      "3.4.16": {
         "en": "Catch errors in tasks processing to prevent crashes",
         "de": "Fehler bei der Aufgabenverarbeitung abfangen, um Abstürze zu vermeiden",
         "ru": "Выявление ошибок при обработке задач для предотвращения сбоев",
