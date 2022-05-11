@@ -1,27 +1,27 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import IconButton from '@material-ui/core/IconButton';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import FormHelperText from '@mui/material/FormHelperText';
+import IconButton from '@mui/material/IconButton';
 
 import Utils from '../Components/Utils';
 
-import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 
-import I18n from '@iobroker/adapter-react/i18n';
+import I18n from '@iobroker/adapter-react-v5/i18n';
 
 import connectionInputs from '../data/optionsConnection';
 import generalInputs from '../data/optionsGeneral';
@@ -30,7 +30,7 @@ const styles = theme => ({
     optionsSelect: {
         width: 280
     },
-    optionsTextfield: {
+    optionsTextField: {
         width: 280
     },
     optionContainer: {
@@ -45,7 +45,7 @@ const styles = theme => ({
         marginBottom: 10
     },
     optionsContainer: {
-        width: `calc(100% - ${theme.spacing(4)}px)`,
+        width: `calc(100% - ${theme.spacing(4)})`,
         padding: theme.spacing(2),
         display: 'inline-block',
         textAlign: 'left'
@@ -149,7 +149,7 @@ class Options extends Component {
     }
 
     getInputsBlock(inputs, title) {
-        return <><Paper className={this.props.classes.optionsContainer}>
+        return <Paper className={this.props.classes.optionsContainer}>
             <Typography variant="h4" gutterBottom className={this.props.classes.header}>{I18n.t(title)}</Typography>
             {inputs.map(input => {
                 if (!this.inputDisplay(input)) {
@@ -160,6 +160,7 @@ class Options extends Component {
                             <FormControl>
                                 <InputLabel>{I18n.t('Slave IP address')}</InputLabel>
                                 <Select
+                                    variant="standard"
                                     className={this.props.classes.optionsSelect}
                                     disabled={this.inputDisabled(input)}
                                     value={this.props.native.params[input.name] || ''}
@@ -172,9 +173,10 @@ class Options extends Component {
                             </FormControl>
                             :
                             <TextField
+                                variant="standard"
                                 type={input.type}
                                 label={I18n.t('Slave IP address')}
-                                className={this.props.classes.optionsTextfield}
+                                className={this.props.classes.optionsTextField}
                                 disabled={this.inputDisabled(input)}
                                 helperText={input.help ? I18n.t(input.help) : ''}
                                 value={this.props.native.params[input.name]}
@@ -203,6 +205,7 @@ class Options extends Component {
                         <FormControl>
                             <InputLabel>{I18n.t(input.title)}</InputLabel>
                             <Select
+                                variant="standard"
                                 className={this.props.classes.optionsSelect}
                                 disabled={this.inputDisabled(input)}
                                 value={this.props.native.params[input.name] || ''}
@@ -220,6 +223,7 @@ class Options extends Component {
                             <FormControl>
                                 <InputLabel>{I18n.t(input.title)}</InputLabel>
                                 <Select
+                                    variant="standard"
                                     className={this.props.classes.optionsSelect}
                                     disabled={this.inputDisabled(input)}
                                     value={this.props.native.params[input.name] || ''}
@@ -232,9 +236,10 @@ class Options extends Component {
                             </FormControl>
                             :
                             <TextField
+                                variant="standard"
                                 type={input.type}
                                 label={I18n.t(input.title)}
-                                className={this.props.classes.optionsTextfield}
+                                className={this.props.classes.optionsTextField}
                                 disabled={this.inputDisabled(input)}
                                 helperText={input.help ? I18n.t(input.help) : ''}
                                 value={this.props.native.params[input.name]}
@@ -244,11 +249,21 @@ class Options extends Component {
                             {this.state.ports ? <IconButton onClick={() => this.setState({customPort: !this.state.customPort})}><EditIcon/></IconButton> : null}
                     </Box>;
                 } else {
+                    const inputProps = {};
+                    if (input.min !== undefined) {
+                        inputProps.min = input.min;
+                    }
+                    if (input.max !== undefined) {
+                        inputProps.max = input.max;
+                    }
+
                     return <Box className={this.props.classes.optionContainer} key={input.name}>
                         <TextField
+                            variant="standard"
                             type={input.type}
                             label={I18n.t(input.title)}
-                            className={this.props.classes.optionsTextfield}
+                            className={this.props.classes.optionsTextField}
+                            inputProps={inputProps}
                             disabled={this.inputDisabled(input)}
                             helperText={input.help ? I18n.t(input.help) : ''}
                             value={this.props.native.params[input.name]}
@@ -259,17 +274,9 @@ class Options extends Component {
                 }
             })
             }
-        </Paper></>
+        </Paper>;
     }
 
-    render() {
-        return <form className={ this.props.classes.tab }>
-            <Grid container spacing={2} >
-                <Grid item xs={12} md={6} className={ this.props.classes.optionsGrid }>{this.getInputsBlock(connectionInputs, 'Connection parameters')}</Grid>
-                <Grid item xs={12} md={6} className={ this.props.classes.optionsGrid }>{this.getInputsBlock(generalInputs, 'General')}</Grid>
-            </Grid>
-        </form>;
-    }
 
     changeParam = (name, value) => {
         let native = JSON.parse(JSON.stringify(this.props.native));
@@ -324,6 +331,16 @@ class Options extends Component {
         }
         this.props.changeNative(native);
     }
+
+    render() {
+        return <form className={ this.props.classes.tab }>
+            <Grid container spacing={2} >
+                <Grid item xs={12} md={6} className={ this.props.classes.optionsGrid }>{this.getInputsBlock(connectionInputs, 'Connection parameters')}</Grid>
+                <Grid item xs={12} md={6} className={ this.props.classes.optionsGrid }>{this.getInputsBlock(generalInputs, 'General')}</Grid>
+            </Grid>
+        </form>;
+    }
+
 }
 
 Options.propTypes = {

@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 
 import { tsv2json, json2tsv } from 'tsv-json';
 import { useSnackbar } from 'notistack';
 import AceEditor from 'react-ace';
 import copy from 'copy-to-clipboard';
 
-import I18n from '@iobroker/adapter-react/i18n';
+import I18n from '@iobroker/adapter-react-v5/i18n';
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
 
-import ClearIcon from '@material-ui/icons/Clear';
-import SaveIcon from '@material-ui/icons/Save';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
+import ClearIcon from '@mui/icons-material/Clear';
+import SaveIcon from '@mui/icons-material/Save';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 
 const styles = theme => ({
     tsvEditor: {
@@ -112,7 +112,7 @@ const TsvDialog = props => {
                 enqueueSnackbar(I18n.t('TSV was copied to clipboard'));
             }} startIcon={<FileCopyIcon />}>{I18n.t('Copy to clipboard')}</Button>
             <Button variant="contained" color="primary" onClick={saveTsv} startIcon={<SaveIcon />}>{I18n.t('Import')}</Button>
-            <Button variant="contained" onClick={props.onClose} startIcon={<ClearIcon />}>{I18n.t('Close')}</Button>
+            <Button variant="contained" color="grey" onClick={props.onClose} startIcon={<ClearIcon />}>{I18n.t('Close')}</Button>
         </DialogActions>
     </Dialog>
 };

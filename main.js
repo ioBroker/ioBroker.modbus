@@ -621,10 +621,10 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
 
         if (localOptions.preserveDotsInId) {
             // preserve dots in name and add to ID
-            config[i].id += (config[i].name ? (config[i].name.replace(/ /g, '_')) : '');
+            config[i].id += (config[i].name ? (config[i].name.replace(/\s/g, '_')) : '');
         } else {
             // replace dots by underlines and add to ID
-            config[i].id += (config[i].name ? '_' + (config[i].name.replace(/\./g, '_').replace(/ /g, '_')) : '');
+            config[i].id += (config[i].name ? '_' + (config[i].name.replace(/\./g, '_').replace(/\s/g, '_')) : '');
         }
         if (config[i].id.endsWith('.')) {
             config[i].id += config[i].id.substr(0,config[i].id.length - 1);

@@ -1,30 +1,30 @@
 import { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Checkbox from '@material-ui/core/Checkbox';
-import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Tooltip from '@material-ui/core/Tooltip';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import Tooltip from '@mui/material/Tooltip';
 
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
-import ImportExport from '@material-ui/icons/ImportExport';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import ImportExport from '@mui/icons-material/ImportExport';
 
-import I18n from '@iobroker/adapter-react/i18n';
-import Utils from '@iobroker/adapter-react/Components/Utils';
+import I18n from '@iobroker/adapter-react-v5/i18n';
+import Utils from '@iobroker/adapter-react-v5/Components/Utils';
 
-import ExpertIcon from '@iobroker/adapter-react/icons/IconExpert';
-import TextWithIcon from '@iobroker/adapter-react/Components/TextWithIcon';
-import SelectWithIcon from '@iobroker/adapter-react/Components/SelectWithIcon';
+import ExpertIcon from '@iobroker/adapter-react-v5/icons/IconExpert';
+import TextWithIcon from '@iobroker/adapter-react-v5/Components/TextWithIcon';
+import SelectWithIcon from '@iobroker/adapter-react-v5/Components/SelectWithIcon';
 
 import TsvDialog from './TsvDialog';
 import DeleteAllDialog from './DeleteAllDialog';
@@ -38,7 +38,7 @@ const styles = theme => ({
         padding: '0px 8px'
     },
     tableHeaderExtended: {
-        color: theme.palette.type === 'dark' ? theme.palette.primary.light : theme.palette.primary.dark
+        color: theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.dark
     },
     tableCell: {
         whiteSpace: 'nowrap',
@@ -108,6 +108,7 @@ const DataCell = props => {
             result = option ? option.title : '';
         } else {
             result = <Select
+                variant="standard"
                 value={item[field.name] === undefined || item[field.name] === null ? '' : item[field.name]}
                 inputProps={{ref, className: props.classes.tableSelect}}
                 disabled={props.getDisable(sortedItem.$index, field.name)}
@@ -124,6 +125,7 @@ const DataCell = props => {
             result = item[field.name] ? item[field.name] : null;
         } else {
             result = <TextField
+                variant="standard"
                 value={item[field.name] === undefined || item[field.name] === null ? '' : item[field.name]}
                 className={props.classes.tableTextFieldContainer}
                 inputProps={{ref: ref, className: props.classes.tableTextField}}

@@ -1,18 +1,18 @@
 import React from 'react';
-import {withStyles} from '@material-ui/core/styles';
-import { MuiThemeProvider } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
 
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import AppBar from '@mui/material/AppBar';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
-import {AiOutlineFieldBinary as BinaryIcon} from 'react-icons/all';
-import {TiSortNumerically as DigitsIcon} from 'react-icons/all';
+import {AiOutlineFieldBinary as BinaryIcon} from 'react-icons/ai';
+import {TiSortNumerically as DigitsIcon} from 'react-icons/ti';
 
-import GenericApp from '@iobroker/adapter-react/GenericApp';
-import Loader from '@iobroker/adapter-react/Components/Loader'
-import I18n from '@iobroker/adapter-react/i18n';
+import GenericApp from '@iobroker/adapter-react-v5/GenericApp';
+import Loader from '@iobroker/adapter-react-v5/Components/Loader'
+import I18n from '@iobroker/adapter-react-v5/i18n';
 
 import TabOptions from './Tabs/Options';
 import TabInputRegisters from './Tabs/InputRegisters';
@@ -35,6 +35,9 @@ const styles = theme => ({
     tab: {
         width: '100%',
         minHeight: '100%'
+    },
+    buttonSelected: {
+        color: theme.palette.mode === 'dark' ? theme.palette.primary.color + ' !important' : 'white !important'
     }
 });
 
@@ -104,13 +107,15 @@ class App extends GenericApp {
             'zh-cn': require('./i18n/zh-cn'),
         };
 
+        extendedProps.sentryDSN = window.sentryDSN;
+
         super(props, extendedProps);
         this.state.moreLoaded = false;
         this.state.rooms = null;
     }
 
     onPrepareSave(native) {
-        // sort all arraysby device:address
+        // sort all arrays by device:address
         native.disInputs && sort(native.disInputs);
         native.coils && sort(native.coils);
         native.inputRegs && sort(native.inputRegs);
@@ -138,26 +143,32 @@ class App extends GenericApp {
 
     render() {
         if (!this.state.loaded || !this.state.moreLoaded) {
-            return <MuiThemeProvider theme={this.state.theme}>
-                <Loader theme={this.state.themeType} />
-            </MuiThemeProvider>;
+            return <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={this.state.theme}>
+                    <Loader theme={this.state.themeType} />
+                </ThemeProvider>
+            </StyledEngineProvider>;
         }
 
-        return <MuiThemeProvider theme={this.state.theme}>
-            <SnackbarProvider>
+        return <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={this.state.theme}>
+                <SnackbarProvider>
                 <div className="App" style={{background: this.state.theme.palette.background.default, color: this.state.theme.palette.text.primary}}>
                     <AppBar position="static">
                         <Tabs
+                            indicatorColor="secondary"
                             value={this.getSelectedTab()}
                             onChange={(e, index) => this.selectTab(tabs[index].name, index)}
-                            variant="scrollable" scrollButtons="auto">
+                            variant="scrollable"
+                            scrollButtons="auto"
+                        >
                             {tabs.map(tab => <Tab
-                                    label={tab.icon ? <>{tab.icon}{I18n.t(tab.title)}</> : I18n.t(tab.title)}
-                                    data-name={tab.name}
-                                    key={tab.name}
-                                    title={tab.tooltip ? I18n.t(tab.tooltip) : undefined}
-                                />
-                            )}
+                                classes={{selected: this.props.classes.buttonSelected}}
+                                label={tab.icon ? <>{tab.icon}{I18n.t(tab.title)}</> : I18n.t(tab.title)}
+                                data-name={tab.name}
+                                key={tab.name}
+                                title={tab.tooltip ? I18n.t(tab.tooltip) : undefined}
+                            />)}
                         </Tabs>
                     </AppBar>
                     <div className={this.isIFrame ? this.props.classes.tabContentIFrame : this.props.classes.tabContent}>
@@ -193,7 +204,8 @@ class App extends GenericApp {
                     {this.renderSaveCloseButtons()}
                 </div>
             </SnackbarProvider>
-        </MuiThemeProvider>;
+            </ThemeProvider>
+        </StyledEngineProvider>;
     }
 }
 
