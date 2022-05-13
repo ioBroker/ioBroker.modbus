@@ -311,17 +311,17 @@ function processTasks(tasks, callback) {
     try {
         if (task.name === 'add') {
             createExtendObject(task.id, task.obj, (err) => {
-                err && adapter.log.info(`Can not execute task ${task.name} for ID ${task.id}: ${err.message}`);
+                err && adapter.log.info(`Can not execute task "add" for ID ${task.id}: ${err.message}`);
                 setImmediate(processTasks, tasks, callback);
             });
         } else if (task.name === 'del') {
             adapter.delObject(task.id, (err) => {
-                err && adapter.log.info(`Can not execute task ${task.name} for ID ${task.id}: ${err.message}`);
+                err && adapter.log.info(`Can not execute task "del" for ID ${task.id}: ${err.message}`);
                 setImmediate(processTasks, tasks, callback);
             });
         } else if (task.name === 'syncEnums') {
             syncEnums('rooms', task.id, task.obj, (err) => {
-                err && adapter.log.info(`Can not execute task ${task.name} for ID ${task.id}: ${err.message}`);
+                err && adapter.log.info(`Can not execute task "syncEnums" for ID ${task.id}: ${err.message}`);
                 setImmediate(processTasks, tasks, callback);
             });
         } else {
@@ -546,13 +546,18 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects)
             }
         }
 
+        if (!regs[i].id) {
+            adapter.log.error(`Invalid data ${regName}/${i}: ${JSON.stringify(regs[i])}`);
+            adapter.log.error('Invalid object: ' + JSON.stringify(objects[id]));
+        }
+
         tasks.push({
             id: regs[i].id,
             name: 'add',
             obj: objects[id]
         });
         tasks.push({
-            id: id,
+            id,
             name: 'syncEnums',
             obj: regs[i].room
         });
@@ -602,7 +607,7 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
         }
 
         if (localOptions.multiDeviceId) {
-            config[i].id = regName + '.' + deviceId + '.';
+            config[i].id = `${regName}.${deviceId}.`;
         } else {
             config[i].id = regName + '.';
         }
@@ -621,13 +626,13 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
 
         if (localOptions.preserveDotsInId) {
             // preserve dots in name and add to ID
-            config[i].id += (config[i].name ? (config[i].name.replace(/\s/g, '_')) : '');
+            config[i].id += config[i].name ? (config[i].name.replace(/\s/g, '_')) : '';
         } else {
             // replace dots by underlines and add to ID
-            config[i].id += (config[i].name ? '_' + (config[i].name.replace(/\./g, '_').replace(/\s/g, '_')) : '');
+            config[i].id += config[i].name ? '_' + (config[i].name.replace(/\./g, '_').replace(/\s/g, '_')) : '';
         }
         if (config[i].id.endsWith('.')) {
-            config[i].id += config[i].id.substr(0,config[i].id.length - 1);
+            config[i].id += config[i].id.substring(0, config[i].id.length - 1);
         }
     }
 }
@@ -747,7 +752,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
 
         if (result.mapping) {
             for (let i = 0; i < config.length; i++) {
-                adapter.log.debug('Iterate ' + regType + ' ' + regName + ': ' + (config[i].address - result.addressLow) + ' = ' + config[i].id);
+                adapter.log.debug(`Iterate ${regType} ${regName}: ${config[i].address - result.addressLow} = ${config[i].id}`);
                 result.mapping[config[i].address - result.addressLow] = adapter.namespace + '.' + config[i].id;
             }
         }
@@ -790,9 +795,9 @@ function parseConfig(callback) {
 
 
             // Discrete inputs
-            assignIds(deviceId, adapter.config.disInputs, device.disInputs,   'discreteInputs',   'disInputs',   localOptions);
-            assignIds(deviceId, adapter.config.coils, device.coils,       'coils',            'coils',       localOptions);
-            assignIds(deviceId, adapter.config.inputRegs, device.inputRegs,   'inputRegisters',   'inputRegs',   localOptions);
+            assignIds(deviceId, adapter.config.disInputs,   device.disInputs,   'discreteInputs',   'disInputs',   localOptions);
+            assignIds(deviceId, adapter.config.coils,       device.coils,       'coils',            'coils',       localOptions);
+            assignIds(deviceId, adapter.config.inputRegs,   device.inputRegs,   'inputRegisters',   'inputRegs',   localOptions);
             assignIds(deviceId, adapter.config.holdingRegs, device.holdingRegs, 'holdingRegisters', 'holdingRegs', localOptions);
 
             device.disInputs.config   = adapter.config.disInputs.  filter(e =>           e.deviceId === deviceId);
