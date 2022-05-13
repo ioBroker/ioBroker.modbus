@@ -311,7 +311,7 @@ function processTasks(tasks, callback) {
     try {
         if (task.name === 'add') {
             createExtendObject(task.id, task.obj, (err) => {
-                err && adapter.log.info(`Can not execute task "add" for ID ${task.id}: ${err.message}`);
+                err && adapter.log.info(`Can not execute task "add" for ID ${task.id}: ${err.message} (${JSON.stringify(task)}`);
                 setImmediate(processTasks, tasks, callback);
             });
         } else if (task.name === 'del') {
