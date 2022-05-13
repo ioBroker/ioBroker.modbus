@@ -443,7 +443,7 @@ function prepareConfig(config) {
             };
         } else {
             device.disInputs = {
-                deviceId:    deviceId,
+                deviceId,
                 addressLow:  0,
                 length:      0,
                 config:      [],
@@ -452,7 +452,7 @@ function prepareConfig(config) {
             };
 
             device.coils = {
-                deviceId:    deviceId,
+                deviceId,
                 addressLow:  0,
                 length:      0,
                 config:      [],
@@ -462,7 +462,7 @@ function prepareConfig(config) {
             };
 
             device.inputRegs = {
-                deviceId:    deviceId,
+                deviceId,
                 addressLow:  0,
                 length:      0,
                 config:      [],
@@ -471,7 +471,7 @@ function prepareConfig(config) {
             };
 
             device.holdingRegs = {
-                deviceId:    deviceId,
+                deviceId,
                 addressLow:  0,
                 length:      0,
                 config:      [],
@@ -501,12 +501,16 @@ function checkDeviceIds(options, config, deviceIds) {
     }
 }
 
-function checkObjects(options, regType, regName, regFullName, tasks, newObjects) {
+function checkObjects(options, regType, regName, regFullName, tasks, newObjects, deviceId) {
     let regs = options[regType];
 
     adapter.log.debug(`Initialize Objects for ${regType}: ${JSON.stringify(regs)}`);
 
     for (let i = 0; regs.length > i; i++) {
+        if (regs[i].deviceId !== deviceId) {
+            continue;
+        }
+
         const id = adapter.namespace + '.' + (regs[i].id || i);
         regs[i].fullId = id;
         objects[id] = {
@@ -793,7 +797,6 @@ function parseConfig(callback) {
             let device = options.devices[_deviceId];
             let deviceId = parseInt(_deviceId, 10);
 
-
             // Discrete inputs
             assignIds(deviceId, adapter.config.disInputs,   device.disInputs,   'discreteInputs',   'disInputs',   localOptions);
             assignIds(deviceId, adapter.config.coils,       device.coils,       'coils',            'coils',       localOptions);
@@ -834,10 +837,10 @@ function parseConfig(callback) {
             iterateAddresses(false, deviceId, device.holdingRegs, 'holdingRegisters', 'holdingRegs', localOptions);
 
             // ------------- create states and objects ----------------------------
-            checkObjects(adapter.config, 'disInputs',   'discreteInputs',   'Discrete inputs',   tasks, newObjects);
-            checkObjects(adapter.config, 'coils',       'coils',            'Coils',             tasks, newObjects);
-            checkObjects(adapter.config, 'inputRegs',   'inputRegisters',   'Input registers',   tasks, newObjects);
-            checkObjects(adapter.config, 'holdingRegs', 'holdingRegisters', 'Holding registers', tasks, newObjects);
+            checkObjects(adapter.config, 'disInputs',   'discreteInputs',   'Discrete inputs',   tasks, newObjects, deviceId);
+            checkObjects(adapter.config, 'coils',       'coils',            'Coils',             tasks, newObjects, deviceId);
+            checkObjects(adapter.config, 'inputRegs',   'inputRegisters',   'Input registers',   tasks, newObjects, deviceId);
+            checkObjects(adapter.config, 'holdingRegs', 'holdingRegisters', 'Holding registers', tasks, newObjects, deviceId);
 
             if (options.config.slave) {
                 device.disInputs.fullIds   = adapter.config.disInputs  .filter(e => e.deviceId === deviceId).map(e => e.fullId);

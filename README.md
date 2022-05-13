@@ -276,8 +276,8 @@ There are some programs in folder *test' to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### 5.0.2 (2022-05-13)
-* (bluefox) Added debug outputs to catch errors
+### **WORK IN PROGRESS**
+* (bluefox) Fixed error with mutli-devices
 
 ### 5.0.0 (2022-05-11)
 * BREAKING: All space characters will be replaced with underscores now in the Objects IDs, not only the first one.
