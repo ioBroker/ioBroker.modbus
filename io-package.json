@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "modbus",
-    "version": "5.0.0",
+    "version": "5.0.1",
     "news": {
+      "5.0.1": {
+        "en": "Added debug outputs to catch errors",
+        "de": "Debug-Ausgaben hinzugefügt, um Fehler abzufangen",
+        "ru": "Добавлены выходные данные отладки для обнаружения ошибок",
+        "pt": "Adicionadas saídas de depuração para detectar erros",
+        "nl": "Foutopsporingsoutputs toegevoegd om fouten op te vangen",
+        "fr": "Ajout de sorties de débogage pour détecter les erreurs",
+        "it": "Aggiunti output di debug per rilevare gli errori",
+        "es": "Se agregaron salidas de depuración para detectar errores.",
+        "pl": "Dodano wyjścia debugowania w celu wyłapania błędów",
+        "zh-cn": "添加了调试输出以捕获错误"
+      },
       "5.0.0": {
         "en": "BREAKING: All space characters will be replaced with underscores now in the Objects IDs, not only the first one.\nCatch error reported by sentry when invalid Master port is entered\nGUI migrated to mui-v5",
         "de": "BREAKING: Alle Leerzeichen werden jetzt in den Objekt-IDs durch Unterstriche ersetzt, nicht nur die erste.\nVom Sentry gemeldeter Fangfehler, wenn ein ungültiger Master-Port eingegeben wird\nGUI auf mui-v5 migriert",
@@ -74,18 +86,6 @@
         "es": "Paquete de puerto serie actualizado\nLa versión mínima de node.js es 12",
         "pl": "Zaktualizowany pakiet portu szeregowego\nMinimalna wersja node.js to 12",
         "zh-cn": "更新串口包\n最小的 node.js 版本是 12"
-      },
-      "3.4.17": {
-        "en": "Catch errors in tasks processing to prevent crashes",
-        "de": "Fehler bei der Aufgabenverarbeitung abfangen, um Abstürze zu vermeiden",
-        "ru": "Выявление ошибок при обработке задач для предотвращения сбоев",
-        "pt": "Capture erros no processamento de tarefas para evitar travamentos",
-        "nl": "Vang fouten bij het verwerken van taken op om crashes te voorkomen",
-        "fr": "Détectez les erreurs dans le traitement des tâches pour éviter les plantages",
-        "it": "Rileva gli errori nell'elaborazione delle attività per evitare arresti anomali",
-        "es": "Detecte errores en el procesamiento de tareas para evitar bloqueos",
-        "pl": "Wyłap błędy w przetwarzaniu zadań, aby zapobiec awariom",
-        "zh-cn": "捕获任务处理中的错误以防止崩溃"
       }
     },
     "title": "ModBus",
