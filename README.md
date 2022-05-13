@@ -276,7 +276,7 @@ There are some programs in folder *test' to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 5.0.3 (2022-05-13)
 * (bluefox) Fixed error with mutli-devices
 
 ### 5.0.0 (2022-05-11)

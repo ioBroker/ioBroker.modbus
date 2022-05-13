@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "modbus",
-    "version": "5.0.2",
+    "version": "5.0.3",
     "news": {
+      "5.0.3": {
+        "en": "Fixed error with mutli-devices",
+        "de": "Fehler bei Multi-Geräten behoben",
+        "ru": "Исправлена ошибка с mutli-устройствами",
+        "pt": "Corrigido erro com vários dispositivos",
+        "nl": "Vaste fout met meerdere apparaten",
+        "fr": "Correction d'une erreur avec plusieurs appareils",
+        "it": "Risolto errore con più dispositivi",
+        "es": "Solucionado el error con varios dispositivos.",
+        "pl": "Naprawiono błąd z wieloma urządzeniami",
+        "zh-cn": "修复了多设备的错误"
+      },
       "5.0.0": {
         "en": "BREAKING: All space characters will be replaced with underscores now in the Objects IDs, not only the first one.\nCatch error reported by sentry when invalid Master port is entered\nGUI migrated to mui-v5",
         "de": "BREAKING: Alle Leerzeichen werden jetzt in den Objekt-IDs durch Unterstriche ersetzt, nicht nur die erste.\nVom Sentry gemeldeter Fangfehler, wenn ein ungültiger Master-Port eingegeben wird\nGUI auf mui-v5 migriert",
