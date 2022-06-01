@@ -39,7 +39,7 @@
     "@iobroker/adapter-core": "^2.6.0"
   },
   "devDependencies": {
-    "del": "^6.0.0",
+    "del": "^6.1.1",
     "@alcalzone/release-script": "^3.5.9",
     "@alcalzone/release-script-plugin-iobroker": "^3.5.9",
     "@alcalzone/release-script-plugin-license": "^3.5.9",
