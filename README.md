@@ -123,7 +123,7 @@ This factor is used to multiply the read value from Bus for static scaling. So t
 This offset is added to the read value after above multiplication. So the calculation looks like following val = x * Factor + Offset
 
 ### Formula
-This field can be used for advanced calculations if Factor and Offset is not sufficient. If this field is set, then the Factor and Offset field is ignored.
+This field can be used for advanced calculations if Factor and Offset is not sufficient. **If this field is set, then the Factor and Offset field is ignored.**
 The Formula is executed by the eval() function. Therefore, all common functions are supported. Especially the Math functions. The formula must comply with Javascript syntax, therefore also take care about upper and lower cases.
 
 In the formula, "x" has to be used for the read value from Modbus. E.g. `x * Math.pow(10, sf['40065'])`
