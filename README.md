@@ -276,7 +276,7 @@ There are some programs in folder *test' to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**v
+### 5.0.4 (2022-06-15)v
 * (bluefox) Corrected the coils reading in slave mode
 * (bluefox) Corrected type of connection indicator
 

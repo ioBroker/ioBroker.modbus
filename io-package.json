@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "modbus",
-    "version": "5.0.3",
+    "version": "5.0.4",
     "news": {
+      "5.0.4": {
+        "en": "Corrected the coils reading in slave mode\nCorrected type of connection indicator",
+        "de": "Korrektur der im Slave-Modus abgelesenen Spulen\nKorrigierte Art der Verbindungsanzeige",
+        "ru": "Исправлено чтение катушек в режиме раба\nИсправлен тип индикатора подключения",
+        "pt": "Corrigido a leitura de bobinas no modo escravo\nTipo correto de indicador de conexão",
+        "nl": "Vertaling:\nGevangene indicator",
+        "fr": "Correction des bobines en mode esclave\nIndicateur de raccordement corrigé",
+        "it": "Corretto la lettura delle bobine in modalità slave\nTipo corretto di indicatore di connessione",
+        "es": "Corregido las bobinas de lectura en modo esclavo\nTipo corregido de indicador de conexión",
+        "pl": "Naprawdę cewki odczytywane są w trybie niewolnikowym\nKlasyczny typ połączenia wskaźnik",
+        "zh-cn": "阅读奴隶模式\n更正的关联指标类型"
+      },
       "5.0.3": {
         "en": "Fixed error with mutli-devices",
         "de": "Fehler bei Multi-Geräten behoben",
