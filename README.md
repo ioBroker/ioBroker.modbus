@@ -276,6 +276,10 @@ There are some programs in folder *test' to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
+### **WORK IN PROGRESS**v
+* (bluefox) Corrected the coils reading in slave mode
+* (bluefox) Corrected type of connection indicator
+
 ### 5.0.3 (2022-05-13)
 * (bluefox) Fixed error with mutli-devices
 

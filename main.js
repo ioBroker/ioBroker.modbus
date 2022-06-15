@@ -84,7 +84,7 @@ function stop(callback) {
     }
 
     if (adapter && adapter.setState && adapter.config && adapter.config.params) {
-        adapter.setState('info.connection', adapter.config.params.slave ? 0 : false, true);
+        adapter.setState('info.connection', adapter.config.params.slave ? '' : false, true);
     }
 
     if (typeof callback === 'function') {
@@ -872,11 +872,12 @@ function parseConfig(callback) {
             obj = {
                 type: 'state',
                 common: {
-                    name:  options.config.slave ? 'Number of connected partners' : 'If connected to slave',
+                    name:  options.config.slave ? 'IPs of connected partners' : 'If connected to slave',
                     role:  'indicator.connected',
                     write: false,
                     read:  true,
-                    type:  options.config.slave ? 'number' : 'boolean'
+                    type:  options.config.slave ? 'string' : 'boolean',
+                    def:   options.config.slave ? '' : false,
                 },
                 native: {}
             };
@@ -884,20 +885,22 @@ function parseConfig(callback) {
         } else if (options.config.slave && obj.common.type !== 'string') {
             obj.common.type = 'string';
             obj.common.name = 'Connected masters';
+            obj.common.def  = '';
             await adapter.setObjectAsync('info.connection', obj);
         } else if (!options.config.slave && obj.common.type !== 'boolean') {
             obj.common.type = 'boolean';
             obj.common.name = 'If connected to slave';
+            obj.common.def  = false;
             await adapter.setObjectAsync('info.connection', obj);
         }
-        await adapter.setStateAsync('info.connection', adapter.config.params.slave ? 0 : false, true);
+        await adapter.setStateAsync('info.connection', adapter.config.params.slave ? '' : false, true);
 
         newObjects.push(adapter.namespace + '.info.connection');
 
         // clear unused states
         for (let id_ in oldObjects) {
             if (oldObjects.hasOwnProperty(id_) && !newObjects.includes(id_)) {
-                adapter.log.debug('Remove old object ' + id_);
+                adapter.log.debug(`Remove old object ${id_}`);
                 tasks.push({
                     id: id_,
                     name: 'del'
