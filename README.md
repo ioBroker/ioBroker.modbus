@@ -278,7 +278,7 @@ There are some programs in folder *test' to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### __WORK IN PROGRESS__
+### 5.0.5 (2022-08-13)
 * (Apollon77) Prevent some crash cases reported by Sentry
 
 ### 5.0.4 (2022-06-15)v
