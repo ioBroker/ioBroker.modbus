@@ -128,6 +128,8 @@ The Formula is executed by the eval() function. Therefore, all common functions 
 
 In the formula, "x" has to be used for the read value from Modbus. E.g. `x * Math.pow(10, sf['40065'])`
 
+Using the "sf" array (see above example) you can access other read modbus values if they are flagged as "Scale Factor" in the config (see below infos on "SF" flag).
+
 If the formula cannot be evaluated during runtime, then the Adapter writes a warning message to the log.
 
 Another use case for formulas could also be to prevent implausible data with a formula like `x > 2000000 ? null : x`
@@ -276,6 +278,9 @@ There are some programs in folder *test' to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
+### __WORK IN PROGRESS__
+* (Apollon77) Prevent some crash cases reported by Sentry
+
 ### 5.0.4 (2022-06-15)v
 * (bluefox) Corrected the coils reading in slave mode
 * (bluefox) Corrected type of connection indicator
