@@ -4,16 +4,16 @@
     "version": "5.0.5",
     "news": {
       "5.0.5": {
-        "en": "GUI packages updated",
-        "de": "GUI-Pakete aktualisiert",
-        "ru": "GUI пакеты обновлены",
-        "pt": "Pacotes GUI atualizados",
-        "nl": "GUI verpakkingen",
-        "fr": "GUI packages updated",
-        "it": "Pacchetti GUI aggiornati",
-        "es": "Paquetes GUI actualizados",
-        "pl": "Pakiet GUI",
-        "zh-cn": "古伊一揽子计划更新"
+        "en": "Prevent some crash cases reported by Sentry",
+        "de": "Verhindern Sie einige Crashfälle, die von Sentry gemeldet wurden",
+        "ru": "Предотвратить некоторые случаи аварии, описанные Сентри",
+        "pt": "Evite alguns casos de acidente relatados por Sentry",
+        "nl": "Vertaling:",
+        "fr": "Prévenir certains cas de crash signalés par Sentry",
+        "it": "Prevenire alcuni casi di crash segnalati da Sentry",
+        "es": "Prevent some accident cases reported by Sentry",
+        "pl": "Wynaleziono kilka przypadków katastrofy w Sentry",
+        "zh-cn": "Sentry报告的一些事故"
       },
       "5.0.4": {
         "en": "Corrected the coils reading in slave mode\nCorrected type of connection indicator",
