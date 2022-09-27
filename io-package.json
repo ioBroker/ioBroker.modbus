@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "modbus",
-    "version": "5.0.7",
+    "version": "5.0.8",
     "news": {
+      "5.0.8": {
+        "en": "GUI packages updated",
+        "de": "GUI-Pakete aktualisiert",
+        "ru": "GUI пакеты обновлены",
+        "pt": "Pacotes GUI atualizados",
+        "nl": "GUI verpakkingen",
+        "fr": "GUI packages updated",
+        "it": "Pacchetti GUI aggiornati",
+        "es": "Paquetes GUI actualizados",
+        "pl": "Pakiet GUI",
+        "zh-cn": "古伊一揽子计划更新"
+      },
       "5.0.4": {
         "en": "Corrected the coils reading in slave mode\nCorrected type of connection indicator",
         "de": "Korrektur der im Slave-Modus abgelesenen Spulen\nKorrigierte Art der Verbindungsanzeige",
