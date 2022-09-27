@@ -276,7 +276,7 @@ There are some programs in folder *test' to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 5.0.5 (2022-09-27)
 * (bluefox) GUI packages updated
 
 ### 5.0.4 (2022-06-15)v
