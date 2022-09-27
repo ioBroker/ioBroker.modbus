@@ -3,18 +3,6 @@
     "name": "modbus",
     "version": "5.0.6",
     "news": {
-      "5.0.6": {
-        "en": "GUI packages updated",
-        "de": "GUI-Pakete aktualisiert",
-        "ru": "GUI пакеты обновлены",
-        "pt": "Pacotes GUI atualizados",
-        "nl": "GUI verpakkingen",
-        "fr": "GUI packages updated",
-        "it": "Pacchetti GUI aggiornati",
-        "es": "Paquetes GUI actualizados",
-        "pl": "Pakiet GUI",
-        "zh-cn": "古伊一揽子计划更新"
-      },
       "5.0.5": {
         "en": "Prevent some crash cases reported by Sentry",
         "de": "Verhindern Sie einige Crashfälle, die von Sentry gemeldet wurden",
