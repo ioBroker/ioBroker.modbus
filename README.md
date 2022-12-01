@@ -278,7 +278,7 @@ There are some programs in folder *test' to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 5.0.9 (2022-12-01)
 * (clausmuus) fixed reconnect of serial communication
 
 ### 5.0.8 (2022-09-27)
