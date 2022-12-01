@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "5.0.9",
+    "version": "5.0.10",
     "news": {
+      "5.0.10": {
+        "en": "fixed reconnect of serial communication",
+        "de": "feste wiederverbindung der seriellen kommunikation",
+        "ru": "фиксированное переподключение серийного общения",
+        "pt": "reconexão fixa da comunicação serial",
+        "nl": "vertaling:",
+        "fr": "reconnecté fixe de la communication série",
+        "it": "ricollegamento fisso della comunicazione seriale",
+        "es": "reconexión fija de la comunicación en serie",
+        "pl": "związany z rekonstytucją szeregową",
+        "uk": "фіксоване відключення послідовного зв'язку",
+        "zh-cn": "定期重新联络"
+      },
       "5.0.8": {
         "en": "GUI packages updated",
         "de": "GUI-Pakete aktualisiert",
