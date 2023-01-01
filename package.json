@@ -33,7 +33,7 @@
   "dependencies": {
     "stampit": "^2.1.2",
     "put": "0.0.6",
-    "crc": "4.1.1",
+    "crc": "4.2.0",
     "stampit-state-machine": "^0.2.1",
     "stampit-event-bus": "^0.1.1",
     "@iobroker/adapter-core": "^2.6.7"
