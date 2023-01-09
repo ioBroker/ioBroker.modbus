@@ -35,7 +35,7 @@
     "Max read request length (booleans)": "Max read request length (booleans)",
     "Max read request length": "Max read request length (float)",
     "Multi device IDs": "Multiple device IDs",
-    "Name": "name",
+    "Name": "Name",
     "Offset": "Offset",
     "PLC Connection": "PLC Connection",
     "PLC IP Address": "PLC IP Address",
