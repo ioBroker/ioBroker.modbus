@@ -36,7 +36,7 @@
     "crc": "4.3.2",
     "stampit-state-machine": "^0.2.1",
     "stampit-event-bus": "^0.1.1",
-    "@iobroker/adapter-core": "^2.6.7"
+    "@iobroker/adapter-core": "^2.6.8"
   },
   "devDependencies": {
     "del": "^6.1.1",
