@@ -112,7 +112,7 @@
     "Write only with FC5/FC6": "Nur mit FC5/FC6 schreiben",
     "Write only with FC15/FC16": "Nur mit FC15/FC16 schreiben",
     "Slave IP address": "Slave-IP-Adresse",
-    "Listen on all IPs": "An allen IP-Adressen hören",
+    "Listen on all IPs": "Zugriff von allen IPs zulassen",
     "Read interval": "Leseintervall",
     "Slave ID": "Slave-ID"
 }
