@@ -28,7 +28,7 @@
     "node": ">=12.17.0 <13.0 || >=14.0.0"
   },
   "optionalDependencies": {
-    "serialport": "^10.5.0"
+    "serialport": "^12.0.0"
   },
   "dependencies": {
     "stampit": "^2.1.2",
