@@ -114,5 +114,19 @@
   "Slave IP address": "Adresse IP esclave",
   "Listen on all IPs": "Écouter sur toutes les IP",
   "Read interval": "Intervalle de lecture",
-  "Slave ID": "ID d'esclave"
+  "Slave ID": "ID d'esclave",
+  "aliases_help": "Normalement, tous les registres peuvent avoir une adresse comprise entre 0 et 65535. En utilisant des alias, vous pouvez définir des champs d'adresse virtuelle pour chaque type de registre. Normalement:\n- les entrées discrètes sont de 10001 à 20000\n- les bobines sont de 1 à 1000\n- les registres d'entrée vont de 30001 à 40000\n- les registres de tenue sont de 40001 à 60000\n\nChaque alias sera mappé en interne à l'adresse, par exemple, 30011 sera mappé au registre d'entrée 10, et ainsi de suite.",
+  "doNotRoundAddressToWord_help": "Normalement, les adresses des bobines et des entrées discrètes sont alignées sur 16 bits. Comme les adresses de 3 à 20 seront alignées sur 0 jusqu'à 32.\nSi cette option est active, les adresses ne seront pas alignées.",
+  "directAddresses_help": "Utilisé pour les entrées binaires et les bobines.\nSans cet indicateur, les bits seront adressés comme : `0 => 15, 1 => 14, 2 => 13, ..., 15 => 0`.\nAvec cet indicateur activé, les bits seront adressés comme : `0 => 0, 1 => 1, 2 => 2, ..., 15 => 15`.",
+  "doNotUseWriteMultipleRegisters_help": "Si l'esclave ne prend pas en charge la commande \"écrire plusieurs registres\", vous pouvez l'activer pour recevoir des avertissements lorsque les plusieurs registres seront écrits.",
+  "waitTime_help": "Temps d'attente entre l'interrogation de deux ID d'appareil différents en millisecondes.",
+  "timeout_help": "Délai d'expiration des demandes de lecture en millisecondes. Si aucune réponse n'est reçue d'un esclave dans ce délai, la connexion sera interrompue.",
+  "pulsetime_help": "Si l'impulsion est utilisée pour les bobines, cela définit l'intervalle en millisecondes et la durée de l'impulsion.",
+  "readInterval_help": "Délai entre deux requêtes de lecture en millisecondes. Par défaut 0.",
+  "writeInterval_help": "Délai entre deux requêtes d'écriture en millisecondes. Par défaut 0.",
+  "alwaysUpdate_help": "Normalement, si la valeur n'a pas changé, elle ne sera pas écrite dans ioBroker.\nCet indicateur permet de mettre à jour l'horodatage de la valeur à chaque cycle.",
+  "doNotIncludeAdrInId_help": "N'ajoutez pas d'adresse dans l'ID ioBroker généré. « 10_Input10 » contre « Input10 ».",
+  "preserveDotsInId_help": "Avec cet indicateur, le nom sera « Inputs.Input10 ». Sans => `Inputs_Input10`.",
+  "poll_help": "Intervalle d'interrogation cyclique en millisecondes (uniquement pertinent pour le maître)",
+  "recon_help": "Intervalle de reconnexion en millisecondes. (Uniquement pertinent pour le maître)\nSi aucune connexion n'est établie, le maître essaiera de se connecter toutes les X millisecondes."
 }

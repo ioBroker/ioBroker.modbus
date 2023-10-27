@@ -34,10 +34,10 @@ function startAdapter(options) {
                             // read all found serial ports
                             SerialPort.list().then(ports => {
                                 ports = listSerial(ports);
-                                adapter.log.info('List of port: ' + JSON.stringify(ports));
+                                adapter.log.info(`List of port: ${JSON.stringify(ports)}`);
                                 adapter.sendTo(obj.from, obj.command, ports, obj.callback);
                             }).catch(err => {
-                                adapter.log.warn('Can not get Serial port list: ' + err);
+                                adapter.log.warn(`Can not get Serial port list: ${err}`);
                                 adapter.sendTo(obj.from, obj.command, [{path: 'Not available'}], obj.callback);
                             });
                         } else {
@@ -50,14 +50,14 @@ function startAdapter(options) {
         }
     });
 
-    let infoRegExp = new RegExp(adapter.namespace.replace('.', '\\.') + '\\.info\\.');
+    let infoRegExp = new RegExp(`${adapter.namespace.replace('.', '\\.')}\\.info\\.`);
 
     adapter.on('stateChange', (id, state) => {
         if (state && !state.ack && id && !infoRegExp.test(id)) {
             if (!modbus) {
                 adapter.log.warn('No connection')
             } else {
-                adapter.log.debug('state Changed ack=false: ' + id + ': ' + JSON.stringify(state));
+                adapter.log.debug(`state Changed ack=false: ${id}: ${JSON.stringify(state)}`);
                 if (objects[id]) {
                     modbus.write(id, state);
                 } else {
@@ -119,7 +119,7 @@ function listSerial(ports) {
 
     let result;
     try {
-        adapter.log.info('Verify ' + JSON.stringify(ports));
+        adapter.log.info(`Verify ${JSON.stringify(ports)}`);
         result = fs
             .readdirSync(devDirName)
             .map(file => path.join(devDirName, file))
@@ -132,7 +132,7 @@ function listSerial(ports) {
                         break;
                     }
                 }
-                adapter.log.info('Check ' + port + ' : ' + found);
+                adapter.log.info(`Check ${port} : ${found}`);
 
                 !found && ports.push({path: port});
 
@@ -372,7 +372,7 @@ function prepareConfig(config) {
         options.config.poll         = parseInt(params.poll, 10)         || 1000; // default is 1 second
         options.config.recon        = parseInt(params.recon, 10)        || 60000;
         if (options.config.recon < 1000) {
-           adapter.log.info('Slave Reconnect time set to 1000ms because was too small (' + options.config.recon + ')');
+           adapter.log.info(`Slave Reconnect time set to 1000ms because was too small (${options.config.recon})`);
             options.config.recon = 1000;
         }
         options.config.maxBlock     = parseInt(params.maxBlock, 10)     || 100;
@@ -511,7 +511,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects,
             continue;
         }
 
-        const id = adapter.namespace + '.' + (regs[i].id || i);
+        const id = `${adapter.namespace}.${regs[i].id || i}`;
         regs[i].fullId = id;
         objects[id] = {
             _id: regs[i].id,
@@ -552,7 +552,7 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects,
 
         if (!regs[i].id) {
             adapter.log.error(`Invalid data ${regName}/${i}: ${JSON.stringify(regs[i])}`);
-            adapter.log.error('Invalid object: ' + JSON.stringify(objects[id]));
+            adapter.log.error(`Invalid object: ${JSON.stringify(objects[id])}`);
         }
 
         tasks.push({
@@ -596,7 +596,7 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
 
                     if (localOptions.directAddresses && (regType === 'disInputs' || regType === 'coils')) {
                         const address = config[i].address;
-                        config[i].address = ((address >> 4) << 4) + (localOptions.directAddresses ? _dmap[address % 16] : _rmap[address % 16]);
+                        config[i].address = ((address >> 4) << 4) + _dmap[address % 16];
                     }
                 }
             } else {
@@ -613,7 +613,7 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
         if (localOptions.multiDeviceId) {
             config[i].id = `${regName}.${deviceId}.`;
         } else {
-            config[i].id = regName + '.';
+            config[i].id = `${regName}.`;
         }
 
         if (localOptions.showAliases) {
@@ -630,10 +630,10 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
 
         if (localOptions.preserveDotsInId) {
             // preserve dots in name and add to ID
-            config[i].id += config[i].name ? (config[i].name.replace(/\s/g, '_')) : '';
+            config[i].id += config[i].name ? config[i].name.replace(/\s/g, '_') : '';
         } else {
             // replace dots by underlines and add to ID
-            config[i].id += config[i].name ? '_' + (config[i].name.replace(/\./g, '_').replace(/\s/g, '_')) : '';
+            config[i].id += config[i].name ? `_${config[i].name.replace(/\./g, '_').replace(/\s/g, '_')}` : '';
         }
         if (config[i].id.endsWith('.')) {
             config[i].id += config[i].id.substring(0, config[i].id.length - 1);
@@ -691,7 +691,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
 
             // collect cyclic write registers
             if (config[i].cw && result.cyclicWrite && Array.isArray(result.cyclicWrite)) {
-                result.cyclicWrite.push(adapter.namespace + '.' + config[i].id);
+                result.cyclicWrite.push(`${adapter.namespace}.${config[i].id}`);
             }
 
             if (address < result.addressLow) {
@@ -757,7 +757,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
         if (result.mapping) {
             for (let i = 0; i < config.length; i++) {
                 adapter.log.debug(`Iterate ${regType} ${regName}: ${config[i].address - result.addressLow} = ${config[i].id}`);
-                result.mapping[config[i].address - result.addressLow] = adapter.namespace + '.' + config[i].id;
+                result.mapping[config[i].address - result.addressLow] = `${adapter.namespace}.${config[i].id}`;
             }
         }
     }
@@ -779,7 +779,7 @@ function parseConfig(callback) {
         preserveDotsInId:        params.preserveDotsInId        === true || params.preserveDotsInId        === 'true',
     };
 
-    adapter.getForeignObjects(adapter.namespace + '.*', async (err, list) => {
+    adapter.getForeignObjects(`${adapter.namespace}.*`, async (err, list) => {
         let oldObjects = list;
         let newObjects = [];
 
@@ -827,7 +827,7 @@ function parseConfig(callback) {
                         native: {}
                     }
                 });
-                newObjects.push(adapter.namespace + '.info.pollTime');
+                newObjects.push(`${adapter.namespace}.info.pollTime`);
             }
 
             // Discrete inputs
@@ -895,7 +895,7 @@ function parseConfig(callback) {
         }
         await adapter.setStateAsync('info.connection', adapter.config.params.slave ? '' : false, true);
 
-        newObjects.push(adapter.namespace + '.info.connection');
+        newObjects.push(`${adapter.namespace}.info.connection`);
 
         // clear unused states
         for (let id_ in oldObjects) {
@@ -933,7 +933,7 @@ function main() {
 function sortByAddress(a, b) {
     let ad = parseFloat(a._address);
     let bd = parseFloat(b._address);
-    return ((ad < bd) ? -1 : ((ad > bd) ? 1 : 0));
+    return ((ad < bd) ? -1 : (ad > bd ? 1 : 0));
 }
 
 // If started as allInOne/compact mode => return function to create instance

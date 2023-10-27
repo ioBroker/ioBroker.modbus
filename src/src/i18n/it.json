@@ -114,5 +114,19 @@
   "Slave IP address": "Indirizzo IP slave",
   "Listen on all IPs": "Ascolta su tutti gli IP",
   "Read interval": "Intervallo di lettura",
-  "Slave ID": "ID schiavo"
+  "Slave ID": "ID schiavo",
+  "aliases_help": "Normalmente tutti i registri possono avere indirizzo da 0 a 65535. Utilizzando degli alias è possibile definire campi indirizzo virtuali per ogni tipo di registro. Normalmente:\n- gli ingressi discreti vanno da 10001 a 20000\n- le bobine vanno da 1 a 1000\n- i registri di input vanno da 30001 a 40000\n- i registri aziendali vanno da 40001 a 60000\n\nOgni alias verrà mappato internamente all'indirizzo, ad esempio 30011 verrà mappato al registro di input 10. e così via.",
+  "doNotRoundAddressToWord_help": "Normalmente le bobine e gli indirizzi degli ingressi discreti sono allineati a 16 bit. Gli indirizzi simili da 3 a 20 verranno allineati da 0 a 32.\nSe questa opzione è attiva gli indirizzi non verranno allineati.",
+  "directAddresses_help": "Utilizzato per ingressi binari e bobine.\nSenza questo flag i bit verranno indirizzati come: `0 => 15, 1 => 14, 2 => 13, ..., 15 => 0`.\nCon questo flag attivato i bit verranno indirizzati come: `0 => 0, 1 => 1, 2 => 2, ..., 15 => 15`.",
+  "doNotUseWriteMultipleRegisters_help": "Se lo slave non supporta il comando \"scrivi più registri\", puoi attivarlo per ricevere avvisi quando verranno scritti più registri.",
+  "waitTime_help": "Tempo di attesa tra il polling di due diversi ID dispositivo in millisecondi.",
+  "timeout_help": "Timeout per le richieste di lettura in millisecondi. Se entro questo tempo non viene ricevuta alcuna risposta da uno slave, la connessione verrà interrotta.",
+  "pulsetime_help": "Se si utilizza l'impulso per le bobine, definisce l'intervallo in millisecondi quanto dura l'impulso.",
+  "readInterval_help": "Ritardo tra due richieste di lettura in millisecondi. Predefinito 0.",
+  "writeInterval_help": "Ritardo tra due richieste di scrittura in millisecondi. Predefinito 0.",
+  "alwaysUpdate_help": "Normalmente, se il valore non è cambiato, non verrà scritto in ioBroker.\nQuesto flag consente di aggiornare il timestamp del valore ad ogni ciclo.",
+  "doNotIncludeAdrInId_help": "Non aggiungere indirizzo nell'iD ioBroker generato. \"10_Ingresso10\" rispetto a \"Ingresso10\".",
+  "preserveDotsInId_help": "Con questo flag il nome sarà \"Inputs.Input10\". Senza => `Ingressi_Input10`.",
+  "poll_help": "Intervallo di interrogazione ciclica in millisecondi (rilevante solo per il master)",
+  "recon_help": "Intervallo di riconnessione in millisecondi. (Rilevante solo per il master)\nSe non viene stabilita alcuna connessione, il master proverà a connettersi ogni X millisecondi."
 }

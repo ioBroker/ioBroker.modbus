@@ -3,16 +3,17 @@ import { withStyles } from '@mui/styles';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
 
-import AppBar from '@mui/material/AppBar';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+import {
+    AppBar,
+    Tabs,
+    Tab,
+} from '@mui/material';
 
 import { AiOutlineFieldBinary as BinaryIcon } from 'react-icons/ai';
 import { TiSortNumerically as DigitsIcon } from 'react-icons/ti';
 
 import GenericApp from '@iobroker/adapter-react-v5/GenericApp';
-import Loader from '@iobroker/adapter-react-v5/Components/Loader'
-import I18n from '@iobroker/adapter-react-v5/i18n';
+import { Loader, I18n } from '@iobroker/adapter-react-v5'
 
 import TabOptions from './Tabs/Options';
 import TabInputRegisters from './Tabs/InputRegisters';
@@ -30,11 +31,11 @@ const styles = theme => ({
     tabContentIFrame: {
         padding: 10,
         height: 'calc(100% - 64px - 48px - 20px - 38px)',
-        overflow: 'auto'
+        overflow: 'auto',
     },
     tab: {
         width: '100%',
-        minHeight: '100%'
+        minHeight: '100%',
     },
     selected: {
         color: theme.palette.mode === 'dark' ? undefined : '#FFF !important',
@@ -54,29 +55,29 @@ const tabs = [
         name: 'discrete-inputs',
         title: 'Discrete inputs',
         component: TabDiscreteInputs,
-        icon: <BinaryIcon style={{width: 18, height: 18, marginRight: 4, display: 'inline-block'}}/>,
-        tooltip: 'Binary inputs (read-only)'
+        icon: <BinaryIcon style={{width: 18, height: 18, marginRight: 4, display: 'inline-block'}} />,
+        tooltip: 'Binary inputs (read-only)',
     },
     {
         name: 'coils',
         title: 'Coils',
         component: TabCoils,
-        icon: <BinaryIcon style={{width: 18, height: 18, marginRight: 4, display: 'inline-block'}}/>,
-        tooltip: 'Binary inputs and outputs'
+        icon: <BinaryIcon style={{width: 18, height: 18, marginRight: 4, display: 'inline-block'}} />,
+        tooltip: 'Binary inputs and outputs',
     },
     {
         name: 'input-registers',
         title: 'Input Registers',
         component: TabInputRegisters,
-        icon: <DigitsIcon style={{width: 18, height: 18, marginRight: 4, display: 'inline-block'}}/>,
-        tooltip: 'Input registers (8-64 bit values, read-only)'
+        icon: <DigitsIcon style={{width: 18, height: 18, marginRight: 4, display: 'inline-block'}} />,
+        tooltip: 'Input registers (8-64 bit values, read-only)',
     },
     {
         name: 'holding-registers',
         title: 'Holding Registers',
         component: TabHoldingRegisters,
-        icon: <DigitsIcon style={{width: 18, height: 18, marginRight: 4, display: 'inline-block'}}/>,
-        tooltip: 'Input/output registers (8-64 bit values)'
+        icon: <DigitsIcon style={{width: 18, height: 18, marginRight: 4, display: 'inline-block'}} />,
+        tooltip: 'Input/output registers (8-64 bit values)',
     },
 ];
 
@@ -133,7 +134,7 @@ class App extends GenericApp {
 
         this.socket.getEnums('rooms')
             .then(rooms =>
-                this.setState({moreLoaded: true, rooms}));
+                this.setState({ moreLoaded: true, rooms }));
     }
 
     getSelectedTab() {
@@ -157,58 +158,58 @@ class App extends GenericApp {
         return <StyledEngineProvider injectFirst>
             <ThemeProvider theme={this.state.theme}>
                 <SnackbarProvider>
-                <div className="App" style={{background: this.state.theme.palette.background.default, color: this.state.theme.palette.text.primary}}>
-                    <AppBar position="static">
-                        <Tabs
-                            indicatorColor="secondary"
-                            value={this.getSelectedTab()}
-                            onChange={(e, index) => this.selectTab(tabs[index].name, index)}
-                            variant="scrollable"
-                            scrollButtons="auto"
-                            classes={{ indicator: this.props.classes.indicator }}
-                        >
-                            {tabs.map(tab => <Tab
-                                classes={{ selected: this.props.classes.selected }}
-                                label={tab.icon ? <>{tab.icon}{I18n.t(tab.title)}</> : I18n.t(tab.title)}
-                                data-name={tab.name}
-                                key={tab.name}
-                                title={tab.tooltip ? I18n.t(tab.tooltip) : undefined}
-                            />)}
-                        </Tabs>
-                    </AppBar>
-                    <div className={this.isIFrame ? this.props.classes.tabContentIFrame : this.props.classes.tabContent}>
-                        {tabs.map((tab, index) => {
-                            const TabComponent = tab.component;
-                            if (this.state.selectedTab) {
-                                if (this.state.selectedTab !== tab.name) {
+                    <div className="App" style={{ background: this.state.theme.palette.background.default, color: this.state.theme.palette.text.primary }}>
+                        <AppBar position="static">
+                            <Tabs
+                                indicatorColor="secondary"
+                                value={this.state.selectedTab || tabs[0].name}
+                                onChange={(e, value) => this.setState({ selectedTab: value })}
+                                variant="scrollable"
+                                scrollButtons="auto"
+                                classes={{ indicator: this.props.classes.indicator }}
+                            >
+                                {tabs.map(tab => <Tab
+                                    value={tab.name}
+                                    classes={{ selected: this.props.classes.selected }}
+                                    label={tab.icon ? <>{tab.icon}{I18n.t(tab.title)}</> : I18n.t(tab.title)}
+                                    data-name={tab.name}
+                                    key={tab.name}
+                                    title={tab.tooltip ? I18n.t(tab.tooltip) : undefined}
+                                />)}
+                            </Tabs>
+                        </AppBar>
+                        <div className={this.isIFrame ? this.props.classes.tabContentIFrame : this.props.classes.tabContent}>
+                            {tabs.map((tab, index) => {
+                                const TabComponent = tab.component;
+                                if (this.state.selectedTab) {
+                                    if (this.state.selectedTab !== tab.name) {
+                                        return null;
+                                    }
+                                } else if (index !== 0) {
                                     return null;
                                 }
-                            } else {
-                                if (index !== 0) {
-                                    return null;
-                                }
-                            }
-                            return <TabComponent
-                                key={tab.name}
-                                formulaDisabled={this.state.native.params.slave === '1' || this.state.native.params.slave === 1}
-                                common={this.common}
-                                socket={this.socket}
-                                native={this.state.native}
-                                onError={text => this.setState({errorText: (text || text === 0) && typeof text !== 'string' ? text.toString() : text})}
-                                onLoad={native => this.onLoadConfig(native)}
-                                instance={this.instance}
-                                adapterName={this.adapterName}
-                                changed={this.state.changed}
-                                onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
-                                changeNative={(value) => this.setState({native: value, changed: this.getIsChanged(value)})}
-                                rooms={this.state.rooms}
-                            />
-                        })}
+
+                                return <TabComponent
+                                    key={tab.name}
+                                    formulaDisabled={this.state.native.params.slave === '1' || this.state.native.params.slave === 1}
+                                    common={this.common}
+                                    socket={this.socket}
+                                    native={this.state.native}
+                                    onError={text => this.setState({ errorText: (text || text === 0) && typeof text !== 'string' ? text.toString() : text })}
+                                    onLoad={native => this.onLoadConfig(native)}
+                                    instance={this.instance}
+                                    adapterName={this.adapterName}
+                                    changed={this.state.changed}
+                                    onChange={(attr, value, cb) => this.updateNativeValue(attr, value, cb)}
+                                    changeNative={(value) => this.setState({ native: value, changed: this.getIsChanged(value) })}
+                                    rooms={this.state.rooms}
+                                />
+                            })}
+                        </div>
+                        {this.renderError()}
+                        {this.renderSaveCloseButtons()}
                     </div>
-                    {this.renderError()}
-                    {this.renderSaveCloseButtons()}
-                </div>
-            </SnackbarProvider>
+                </SnackbarProvider>
             </ThemeProvider>
         </StyledEngineProvider>;
     }

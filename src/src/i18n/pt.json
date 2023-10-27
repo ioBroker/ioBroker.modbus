@@ -114,5 +114,19 @@
   "Slave IP address": "Endereço IP escravo",
   "Listen on all IPs": "Ouça em todos os IPs",
   "Read interval": "Intervalo de leitura",
-  "Slave ID": "Slave ID"
+  "Slave ID": "Slave ID",
+  "aliases_help": "Normalmente, todos os registradores podem ter endereços de 0 a 65535. Usando aliases, você pode definir campos de endereço virtual para cada tipo de registrador. Normalmente:\n- entradas discretas são de 10.001 a 20.000\n- as bobinas são de 1 a 1000\n- os registros de entrada vão de 30.001 a 40.000\n- os registros de retenção vão de 40.001 a 60.000\n\nCada alias será mapeado internamente para o endereço, por exemplo, 30011 será mapeado para o registro de entrada 10. e assim por diante.",
+  "doNotRoundAddressToWord_help": "Normalmente, as bobinas e os endereços das entradas discretas são alinhados em 16 bits. Endereços semelhantes de 3 a 20 serão alinhados de 0 a 32.\nSe esta opção estiver ativa, os endereços não ficarão alinhados.",
+  "directAddresses_help": "Usado para entradas binárias e bobinas.\nSem este sinalizador os bits serão endereçados como: `0 => 15, 1 => 14, 2 => 13, ..., 15 => 0`.\nCom esta flag ativada os bits serão endereçados como: `0 => 0, 1 => 1, 2 => 2, ..., 15 => 15`.",
+  "doNotUseWriteMultipleRegisters_help": "Se o escravo não suportar o comando \"escrever múltiplos registros\", você pode ativá-lo para receber avisos quando os múltiplos registros serão gravados.",
+  "waitTime_help": "Tempo de espera entre a pesquisa de dois IDs de dispositivos diferentes em milissegundos.",
+  "timeout_help": "Tempo limite para solicitações de leitura em milissegundos. Se nenhuma resposta for recebida de um escravo neste período, a conexão será encerrada.",
+  "pulsetime_help": "Se o pulso for usado para bobinas, isso define o intervalo em milissegundos de duração do pulso.",
+  "readInterval_help": "Atraso entre duas solicitações de leitura em milissegundos. Padrão 0.",
+  "writeInterval_help": "Atraso entre duas solicitações de gravação em milissegundos. Padrão 0.",
+  "alwaysUpdate_help": "Normalmente, se o valor não for alterado, ele não será gravado no ioBroker.\nEste sinalizador permite atualizar o carimbo de data/hora do valor a cada ciclo.",
+  "doNotIncludeAdrInId_help": "Não adicione endereço no ioBroker iD gerado. `10_Input10` vs `Input10`.",
+  "preserveDotsInId_help": "Com este sinalizador o nome será `Inputs.Input10`. Sem => `Inputs_Input10`.",
+  "poll_help": "Intervalo de pesquisa cíclica em milissegundos (relevante apenas para mestre)",
+  "recon_help": "Intervalo de reconexão em milissegundos. (Relevante apenas para mestre)\nSe nenhuma conexão for estabelecida, o mestre tentará conectar-se a cada X milissegundos."
 }
