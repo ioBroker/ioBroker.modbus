@@ -209,7 +209,7 @@ For example, the number 123/456.00 as defined in the IEEE 754 standard for singl
 
 ![Image1](img/img1.png)
 
-The affects of various byte orderings are significant. For example, ordering the 4 bytes of data that represent 123456.00 in a `B A D C` sequence in known as a “byte swap”. When interpreted as an IEEE 744 floating point data type, the result is quite different:
+The effects of various byte orderings are significant. For example, ordering the 4 bytes of data that represent 123456.00 in a `B A D C` sequence in known as a “byte swap”. When interpreted as an IEEE 744 floating point data type, the result is quite different:
 
 ![Image2](img/img2.png)
 
@@ -268,7 +268,7 @@ The following table shows the FieldServer function moves that copy a single 32-b
 Given the various FieldServer function moves, the correct handling of 32-bit data is dependent on choosing the proper one. Observe the following behavior of these FieldServer function moves on the known single-precision decimal float value of 123456.00:
 
 |16-bit Values	| Function Move	     | Result	| Function Move	    | Result        |
-|---------------|--------------------|-----------|-------------------|---------------|
+|---------------|-------------------|-----------|-------------------|---------------|
 |0x2000 0x47F1	| 2.i16-1.float	     | 123456.00	| 1.float-2.i16	    | 0x2000 0x47F1 |
 |0xF147 0x0020	| 2.i16-1.float-s	  | 123456.00	| 1.float-2.i16-s	| 0xF147 0X0020 |
 |0x0020 0xF147	| 2.i16-1.float-sb	  | 123456.00	| 1.float-2.i16-sb	| 0x0020 0xF147 |
@@ -284,7 +284,7 @@ One can then swap bytes and/or words to analyze what potential endianness issues
 
 ## Test
 There are some programs in folder `test` to test the TCP communication:
-- Ananas32/64 is slave simulator (only holding registers and inputs, no coils and digital inputs)
+- Ananas32/64 is a slave simulator (only holding registers and inputs, no coils and digital inputs)
 - RMMS is master simulator
 - mod_RSsim.exe is slave simulator. It can be that you need [Microsoft Visual C++ 2008 SP1 Redistributable Package](https://www.microsoft.com/en-us/download/details.aspx?id=5582) to start it (because of SideBySide error).
 
@@ -292,6 +292,11 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) GUI packages updated
+* (bluefox) Added help for settings
+* (bluefox) Minimal supported node.js version is 16
+
 ### 5.0.11 (2022-12-01)
 * (clausmuus) fixed reconnect of serial communication
 
