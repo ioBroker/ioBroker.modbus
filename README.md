@@ -282,11 +282,16 @@ Of the many hex-to-floating point converters and calculators that are available 
 
 One can then swap bytes and/or words to analyze what potential endianness issues may exist between Modbus RTU master and slave devices.
 
+## Export / Import of registers
+With export / import functionality, you can convert all register data (only of one type) to CSV file and back to easily copy data from one device to another or to edit register in Excel.
+
+You can share your schemas with other users in [modbus-templates](https://github.com/ioBroker/modbus-templates) or you can find some register schemas there.
+
 ## Test
 There are some programs in folder `test` to test the TCP communication:
 - Ananas32/64 is a slave simulator (only holding registers and inputs, no coils and digital inputs)
 - RMMS is master simulator
-- mod_RSsim.exe is slave simulator. It can be that you need [Microsoft Visual C++ 2008 SP1 Redistributable Package](https://www.microsoft.com/en-us/download/details.aspx?id=5582) to start it (because of SideBySide error).
+- mod_RSsim.exe is a slave simulator. It can be that you need [Microsoft Visual C++ 2008 SP1 Redistributable Package](https://www.microsoft.com/en-us/download/details.aspx?id=5582) to start it (because of SideBySide error).
 
 <!--
 	### **WORK IN PROGRESS**
