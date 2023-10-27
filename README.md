@@ -198,7 +198,7 @@ Such a convenience does not come without any complications, however, and Modbus 
 The protocol itself was designed based on devices with a 16-bit register length.
 Consequently, special considerations were required when implementing 32-bit data elements.
 This implementation settled on using two consecutive 16-bit registers to represent 32 bits of data or essentially 4 bytes of data.
-It is within these 4 bytes of data that single-precision floating point data can be encoded into a Modbus RTU message.
+It is within these four bytes of data that single-precision floating point data can be encoded into a Modbus RTU message.
 
 ### The Importance of Byte Order
 Modbus itself does not define a floating point data type, but it is widely accepted that it implements 32-bit floating point data using the IEEE-754 standard.
@@ -267,12 +267,12 @@ The following table shows the FieldServer function moves that copy a single 32-b
 
 Given the various FieldServer function moves, the correct handling of 32-bit data is dependent on choosing the proper one. Observe the following behavior of these FieldServer function moves on the known single-precision decimal float value of 123456.00:
 
-|16-bit Values	| Function Move	     | Result	| Function Move	    | Result        |
-|---------------|-------------------|-----------|-------------------|---------------|
-|0x2000 0x47F1	| 2.i16-1.float	     | 123456.00	| 1.float-2.i16	    | 0x2000 0x47F1 |
-|0xF147 0x0020	| 2.i16-1.float-s	  | 123456.00	| 1.float-2.i16-s	| 0xF147 0X0020 |
-|0x0020 0xF147	| 2.i16-1.float-sb	  | 123456.00	| 1.float-2.i16-sb	| 0x0020 0xF147 |
-|0x47F1 0x2000	| 2.i16-1.float-sw	  | 123456.00	| 1.float-2.i16-sw	| 0x47F1 0x2000 |
+|16-bit Values	| Function Move	     | Result	    | Function Move	    | Result        |
+|--------------|--------------------|------------|-------------------|---------------|
+|0x2000 0x47F1	| 2.i16-1.float	     | 123456.00	 | 1.float-2.i16	    | 0x2000 0x47F1 |
+|0xF147 0x0020	| 2.i16-1.float-s	   | 123456.00	 | 1.float-2.i16-s	| 0xF147 0X0020 |
+|0x0020 0xF147	| 2.i16-1.float-sb	  | 123456.00	 | 1.float-2.i16-sb	| 0x0020 0xF147 |
+|0x47F1 0x2000	| 2.i16-1.float-sw	  | 123456.00	 | 1.float-2.i16-sw	| 0x47F1 0x2000 |
 
 Notice that different byte and word orderings require the use of the appropriate FieldServer function move. Once the proper function move is selected, the data can be converted in both directions.
 
@@ -292,7 +292,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 6.0.0 (2023-10-27)
 * (bluefox) GUI packages updated
 * (bluefox) Added help for settings
 * (bluefox) Minimal supported node.js version is 16

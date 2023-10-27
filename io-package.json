@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "5.0.11",
+    "version": "6.0.0",
     "news": {
+      "6.0.0": {
+        "en": "GUI packages updated\nAdded help for settings\nMinimal supported node.js version is 16",
+        "de": "GUI-Pakete aktualisiert\nHilfe für Einstellungen hinzugefügt\nMinimal unterstützt node.js version is 16",
+        "ru": "GUI пакеты обновлены\nДобавлена помощь для настроек\nМинимальная поддерживаемая версия node.js 16",
+        "pt": "Pacotes GUI atualizados\nAdicionado ajuda para configurações\nNode.js com suporte mínimo é 16",
+        "nl": "GUI verpakkingen\nVoegde hulp toe voor de instelling\nMinimale ondersteunde node",
+        "fr": "GUI packages updated\nAjout d'aide pour les paramètres\nVersion node.js supportée Minimal est 16",
+        "it": "Pacchetti GUI aggiornati\nAggiunto aiuto per le impostazioni\nMinimal supportato node.js versione è 16",
+        "es": "Paquetes GUI actualizados\nAyuda adicional para la configuración\nMinimal soportado node.js versión es 16",
+        "pl": "Pakiet GUI\nZamknięte pomoc dla ustawienia\nMinimal supportowana wersja węzła wynosi 16",
+        "uk": "Оновлення пакетів GUI\nДодана допомога для налаштування\nMinimal підтримуваний node.js версія 16",
+        "zh-cn": "古伊一揽子计划更新\n增加环境援助\n米切尔支持不dejs版本为16。"
+      },
       "5.0.11": {
         "en": "fixed reconnect of serial communication",
         "de": "feste wiederverbindung der seriellen kommunikation",
@@ -75,18 +88,6 @@
         "es": "Evitar registro de estado no válido",
         "pl": "Zapobiegaj nieprawidłowemu dziennikowi stanu",
         "zh-cn": "防止无效状态日志"
-      },
-      "4.0.3": {
-        "en": "Updated serial port package\nMinimal node.js version is 12",
-        "de": "Aktualisiertes Paket für die serielle Schnittstelle\nDie minimale Version von node.js ist 12",
-        "ru": "Обновленный пакет последовательного порта\nМинимальная версия node.js — 12.",
-        "pt": "Pacote de porta serial atualizado\nA versão mínima do node.js é 12",
-        "nl": "Bijgewerkt seriële poortpakket\nMinimale node.js-versie is 12",
-        "fr": "Package de port série mis à jour\nLa version minimale de node.js est 12",
-        "it": "Pacchetto porta seriale aggiornato\nLa versione minima di node.js è 12",
-        "es": "Paquete de puerto serie actualizado\nLa versión mínima de node.js es 12",
-        "pl": "Zaktualizowany pakiet portu szeregowego\nMinimalna wersja node.js to 12",
-        "zh-cn": "更新串口包\n最小的 node.js 版本是 12"
       }
     },
     "title": "ModBus",
