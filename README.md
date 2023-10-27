@@ -267,12 +267,12 @@ The following table shows the FieldServer function moves that copy a single 32-b
 
 Given the various FieldServer function moves, the correct handling of 32-bit data is dependent on choosing the proper one. Observe the following behavior of these FieldServer function moves on the known single-precision decimal float value of 123456.00:
 
-|16-bit Values	| Function Move	     | Result	    | Function Move	    | Result        |
-|--------------|--------------------|------------|-------------------|---------------|
-|0x2000 0x47F1	| 2.i16-1.float	     | 123456.00	 | 1.float-2.i16	    | 0x2000 0x47F1 |
-|0xF147 0x0020	| 2.i16-1.float-s	   | 123456.00	 | 1.float-2.i16-s	| 0xF147 0X0020 |
-|0x0020 0xF147	| 2.i16-1.float-sb	  | 123456.00	 | 1.float-2.i16-sb	| 0x0020 0xF147 |
-|0x47F1 0x2000	| 2.i16-1.float-sw	  | 123456.00	 | 1.float-2.i16-sw	| 0x47F1 0x2000 |
+|16-bit Values | Function Move    | Result	  | Function Move    | Result        |
+|--------------|------------------|-----------|------------------|---------------|
+|0x2000 0x47F1 | 2.i16-1.float    | 123456.00 | 1.float-2.i16    | 0x2000 0x47F1 |
+|0xF147 0x0020 | 2.i16-1.float-s  | 123456.00 | 1.float-2.i16-s  | 0xF147 0X0020 |
+|0x0020 0xF147 | 2.i16-1.float-sb | 123456.00 | 1.float-2.i16-sb | 0x0020 0xF147 |
+|0x47F1 0x2000 | 2.i16-1.float-sw | 123456.00 | 1.float-2.i16-sw | 0x47F1 0x2000 |
 
 Notice that different byte and word orderings require the use of the appropriate FieldServer function move. Once the proper function move is selected, the data can be converted in both directions.
 
