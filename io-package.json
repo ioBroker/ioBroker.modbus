@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "6.0.0",
+    "version": "6.0.1",
     "news": {
+      "6.0.1": {
+        "en": "Better tooltips in settings",
+        "de": "Bessere Tooltips in Einstellungen",
+        "ru": "Лучшие инструменты в настройках",
+        "pt": "Melhores dicas de ferramentas nas configurações",
+        "nl": "Beter teltips in setting",
+        "fr": "Meilleurs outils dans les paramètres",
+        "it": "Migliori tooltips nelle impostazioni",
+        "es": "Mejores puntas de herramientas en la configuración",
+        "pl": "Lepsze opłaki w ustawie",
+        "uk": "Краще налаштування інструментів",
+        "zh-cn": "B. 环境中更好的工具ti"
+      },
       "6.0.0": {
         "en": "GUI packages updated\nAdded help for settings\nMinimal supported node.js version is 16",
         "de": "GUI-Pakete aktualisiert\nHilfe für Einstellungen hinzugefügt\nMinimal unterstützt node.js version is 16",
@@ -76,18 +89,6 @@
         "es": "ÚLTIMA HORA: Todos los caracteres de espacio serán reemplazados con guiones bajos ahora en las ID de objetos, no solo el primero.\nError de captura informado por centinela cuando se ingresa un puerto maestro no válido\nGUI migrada a mui-v5",
         "pl": "ŁAMANIE: Wszystkie znaki spacji zostaną teraz zastąpione podkreśleniami w identyfikatorach obiektów, nie tylko pierwszy.\nBłąd wyłapania zgłoszony przez wartę po wprowadzeniu nieprawidłowego portu głównego\nGUI migrowane do mui-v5",
         "zh-cn": "BREAKING：现在，对象 ID 中的所有空格字符都将替换为下划线，而不仅仅是第一个。\n输入无效的主端口时，哨兵报告的捕获错误\nGUI 迁移到 mui-v5"
-      },
-      "4.0.4": {
-        "en": "Prevent invalid state log",
-        "de": "Ungültiges Zustandsprotokoll verhindern",
-        "ru": "Предотвратить неверный журнал состояний",
-        "pt": "Impedir registro de estado inválido",
-        "nl": "Voorkom ongeldig statuslogboek",
-        "fr": "Empêcher le journal d'état invalide",
-        "it": "Impedisci registro di stato non valido",
-        "es": "Evitar registro de estado no válido",
-        "pl": "Zapobiegaj nieprawidłowemu dziennikowi stanu",
-        "zh-cn": "防止无效状态日志"
       }
     },
     "title": "ModBus",

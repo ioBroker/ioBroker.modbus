@@ -300,7 +300,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 6.0.1 (2023-10-30)
 * (bluefox) Better tooltips in settings
 
 ### 6.0.0 (2023-10-27)
