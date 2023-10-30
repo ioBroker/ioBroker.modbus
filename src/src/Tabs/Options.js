@@ -17,6 +17,7 @@ import {
     Box,
     FormHelperText,
     IconButton,
+    Tooltip,
 } from '@mui/material';
 
 import { Edit as EditIcon, Info as IconInfo } from '@mui/icons-material';
@@ -26,7 +27,6 @@ import { I18n } from '@iobroker/adapter-react-v5';
 import Utils from '../Components/Utils';
 import connectionInputs from '../data/optionsConnection';
 import generalInputs from '../data/optionsGeneral';
-import Tooltip from "@mui/material/Tooltip";
 
 const styles = theme => ({
     optionsSelect: {
@@ -62,6 +62,14 @@ const styles = theme => ({
         fontSize: 24,
     },
 });
+
+function text2react(text) {
+    if (!text.includes('\n')) {
+        return text;
+    }
+    const lines = text.split('\n');
+    return lines.map((line, i) => <p key={i}>{line}</p>);
+}
 
 class Options extends Component {
     constructor(props) {
@@ -199,7 +207,7 @@ class Options extends Component {
                             />
                             {input.help ? <FormHelperText className={this.props.classes.helperText}>{I18n.t(input.help)}</FormHelperText> : null}
                         </div>
-                        {input.tooltip ? <Tooltip title={I18n.t(input.tooltip)}>
+                        {input.tooltip ? <Tooltip title={text2react(I18n.t(input.tooltip))}>
                             <IconInfo />
                         </Tooltip> : null}
                     </FormControl>;
@@ -220,7 +228,7 @@ class Options extends Component {
                             </Select>
                         </FormControl>
                         {input.dimension ? I18n.t(input.dimension) : null}
-                        {input.tooltip ? <Tooltip title={I18n.t(input.tooltip)}>
+                        {input.tooltip ? <Tooltip title={text2react(I18n.t(input.tooltip))}>
                             <IconInfo />
                         </Tooltip> : null}
                     </Box>;
@@ -280,7 +288,7 @@ class Options extends Component {
                         InputProps={{endAdornment: input.dimension ? <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment> : null}}
                         onChange={e => this.changeParam(input.name, e.target.value)}
                     />
-                    {input.tooltip ? <Tooltip title={I18n.t(input.tooltip)}>
+                    {input.tooltip ? <Tooltip title={text2react(I18n.t(input.tooltip))}>
                         <IconInfo />
                     </Tooltip> : null}
                 </Box>;
