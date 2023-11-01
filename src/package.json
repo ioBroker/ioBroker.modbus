@@ -7,7 +7,7 @@
         "@mui/material": "5.14.16",
         "@mui/styles": "5.14.16",
         "@mui/icons-material": "^5.14.16",
-        "@sentry/browser": "^7.76.0",
+        "@sentry/browser": "^7.77.0",
         "babel-eslint": "^10.1.0",
         "@sentry/integrations": "^7.76.0",
         "notistack": "^3.0.1",
