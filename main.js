@@ -3,16 +3,16 @@
 /* jslint node: true */
 'use strict';
 
-const utils       = require('@iobroker/adapter-core');
+const utils = require('@iobroker/adapter-core');
 const adapterName = require('./package.json').name.split('.').pop();
-let modbus        = null;
-let SerialPort    = null;
+let modbus = null;
+let SerialPort = null;
 let fs;
 let adapter;
 
 function startAdapter(options) {
     options = options || {};
-    Object.assign(options, {name: adapterName, unload: stop});
+    Object.assign(options, { name: adapterName, unload: stop });
     adapter = new utils.Adapter(options);
 
     adapter.on('ready', () => {
@@ -38,11 +38,11 @@ function startAdapter(options) {
                                 adapter.sendTo(obj.from, obj.command, ports, obj.callback);
                             }).catch(err => {
                                 adapter.log.warn('Can not get Serial port list: ' + err);
-                                adapter.sendTo(obj.from, obj.command, [{path: 'Not available'}], obj.callback);
+                                adapter.sendTo(obj.from, obj.command, [{ path: 'Not available' }], obj.callback);
                             });
                         } else {
                             adapter.log.warn('Module serialport is not available');
-                            adapter.sendTo(obj.from, obj.command, [{path: 'Not available'}], obj.callback);
+                            adapter.sendTo(obj.from, obj.command, [{ path: 'Not available' }], obj.callback);
                         }
                     }
                     break;
@@ -94,8 +94,8 @@ function stop(callback) {
     adapter.terminate ? adapter.terminate() : process.exit()
 }
 
-let objects    = {};
-let enums      = {};
+let objects = {};
+let enums = {};
 
 function filterSerialPorts(path) {
     fs = fs || require('fs');
@@ -134,9 +134,9 @@ function listSerial(ports) {
                 }
                 adapter.log.info('Check ' + port + ' : ' + found);
 
-                !found && ports.push({path: port});
+                !found && ports.push({ path: port });
 
-                return {path: port};
+                return { path: port };
             });
     } catch (e) {
         if (require('os').platform() !== 'win32') {
@@ -204,43 +204,43 @@ function syncEnums(enumGroup, id, newEnumName, callback) {
     if (!found && newEnumName) {
         count++;
         addToEnum(newEnumName, id, () =>
-            !--count&& typeof callback === 'function' && callback());
+            !--count && typeof callback === 'function' && callback());
     }
 
     !count && typeof callback === 'function' && callback();
 }
 
 const typeItemsLen = {
-    'uint8be':    1,
-    'uint8le':    1,
-    'int8be':     1,
-    'int8le':     1,
-    'uint16be':   1,
-    'uint16le':   1,
-    'int16be':    1,
-    'int16le':    1,
-    'int16be1':   1,
-    'int16le1':   1,
-    'uint32be':   2,
-    'uint32le':   2,
-    'uint32sw':   2,
-    'uint32sb':   2,
-    'int32be':    2,
-    'int32le':    2,
-    'int32sw':    2,
-    'int32sb':    2,
-    'uint64be':   4,
-    'uint64le':   4,
-    'int64be':    4,
-    'int64le':    4,
-    'floatbe':    2,
-    'floatle':    2,
-    'floatsw':    2,
-    'floatsb':    2,
-    'doublebe':   4,
-    'doublele':   4,
-    'string':     0,
-    'stringle':   0,
+    'uint8be': 1,
+    'uint8le': 1,
+    'int8be': 1,
+    'int8le': 1,
+    'uint16be': 1,
+    'uint16le': 1,
+    'int16be': 1,
+    'int16le': 1,
+    'int16be1': 1,
+    'int16le1': 1,
+    'uint32be': 2,
+    'uint32le': 2,
+    'uint32sw': 2,
+    'uint32sb': 2,
+    'int32be': 2,
+    'int32le': 2,
+    'int32sw': 2,
+    'int32sb': 2,
+    'uint64be': 4,
+    'uint64le': 4,
+    'int64be': 4,
+    'int64le': 4,
+    'floatbe': 2,
+    'floatle': 2,
+    'floatsw': 2,
+    'floatsb': 2,
+    'doublebe': 4,
+    'doublele': 4,
+    'string': 0,
+    'stringle': 0,
 };
 
 const _rmap = {
@@ -279,6 +279,7 @@ const _dmap = {
     14: 14,
     15: 15
 };
+
 function address2alias(id, address, isDirect, offset) {
     if (typeof address === 'string') {
         address = parseInt(address, 10);
@@ -339,17 +340,17 @@ function prepareConfig(config) {
 
     let options = {
         config: {
-            type:                params.type || 'tcp',
-            slave:               params.slave,
-            alwaysUpdate:        params.alwaysUpdate,
-            round:               parseInt(params.round, 10) || 0,
-            timeout:             parseInt(params.timeout, 10) || 5000,
-            defaultDeviceId:     (params.deviceId === undefined || params.deviceId === null) ? 1 : (parseInt(params.deviceId, 10) || 0),
+            type: params.type || 'tcp',
+            slave: params.slave,
+            alwaysUpdate: params.alwaysUpdate,
+            round: parseInt(params.round, 10) || 0,
+            timeout: parseInt(params.timeout, 10) || 5000,
+            defaultDeviceId: (params.deviceId === undefined || params.deviceId === null) ? 1 : (parseInt(params.deviceId, 10) || 0),
             doNotIncludeAdrInId: params.doNotIncludeAdrInId,
-            preserveDotsInId:    params.preserveDotsInId,
-            writeInterval:       parseInt(params.writeInterval, 10) || 0,
+            preserveDotsInId: params.preserveDotsInId,
+            writeInterval: parseInt(params.writeInterval, 10) || 0,
             doNotUseWriteMultipleRegisters: params.doNotUseWriteMultipleRegisters === true || params.doNotUseWriteMultipleRegisters === 'true',
-            onlyUseWriteMultipleRegisters:  params.onlyUseWriteMultipleRegisters  === true || params.onlyUseWriteMultipleRegisters  === 'true',
+            onlyUseWriteMultipleRegisters: params.onlyUseWriteMultipleRegisters === true || params.onlyUseWriteMultipleRegisters === 'true',
         },
         devices: {}
     };
@@ -361,25 +362,26 @@ function prepareConfig(config) {
     }
 
     let deviceIds = [];
-    checkDeviceIds(options, config.disInputs,   deviceIds);
-    checkDeviceIds(options, config.coils,       deviceIds);
-    checkDeviceIds(options, config.inputRegs,   deviceIds);
+    checkDeviceIds(options, config.disInputs, deviceIds);
+    checkDeviceIds(options, config.coils, deviceIds);
+    checkDeviceIds(options, config.inputRegs, deviceIds);
     checkDeviceIds(options, config.holdingRegs, deviceIds);
     deviceIds.sort();
 
     // settings for master
     if (!options.config.slave) {
-        options.config.poll         = parseInt(params.poll, 10)         || 1000; // default is 1 second
-        options.config.recon        = parseInt(params.recon, 10)        || 60000;
+        options.config.poll = parseInt(params.poll, 10) || 1000; // default is 1 second
+        options.config.recon = parseInt(params.recon, 10) || 60000;
         if (options.config.recon < 1000) {
-           adapter.log.info('Slave Reconnect time set to 1000ms because was too small (' + options.config.recon + ')');
+            adapter.log.info('Slave Reconnect time set to 1000ms because was too small (' + options.config.recon + ')');
             options.config.recon = 1000;
         }
-        options.config.maxBlock     = parseInt(params.maxBlock, 10)     || 100;
+        options.config.maxBlock = parseInt(params.maxBlock, 10) || 100;
         options.config.maxBoolBlock = parseInt(params.maxBoolBlock, 10) || 128;
-        options.config.pulsetime    = parseInt(params.pulsetime         || 1000);
-        options.config.waitTime     = (params.waitTime === undefined) ? 50 : (parseInt(params.waitTime, 10) || 0);
+        options.config.pulsetime = parseInt(params.pulsetime || 1000);
+        options.config.waitTime = (params.waitTime === undefined) ? 50 : (parseInt(params.waitTime, 10) || 0);
         options.config.readInterval = parseInt(params.readInterval, 10) || 0;
+        options.config.keepAliveInterval = parseInt(params.keepAliveInterval, 10) || 0;
     }
 
     if (params.type === 'tcp' || params.type === 'tcprtu') {
@@ -389,11 +391,11 @@ function prepareConfig(config) {
         };
     } else {
         options.config.serial = {
-            comName:    params.comName,
-            baudRate:   params.baudRate,
-            dataBits:   params.dataBits,
-            stopBits:   params.stopBits,
-            parity:     params.parity
+            comName: params.comName,
+            baudRate: params.baudRate,
+            dataBits: params.dataBits,
+            stopBits: params.stopBits,
+            parity: params.parity
         };
     }
 
@@ -403,81 +405,81 @@ function prepareConfig(config) {
         let device = options.devices[deviceId];
         if (options.config.slave) {
             device.disInputs = {
-                fullIds:       [],
-                changed:       true,
-                addressHigh:   0,
-                addressLow:    0,
-                values:        [],
-                mapping:       {},
-                offset:        parseInt(params.disInputsOffset,   10)
+                fullIds: [],
+                changed: true,
+                addressHigh: 0,
+                addressLow: 0,
+                values: [],
+                mapping: {},
+                offset: parseInt(params.disInputsOffset, 10)
             };
 
             device.coils = {
-                fullIds:       [],
-                changed:       true,
-                addressHigh:   0,
-                addressLow:    0,
-                values:        [],
-                mapping:       {},
-                offset:        parseInt(params.coilsOffset,   10)
+                fullIds: [],
+                changed: true,
+                addressHigh: 0,
+                addressLow: 0,
+                values: [],
+                mapping: {},
+                offset: parseInt(params.coilsOffset, 10)
             };
 
             device.inputRegs = {
-                fullIds:       [],
-                changed:       true,
-                addressHigh:   0,
-                addressLow:    0,
-                values:        [],
-                mapping:       {},
-                offset:        parseInt(params.inputRegsOffset,   10)
+                fullIds: [],
+                changed: true,
+                addressHigh: 0,
+                addressLow: 0,
+                values: [],
+                mapping: {},
+                offset: parseInt(params.inputRegsOffset, 10)
             };
 
             device.holdingRegs = {
-                fullIds:       [],
-                changed:       true,
-                addressHigh:   0,
-                addressLow:    0,
-                values:        [],
-                mapping:       {},
-                offset:        parseInt(params.holdingRegsOffset,   10)
+                fullIds: [],
+                changed: true,
+                addressHigh: 0,
+                addressLow: 0,
+                values: [],
+                mapping: {},
+                offset: parseInt(params.holdingRegsOffset, 10)
             };
         } else {
             device.disInputs = {
                 deviceId,
-                addressLow:  0,
-                length:      0,
-                config:      [],
-                blocks:      [],
-                offset:      parseInt(params.disInputsOffset,   10)
+                addressLow: 0,
+                length: 0,
+                config: [],
+                blocks: [],
+                offset: parseInt(params.disInputsOffset, 10)
             };
 
             device.coils = {
                 deviceId,
-                addressLow:  0,
-                length:      0,
-                config:      [],
-                blocks:      [],
+                addressLow: 0,
+                length: 0,
+                config: [],
+                blocks: [],
                 cyclicWrite: [], // only holdingRegs and coils
-                offset:      parseInt(params.coilsOffset,   10)
+                offset: parseInt(params.coilsOffset, 10)
             };
 
             device.inputRegs = {
                 deviceId,
-                addressLow:  0,
-                length:      0,
-                config:      [],
-                blocks:      [],
-                offset:      parseInt(params.inputRegsOffset,   10)
+                addressLow: 0,
+                length: 0,
+                config: [],
+                blocks: [],
+                offset: parseInt(params.inputRegsOffset, 10)
             };
 
             device.holdingRegs = {
                 deviceId,
-                addressLow:  0,
-                length:      0,
-                config:      [],
-                blocks:      [],
+                addressLow: 0,
+                length: 0,
+                config: [],
+                blocks: [],
                 cyclicWrite: [], // only holdingRegs and coils
-                offset:      parseInt(params.holdingRegsOffset,   10)
+                offset: parseInt(params.holdingRegsOffset, 10)
             };
         }
     }
@@ -517,17 +519,16 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects,
             _id: regs[i].id,
             type: 'state',
             common: {
-                name:    regs[i].description,
-                role:    regs[i].role,
-                type:    regType === 'coils' || regType === 'disInputs' ? 'boolean' :
-                    ((regs[i].type === 'string' || regs[i].type === 'stringle') ? 'string' : 'number'),
-                read:    true,
-                write:   !!options.params.slave || regType === 'coils' || regType === 'holdingRegs',
-                def:     regType === 'coils' || regType === 'disInputs' ? false : ((regs[i].type === 'string' || regs[i].type === 'stringle') ? '' : 0)
+                name: regs[i].description,
+                role: regs[i].role,
+                type: regType === 'coils' || regType === 'disInputs' ? 'boolean' : ((regs[i].type === 'string' || regs[i].type === 'stringle') ? 'string' : 'number'),
+                read: true,
+                write: !!options.params.slave || regType === 'coils' || regType === 'holdingRegs',
+                def: regType === 'coils' || regType === 'disInputs' ? false : ((regs[i].type === 'string' || regs[i].type === 'stringle') ? '' : 0)
             },
             native: {
-                regType:  regType,
-                address:  regs[i].address,
+                regType: regType,
+                address: regs[i].address,
                 deviceId: regs[i].deviceId
             }
         };
@@ -535,13 +536,13 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects,
         if (regType === 'coils') {
             objects[id].native.poll = regs[i].poll;
             objects[id].common.read = !!regs[i].poll;
-            objects[id].native.wp   = regs[i].wp;
+            objects[id].native.wp = regs[i].wp;
         } else
         if (regType === 'inputRegs' || regType === 'holdingRegs') {
-            objects[id].common.unit   = regs[i].unit || '';
+            objects[id].common.unit = regs[i].unit || '';
 
-            objects[id].native.type   = regs[i].type;
-            objects[id].native.len    = regs[i].len;
+            objects[id].native.type = regs[i].type;
+            objects[id].native.len = regs[i].len;
             objects[id].native.offset = regs[i].offset;
             objects[id].native.factor = regs[i].factor;
             if (regType === 'holdingRegs') {
@@ -654,7 +655,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
     const config = result.config;
 
     if (config && config.length) {
-        result.addressLow  = 0xFFFFFFFF;
+        result.addressLow = 0xFFFFFFFF;
         result.addressHigh = 0;
 
         for (let i = config.length - 1; i >= 0; i--) {
@@ -670,7 +671,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
             }
 
             if (!isBools) {
-                config[i].type   = config[i].type || 'uint16be';
+                config[i].type = config[i].type || 'uint16be';
                 if (typeof config[i].offset === 'string') {
                     config[i].offset = config[i].offset.replace(',', '.');
                 }
@@ -704,15 +705,15 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
 
         const maxBlock = isBools ? localOptions.maxBoolBlock : localOptions.maxBlock;
         let lastAddress = null;
-        let startIndex  = 0;
-        let blockStart  = 0;
+        let startIndex = 0;
+        let blockStart = 0;
         let i;
         for (i = 0; i < config.length; i++) {
             if (config[i].deviceId !== deviceId) continue;
 
             if (lastAddress === null) {
-                startIndex  = i;
-                blockStart  = config[i].address;
+                startIndex = i;
+                blockStart = config[i].address;
                 lastAddress = blockStart + config[i].len;
             }
 
@@ -720,16 +721,16 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
             if (result.blocks) {
                 if ((config[i].address - lastAddress > 10 && config[i].len < 10) || (lastAddress - blockStart >= maxBlock)) {
                     if (!result.blocks.map(obj => obj.start).includes(blockStart)) {
-                        result.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+                        result.blocks.push({ start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i });
                     }
-                    blockStart  = config[i].address;
-                    startIndex  = i;
+                    blockStart = config[i].address;
+                    startIndex = i;
                 }
             }
             lastAddress = config[i].address + config[i].len;
         }
         if (lastAddress && lastAddress - blockStart && result.blocks && !result.blocks.map(obj => obj.start).includes(blockStart)) {
-            result.blocks.push({start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i});
+            result.blocks.push({ start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i });
         }
 
         if (config.length) {
@@ -769,14 +770,14 @@ function parseConfig(callback) {
 
     // not for master or slave
     const localOptions = {
-        multiDeviceId:           options.config.multiDeviceId,
-        showAliases:             params.showAliases             === true || params.showAliases             === 'true',
+        multiDeviceId: options.config.multiDeviceId,
+        showAliases: params.showAliases === true || params.showAliases === 'true',
         doNotRoundAddressToWord: params.doNotRoundAddressToWord === true || params.doNotRoundAddressToWord === 'true',
-        directAddresses:         params.directAddresses         === true || params.directAddresses         === 'true',
-        maxBlock:                options.config.maxBlock,
-        maxBoolBlock:            options.config.maxBoolBlock,
-        doNotIncludeAdrInId:     params.doNotIncludeAdrInId     === true || params.doNotIncludeAdrInId     === 'true',
-        preserveDotsInId:        params.preserveDotsInId        === true || params.preserveDotsInId        === 'true',
+        directAddresses: params.directAddresses === true || params.directAddresses === 'true',
+        maxBlock: options.config.maxBlock,
+        maxBoolBlock: options.config.maxBoolBlock,
+        doNotIncludeAdrInId: params.doNotIncludeAdrInId === true || params.doNotIncludeAdrInId === 'true',
+        preserveDotsInId: params.preserveDotsInId === true || params.preserveDotsInId === 'true',
     };
 
     adapter.getForeignObjects(adapter.namespace + '.*', async (err, list) => {
@@ -798,14 +799,14 @@ function parseConfig(callback) {
             let deviceId = parseInt(_deviceId, 10);
 
             // Discrete inputs
-            assignIds(deviceId, adapter.config.disInputs,   device.disInputs,   'discreteInputs',   'disInputs',   localOptions);
-            assignIds(deviceId, adapter.config.coils,       device.coils,       'coils',            'coils',       localOptions);
-            assignIds(deviceId, adapter.config.inputRegs,   device.inputRegs,   'inputRegisters',   'inputRegs',   localOptions);
+            assignIds(deviceId, adapter.config.disInputs, device.disInputs, 'discreteInputs', 'disInputs', localOptions);
+            assignIds(deviceId, adapter.config.coils, device.coils, 'coils', 'coils', localOptions);
+            assignIds(deviceId, adapter.config.inputRegs, device.inputRegs, 'inputRegisters', 'inputRegs', localOptions);
             assignIds(deviceId, adapter.config.holdingRegs, device.holdingRegs, 'holdingRegisters', 'holdingRegs', localOptions);
 
-            device.disInputs.config   = adapter.config.disInputs.  filter(e =>           e.deviceId === deviceId);
-            device.coils.config       = adapter.config.coils.      filter(e => e.poll && e.deviceId === deviceId);
-            device.inputRegs.config   = adapter.config.inputRegs.  filter(e =>           e.deviceId === deviceId);
+            device.disInputs.config = adapter.config.disInputs.filter(e => e.deviceId === deviceId);
+            device.coils.config = adapter.config.coils.filter(e => e.poll && e.deviceId === deviceId);
+            device.inputRegs.config = adapter.config.inputRegs.filter(e => e.deviceId === deviceId);
             device.holdingRegs.config = adapter.config.holdingRegs.filter(e => e.poll && e.deviceId === deviceId);
 
             // ----------- remember poll values --------------------------
@@ -821,7 +822,7 @@ function parseConfig(callback) {
                             role: '',
                             write: false,
                             read: true,
-                            def:  0,
+                            def: 0,
                             unit: 'ms'
                         },
                         native: {}
@@ -831,21 +832,21 @@ function parseConfig(callback) {
             }
 
             // Discrete inputs
-            iterateAddresses(true,  deviceId, device.disInputs,   'discreteInputs',   'disInputs',   localOptions);
-            iterateAddresses(true,  deviceId, device.coils,       'coils',            'coils',       localOptions);
-            iterateAddresses(false, deviceId, device.inputRegs,   'inputRegisters',   'inputRegs',   localOptions);
+            iterateAddresses(true, deviceId, device.disInputs, 'discreteInputs', 'disInputs', localOptions);
+            iterateAddresses(true, deviceId, device.coils, 'coils', 'coils', localOptions);
+            iterateAddresses(false, deviceId, device.inputRegs, 'inputRegisters', 'inputRegs', localOptions);
             iterateAddresses(false, deviceId, device.holdingRegs, 'holdingRegisters', 'holdingRegs', localOptions);
 
             // ------------- create states and objects ----------------------------
-            checkObjects(adapter.config, 'disInputs',   'discreteInputs',   'Discrete inputs',   tasks, newObjects, deviceId);
-            checkObjects(adapter.config, 'coils',       'coils',            'Coils',             tasks, newObjects, deviceId);
-            checkObjects(adapter.config, 'inputRegs',   'inputRegisters',   'Input registers',   tasks, newObjects, deviceId);
+            checkObjects(adapter.config, 'disInputs', 'discreteInputs', 'Discrete inputs', tasks, newObjects, deviceId);
+            checkObjects(adapter.config, 'coils', 'coils', 'Coils', tasks, newObjects, deviceId);
+            checkObjects(adapter.config, 'inputRegs', 'inputRegisters', 'Input registers', tasks, newObjects, deviceId);
             checkObjects(adapter.config, 'holdingRegs', 'holdingRegisters', 'Holding registers', tasks, newObjects, deviceId);
 
             if (options.config.slave) {
-                device.disInputs.fullIds   = adapter.config.disInputs  .filter(e => e.deviceId === deviceId).map(e => e.fullId);
-                device.coils.fullIds       = adapter.config.coils      .filter(e => e.deviceId === deviceId).map(e => e.fullId);
-                device.inputRegs.fullIds   = adapter.config.inputRegs  .filter(e => e.deviceId === deviceId).map(e => e.fullId);
+                device.disInputs.fullIds = adapter.config.disInputs.filter(e => e.deviceId === deviceId).map(e => e.fullId);
+                device.coils.fullIds = adapter.config.coils.filter(e => e.deviceId === deviceId).map(e => e.fullId);
+                device.inputRegs.fullIds = adapter.config.inputRegs.filter(e => e.deviceId === deviceId).map(e => e.fullId);
                 device.holdingRegs.fullIds = adapter.config.holdingRegs.filter(e => e.deviceId === deviceId).map(e => e.fullId);
             }
 
@@ -872,12 +873,12 @@ function parseConfig(callback) {
             obj = {
                 type: 'state',
                 common: {
-                    name:  options.config.slave ? 'IPs of connected partners' : 'If connected to slave',
-                    role:  'indicator.connected',
+                    name: options.config.slave ? 'IPs of connected partners' : 'If connected to slave',
+                    role: 'indicator.connected',
                     write: false,
-                    read:  true,
-                    type:  options.config.slave ? 'string' : 'boolean',
-                    def:   options.config.slave ? '' : false,
+                    read: true,
+                    type: options.config.slave ? 'string' : 'boolean',
+                    def: options.config.slave ? '' : false,
                 },
                 native: {}
             };
@@ -885,12 +886,12 @@ function parseConfig(callback) {
         } else if (options.config.slave && obj.common.type !== 'string') {
             obj.common.type = 'string';
             obj.common.name = 'Connected masters';
-            obj.common.def  = '';
+            obj.common.def = '';
             await adapter.setObjectAsync('info.connection', obj);
         } else if (!options.config.slave && obj.common.type !== 'boolean') {
             obj.common.type = 'boolean';
             obj.common.name = 'If connected to slave';
-            obj.common.def  = false;
+            obj.common.def = false;
             await adapter.setObjectAsync('info.connection', obj);
         }
         await adapter.setStateAsync('info.connection', adapter.config.params.slave ? '' : false, true);
