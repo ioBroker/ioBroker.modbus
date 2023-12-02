@@ -1,8 +1,10 @@
 {
   "common": {
     "name": "modbus",
-    "version": "5.0.11",
+    "version": "5.0.12",
     "news": {
+      "5.0.12": {
+      },{
       "5.0.11": {
         "en": "fixed reconnect of serial communication",
         "de": "feste wiederverbindung der seriellen kommunikation",
