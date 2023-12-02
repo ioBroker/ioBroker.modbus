@@ -114,5 +114,19 @@
   "Slave IP address": "Dirección IP esclava",
   "Listen on all IPs": "Escuche en todas las direcciones IP",
   "Read interval": "Intervalo de lectura",
-  "Slave ID": "ID de esclavo"
+  "Slave ID": "ID de esclavo",
+  "aliases_help": "Normalmente, todos los registros pueden tener direcciones de 0 a 65535. Al utilizar alias, puede definir campos de dirección virtuales para cada tipo de registros. Normalmente:\n- las entradas discretas son de 10001 a 20000\n- las bobinas son de 1 a 1000\n- los registros de entrada son del 30001 al 40000\n- los registros de tenencia son del 40001 al 60000\n\nCada alias se asignará internamente a la dirección, por ejemplo, 30011 se asignará al registro de entrada 10, y así sucesivamente.",
+  "doNotRoundAddressToWord_help": "Normalmente, las direcciones de las bobinas y las entradas discretas están alineadas a 16 bits. Las direcciones similares del 3 al 20 se alinearán del 0 al 32.\nSi esta opción está activa, las direcciones no estarán alineadas.",
+  "directAddresses_help": "Utilizado para entradas binarias y bobinas.\nSin este indicador, los bits se direccionarán desde: `0 => 15, 1 => 14, 2 => 13, ..., 15 => 0`.\nCon este flag activado los bits serán direccionados como: `0 => 0, 1 => 1, 2 => 2, ..., 15 => 15`.",
+  "doNotUseWriteMultipleRegisters_help": "Si el esclavo no admite el comando \"escribir registros múltiples\", puede activarlo para recibir advertencias cuando se escribirán los registros múltiples.",
+  "waitTime_help": "Tiempo de espera entre el sondeo de dos ID de dispositivo diferentes en milisegundos.",
+  "timeout_help": "Tiempo de espera para solicitudes de lectura en milisegundos. Si no se recibe respuesta de un esclavo en este tiempo, se terminará la conexión.",
+  "pulsetime_help": "Si se usa pulso para bobinas, esto define el intervalo en milisegundos de cuánto dura el pulso.",
+  "readInterval_help": "Retraso entre dos solicitudes de lectura en milisegundos. Predeterminado 0.",
+  "writeInterval_help": "Retraso entre dos solicitudes de escritura en milisegundos. Predeterminado 0.",
+  "alwaysUpdate_help": "Normalmente, si el valor no ha cambiado, no se escribirá en ioBroker.\nEste indicador permite actualizar la marca de tiempo del valor en cada ciclo.",
+  "doNotIncludeAdrInId_help": "No agregue la dirección en el ID de ioBroker generado. `10_Entrada10` frente a `Entrada10`.",
+  "preserveDotsInId_help": "Con esta bandera el Nombre será `Inputs.Input10`. Sin => `Inputs_Input10`.",
+  "poll_help": "Intervalo de sondeo cíclico en milisegundos (solo relevante para maestro)",
+  "recon_help": "Intervalo de reconexión en milisegundos. (Sólo relevante para el maestro)\nSi no se establece ninguna conexión, el maestro intentará conectarse cada X milisegundos."
 }

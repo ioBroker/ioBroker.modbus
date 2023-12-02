@@ -313,7 +313,6 @@ const RegisterTable = props => {
             </Table>
         </div>
         {tsvDialogOpen ? <TsvDialog
-            open={true}
             save={props.changeData}
             onClose={() => setTsvDialogOpen(false)}
             data={props.data}

@@ -2,23 +2,27 @@
     {
         "name": "showAliases",
         "type": "checkbox",
-        "title": "Use aliases as address"
+        "title": "Use aliases as address",
+        "tooltip": "aliases_help"
     },
     {
         "name": "directAddresses",
         "type": "checkbox",
-        "title": "Use direct addresses by aliases"
+        "title": "Use direct addresses by aliases",
+        "tooltip": "directAddresses_help"
     },
     {
         "name": "doNotRoundAddressToWord",
         "type": "checkbox",
-        "title": "Do not align addresses to word"
+        "title": "Do not align addresses to word",
+        "tooltip": "doNotRoundAddressToWord_help"
     },
     {
         "name": "doNotUseWriteMultipleRegisters",
         "type": "checkbox",
         "title": "Do not use \"Write multiple registers\"",
-        "help": "Write only with FC5/FC6"
+        "help": "Write only with FC5/FC6",
+        "tooltip": "doNotUseWriteMultipleRegisters_help"
     },
     {
         "name": "onlyUseWriteMultipleRegisters",
@@ -35,31 +39,36 @@
         "name": "poll",
         "type": "number",
         "title": "Poll delay",
-        "dimension": "ms"
+        "dimension": "ms",
+        "tooltip": "poll_help"
     },
     {
         "name": "recon",
         "type": "number",
         "title": "Reconnect time",
-        "dimension": "ms"
+        "dimension": "ms",
+        "tooltip": "recon_help"
     },
     {
         "name": "timeout",
         "type": "number",
         "title": "Read timeout",
-        "dimension": "ms"
+        "dimension": "ms",
+        "tooltip": "timeout_help"
     },
     {
         "name": "pulsetime",
         "type": "number",
         "title": "Pulse time",
-        "dimension": "ms"
+        "dimension": "ms",
+        "tooltip": "pulsetime_help"
     },
     {
         "name": "waitTime",
         "type": "number",
         "title": "Wait time",
-        "dimension": "ms"
+        "dimension": "ms",
+        "tooltip": "waitTime_help"
     },
     {
         "name": "maxBlock",
@@ -77,27 +86,32 @@
         "name": "readInterval",
         "type": "number",
         "title": "Read interval",
-        "dimension": "ms"
+        "dimension": "ms",
+        "tooltip": "readInterval_help"
     },
     {
         "name": "writeInterval",
         "type": "number",
         "title": "Write interval",
-        "dimension": "ms"
+        "dimension": "ms",
+        "tooltip": "writeInterval_help"
     },
     {
         "name": "alwaysUpdate",
         "type": "checkbox",
-        "title": "Update unchanged states"
+        "title": "Update unchanged states",
+        "tooltip": "alwaysUpdate_help"
     },
     {
         "name": "doNotIncludeAdrInId",
         "type": "checkbox",
-        "title": "do not include address in ID"
+        "title": "do not include address in ID",
+        "tooltip": "doNotIncludeAdrInId_help"
     },
     {
         "name": "preserveDotsInId",
         "type": "checkbox",
-        "title": "preserve dots in ID"
+        "title": "preserve dots in ID",
+        "tooltip": "preserveDotsInId_help"
     }
 ]

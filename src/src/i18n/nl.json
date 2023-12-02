@@ -114,5 +114,19 @@
   "Slave IP address": "Slave IP-adres",
   "Listen on all IPs": "Luister op alle IP's",
   "Read interval": "Lees interval",
-  "Slave ID": "Slave-ID"
+  "Slave ID": "Slave-ID",
+  "aliases_help": "Normaal gesproken kunnen alle registers een adres hebben van 0 tot 65535. Door aliassen te gebruiken, kunt u voor elk type register virtuele adresvelden definiëren. Normaal gesproken:\n- discrete ingangen lopen van 10001 tot 20000\n-spoelen zijn van 1 tot 1000\n- invoerregisters zijn van 30001 tot 40000\n- de bedrijfsregisters variëren van 40001 tot 60000\n\nElke alias wordt intern toegewezen aan het adres, bijvoorbeeld 30011 wordt toegewezen aan invoerregister 10, enzovoort.",
+  "doNotRoundAddressToWord_help": "Normaal gesproken zijn de spoelen en de discrete ingangsadressen uitgelijnd op 16 bit. Soortgelijke adressen van 3 tot 20 worden uitgelijnd op 0 tot 32.\nAls deze optie actief is, worden de adressen niet uitgelijnd.",
+  "directAddresses_help": "Gebruikt voor binaire ingangen en spoelen.\nZonder deze vlag worden de bits geadresseerd als volgt: `0 => 15, 1 => 14, 2 => 13, ..., 15 => 0`.\nAls deze vlag geactiveerd is, worden de bits geadresseerd als: `0 => 0, 1 => 1, 2 => 2, ..., 15 => 15`.",
+  "doNotUseWriteMultipleRegisters_help": "Als de slave de opdracht \"meerdere registers schrijven\" niet ondersteunt, kunt u deze activeren om waarschuwingen te krijgen wanneer de meerdere registers zullen worden geschreven.",
+  "waitTime_help": "Wachttijd tussen het opvragen van twee verschillende apparaat-ID's in milliseconden.",
+  "timeout_help": "Time-out voor leesverzoeken in milliseconden. Als er binnen deze tijd geen reactie van een slave wordt ontvangen, wordt de verbinding verbroken.",
+  "pulsetime_help": "Als puls wordt gebruikt voor spoelen, definieert dit het interval in milliseconden hoe lang de puls is.",
+  "readInterval_help": "Vertraging tussen twee leesverzoeken in milliseconden. Standaard 0.",
+  "writeInterval_help": "Vertraging tussen twee schrijfverzoeken in milliseconden. Standaard 0.",
+  "alwaysUpdate_help": "Normaal gesproken wordt de waarde niet in ioBroker geschreven als de waarde niet is gewijzigd.\nMet deze vlag kan de tijdstempel van de waarde bij elke cyclus worden bijgewerkt.",
+  "doNotIncludeAdrInId_help": "Voeg geen adres toe aan de gegenereerde ioBroker iD. `10_Invoer10` versus `Invoer10`.",
+  "preserveDotsInId_help": "Met deze vlag wordt de naam `Inputs.Input10`. Zonder => `Invoer_Invoer10`.",
+  "poll_help": "Cyclisch poll-interval in milliseconden (alleen relevant voor master)",
+  "recon_help": "Herverbindingsinterval in milliseconden. (Alleen relevant voor master)\nAls er geen verbinding tot stand is gebracht, probeert de master elke X milliseconden verbinding te maken."
 }

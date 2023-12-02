@@ -114,5 +114,19 @@
   "Slave IP address": "从IP地址",
   "Listen on all IPs": "侦听所有 IP",
   "Read interval": "读取间隔",
-  "Slave ID": "从机 ID"
+  "Slave ID": "从机 ID",
+  "aliases_help": "通常，所有寄存器的地址范围为 0 到 65535。通过使用别名，您可以为每种类型的寄存器定义虚拟地址字段。通常情况下：\n- 离散输入从 10001 到 20000\n- 线圈数从 1 到 1000\n- 输入寄存器从30001到40000\n- 保存寄存器从 40001 到 60000\n\n每个别名都将在内部映射到地址，例如，30011 将映射到输入寄存器 10，依此类推。",
+  "doNotRoundAddressToWord_help": "通常，线圈和离散输入地址对齐为 16 位。从 3 到 20 的类似地址将与 0 到 32 对齐。\n如果此选项处于活动状态，则地址将不会对齐。",
+  "directAddresses_help": "用于二进制输入和线圈。\n如果没有这个标志，这些位的寻址方式如下：`0 => 15, 1 => 14, 2 => 13, ..., 15 => 0`。\n激活此标志后，位将被寻址为：“0 => 0, 1 => 1, 2 => 2, ..., 15 => 15”。",
+  "doNotUseWriteMultipleRegisters_help": "如果从机不支持“写入多个寄存器”命令，您可以激活它以在多个寄存器将被写入时收到警告。",
+  "waitTime_help": "轮询两个不同设备 ID 之间的等待时间（以毫秒为单位）。",
+  "timeout_help": "读取请求的超时时间（以毫秒为单位）。如果这段时间内没有收到从站的响应，连接将被终止。",
+  "pulsetime_help": "如果脉冲用于线圈，则定义脉冲的时间间隔（以毫秒为单位）。",
+  "readInterval_help": "两个读取请求之间的延迟（以毫秒为单位）。默认 0。",
+  "writeInterval_help": "两个写入请求之间的延迟（以毫秒为单位）。默认 0。",
+  "alwaysUpdate_help": "通常情况下，如果该值没有改变，则不会写入ioBroker。\n该标志允许在每个周期更新值的时间戳。",
+  "doNotIncludeAdrInId_help": "不要在生成的 ioBroker iD 中添加地址。 “10_Input10”与“Input10”。",
+  "preserveDotsInId_help": "使用此标志，名称将为“Inputs.Input10”。没有 => `Inputs_Input10`。",
+  "poll_help": "循环轮询间隔（以毫秒为单位）（仅与主站相关）",
+  "recon_help": "重新连接间隔（以毫秒为单位）。 （仅与master相关）\n如果没有建立连接，master 将每隔 X 毫秒尝试连接。"
 }
