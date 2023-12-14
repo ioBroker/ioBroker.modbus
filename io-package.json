@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "6.0.1",
+    "version": "6.1.0",
     "news": {
+      "6.1.0": {
+        "en": "Implement the connection keepAlive",
+        "de": "Implementieren der Verbindung halten Alive",
+        "ru": "Внедрить соединение держать Живой",
+        "pt": "Implementar a conexão manter Vivo",
+        "nl": "Impliceer de connectie Levend",
+        "fr": "Mettre en œuvre la connexion Alive",
+        "it": "Implementare la connessione mantenere Vivo",
+        "es": "Implementar la conexión Alive",
+        "pl": "Umożliwia to, że połączenie zachowuje połączenie. Alive",
+        "uk": "Реалізація з'єднання тримати Напляскване",
+        "zh-cn": "执行联络系统 活 活"
+      },
       "6.0.1": {
         "en": "Better tooltips in settings",
         "de": "Bessere Tooltips in Einstellungen",
@@ -77,18 +90,6 @@
         "es": "Solucionado el error con varios dispositivos.",
         "pl": "Naprawiono błąd z wieloma urządzeniami",
         "zh-cn": "修复了多设备的错误"
-      },
-      "5.0.0": {
-        "en": "BREAKING: All space characters will be replaced with underscores now in the Objects IDs, not only the first one.\nCatch error reported by sentry when invalid Master port is entered\nGUI migrated to mui-v5",
-        "de": "BREAKING: Alle Leerzeichen werden jetzt in den Objekt-IDs durch Unterstriche ersetzt, nicht nur die erste.\nVom Sentry gemeldeter Fangfehler, wenn ein ungültiger Master-Port eingegeben wird\nGUI auf mui-v5 migriert",
-        "ru": "ВАЖНО: теперь в идентификаторах объектов все символы пробела будут заменены символами подчеркивания, а не только первый.\nОшибка перехвата, о которой сообщает часовой, когда введен неверный главный порт\nГрафический интерфейс перенесен на mui-v5",
-        "pt": "QUEBRA: Todos os caracteres de espaço serão substituídos por sublinhados agora nos IDs de objetos, não apenas o primeiro.\nErro de captura relatado pela sentinela quando a porta mestre inválida é inserida\nGUI migrada para mui-v5",
-        "nl": "BREAKING: alle spatietekens worden nu vervangen door onderstrepingstekens in de object-ID's, niet alleen de eerste.\nVangfout gerapporteerd door schildwacht wanneer ongeldige hoofdpoort wordt ingevoerd\nGUI gemigreerd naar mui-v5",
-        "fr": "BREAKING : Tous les caractères d'espacement seront désormais remplacés par des traits de soulignement dans les ID d'objets, et pas seulement le premier.\nErreur de capture signalée par la sentinelle lorsque le port maître invalide est entré\nInterface graphique migrée vers mui-v5",
-        "it": "INTERRUZIONE: tutti i caratteri spazio verranno sostituiti con trattini bassi ora negli ID oggetti, non solo il primo.\nErrore di cattura segnalato dalla sentinella quando viene immessa una porta master non valida\nLa GUI è migrata a mui-v5",
-        "es": "ÚLTIMA HORA: Todos los caracteres de espacio serán reemplazados con guiones bajos ahora en las ID de objetos, no solo el primero.\nError de captura informado por centinela cuando se ingresa un puerto maestro no válido\nGUI migrada a mui-v5",
-        "pl": "ŁAMANIE: Wszystkie znaki spacji zostaną teraz zastąpione podkreśleniami w identyfikatorach obiektów, nie tylko pierwszy.\nBłąd wyłapania zgłoszony przez wartę po wprowadzeniu nieprawidłowego portu głównego\nGUI migrowane do mui-v5",
-        "zh-cn": "BREAKING：现在，对象 ID 中的所有空格字符都将替换为下划线，而不仅仅是第一个。\n输入无效的主端口时，哨兵报告的捕获错误\nGUI 迁移到 mui-v5"
       }
     },
     "title": "ModBus",
@@ -137,50 +138,56 @@
     "adminUI": {
       "config": "materialize"
     },
-    "dependencies": [{
-      "js-controller": ">=2.0.0"
-    }],
-    "globalDependencies": [{
-      "admin": ">=5.1.28"
-    }],
-    "messages": [{
-      "condition": {
-        "operand": "and",
-        "rules": [
-          "oldVersion<5.0.0",
-          "newVersion>=5.0.0"
+    "dependencies": [
+      {
+        "js-controller": ">=2.0.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=5.1.28"
+      }
+    ],
+    "messages": [
+      {
+        "condition": {
+          "operand": "and",
+          "rules": [
+            "oldVersion<5.0.0",
+            "newVersion>=5.0.0"
+          ]
+        },
+        "title": {
+          "en": "Objects IDs will change with update!",
+          "de": "Objekt-IDs ändern sich mit dem Update!",
+          "ru": "ID объектов изменятся с обновлением!",
+          "pt": "Os IDs de objetos mudarão com a atualização!",
+          "nl": "Object-ID's veranderen met de update!",
+          "fr": "Les ID d'objets changeront avec la mise à jour !",
+          "it": "Gli ID degli oggetti cambieranno con l'aggiornamento!",
+          "es": "¡Los ID de los objetos cambiarán con la actualización!",
+          "pl": "Identyfikatory obiektów zmienią się wraz z aktualizacją!",
+          "zh-cn": "对象 ID 会随着更新而改变！"
+        },
+        "text": {
+          "en": "This update makes sure that all space characters are correctly replaced by underscores on Object-IDs. This means that they will change after this update if you use more then one space in the names of your registers. You need to manually delete the old Object names.",
+          "de": "Dieses Update stellt sicher, dass alle Leerzeichen bei Objekt-IDs korrekt durch Unterstriche ersetzt werden. Das bedeutet, dass sie sich nach diesem Update ändern, wenn mehr als ein Leerzeichen im Namen der Register verwendet wird. Alte Objektnamen müssen manuell gelöscht werden.",
+          "ru": "Это обновление обеспечивает правильную замену всех символов пробела символами подчеркивания в идентификаторах объектов. Это означает, что они изменятся после этого обновления, если вы используете более одного пробела в именах ваших регистров. Вам необходимо вручную удалить старые имена объектов.",
+          "pt": "Essa atualização garante que todos os caracteres de espaço sejam substituídos corretamente por sublinhados em IDs de objeto. Isso significa que eles serão alterados após esta atualização se você usar mais de um espaço nos nomes dos seus registros. Você precisa excluir manualmente os nomes de objetos antigos.",
+          "nl": "Deze update zorgt ervoor dat alle spatietekens correct worden vervangen door onderstrepingstekens op Object-ID's. Dit betekent dat ze na deze update zullen veranderen als u meer dan één spatie gebruikt in de namen van uw registers. U moet de oude objectnamen handmatig verwijderen.",
+          "fr": "Cette mise à jour garantit que tous les espaces sont correctement remplacés par des traits de soulignement sur les ID d'objet. Cela signifie qu'ils changeront après cette mise à jour si vous utilisez plus d'un espace dans les noms de vos registres. Vous devez supprimer manuellement les anciens noms d'objet.",
+          "it": "Questo aggiornamento assicura che tutti i caratteri spazio siano sostituiti correttamente da caratteri di sottolineatura sugli ID oggetto. Ciò significa che cambieranno dopo questo aggiornamento se utilizzi più di uno spazio nei nomi dei tuoi registri. È necessario eliminare manualmente i vecchi nomi degli oggetti.",
+          "es": "Esta actualización garantiza que todos los caracteres de espacio se reemplacen correctamente por guiones bajos en los ID de objetos. Esto significa que cambiarán después de esta actualización si usa más de un espacio en los nombres de sus registros. Debe eliminar manualmente los nombres de objetos antiguos.",
+          "pl": "Ta aktualizacja zapewnia, że wszystkie znaki spacji są poprawnie zastępowane podkreśleniami w identyfikatorach obiektów. Oznacza to, że zmienią się one po tej aktualizacji, jeśli użyjesz więcej niż jednej spacji w nazwach swoich rejestrów. Musisz ręcznie usunąć stare nazwy obiektów.",
+          "zh-cn": "此更新确保所有空格字符都正确替换为对象 ID 上的下划线。这意味着如果您在寄存器名称中使用超过一个空格，它们将在此更新后更改。您需要手动删除旧的对象名称。"
+        },
+        "level": "warn",
+        "buttons": [
+          "agree",
+          "cancel"
         ]
-      },
-      "title": {
-        "en": "Objects IDs will change with update!",
-        "de": "Objekt-IDs ändern sich mit dem Update!",
-        "ru": "ID объектов изменятся с обновлением!",
-        "pt": "Os IDs de objetos mudarão com a atualização!",
-        "nl": "Object-ID's veranderen met de update!",
-        "fr": "Les ID d'objets changeront avec la mise à jour !",
-        "it": "Gli ID degli oggetti cambieranno con l'aggiornamento!",
-        "es": "¡Los ID de los objetos cambiarán con la actualización!",
-        "pl": "Identyfikatory obiektów zmienią się wraz z aktualizacją!",
-        "zh-cn": "对象 ID 会随着更新而改变！"
-      },
-      "text": {
-        "en": "This update makes sure that all space characters are correctly replaced by underscores on Object-IDs. This means that they will change after this update if you use more then one space in the names of your registers. You need to manually delete the old Object names.",
-        "de": "Dieses Update stellt sicher, dass alle Leerzeichen bei Objekt-IDs korrekt durch Unterstriche ersetzt werden. Das bedeutet, dass sie sich nach diesem Update ändern, wenn mehr als ein Leerzeichen im Namen der Register verwendet wird. Alte Objektnamen müssen manuell gelöscht werden.",
-        "ru": "Это обновление обеспечивает правильную замену всех символов пробела символами подчеркивания в идентификаторах объектов. Это означает, что они изменятся после этого обновления, если вы используете более одного пробела в именах ваших регистров. Вам необходимо вручную удалить старые имена объектов.",
-        "pt": "Essa atualização garante que todos os caracteres de espaço sejam substituídos corretamente por sublinhados em IDs de objeto. Isso significa que eles serão alterados após esta atualização se você usar mais de um espaço nos nomes dos seus registros. Você precisa excluir manualmente os nomes de objetos antigos.",
-        "nl": "Deze update zorgt ervoor dat alle spatietekens correct worden vervangen door onderstrepingstekens op Object-ID's. Dit betekent dat ze na deze update zullen veranderen als u meer dan één spatie gebruikt in de namen van uw registers. U moet de oude objectnamen handmatig verwijderen.",
-        "fr": "Cette mise à jour garantit que tous les espaces sont correctement remplacés par des traits de soulignement sur les ID d'objet. Cela signifie qu'ils changeront après cette mise à jour si vous utilisez plus d'un espace dans les noms de vos registres. Vous devez supprimer manuellement les anciens noms d'objet.",
-        "it": "Questo aggiornamento assicura che tutti i caratteri spazio siano sostituiti correttamente da caratteri di sottolineatura sugli ID oggetto. Ciò significa che cambieranno dopo questo aggiornamento se utilizzi più di uno spazio nei nomi dei tuoi registri. È necessario eliminare manualmente i vecchi nomi degli oggetti.",
-        "es": "Esta actualización garantiza que todos los caracteres de espacio se reemplacen correctamente por guiones bajos en los ID de objetos. Esto significa que cambiarán después de esta actualización si usa más de un espacio en los nombres de sus registros. Debe eliminar manualmente los nombres de objetos antiguos.",
-        "pl": "Ta aktualizacja zapewnia, że wszystkie znaki spacji są poprawnie zastępowane podkreśleniami w identyfikatorach obiektów. Oznacza to, że zmienią się one po tej aktualizacji, jeśli użyjesz więcej niż jednej spacji w nazwach swoich rejestrów. Musisz ręcznie usunąć stare nazwy obiektów.",
-        "zh-cn": "此更新确保所有空格字符都正确替换为对象 ID 上的下划线。这意味着如果您在寄存器名称中使用超过一个空格，它们将在此更新后更改。您需要手动删除旧的对象名称。"
-      },
-      "level": "warn",
-      "buttons": [
-        "agree",
-        "cancel"
-      ]
-    }]
+      }
+    ]
   },
   "native": {
     "params": {
@@ -223,7 +230,8 @@
     "inputRegs": [],
     "holdingRegs": []
   },
-  "instanceObjects": [{
+  "instanceObjects": [
+    {
       "_id": "",
       "type": "meta",
       "common": {
