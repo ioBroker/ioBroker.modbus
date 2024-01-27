@@ -177,10 +177,10 @@ This variable can be then later used in any formula for other parameters. E.g., 
 - `int32sb`  - `Signed 32 bit (Big Endian Byte Swap): AABBCCDD => DDCCBBAA`
 - `uint64be` - `Unsigned 64 bit (Big Endian): AABBCCDDEEFFGGHH => AABBCCDDEEFFGGHH`
 - `uint64le` - `Unsigned 64 bit (Little Endian): AABBCCDDEEFFGGHH => HHGGFFEEDDCCBBAA`
-- `uint8be`  - `Unsigned 8 bit (Big Endian): AA => AA`
-- `uint8le`  - `Unsigned 8 bit (Little Endian): AA => AA`
-- `int8be`   - `Signed 8 bit (Big Endian): AA => AA`
-- `int8le`   - `Signed 8 bit (Little Endian): AA => AA`
+- `uint8be`  - `Unsigned 8 bit (Big Endian): AABB => BB`
+- `uint8le`  - `Unsigned 8 bit (Little Endian): AABB => AA`
+- `int8be`   - `Signed 8 bit (Big Endian): AABB => BB`
+- `int8le`   - `Signed 8 bit (Little Endian): AABB => AA`
 - `floatbe`  - `Float (Big Endian): AABBCCDD => AABBCCDD`
 - `floatle`  - `Float (Little Endian): AABBCCDD => DDCCBBAA`
 - `floatsw`  - `Float (Big Endian Word Swap): AABBCCDD => CCDDAABB`
