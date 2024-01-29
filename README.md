@@ -303,7 +303,8 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### x.x.x (2024-01-28)
+
+### **WORK IN PROGRESS**
 * (PLCHome) String based on 16 bit values big endian as well as little endian
 * (PLCHome) Raw data as a hex string
 * (PLCHome) Fix issue stringle was always converted to number for slave
