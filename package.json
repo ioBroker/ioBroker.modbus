@@ -44,7 +44,7 @@
     "@alcalzone/release-script-plugin-license": "^3.7.0",
     "gulp": "^4.0.2",
     "mocha": "^10.3.0",
-    "chai": "^4.3.10",
+    "chai": "^5.1.0",
     "nan": "2.18.0",
     "modbus-stack": "^0.2.1"
   },
