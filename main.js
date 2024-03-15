@@ -241,6 +241,9 @@ const typeItemsLen = {
     'doublele': 4,
     'string': 0,
     'stringle': 0,
+    'string16': 0,
+    'string16le': 0,
+    'rawhex': 0
 };
 
 const _rmap = {
@@ -521,10 +524,10 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects,
             common: {
                 name: regs[i].description,
                 role: regs[i].role,
-                type: regType === 'coils' || regType === 'disInputs' ? 'boolean' : ((regs[i].type === 'string' || regs[i].type === 'stringle') ? 'string' : 'number'),
+                type: regType === 'coils' || regType === 'disInputs' ? 'boolean' : (['string', 'stringle', 'string16', 'string16le', 'rawhex'].includes(regs[i].type) ? 'string' : 'number'),
                 read: true,
                 write: !!options.params.slave || regType === 'coils' || regType === 'holdingRegs',
-                def: regType === 'coils' || regType === 'disInputs' ? false : ((regs[i].type === 'string' || regs[i].type === 'stringle') ? '' : 0)
+                def: regType === 'coils' || regType === 'disInputs' ? false : (['string', 'stringle', 'string16', 'string16le', 'rawhex'].includes(regs[i].type) ? '' : 0)
             },
             native: {
                 regType: regType,
@@ -680,7 +683,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
                 }
                 config[i].offset = parseFloat(config[i].offset) || 0;
                 config[i].factor = parseFloat(config[i].factor) || 1;
-                if ((config[i].type === 'string') || (config[i].type === 'stringle')) {
+                if (['string', 'stringle', 'string16', 'string16le', 'rawhex'].includes(config[i].type)) {
                     config[i].len = parseInt(config[i].len, 10) || 1;
                 } else {
                     config[i].len = typeItemsLen[config[i].type];

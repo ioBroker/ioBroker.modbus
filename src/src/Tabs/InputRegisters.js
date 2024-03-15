@@ -67,7 +67,7 @@ class InputRegisters extends BaseRegisters {
 
     getDisable = (index, name) => {
         if (name === 'len') {
-            if (!['string', 'stringle'].includes(this.props.native[this.nativeField][index].type)) {
+            if (!['string', 'stringle', 'string16', 'string16le', 'rawhex'].includes(this.props.native[this.nativeField][index].type)) {
                 return true;
             }
         }
@@ -81,7 +81,7 @@ class InputRegisters extends BaseRegisters {
             if (['', 'uint16be', 'uint16le', 'int16be', 'int16le', 'uint8be', 'uint8le', 'int8be', 'int8le'].includes(value)) {
                 data[index].len = 1;
             }
-            if (['uint32be', 'uint32le', 'uint32sw', 'uint32sb', 'int32be', 'int32le', 'int32sw', 'int32sb', 'floatbe', 'floatle', 'floatsw', 'floatsb', 'string', 'stringle'].includes(value)) {
+            if (['uint32be', 'uint32le', 'uint32sw', 'uint32sb', 'int32be', 'int32le', 'int32sw', 'int32sb', 'floatbe', 'floatle', 'floatsw', 'floatsb', 'string', 'stringle', 'string16', 'string16le', 'rawhex'].includes(value)) {
                 data[index].len = 2;
             }
             if (['uint64be', 'uint64le', 'doublebe', 'doublele'].includes(value)) {
