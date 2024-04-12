@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "6.1.0",
+    "version": "6.2.0",
     "news": {
+      "6.2.0": {
+        "en": "String based on 16 bit values big endian as well as little endian\nRaw data as a hex string\nFix issue stringle was always converted to number for slave\nEnable formula for strings and hex strings",
+        "de": "String basierend auf 16 Bit Werten große Endian sowie wenig Endian\nDaten als Hexenzeichen\nFix Problem stringle wurde immer in Nummer für Slave umgewandelt\nFormel aktivieren für Strings und Hexenstrings",
+        "ru": "Стринг основан на 16-битных значениях большого кондиана, а также маленького кондиана\nСырные данные как строка гекса\nФикс-лидер всегда был конвертирован в число для раба\nВключить формулу для строк и строк",
+        "pt": "String baseado em 16 bits valores grande endian, bem como pouco endian\nDados brutos como uma cadeia hex\nCorrigir problema stringle foi sempre convertido em número para escravo\nHabilite a fórmula para strings e caracteres hex",
+        "nl": "Tekenreeks gebaseerd op 16 bit waarden grote endiaan en kleine endiaan\nRaw data als hex string\nFix probleem stringle werd altijd omgezet naar nummer voor slave\nFormule voor tekenreeksen en hextekenreeksen inschakelen",
+        "fr": "String basé sur les valeurs 16 bits grand endian ainsi que peu d'endian\nDonnées brutes comme une chaîne de caractères hexagonaux\nCorrection de la chaîne d'émission a toujours été convertie en nombre pour esclave\nActiver la formule pour les chaînes de caractères et les chaînes de caractères",
+        "it": "String basato su 16 bit valori big endian e piccolo endian\nDati grezzi come stringa esagonale\nFisso problema stringle è sempre stato convertito in numero per schiavo\nAttiva la formula per stringhe e stringhe di esagonale",
+        "es": "Pendiente basado en 16 valores de bits grandes endian así como poco endian\nDatos brutos como cadena hexagonal\nCorrección de números siempre se convirtió en número para esclavo\nActivar fórmula para cadenas y cadenas hexagonales",
+        "pl": "String w oparciu o 16-bitowe wartości duże endian, jak również małe endian\nSurowe dane jako ciąg szesnastkowy\nPoprawiony numer utworu był zawsze przeliczany na numer dla niewolnika\nWłącz formułę dla ciągów i ciągów hex",
+        "uk": "String на основі 16 біт значень великого ендоріана, а також маленького ендоріана\nСирі дані як рядок шестигранної\nВиправлено помилку питання stringle завжди перетворено на номер для раба\nУвімкнути формулу для рядків і шестигранних рядків",
+        "zh-cn": "基于 16 位值的字符串\n作为十六进制字符串的原始数据\nFix issue stringle 总是被转换成奴隶的数字\n启用字符串和十六进制字符串的公式"
+      },
       "6.1.0": {
         "en": "Implement the connection keepAlive",
         "de": "Implementieren der Verbindung halten Alive",
@@ -78,18 +91,6 @@
         "es": "Corregido las bobinas de lectura en modo esclavo\nTipo corregido de indicador de conexión",
         "pl": "Naprawdę cewki odczytywane są w trybie niewolnikowym\nKlasyczny typ połączenia wskaźnik",
         "zh-cn": "阅读奴隶模式\n更正的关联指标类型"
-      },
-      "5.0.3": {
-        "en": "Fixed error with mutli-devices",
-        "de": "Fehler bei Multi-Geräten behoben",
-        "ru": "Исправлена ошибка с mutli-устройствами",
-        "pt": "Corrigido erro com vários dispositivos",
-        "nl": "Vaste fout met meerdere apparaten",
-        "fr": "Correction d'une erreur avec plusieurs appareils",
-        "it": "Risolto errore con più dispositivi",
-        "es": "Solucionado el error con varios dispositivos.",
-        "pl": "Naprawiono błąd z wieloma urządzeniami",
-        "zh-cn": "修复了多设备的错误"
       }
     },
     "title": "ModBus",
