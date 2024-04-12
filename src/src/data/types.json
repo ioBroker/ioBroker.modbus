@@ -25,5 +25,8 @@
     {"value": "doublebe", "title": "Double (Big Endian)"},
     {"value": "doublele", "title": "Double (Little Endian)"},
     {"value": "string", "title": "String (Zero-end)"},
-    {"value": "stringle", "title": "String (Little Endian, Zero-end)"}
+    {"value": "stringle", "title": "String (Little Endian, Zero-end)"},
+    {"value": "string16", "title": "String 16 bit (Zero-end)"},
+    {"value": "string16le", "title": "String 16 bit (Little Endian, Zero-end)"},
+    {"value": "rawhex", "title": "String with value in hex representation"}
 ]
