@@ -303,7 +303,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 6.2.1 (2024-04-16)
 * (PLCHome) Warning regarding scale factor due to incorrect check: "Calculation of a scaleFactor which is based on another scaleFactor seems strange."
 
 ### 6.2.0 (2024-04-12)
