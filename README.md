@@ -303,8 +303,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-
-### __WORK IN PROGRESS__
+### 6.2.2 (2024-04-26)
 * (Apollon77) Downgrade gulp to 4.0.2 to fix build
 
 ### 6.2.1 (2024-04-16)

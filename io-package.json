@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "6.2.1",
+    "version": "6.2.2",
     "news": {
+      "6.2.2": {
+        "en": "Downgrade gulp to 4.0.2 to fix build",
+        "de": "Downgrade Gulp auf 4.0.2 zu reparieren Build",
+        "ru": "4.0.2 для фиксации сборки",
+        "pt": "Downgrade gulp para 4.0.2 para corrigir a compilação",
+        "nl": "Downgrade gulp naar 4.0.2 om build te repareren",
+        "fr": "Goupe de qualité inférieure à 4.0.2 pour fixer la construction",
+        "it": "Golp downgrade a 4.0.2 per fissare la costruzione",
+        "es": "Golp degradado a 4.0.2 para fijar la construcción",
+        "pl": "Przewód downgrade do 4.0.2, aby naprawić budowę",
+        "uk": "Downgrade gulp до 4.0.2 для кріплення",
+        "zh-cn": "将gulp降级为4. 0.2,以修复建筑"
+      },
       "6.2.1": {
         "en": "Warning regarding scale factor due to incorrect check: \"Calculation of a scaleFactor which is based on another scaleFactor seems strange.\"",
         "de": "Warnung bezüglich des Skalenfaktors durch falsche Überprüfung: \"Kalkulation einer SkalaFactor, die auf einer anderen Skala basiertFactor scheint seltsam.\"",
@@ -80,18 +93,6 @@
         "pl": "związany z rekonstytucją szeregową",
         "uk": "фіксоване відключення послідовного зв'язку",
         "zh-cn": "定期重新联络"
-      },
-      "5.0.8": {
-        "en": "GUI packages updated",
-        "de": "GUI-Pakete aktualisiert",
-        "ru": "GUI пакеты обновлены",
-        "pt": "Pacotes GUI atualizados",
-        "nl": "GUI verpakkingen",
-        "fr": "GUI packages updated",
-        "it": "Pacchetti GUI aggiornati",
-        "es": "Paquetes GUI actualizados",
-        "pl": "Pakiet GUI",
-        "zh-cn": "古伊一揽子计划更新"
       }
     },
     "title": "ModBus",
