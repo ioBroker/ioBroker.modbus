@@ -739,14 +739,18 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
         if (config.length) {
             result.length = result.addressHigh - result.addressLow;
             if (isBools && !localOptions.doNotRoundAddressToWord) {
+                let oldstart = result.addressLow;
                 result.addressLow = (result.addressLow >> 4) << 4;
+                result.length += (oldstart - result.addressLow); 
 
                 if (result.length % 16) {
                     result.length = ((result.length >> 4) + 1) << 4;
                 }
                 if (result.blocks) {
                     for (let b = 0; b < result.blocks.length; b++) {
+                        let oldstart = result.blocks[b].start;
                         result.blocks[b].start = (result.blocks[b].start >> 4) << 4;
+                        result.blocks[b].count += (oldstart - result.blocks[b].count);
 
                         if (result.blocks[b].count % 16) {
                             result.blocks[b].count = ((result.blocks[b].count >> 4) + 1) << 4;
