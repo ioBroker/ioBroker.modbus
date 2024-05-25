@@ -303,8 +303,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-
-### __WORK IN PROGRESS__
+### 6.2.3 (2024-05-25)
 * (Q7Jensen) Fixed error at aligning addresses to word
 * (Apollon77) Added device id to some errors
 
