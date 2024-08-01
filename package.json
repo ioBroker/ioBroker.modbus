@@ -43,7 +43,7 @@
     "@alcalzone/release-script-plugin-iobroker": "^3.7.2",
     "@alcalzone/release-script-plugin-license": "^3.7.0",
     "gulp": "^4.0.2",
-    "mocha": "^10.5.2",
+    "mocha": "^10.7.0",
     "chai": "^4.4.1",
     "nan": "2.20.0",
     "modbus-stack": "^0.2.1"
