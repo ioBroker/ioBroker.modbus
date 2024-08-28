@@ -308,6 +308,7 @@ There are some programs in folder `test` to test the TCP communication:
 * (Apollon77) Fix Timeout management to prevent leaking memory
 * (bluefox) Added information about connected clients in the server mode
 * (bluefox) Tried to fix error with aligning addresses
+* (bluefox) GUI was migrated to admin 7
 
 ### 6.2.3 (2024-05-25)
 * (Q7Jensen) Fixed error at aligning addresses to word
