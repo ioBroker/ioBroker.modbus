@@ -303,8 +303,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 6.3.0 (2024-08-28)
 * (Apollon77) Fix Timeout management to prevent leaking memory
 * (bluefox) Added information about connected clients in the server mode
 * (bluefox) Tried to fix error with aligning addresses
