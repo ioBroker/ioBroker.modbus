@@ -1,16 +1,20 @@
 import PropTypes from 'prop-types';
 
-import I18n from '@iobroker/adapter-react-v5/i18n';
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Button,
+} from '@mui/material';
 
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
+import {
+    Delete as DeleteIcon,
+    Clear as ClearIcon,
+} from '@mui/icons-material';
 
-import DeleteIcon from '@mui/icons-material/Delete';
-import ClearIcon from '@mui/icons-material/Clear';
+import { I18n } from '@iobroker/adapter-react-v5';
 
 const DeleteAllDialog = (props) => {
     return props.open ? <Dialog open={props.open} onClose={props.onClose}>
@@ -32,7 +36,6 @@ DeleteAllDialog.propTypes = {
     open: PropTypes.bool,
     action: PropTypes.func,
     onClose: PropTypes.func,
-    classes: PropTypes.object,
 }
 
 export default DeleteAllDialog;

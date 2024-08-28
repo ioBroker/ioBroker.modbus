@@ -1,6 +1,5 @@
-import {Component} from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@mui/styles';
 
 import {
     Typography,
@@ -28,7 +27,7 @@ import Utils from '../Components/Utils';
 import connectionInputs from '../data/optionsConnection';
 import generalInputs from '../data/optionsGeneral';
 
-const styles = theme => ({
+const styles = {
     optionsSelect: {
         width: 280,
     },
@@ -49,19 +48,19 @@ const styles = theme => ({
         marginBottom: 10,
     },
     optionsContainer: {
-        width: `calc(100% - ${theme.spacing(4)})`,
-        padding: theme.spacing(2),
+        width: `calc(100% - 32px)`,
+        padding: 16,
         display: 'inline-block',
         textAlign: 'left',
     },
     optionsGrid: {
         textAlign: 'center',
-        padding: theme.spacing(2),
+        padding: 16,
     },
     header: {
         fontSize: 24,
     },
-});
+};
 
 function text2react(text) {
     if (!text.includes('\n')) {
@@ -156,20 +155,20 @@ class Options extends Component {
     }
 
     getInputsBlock(inputs, title) {
-        return <Paper className={this.props.classes.optionsContainer}>
-            <Typography variant="h4" gutterBottom className={this.props.classes.header}>{I18n.t(title)}</Typography>
+        return <Paper style={styles.optionsContainer}>
+            <Typography variant="h4" gutterBottom style={styles.header}>{I18n.t(title)}</Typography>
             {inputs.map(input => {
                 if (!this.inputDisplay(input)) {
                     return null;
                 }
                 if (input.name === 'bind' && this.props.native.params.type !== 'serial' && (this.props.native.params.slave === '1' || this.props.native.params.slave === 1)) {
-                    return <Box className={this.props.classes.optionContainer} key={input.name}>
+                    return <Box style={styles.optionContainer} key={input.name}>
                         {this.state.ips ?
                             <FormControl>
                                 <InputLabel>{I18n.t('Slave IP address')}</InputLabel>
                                 <Select
                                     variant="standard"
-                                    className={this.props.classes.optionsSelect}
+                                    style={styles.optionsSelect}
                                     disabled={this.inputDisabled(input)}
                                     value={this.props.native.params[input.name] || ''}
                                     onChange={e => this.changeParam(input.name, e.target.value)}
@@ -183,7 +182,7 @@ class Options extends Component {
                                 variant="standard"
                                 type={input.type}
                                 label={I18n.t('Slave IP address')}
-                                className={this.props.classes.optionsTextField}
+                                style={styles.optionsTextField}
                                 disabled={this.inputDisabled(input)}
                                 helperText={input.help ? I18n.t(input.help) : ''}
                                 value={this.props.native.params[input.name]}
@@ -193,19 +192,19 @@ class Options extends Component {
                     </Box>;
                 }
                 if (input.type === 'checkbox') {
-                    return <FormControl className={this.props.classes.optionContainer} key={input.name}>
+                    return <FormControl style={styles.optionContainer} key={input.name}>
                         <div>
                             <FormControlLabel
                                 label={I18n.t(input.title)}
                                 control={<Checkbox
                                     label={I18n.t(input.title)}
-                                    className={this.props.classes.optionsCheckbox}
+                                    style={styles.optionsCheckbox}
                                     disabled={this.inputDisabled(input)}
                                     checked={this.props.native.params[input.name]}
                                     onChange={e => this.changeParam(input.name, e.target.checked)}
                                 />}
                             />
-                            {input.help ? <FormHelperText className={this.props.classes.helperText}>{I18n.t(input.help)}</FormHelperText> : null}
+                            {input.help ? <FormHelperText style={styles.helperText}>{I18n.t(input.help)}</FormHelperText> : null}
                         </div>
                         {input.tooltip ? <Tooltip title={text2react(I18n.t(input.tooltip))}>
                             <IconInfo />
@@ -213,12 +212,12 @@ class Options extends Component {
                     </FormControl>;
                 }
                 if (input.type === 'select') {
-                    return <Box className={this.props.classes.optionContainer} key={input.name}>
+                    return <Box style={styles.optionContainer} key={input.name}>
                         <FormControl style={{ marginRight: 8 }}>
                             <InputLabel>{I18n.t(input.title)}</InputLabel>
                             <Select
                                 variant="standard"
-                                className={this.props.classes.optionsSelect}
+                                style={styles.optionsSelect}
                                 disabled={this.inputDisabled(input)}
                                 value={this.props.native.params[input.name] || ''}
                                 onChange={e => this.changeParam(input.name, e.target.value)}
@@ -234,13 +233,13 @@ class Options extends Component {
                     </Box>;
                 }
                 if (input.type === 'ports') {
-                    return <Box className={this.props.classes.optionContainer} key={input.name}>
+                    return <Box style={styles.optionContainer} key={input.name}>
                         {this.state.ports && !this.state.customPort ?
                             <FormControl>
                                 <InputLabel>{I18n.t(input.title)}</InputLabel>
                                 <Select
                                     variant="standard"
-                                    className={this.props.classes.optionsSelect}
+                                    style={styles.optionsSelect}
                                     disabled={this.inputDisabled(input)}
                                     value={this.props.native.params[input.name] || ''}
                                     onChange={e => this.changeParam(input.name, e.target.value)}
@@ -254,7 +253,7 @@ class Options extends Component {
                                 variant="standard"
                                 type={input.type}
                                 label={I18n.t(input.title)}
-                                className={this.props.classes.optionsTextField}
+                                style={styles.optionsTextField}
                                 disabled={this.inputDisabled(input)}
                                 helperText={input.help ? I18n.t(input.help) : ''}
                                 value={this.props.native.params[input.name]}
@@ -275,12 +274,12 @@ class Options extends Component {
                     inputProps.max = input.max;
                 }
 
-                return <Box className={this.props.classes.optionContainer} key={input.name}>
+                return <Box style={styles.optionContainer} key={input.name}>
                     <TextField
                         variant="standard"
                         type={input.type}
                         label={I18n.t(input.title)}
-                        className={this.props.classes.optionsTextField}
+                        style={styles.optionsTextField}
                         inputProps={inputProps}
                         disabled={this.inputDisabled(input)}
                         helperText={input.help ? I18n.t(input.help) : ''}
@@ -348,10 +347,10 @@ class Options extends Component {
     }
 
     render() {
-        return <form className={this.props.classes.tab}>
+        return <form style={{ width: '100%', minHeight: '100%' }}>
             <Grid container spacing={2} >
-                <Grid item xs={12} md={6} className={this.props.classes.optionsGrid }>{this.getInputsBlock(connectionInputs, 'Connection parameters')}</Grid>
-                <Grid item xs={12} md={6} className={this.props.classes.optionsGrid }>{this.getInputsBlock(generalInputs, 'General')}</Grid>
+                <Grid item xs={12} md={6} style={styles.optionsGrid}>{this.getInputsBlock(connectionInputs, 'Connection parameters')}</Grid>
+                <Grid item xs={12} md={6} style={styles.optionsGrid}>{this.getInputsBlock(generalInputs, 'General')}</Grid>
             </Grid>
         </form>;
     }
@@ -370,4 +369,4 @@ Options.propTypes = {
     rooms: PropTypes.object,
 };
 
-export default withStyles(styles)(Options);
+export default Options;

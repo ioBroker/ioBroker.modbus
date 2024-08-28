@@ -87,18 +87,26 @@ function stop(callback) {
         adapter.setState('info.connection', adapter.config.params.slave ? '' : false, true);
     }
 
-    if (typeof callback === 'function') {
-        return void callback();
-    }
+    adapter.getForeignStatesAsync(`${adapter.namespace}.info.clients.*`)
+        .then(async allStates => {
+            for (let id in allStates) {
+                if (allStates[id] && allStates[id].val) {
+                    await adapter.setStateAsync(id, false, true);
+                }
+            }
+            if (typeof callback === 'function') {
+                return void callback();
+            }
 
-    adapter.terminate ? adapter.terminate() : process.exit()
+            adapter.terminate ? adapter.terminate() : process.exit()
+        });
 }
 
 let objects = {};
 let enums = {};
 
 function filterSerialPorts(path) {
-    fs = fs || require('fs');
+    fs = fs || require('node:fs');
     // get only serial port names
     if (!(/(tty(S|ACM|USB|AMA|MFD|XR)|rfcomm)/).test(path)) {
         return false;
@@ -111,8 +119,8 @@ function filterSerialPorts(path) {
 
 function listSerial(ports) {
     ports = ports || [];
-    const path = require('path');
-    fs = fs || require('fs');
+    const path = require('node:path');
+    fs = fs || require('node:fs');
 
     // Filter out the devices that aren't serial ports
     let devDirName = '/dev';
@@ -139,7 +147,7 @@ function listSerial(ports) {
                 return { path: port };
             });
     } catch (e) {
-        if (require('os').platform() !== 'win32') {
+        if (require('node:os').platform() !== 'win32') {
             adapter.log.error(`Cannot read "${devDirName}": ${e}`);
         }
         result = ports;
@@ -741,7 +749,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
             if (isBools && !localOptions.doNotRoundAddressToWord) {
                 let oldstart = result.addressLow;
                 result.addressLow = (result.addressLow >> 4) << 4;
-                result.length += (oldstart - result.addressLow); 
+                result.length += (oldstart - result.addressLow);
 
                 if (result.length % 16) {
                     result.length = ((result.length >> 4) + 1) << 4;
@@ -907,7 +915,7 @@ function parseConfig(callback) {
 
         // clear unused states
         for (let id_ in oldObjects) {
-            if (oldObjects.hasOwnProperty(id_) && !newObjects.includes(id_)) {
+            if (oldObjects.hasOwnProperty(id_) && !newObjects.includes(id_) && !id_.startsWith(`${adapter.namespace}.info.clients.`)) {
                 adapter.log.debug(`Remove old object ${id_}`);
                 tasks.push({
                     id: id_,

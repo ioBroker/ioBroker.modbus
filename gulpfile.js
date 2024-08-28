@@ -5,8 +5,8 @@
 'use strict';
 
 const gulp = require('gulp');
-const fs = require('fs');
-const cp = require('child_process');
+const fs = require('node:fs');
+const cp = require('node:child_process');
 
 function deleteFoldersRecursive(path, exceptions) {
     if (fs.existsSync(path)) {

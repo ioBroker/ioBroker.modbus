@@ -95,9 +95,18 @@
         "zh-cn": "古伊一揽子计划更新\n增加环境援助\n米切尔支持不dejs版本为16。"
       }
     },
-    "title": "ModBus",
     "titleLang": {
-      "en": "ModBus"
+      "en": "ModBus",
+      "de": "ModBus",
+      "ru": "ModBus",
+      "pt": "ModBus",
+      "nl": "ModBus",
+      "fr": "ModBus",
+      "it": "ModBus",
+      "es": "ModBus",
+      "pl": "ModBus",
+      "uk": "ModBus",
+      "zh-cn": "ModBus"
     },
     "desc": {
       "en": "ModBus connection Slave or Master",
@@ -138,7 +147,6 @@
     "compact": true,
     "connectionType": "local",
     "dataSource": "poll",
-    "materialize": true,
     "tier": 2,
     "eraseOnUpload": true,
     "adminUI": {
@@ -146,7 +154,7 @@
     },
     "dependencies": [
       {
-        "js-controller": ">=2.0.0"
+        "js-controller": ">=5.0.19"
       }
     ],
     "globalDependencies": [

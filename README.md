@@ -64,7 +64,7 @@ Cyclic poll interval (Only relevant for master)
 Reconnection interval (Only relevant for master)
 
 ### Read timeout
-Timeout for read requests in milliseconds. If no response is received from a slave in this time, the connection will be terminated.
+Timeout for read requests in milliseconds. If no response is received from a slave at this time, the connection will be terminated.
 
 ### Pulse time
 If pulse used for coils, this defines the interval in milliseconds how long is the pulse.
@@ -130,8 +130,8 @@ This factor is used to multiply the read value from Bus for static scaling. So t
 This offset is added to the read value after above multiplication. So the calculation looks like following `val = x * Factor + Offset`.
 
 ### Formula
-This field can be used for advanced calculations if Factor and Offset are not sufficient. **If this field is set, then the Factor and Offset fields are ignored.**
-The Formula is executed by the eval() function. Therefore, all common functions are supported. Especially the Math functions. The formula must comply with Javascript syntax, therefore, also take care about upper and lower cases.
+This field can be used for advanced calculations if Factor and Offset are not enough. **If this field is set, then the Factor and Offset fields are ignored.**
+The Formula is executed by the eval() function. Therefore, all common functions are supported. Especially the Math functions. The formula must comply with JavaScript syntax, therefore, also take care about upper and lower cases.
 
 In the formula, "x" has to be used for the read value from Modbus. E.g. `x * Math.pow(10, sf['40065'])`
 
@@ -154,11 +154,11 @@ If activated, the values are polled in a predefined interval from slave.
 Write pulse
 
 ### CW
-Cyclic write
+Cyclically write
 
 ### SF
 Use value as a scaling factor.
-This is needed to be used by dynamic scaling factors which are on some systems provided through values on interface.
+This is necessary to be used by dynamic scaling factors which are on some systems provided through values on interface.
 If a value is marked with this flag, then the value will be stored into a variable with the following naming convention: `sf['Modbus_address']`.
 This variable can be then later used in any formula for other parameters. E.g., the following formula can set: `(x * sf['40065']) + 50;`
 
@@ -234,7 +234,7 @@ This means that when a numerical quantity larger than a single byte is transmitt
 
 Big-Endian is the most commonly used format for network protocols – so common, in fact, that it is also referred to as ‘network order’.
 
-Given that the Modbus RTU message protocol is big-Endian, in order to successfully exchange a 32-bit datatype via a Modbus RTU message, the endianness of both the master, and the slave must be considered. Many RTU master and slave devices allow specific selection of byte order, particularly in the case of software-simulated units. It only has to be ensured that both units are set to the same byte order.
+Given that the Modbus RTU message protocol is big-Endian, in order to successfully exchange a 32-bit datatype via a Modbus RTU message, the endianness of both the master and the slave must be considered. Many RTU master and slave devices allow specific selection of byte order, particularly in the case of software-simulated units. It only has to be ensured that both units are set to the same byte order.
 
 As a rule of thumb, the family of a device’s microprocessor determines its endianness. Typically, the big-Endian style (the high-order byte is stored first, followed by the low-order byte) is generally found in CPUs designed with a Motorola processor. The little-Endian style (the low-order byte is stored first, followed by the high-order byte) is generally found in CPUs using the Intel architecture. It is a matter of personal perspective as to which style is considered ‘backwards’.
 
@@ -286,7 +286,7 @@ Of the many hex-to-floating point converters and calculators that are available 
 One can then swap bytes and/or words to analyze what potential endianness issues may exist between Modbus RTU master and slave devices.
 
 ## Export / Import of registers
-With export / import functionality, you can convert all register data (only of one type) to TSV (Tab separated values) file and back to easily copy data from one device to another or to edit register in Excel.
+With export / import functionality, you can convert all register data (only of one type) to a TSV (Tab separated values) file and back to easily copy data from one device to another or to edit register in Excel.
 
 You can share your schemas with other users in [modbus-templates](https://github.com/ioBroker/modbus-templates) or you can find some register schemas there.
 
@@ -304,8 +304,9 @@ There are some programs in folder `test` to test the TCP communication:
 -->
 ## Changelog
 
-### __WORK IN PROGRESS__
+### **WORK IN PROGRESS**
 * (Apollon77) Fix Timeout management to prevent leaking memory
+* (bluefox) Added information about connected clients in the server mode
 
 ### 6.2.3 (2024-05-25)
 * (Q7Jensen) Fixed error at aligning addresses to word
@@ -318,7 +319,7 @@ There are some programs in folder `test` to test the TCP communication:
 * (PLCHome) Warning regarding scale factor due to incorrect check: "Calculation of a scaleFactor which is based on another scaleFactor seems strange."
 
 ### 6.2.0 (2024-04-12)
-* (PLCHome) String based on 16 bit values big endian as well as little endian
+* (PLCHome) String based on 16-bit values big endian as well as little endian
 * (PLCHome) Raw data as a hex string
 * (PLCHome) Fix issue stringle was always converted to number for slave
 * (PLCHome) Enable formula for strings and hex strings
@@ -348,7 +349,7 @@ There are some programs in folder `test` to test the TCP communication:
 * (bluefox) Corrected type of connection indicator
 
 ### 5.0.3 (2022-05-13)
-* (bluefox) Fixed error with mutli-devices
+* (bluefox) Fixed error with multi-devices
 
 ### 5.0.0 (2022-05-11)
 * BREAKING: All space characters will be replaced with underscores now in the Objects IDs, not only the first one.
@@ -360,7 +361,7 @@ There are some programs in folder `test` to test the TCP communication:
 
 ### 4.0.3 (2022-03-21)
 * (bluefox) Updated serial port package
-* (bluefox) Minimal node.js version is 12
+* (bluefox) A minimal node.js version is 12
 
 ### 3.4.17 (2021-11-11)
 * (Apollon77) Catch errors in tasks processing to prevent crashes

@@ -1,7 +1,7 @@
 import {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import Paper from '@mui/material/Paper';
+import { Paper } from '@mui/material';
 
 import RegisterTable from '../Components/RegisterTable';
 import Utils from '../Components/Utils';

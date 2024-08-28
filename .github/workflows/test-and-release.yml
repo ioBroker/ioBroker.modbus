@@ -144,5 +144,5 @@ jobs:
           sentry-cli releases set-commits $SENTRY_VERSION --auto
           sentry-cli releases finalize $SENTRY_VERSION
 
-        # Add the following line BEFORE finalize if sourcemap uploads are needed
+        # Add the following line BEFORE finalize if sourcemap uploads are necessary
         # sentry-cli releases files $SENTRY_VERSION upload-sourcemaps build/

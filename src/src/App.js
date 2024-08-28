@@ -1,5 +1,4 @@
 import React from 'react';
-import { withStyles } from '@mui/styles';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
 
@@ -21,8 +20,7 @@ import TabHoldingRegisters from './Tabs/HoldingRegisters';
 import TabDiscreteInputs from './Tabs/DiscreteInputs';
 import TabCoils from './Tabs/Coils';
 
-const styles = theme => ({
-    root: {},
+const styles = {
     tabContent: {
         padding: 10,
         height: 'calc(100% - 64px - 48px - 20px)',
@@ -33,17 +31,13 @@ const styles = theme => ({
         height: 'calc(100% - 64px - 48px - 20px - 38px)',
         overflow: 'auto',
     },
-    tab: {
-        width: '100%',
-        minHeight: '100%',
-    },
-    selected: {
+    selected: theme => ({
         color: theme.palette.mode === 'dark' ? undefined : '#FFF !important',
-    },
-    indicator: {
+    }),
+    indicator: theme => ({
         backgroundColor: theme.palette.mode === 'dark' ? theme.palette.secondary.main : '#FFF',
-    },
-});
+    }),
+};
 
 const tabs = [
     {
@@ -150,7 +144,7 @@ class App extends GenericApp {
         if (!this.state.loaded || !this.state.moreLoaded) {
             return <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={this.state.theme}>
-                    <Loader theme={this.state.themeType} />
+                    <Loader themeType={this.state.themeType} />
                 </ThemeProvider>
             </StyledEngineProvider>;
         }
@@ -166,11 +160,11 @@ class App extends GenericApp {
                                 onChange={(e, value) => this.setState({ selectedTab: value })}
                                 variant="scrollable"
                                 scrollButtons="auto"
-                                classes={{ indicator: this.props.classes.indicator }}
+                                sx={{ '&.Mui-indicator': styles.indicator }}
                             >
                                 {tabs.map(tab => <Tab
                                     value={tab.name}
-                                    classes={{ selected: this.props.classes.selected }}
+                                    sx={{ '&.Mui-selected': styles.selected }}
                                     label={tab.icon ? <>{tab.icon}{I18n.t(tab.title)}</> : I18n.t(tab.title)}
                                     data-name={tab.name}
                                     key={tab.name}
@@ -178,7 +172,7 @@ class App extends GenericApp {
                                 />)}
                             </Tabs>
                         </AppBar>
-                        <div className={this.isIFrame ? this.props.classes.tabContentIFrame : this.props.classes.tabContent}>
+                        <div style={this.isIFrame ? styles.tabContentIFrame : styles.tabContent}>
                             {tabs.map((tab, index) => {
                                 const TabComponent = tab.component;
                                 if (this.state.selectedTab) {
@@ -215,4 +209,4 @@ class App extends GenericApp {
     }
 }
 
-export default withStyles(styles)(App);
+export default App;

@@ -1,45 +1,46 @@
 import { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@mui/styles';
 
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import Checkbox from '@mui/material/Checkbox';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Tooltip from '@mui/material/Tooltip';
+import {
+    Table,
+    TableHead,
+    TableBody,
+    TableRow,
+    TableCell,
+    Checkbox,
+    TextField,
+    IconButton,
+    Select,
+    MenuItem,
+    TableSortLabel,
+    Tooltip,
+} from '@mui/material';
 
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
-import ImportExport from '@mui/icons-material/ImportExport';
+import {
+    Delete as DeleteIcon,
+    Add as AddIcon,
+    ImportExport,
+} from '@mui/icons-material';
 
-import I18n from '@iobroker/adapter-react-v5/i18n';
-import Utils from '@iobroker/adapter-react-v5/Components/Utils';
-
-import ExpertIcon from '@iobroker/adapter-react-v5/icons/IconExpert';
-import TextWithIcon from '@iobroker/adapter-react-v5/Components/TextWithIcon';
-import SelectWithIcon from '@iobroker/adapter-react-v5/Components/SelectWithIcon';
+import {
+    I18n, IconExpert,
+    TextWithIcon, SelectWithIcon,
+} from '@iobroker/adapter-react-v5';
 
 import TsvDialog from './TsvDialog';
 import DeleteAllDialog from './DeleteAllDialog';
 import DeleteDialog from './DeleteDialog';
 
-const styles = theme => ({
+const styles = {
     tableHeader: {
         whiteSpace: 'nowrap',
         fontWeight: 'bold',
         fontSize: '80%',
         padding: '0px 8px'
     },
-    tableHeaderExtended: {
+    tableHeaderExtended: theme => ({
         color: theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.dark
-    },
+    }),
     tableCell: {
         whiteSpace: 'nowrap',
         fontSize: '80%',
@@ -64,7 +65,7 @@ const styles = theme => ({
     nonEditMode: {
         cursor: 'pointer'
     }
-});
+};
 
 const DataCell = props => {
     const sortedItem = props.sortedItem;
@@ -80,7 +81,7 @@ const DataCell = props => {
         result = <Tooltip title={I18n.t(field.title)}>
             <Checkbox
                 inputRef={ref}
-                className={props.classes.tableCheckbox}
+                style={styles.tableCheckbox}
                 checked={!!item[field.name]}
                 disabled={props.getDisable(sortedItem.$index, field.name)}
                 onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.checked)}
@@ -88,18 +89,28 @@ const DataCell = props => {
         </Tooltip>;
     } else if (field.type === 'rooms') {
         if (!editMode) {
-            result = <TextWithIcon list={props.rooms} value={item[field.name]} themeType={props.themeType}/>;
+            result = <TextWithIcon
+                list={props.rooms}
+                value={item[field.name]}
+                themeType={props.themeType}
+                lang={I18n.getLanguage()}
+            />;
         } else {
             result = <SelectWithIcon
+                lang={I18n.getLanguage()}
+                t={I18n.t}
                 list={props.rooms}
-                allowNone={true}
+                allowNone
                 value={item[field.name] === undefined || item[field.name] === null ? '' : item[field.name]}
-                dense={true}
+                dense
                 themeType={props.themeType}
-                inputProps={{ref, className: props.classes.tableSelect}}
+                inputProps={{
+                    ref,
+                    style: styles.tableSelect,
+                }}
                 disabled={props.getDisable(sortedItem.$index, field.name)}
                 onChange={value => props.changeParam(sortedItem.$index, field.name, value)}
-                className={props.classes.tableSelectContainer}
+                style={styles.tableSelectContainer}
             />;
         }
     } else if (field.type === 'select') {
@@ -110,10 +121,13 @@ const DataCell = props => {
             result = <Select
                 variant="standard"
                 value={item[field.name] === undefined || item[field.name] === null ? '' : item[field.name]}
-                inputProps={{ref, className: props.classes.tableSelect}}
+                inputProps={{
+                    ref,
+                    style: styles.tableSelect,
+                }}
                 disabled={props.getDisable(sortedItem.$index, field.name)}
                 onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.value)}
-                className={props.classes.tableSelectContainer}
+                style={styles.tableSelectContainer}
             >
                 {field.options.map(option =>
                     <MenuItem key={option.value} value={option.value}>{option.title ? option.title : <i>{I18n.t('Nothing')}</i>}</MenuItem>
@@ -127,8 +141,11 @@ const DataCell = props => {
             result = <TextField
                 variant="standard"
                 value={item[field.name] === undefined || item[field.name] === null ? '' : item[field.name]}
-                className={props.classes.tableTextFieldContainer}
-                inputProps={{ref: ref, className: props.classes.tableTextField}}
+                style={styles.tableTextFieldContainer}
+                inputProps={{
+                    ref,
+                    style: styles.tableTextField,
+                }}
                 type={field.type}
                 onChange={e => props.changeParam(sortedItem.$index, field.name, e.target.value)}
                 disabled={props.getDisable(sortedItem.$index, field.name)}
@@ -137,11 +154,11 @@ const DataCell = props => {
     }
 
     return <TableCell
-        className={Utils.clsx(props.classes.tableCell, !editMode && props.classes.nonEditMode)}
-        onClick={e => {
+        style={{ ...styles.tableCell, ...(!editMode ? styles.nonEditMode : undefined) }}
+        onClick={() => {
             setEditMode(true);
             window.localStorage.setItem('Modbus.editMode', 'true');
-            window.setTimeout(() => ref.current && ref.current.focus(), 100);
+            window.setTimeout(() => ref.current?.focus(), 100);
         }}
     >
         {result}
@@ -167,7 +184,7 @@ const RegisterTable = props => {
     return <div>
         <div>
             <Tooltip title={I18n.t('Add line')}>
-                <IconButton onClick={e => {
+                <IconButton onClick={() => {
                     props.addItem();
                 }}>
                     <AddIcon/>
@@ -185,11 +202,11 @@ const RegisterTable = props => {
                         window.localStorage.setItem('Modbus.extendedMode', extendedMode ? 'false' : 'true');
                         setExtendedMode(!extendedMode);
                     }}>
-                    <ExpertIcon/>
+                    <IconExpert/>
                 </IconButton>
             </Tooltip>
         </div>
-        <div className={props.classes.tableContainer}>
+        <div style={styles.tableContainer}>
             <Table size="small"
                    stickyHeader
                    padding="none"
@@ -219,8 +236,10 @@ const RegisterTable = props => {
 
                             return <TableCell
                                 key={field.name}
-                                style={{width: field.type === 'checkbox' ? 20 : field.width}}
-                                className={Utils.clsx(props.classes.tableHeader, field.expert && props.classes.tableHeaderExtended)}
+                                style={{
+                                    ...styles.tableHeader,
+                                    width: field.type === 'checkbox' ? 20 : field.width}}
+                                sx={field.expert ? styles.tableHeaderExtended : undefined}
                                 title={field.tooltip ? I18n.t(field.tooltip) : null}
                             >
                                 {field.type === 'checkbox' ?
@@ -240,7 +259,7 @@ const RegisterTable = props => {
                                 {field.sorted ? <TableSortLabel
                                     active={field.name === props.orderBy}
                                     direction={props.order}
-                                    onClick={e => {
+                                    onClick={() => {
                                         const isAsc = props.orderBy === field.name && props.order === 'asc';
                                         props.onChangeOrder(field.name, isAsc ? 'desc' : 'asc');
                                     }}
@@ -252,13 +271,13 @@ const RegisterTable = props => {
                                 <div>
                                     <IconButton
                                         size="small"
-                                        onClick={e => setDeleteAllDialog({
+                                        onClick={() => setDeleteAllDialog({
                                             open: true,
                                             action: () => props.changeData([]),
                                         })}
                                         disabled={!props.data.length}
                                     >
-                                        <DeleteIcon/>
+                                        <DeleteIcon />
                                     </IconButton>
                                 </div>
                             </Tooltip>
@@ -284,7 +303,7 @@ const RegisterTable = props => {
                                 <TableCell>
                                     <Tooltip title={I18n.t('Delete')}>
                                         <div>
-                                            <IconButton size="small" onClick={e => {
+                                            <IconButton size="small" onClick={() => {
                                                 let lastTime = window.sessionStorage.getItem('disableDeleteDialogs');
                                                 if (lastTime && (new Date() - new Date(lastTime)) < 1000 * 60 * 5) {
                                                     props.deleteItem(sortedItem.$index);
@@ -342,7 +361,6 @@ const RegisterTable = props => {
 RegisterTable.propTypes = {
     data: PropTypes.array,
     fields: PropTypes.array,
-    classes: PropTypes.object,
     addItem: PropTypes.func,
     changeData: PropTypes.func,
     deleteItem: PropTypes.func,
@@ -354,4 +372,4 @@ RegisterTable.propTypes = {
     showExtendedModeSwitch: PropTypes.bool,
 }
 
-export default withStyles(styles)(RegisterTable);
+export default RegisterTable;
