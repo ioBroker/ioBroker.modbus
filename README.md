@@ -307,7 +307,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 6.3.2 (2024-08-29)
 * (bluefox) Corrected the error with alignment of addresses
 
 ### 6.3.0 (2024-08-28)
