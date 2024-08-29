@@ -61,8 +61,6 @@ function checkValueOfState(id, value, cb, counter) {
 
 describe(`Test ${adapterShortName} adapter`, function () {
     before(`Test ${adapterShortName} adapter: Start js-controller`, function (_done) {
-        _done();
-        return;
         this.timeout(600000); // because of the first installation from npm
 
         setup.setupController(async () => {
@@ -70,8 +68,6 @@ describe(`Test ${adapterShortName} adapter`, function () {
             // enable adapter
             config.common.enabled  = true;
             config.common.loglevel = 'debug';
-
-            //config.native.dbtype   = 'sqlite';
 
             await setup.setAdapterConfig(config.common, config.native);
 
