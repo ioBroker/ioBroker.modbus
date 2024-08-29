@@ -728,7 +728,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
                 lastAddress = blockStart + config[i].len;
             }
 
-            // try to detect next block
+            // try to detect the next block
             if (result.blocks) {
                 if ((config[i].address - lastAddress > 10 && config[i].len < 10) || (lastAddress - blockStart >= maxBlock)) {
                     if (!result.blocks.map(obj => obj.start).includes(blockStart)) {
@@ -747,14 +747,29 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
         if (config.length) {
             result.length = result.addressHigh - result.addressLow;
             if (isBools && !localOptions.doNotRoundAddressToWord) {
+                const oldStart = result.addressLow;
+
+                // align addresses to 16 bit. E.g 30 => 16, 31 => 16, 32 => 32
                 result.addressLow = (result.addressLow >> 4) << 4;
 
+                // increase the length on the alignment if any
+                result.length += oldStart - result.addressLow;
+
+                // If the length is not a multiple of 16
                 if (result.length % 16) {
+                    // then round it up to the next multiple of 16
                     result.length = ((result.length >> 4) + 1) << 4;
                 }
+
                 if (result.blocks) {
                     for (let b = 0; b < result.blocks.length; b++) {
+                        const _oldStart = result.blocks[b].start;
+
+                        // align addresses to 16 bit. E.g 30 => 16, 31 => 16, 32 => 32
                         result.blocks[b].start = (result.blocks[b].start >> 4) << 4;
+
+                        // increase the length on the alignment if any
+                        result.blocks[b].count += (_oldStart - result.blocks[b].start);
 
                         if (result.blocks[b].count % 16) {
                             result.blocks[b].count = ((result.blocks[b].count >> 4) + 1) << 4;

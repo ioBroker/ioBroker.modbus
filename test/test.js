@@ -10,7 +10,7 @@ const req = client.request(FC.READ_INPUT_REGISTERS, // Function Code: 4
         50)  // Read 50 contiguous registers from 0
     .on('error', err => console.error(err));
 
-// 'response' is emitted after the entire contents of the response has been received.
+// 'response' is emitted after the entire contents of the response have been received.
 req.on('response', registers => {
     // An Array of length 50 filled with Numbers of the current registers.
     console.log(registers);

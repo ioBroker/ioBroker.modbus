@@ -303,6 +303,9 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Corrected the error with alignment of addresses
+
 ### 6.3.0 (2024-08-28)
 * (Apollon77) Fix Timeout management to prevent leaking memory
 * (bluefox) Added information about connected clients in the server mode
