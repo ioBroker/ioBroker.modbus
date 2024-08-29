@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "6.3.0",
+    "version": "6.3.1",
     "news": {
+      "6.3.1": {
+        "en": "Corrected the error with alignment of addresses",
+        "de": "Korrektur des Fehlers bei der Ausrichtung von Adressen",
+        "ru": "Исправлена ошибка с выравниванием адресов",
+        "pt": "Corrigido o erro com o alinhamento de endereços",
+        "nl": "De fout gecorrigeerd met het uitlijnen van adressen",
+        "fr": "Correction de l'erreur avec l'alignement des adresses",
+        "it": "Corretto l'errore con allineamento degli indirizzi",
+        "es": "Corregido el error con la alineación de direcciones",
+        "pl": "Poprawiono błąd z ustawieniem adresów",
+        "uk": "Виправлено помилку з вирівнюванням адрес",
+        "zh-cn": "在地址对齐时纠正了错误"
+      },
       "6.3.0": {
         "en": "Fix Timeout management to prevent leaking memory\nAdded information about connected clients in the server mode\nTried to fix error with aligning addresses\nGUI was migrated to admin 7",
         "de": "Fix Timeout-Management, um zu verhindern, dass Leckspeicher\nWeitere Informationen zu verbundenen Clients im Servermodus\nVersuche, Fehler mit Ausrichtadressen zu beheben\nGUI wurde zu admin 7 migriert",
@@ -80,19 +93,6 @@
         "pl": "Umożliwia to, że połączenie zachowuje połączenie. Alive",
         "uk": "Реалізація з'єднання тримати Напляскване",
         "zh-cn": "执行联络系统 活 活"
-      },
-      "6.0.1": {
-        "en": "Better tooltips in settings",
-        "de": "Bessere Tooltips in Einstellungen",
-        "ru": "Лучшие инструменты в настройках",
-        "pt": "Melhores dicas de ferramentas nas configurações",
-        "nl": "Beter teltips in setting",
-        "fr": "Meilleurs outils dans les paramètres",
-        "it": "Migliori tooltips nelle impostazioni",
-        "es": "Mejores puntas de herramientas en la configuración",
-        "pl": "Lepsze opłaki w ustawie",
-        "uk": "Краще налаштування інструментів",
-        "zh-cn": "B. 环境中更好的工具ti"
       }
     },
     "titleLang": {
