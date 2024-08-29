@@ -27,7 +27,7 @@ TCP Port of modbus partner if configured as master (client) or own port if confi
 Modbus Device ID. Important if TCP/Modbus bridge is used.
 
 ### Type
-Slave(Server) or Master(Client).
+Slave (Server) or Master (Client).
 
 ### Use aliases as address
 Normally, all registers can have address from 0 to 65535. By using of aliases, you can define virtual address fields for every type of registers. Normally:
@@ -261,25 +261,29 @@ The following table shows the FieldServer function moves that copy two adjacent 
 
 The following table shows the FieldServer function moves that copy a single 32-bit floating point value to two adjacent 16-bit registers:
 
-| Function Keyword | Swap Mode         | Source Bytes    | Target Bytes   |
-|------------------|-------------------|-----------------|----------------|
-| 1.float-2.i16    |N/A                | [ a b ] [ c d ] | [ a b ][ c d ] |
-| 1.float-2.i16-s  |byte and word swap | [ a b ] [ c d ] | [ d c ][ b a ] |
-| 1.float-2.i16-sb |byte swap          | [ a b ] [ c d ] | [ b a ][ d c ] |
-| 1.float-2.i16-sw |word swap          | [ a b ] [ c d ] | [ c d ][ a b ] |
+| Function Keyword | Swap Mode          | Source Bytes    | Target Bytes   |
+|------------------|--------------------|-----------------|----------------|
+| 1.float-2.i16    | N/A                | [ a b ] [ c d ] | [ a b ][ c d ] |
+| 1.float-2.i16-s  | byte and word swap | [ a b ] [ c d ] | [ d c ][ b a ] |
+| 1.float-2.i16-sb | byte swap          | [ a b ] [ c d ] | [ b a ][ d c ] |
+| 1.float-2.i16-sw | word swap          | [ a b ] [ c d ] | [ c d ][ a b ] |
 
 Given the various FieldServer function moves, the correct handling of 32-bit data is dependent on choosing the proper one. Observe the following behavior of these FieldServer function moves on the known single-precision decimal float value of 123456.00:
 
-|16-bit Values | Function Move    | Result	  | Function Move    | Result        |
-|--------------|------------------|-----------|------------------|---------------|
-|0x2000 0x47F1 | 2.i16-1.float    | 123456.00 | 1.float-2.i16    | 0x2000 0x47F1 |
-|0xF147 0x0020 | 2.i16-1.float-s  | 123456.00 | 1.float-2.i16-s  | 0xF147 0X0020 |
-|0x0020 0xF147 | 2.i16-1.float-sb | 123456.00 | 1.float-2.i16-sb | 0x0020 0xF147 |
-|0x47F1 0x2000 | 2.i16-1.float-sw | 123456.00 | 1.float-2.i16-sw | 0x47F1 0x2000 |
+| 16-bit Values | Function Move    | Result    | Function Move    | Result        |
+|---------------|------------------|-----------|------------------|---------------|
+| 0x2000 0x47F1 | 2.i16-1.float    | 123456.00 | 1.float-2.i16    | 0x2000 0x47F1 |
+| 0xF147 0x0020 | 2.i16-1.float-s  | 123456.00 | 1.float-2.i16-s  | 0xF147 0X0020 |
+| 0x0020 0xF147 | 2.i16-1.float-sb | 123456.00 | 1.float-2.i16-sb | 0x0020 0xF147 |
+| 0x47F1 0x2000 | 2.i16-1.float-sw | 123456.00 | 1.float-2.i16-sw | 0x47F1 0x2000 |
 
 Notice that different byte and word orderings require the use of the appropriate FieldServer function move. Once the proper function move is selected, the data can be converted in both directions.
 
-Of the many hex-to-floating point converters and calculators that are available in the Internet, very few actually allow manipulation of the byte and word orders. One such utility is located at www.61131.com/download.htm where both Linux and Windows versions of the utilities can be downloaded. Once installed, the utility is run as an executable with a single dialog interface. The utility presents the decimal float value of 123456.00 as follows:
+Of the many hex-to-floating point converters and calculators that are available on the Internet,
+very few actually allow manipulation of the byte and word orders.
+One such utility is located at www.61131.com/download.htm where both Linux and Windows versions of the utilities can be downloaded.
+Once installed, the utility is run as an executable with a single dialog interface.
+The utility presents the decimal float value of 123456.00 as follows:
 
 ![Image5](img/img5.png)
 
@@ -303,7 +307,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### 6.3.1 (2024-08-29)
+### **WORK IN PROGRESS**
 * (bluefox) Corrected the error with alignment of addresses
 
 ### 6.3.0 (2024-08-28)
