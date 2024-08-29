@@ -630,13 +630,11 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
 
         if (localOptions.showAliases) {
             config[i].id += address2alias(regType, address, localOptions.directAddresses, result.offset);
-        } else {
+        } else if (!localOptions.doNotIncludeAdrInId || !config[i].name) {
             // add address if not disabled or name not empty
-            if (!localOptions.doNotIncludeAdrInId || !config[i].name) {
-                config[i].id += address;
-                if (localOptions.preserveDotsInId) {
-                    config[i].id += '_';
-                }
+            config[i].id += address;
+            if (localOptions.preserveDotsInId) {
+                config[i].id += '_';
             }
         }
 
@@ -645,7 +643,15 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
             config[i].id += config[i].name ? config[i].name.replace(/\s/g, '_') : '';
         } else {
             // replace dots by underlines and add to ID
-            config[i].id += config[i].name ? `_${config[i].name.replace(/\./g, '_').replace(/\s/g, '_')}` : '';
+            if (localOptions.doNotIncludeAdrInId) {
+                // It must be so, because of the bug https://github.com/ioBroker/ioBroker.modbus/issues/473
+                // config[i].id += config[i].name ? config[i].name.replace(/\./g, '_').replace(/\s/g, '_') : '';
+
+                // But because of breaking change
+                config[i].id += config[i].name ? `_${config[i].name.replace(/\./g, '_').replace(/\s/g, '_')}` : '';
+            } else {
+                config[i].id += config[i].name ? `_${config[i].name.replace(/\./g, '_').replace(/\s/g, '_')}` : '';
+            }
         }
         if (config[i].id.endsWith('.')) {
             config[i].id += config[i].id.substring(0, config[i].id.length - 1);
