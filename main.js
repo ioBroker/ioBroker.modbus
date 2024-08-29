@@ -936,7 +936,7 @@ function parseConfig(callback) {
                 adapter.log.debug(`Remove old object ${id_}`);
                 tasks.push({
                     id: id_,
-                    name: 'del'
+                    name: 'del',
                 });
             }
         }
