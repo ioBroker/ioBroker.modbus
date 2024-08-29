@@ -96,7 +96,7 @@ Normally, if the value has not changed, it will not be written into ioBroker.
 This flag allows updating the value's timestamp by every cycle.
 
 ### Do not include addresses in ID
-Do not add address in the generated ioBroker iD. `10_Input10` vs `Input10`.
+Do not add address in the generated ioBroker iD. `10_Input10` vs `_Input10`.
 
 ### Preserve dots in ID
 With this flag the Name will be `Inputs.Input10`. Without => `Inputs_Input10`.

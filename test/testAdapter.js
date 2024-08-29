@@ -4,9 +4,8 @@ const setup = require('@iobroker/legacy-testing');
 let objects = null;
 let states  = null;
 let onStateChanged = null;
-let sendToID = 1;
 
-const adapterShortName = setup.adapterName.substring(setup.adapterName.indexOf('.')+1);
+const adapterShortName = setup.adapterName.substring(setup.adapterName.indexOf('.') + 1);
 
 function checkConnectionOfAdapter(cb, counter) {
     counter = counter || 0;
@@ -25,36 +24,6 @@ function checkConnectionOfAdapter(cb, counter) {
         } else {
             setTimeout(() =>
                 checkConnectionOfAdapter(cb, counter + 1), 1000);
-        }
-    });
-}
-
-function checkValueOfState(id, value, cb, counter) {
-    counter = counter || 0;
-    if (counter > 20) {
-        if (cb) {
-            cb(`Cannot check value Of State ${id}`);
-        }
-        return;
-    }
-
-    states.getState(id, (err, state) => {
-        if (err) {
-            console.error(err);
-        }
-        if (value === null && !state) {
-            if (cb) {
-                cb();
-            }
-        } else
-        if (state && (value === undefined || state.val === value)) {
-            if (cb) {
-                cb();
-            }
-        } else {
-            setTimeout(() => {
-                checkValueOfState(id, value, cb, counter + 1);
-            }, 500);
         }
     });
 }
@@ -201,6 +170,7 @@ describe(`Test ${adapterShortName} adapter`, function () {
         result.blocks[0].end = result.blocks[0].start + result.blocks[0].count;
 
         console.log(`${JSON.stringify(oldData)} => ${JSON.stringify(result)}`);
+        done();
     });
 /**/
 
