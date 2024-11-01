@@ -45,7 +45,7 @@
     "@iobroker/testing": "^4.1.3",
     "@iobroker/legacy-testing": "^1.0.13",
     "gulp": "^4.0.2",
-    "mocha": "^10.7.3",
+    "mocha": "^10.8.2",
     "chai": "^4.5.0",
     "nan": "2.20.0",
     "modbus-stack": "^0.2.1"
