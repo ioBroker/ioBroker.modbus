@@ -307,7 +307,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 6.4.0 (2024-11-22)
 * (bluefox) Moved GUI compilation to vite
 * (bluefox) Added error message if the response length is invalid
 

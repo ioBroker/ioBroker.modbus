@@ -1,268 +1,278 @@
 {
-    "common": {
-        "name": "modbus",
-        "version": "6.3.2",
-        "news": {
-            "6.3.2": {
-                "en": "Corrected the error with alignment of addresses",
-                "de": "Korrektur des Fehlers bei der Ausrichtung von Adressen",
-                "ru": "Исправлена ошибка с выравниванием адресов",
-                "pt": "Corrigido o erro com o alinhamento de endereços",
-                "nl": "De fout gecorrigeerd met het uitlijnen van adressen",
-                "fr": "Correction de l'erreur avec l'alignement des adresses",
-                "it": "Corretto l'errore con allineamento degli indirizzi",
-                "es": "Corregido el error con la alineación de direcciones",
-                "pl": "Poprawiono błąd z ustawieniem adresów",
-                "uk": "Виправлено помилку з вирівнюванням адрес",
-                "zh-cn": "在地址对齐时纠正了错误"
-            },
-            "6.3.0": {
-                "en": "Fix Timeout management to prevent leaking memory\nAdded information about connected clients in the server mode\nTried to fix error with aligning addresses\nGUI was migrated to admin 7",
-                "de": "Fix Timeout-Management, um zu verhindern, dass Leckspeicher\nWeitere Informationen zu verbundenen Clients im Servermodus\nVersuche, Fehler mit Ausrichtadressen zu beheben\nGUI wurde zu admin 7 migriert",
-                "ru": "Управление тайм-аутом для предотвращения утечки памяти\nДобавлена информация о подключенных клиентах в серверном режиме\nПопытка исправить ошибку с выравниванием адресов\nGUI был перенесен на admin 7",
-                "pt": "Corrigir gerenciamento de tempo limite para evitar vazamento de memória\nInformaÃ§Ãμes adicionais sobre clientes conectados no modo servidor\nTentei corrigir o erro com os endereços de alinhamento\nGUI foi migrado para admin 7",
-                "nl": "Fix Timeout management om het lekken van geheugen te voorkomen\nInformatie over verbonden clients toegevoegd in de servermodus\nProbeerde fout te herstellen met uitlijnen van adressen\nGUI is gemigreerd naar admin 7",
-                "fr": "Correction de la gestion du délai pour éviter les fuites de mémoire\nAjout d'informations sur les clients connectés en mode serveur\nEssai de corriger l'erreur avec les adresses d'alignement\nGUI a été migré vers admin 7",
-                "it": "Fissare la gestione Timeout per evitare perdite di memoria\nAggiunte informazioni sui client connessi nella modalità server\nHo cercato di correggere l'errore con gli indirizzi di allineamento\nGUI è stata migrata ad admin 7",
-                "es": "Arreglar la gestión del tiempo para evitar fugas de memoria\nInformación adicional sobre clientes conectados en el modo servidor\nTrató de corregir el error con direcciones alineadas\nGUI was migrated to admin 7",
-                "pl": "Zarządzanie timeout, aby zapobiec wyciekom pamięci\nDodano informacje o podłączonych klientach w trybie serwera\nPróbowano naprawić błąd z adresami dostosowującymi\nGUI został przeniesiony do admin 7",
-                "uk": "Виправлення часу управління для запобігання витоку пам'яті\nДодано інформацію про підключені клієнти в режимі сервера\nПеревірити помилку з вирівнюванням адрес\nGUI був мігрований до адмін 7",
-                "zh-cn": "修正超时管理以防止内存泄漏\n在服务器模式中添加了连接客户端的信息\n尝试用对齐地址修正错误\nGUI 已迁移到管理员 7"
-            },
-            "6.2.3": {
-                "en": "Fixed error at aligning addresses to word\nAdded device id to some errors",
-                "de": "Fehler beim Ausrichten von Adressen zu Wort behoben\nHinzugefügt Gerät id zu einigen Fehlern",
-                "ru": "Исправленная ошибка при выравнивании адресов к слову\nДобавлено устройство id к некоторым ошибкам",
-                "pt": "Erro fixo em endereços de alinhamento à palavra\nAdicionado dispositivo id a alguns erros",
-                "nl": "Fout bij het uitlijnen van adressen naar woord\nApparaat-id toegevoegd aan enkele fouten",
-                "fr": "Erreur corrigée à l'alignement des adresses sur le mot\nAjout de l'identifiant du périphérique à certaines erreurs",
-                "it": "Errore fisso allineando gli indirizzi alla parola\nAggiunto dispositivo id a alcuni errori",
-                "es": "Error fijo en alinear direcciones a palabra\nDispositivo añadido id a algunos errores",
-                "pl": "Naprawiony błąd przy dostosowywaniu adresów do słowa\nDodano id urządzenia do niektórych błędów",
-                "uk": "Виправлена помилка при вирівнюванні адрес в слово\nДодано пристрій id до деяких помилок",
-                "zh-cn": "对齐地址和单词时的固定错误\n添加到一些错误中的设备 ID"
-            },
-            "6.2.2": {
-                "en": "Downgrade gulp to 4.0.2 to fix build",
-                "de": "Downgrade Gulp auf 4.0.2 zu reparieren Build",
-                "ru": "4.0.2 для фиксации сборки",
-                "pt": "Downgrade gulp para 4.0.2 para corrigir a compilação",
-                "nl": "Downgrade gulp naar 4.0.2 om build te repareren",
-                "fr": "Goupe de qualité inférieure à 4.0.2 pour fixer la construction",
-                "it": "Golp downgrade a 4.0.2 per fissare la costruzione",
-                "es": "Golp degradado a 4.0.2 para fijar la construcción",
-                "pl": "Przewód downgrade do 4.0.2, aby naprawić budowę",
-                "uk": "Downgrade gulp до 4.0.2 для кріплення",
-                "zh-cn": "将gulp降级为4. 0.2,以修复建筑"
-            },
-            "6.2.1": {
-                "en": "Warning regarding scale factor due to incorrect check: \"Calculation of a scaleFactor which is based on another scaleFactor seems strange.\"",
-                "de": "Warnung bezüglich des Skalenfaktors durch falsche Überprüfung: \"Kalkulation einer SkalaFactor, die auf einer anderen Skala basiertFactor scheint seltsam.\"",
-                "ru": "Предупреждение о факторе шкалы из-за неправильной проверки: «Calculation of a scaleFactor which is based on another scaleFactor seems Strange»",
-                "pt": "Aviso sobre o fator de escala devido à verificação incorreta: \"Calculação de uma escalaFactor que é baseado em outra escalaFactor parece estranho.\"",
-                "nl": "Waarschuwing met betrekking tot schaalfactor vanwege onjuiste controle: \"Berekenen van een schaalFactor die gebaseerd is op een andere schaalFactor lijkt vreemd.\"",
-                "fr": "Avertissement concernant le facteur d'échelle en raison d'une vérification incorrecte: \"Calcul d'une échelleFactor qui est basée sur une autre échelleFactor semble étrange.\"",
-                "it": "Avvertenza sul fattore di scala a causa di un controllo errato: \"Calcolo di una scalaFattore che si basa su un'altra scalaFattore sembra strano.\"",
-                "es": "Advertencia sobre el factor de escala debido a la comprobación incorrecta: \"Calculación de una escalaFactor que se basa en otra escalaEl actor parece extraño\"",
-                "pl": "Ostrzeżenie dotyczące współczynnika skali z powodu nieprawidłowego sprawdzenia: \"Obliczanie skaleFactor, który jest oparty na innym skaleFactor wydaje się dziwne\"",
-                "uk": "Попередження про фактор масштабу за рахунок неправильної перевірки: «Калкуляція масштабуФактора, який базується на іншому масштабіФактор здається дивним»",
-                "zh-cn": "因检查不正确而显示比例表因素的警告 : \"计算一个尺度的Factor 它基于另一个尺度的Factor似乎很奇怪。\""
-            },
-            "6.2.0": {
-                "en": "String based on 16 bit values big endian as well as little endian\nRaw data as a hex string\nFix issue stringle was always converted to number for slave\nEnable formula for strings and hex strings",
-                "de": "String basierend auf 16 Bit Werten große Endian sowie wenig Endian\nDaten als Hexenzeichen\nFix Problem stringle wurde immer in Nummer für Slave umgewandelt\nFormel aktivieren für Strings und Hexenstrings",
-                "ru": "Стринг основан на 16-битных значениях большого кондиана, а также маленького кондиана\nСырные данные как строка гекса\nФикс-лидер всегда был конвертирован в число для раба\nВключить формулу для строк и строк",
-                "pt": "String baseado em 16 bits valores grande endian, bem como pouco endian\nDados brutos como uma cadeia hex\nCorrigir problema stringle foi sempre convertido em número para escravo\nHabilite a fórmula para strings e caracteres hex",
-                "nl": "Tekenreeks gebaseerd op 16 bit waarden grote endiaan en kleine endiaan\nRaw data als hex string\nFix probleem stringle werd altijd omgezet naar nummer voor slave\nFormule voor tekenreeksen en hextekenreeksen inschakelen",
-                "fr": "String basé sur les valeurs 16 bits grand endian ainsi que peu d'endian\nDonnées brutes comme une chaîne de caractères hexagonaux\nCorrection de la chaîne d'émission a toujours été convertie en nombre pour esclave\nActiver la formule pour les chaînes de caractères et les chaînes de caractères",
-                "it": "String basato su 16 bit valori big endian e piccolo endian\nDati grezzi come stringa esagonale\nFisso problema stringle è sempre stato convertito in numero per schiavo\nAttiva la formula per stringhe e stringhe di esagonale",
-                "es": "Pendiente basado en 16 valores de bits grandes endian así como poco endian\nDatos brutos como cadena hexagonal\nCorrección de números siempre se convirtió en número para esclavo\nActivar fórmula para cadenas y cadenas hexagonales",
-                "pl": "String w oparciu o 16-bitowe wartości duże endian, jak również małe endian\nSurowe dane jako ciąg szesnastkowy\nPoprawiony numer utworu był zawsze przeliczany na numer dla niewolnika\nWłącz formułę dla ciągów i ciągów hex",
-                "uk": "String на основі 16 біт значень великого ендоріана, а також маленького ендоріана\nСирі дані як рядок шестигранної\nВиправлено помилку питання stringle завжди перетворено на номер для раба\nУвімкнути формулу для рядків і шестигранних рядків",
-                "zh-cn": "基于 16 位值的字符串\n作为十六进制字符串的原始数据\nFix issue stringle 总是被转换成奴隶的数字\n启用字符串和十六进制字符串的公式"
-            },
-            "6.1.0": {
-                "en": "Implement the connection keepAlive",
-                "de": "Implementieren der Verbindung halten Alive",
-                "ru": "Внедрить соединение держать Живой",
-                "pt": "Implementar a conexão manter Vivo",
-                "nl": "Impliceer de connectie Levend",
-                "fr": "Mettre en œuvre la connexion Alive",
-                "it": "Implementare la connessione mantenere Vivo",
-                "es": "Implementar la conexión Alive",
-                "pl": "Umożliwia to, że połączenie zachowuje połączenie. Alive",
-                "uk": "Реалізація з'єднання тримати Напляскване",
-                "zh-cn": "执行联络系统 活 活"
-            }
+  "common": {
+    "name": "modbus",
+    "version": "6.4.0",
+    "news": {
+      "6.4.0": {
+        "en": "Moved GUI compilation to vite\nAdded error message if the response length is invalid",
+        "de": "Versetzte GUI-Compilation zu vite\nFehlermeldung hinzugefügt, wenn die Antwortlänge ungültig ist",
+        "ru": "Перемещение GUI-компиляция в vite\nДобавить сообщение об ошибке, если длина ответа недействительна",
+        "pt": "Compilação de GUI movido para vite\nAdicionado mensagem de erro se o comprimento de resposta é inválido",
+        "nl": "GUI compilatie verplaatst naar vite\nFoutmelding toegevoegd als de responslengte ongeldig is",
+        "fr": "Compilation GUI déplacée sur rite\nAjout du message d'erreur si la longueur de réponse est invalide",
+        "it": "Spostato compilazione GUI a vite\nAggiunto messaggio di errore se la lunghezza di risposta è invalida",
+        "es": "Mueve la compilación GUI para vite\nMensaje de error añadido si la longitud de respuesta es inválida",
+        "pl": "Przeniesiony GUI kompilacja vite\nDodano komunikat błędu, jeśli długość odpowiedzi jest nieprawidłowa",
+        "uk": "Переміщення графічних інтерфейсів для vite\nДодано повідомлення про помилку, якщо довжина відповіді недійсна",
+        "zh-cn": "将 GUI 编译为 vite\n如果响应长度无效, 则添加错误消息"
+      },
+      "6.3.2": {
+        "en": "Corrected the error with alignment of addresses",
+        "de": "Korrektur des Fehlers bei der Ausrichtung von Adressen",
+        "ru": "Исправлена ошибка с выравниванием адресов",
+        "pt": "Corrigido o erro com o alinhamento de endereços",
+        "nl": "De fout gecorrigeerd met het uitlijnen van adressen",
+        "fr": "Correction de l'erreur avec l'alignement des adresses",
+        "it": "Corretto l'errore con allineamento degli indirizzi",
+        "es": "Corregido el error con la alineación de direcciones",
+        "pl": "Poprawiono błąd z ustawieniem adresów",
+        "uk": "Виправлено помилку з вирівнюванням адрес",
+        "zh-cn": "在地址对齐时纠正了错误"
+      },
+      "6.3.0": {
+        "en": "Fix Timeout management to prevent leaking memory\nAdded information about connected clients in the server mode\nTried to fix error with aligning addresses\nGUI was migrated to admin 7",
+        "de": "Fix Timeout-Management, um zu verhindern, dass Leckspeicher\nWeitere Informationen zu verbundenen Clients im Servermodus\nVersuche, Fehler mit Ausrichtadressen zu beheben\nGUI wurde zu admin 7 migriert",
+        "ru": "Управление тайм-аутом для предотвращения утечки памяти\nДобавлена информация о подключенных клиентах в серверном режиме\nПопытка исправить ошибку с выравниванием адресов\nGUI был перенесен на admin 7",
+        "pt": "Corrigir gerenciamento de tempo limite para evitar vazamento de memória\nInformaÃ§Ãμes adicionais sobre clientes conectados no modo servidor\nTentei corrigir o erro com os endereços de alinhamento\nGUI foi migrado para admin 7",
+        "nl": "Fix Timeout management om het lekken van geheugen te voorkomen\nInformatie over verbonden clients toegevoegd in de servermodus\nProbeerde fout te herstellen met uitlijnen van adressen\nGUI is gemigreerd naar admin 7",
+        "fr": "Correction de la gestion du délai pour éviter les fuites de mémoire\nAjout d'informations sur les clients connectés en mode serveur\nEssai de corriger l'erreur avec les adresses d'alignement\nGUI a été migré vers admin 7",
+        "it": "Fissare la gestione Timeout per evitare perdite di memoria\nAggiunte informazioni sui client connessi nella modalità server\nHo cercato di correggere l'errore con gli indirizzi di allineamento\nGUI è stata migrata ad admin 7",
+        "es": "Arreglar la gestión del tiempo para evitar fugas de memoria\nInformación adicional sobre clientes conectados en el modo servidor\nTrató de corregir el error con direcciones alineadas\nGUI was migrated to admin 7",
+        "pl": "Zarządzanie timeout, aby zapobiec wyciekom pamięci\nDodano informacje o podłączonych klientach w trybie serwera\nPróbowano naprawić błąd z adresami dostosowującymi\nGUI został przeniesiony do admin 7",
+        "uk": "Виправлення часу управління для запобігання витоку пам'яті\nДодано інформацію про підключені клієнти в режимі сервера\nПеревірити помилку з вирівнюванням адрес\nGUI був мігрований до адмін 7",
+        "zh-cn": "修正超时管理以防止内存泄漏\n在服务器模式中添加了连接客户端的信息\n尝试用对齐地址修正错误\nGUI 已迁移到管理员 7"
+      },
+      "6.2.3": {
+        "en": "Fixed error at aligning addresses to word\nAdded device id to some errors",
+        "de": "Fehler beim Ausrichten von Adressen zu Wort behoben\nHinzugefügt Gerät id zu einigen Fehlern",
+        "ru": "Исправленная ошибка при выравнивании адресов к слову\nДобавлено устройство id к некоторым ошибкам",
+        "pt": "Erro fixo em endereços de alinhamento à palavra\nAdicionado dispositivo id a alguns erros",
+        "nl": "Fout bij het uitlijnen van adressen naar woord\nApparaat-id toegevoegd aan enkele fouten",
+        "fr": "Erreur corrigée à l'alignement des adresses sur le mot\nAjout de l'identifiant du périphérique à certaines erreurs",
+        "it": "Errore fisso allineando gli indirizzi alla parola\nAggiunto dispositivo id a alcuni errori",
+        "es": "Error fijo en alinear direcciones a palabra\nDispositivo añadido id a algunos errores",
+        "pl": "Naprawiony błąd przy dostosowywaniu adresów do słowa\nDodano id urządzenia do niektórych błędów",
+        "uk": "Виправлена помилка при вирівнюванні адрес в слово\nДодано пристрій id до деяких помилок",
+        "zh-cn": "对齐地址和单词时的固定错误\n添加到一些错误中的设备 ID"
+      },
+      "6.2.2": {
+        "en": "Downgrade gulp to 4.0.2 to fix build",
+        "de": "Downgrade Gulp auf 4.0.2 zu reparieren Build",
+        "ru": "4.0.2 для фиксации сборки",
+        "pt": "Downgrade gulp para 4.0.2 para corrigir a compilação",
+        "nl": "Downgrade gulp naar 4.0.2 om build te repareren",
+        "fr": "Goupe de qualité inférieure à 4.0.2 pour fixer la construction",
+        "it": "Golp downgrade a 4.0.2 per fissare la costruzione",
+        "es": "Golp degradado a 4.0.2 para fijar la construcción",
+        "pl": "Przewód downgrade do 4.0.2, aby naprawić budowę",
+        "uk": "Downgrade gulp до 4.0.2 для кріплення",
+        "zh-cn": "将gulp降级为4. 0.2,以修复建筑"
+      },
+      "6.2.1": {
+        "en": "Warning regarding scale factor due to incorrect check: \"Calculation of a scaleFactor which is based on another scaleFactor seems strange.\"",
+        "de": "Warnung bezüglich des Skalenfaktors durch falsche Überprüfung: \"Kalkulation einer SkalaFactor, die auf einer anderen Skala basiertFactor scheint seltsam.\"",
+        "ru": "Предупреждение о факторе шкалы из-за неправильной проверки: «Calculation of a scaleFactor which is based on another scaleFactor seems Strange»",
+        "pt": "Aviso sobre o fator de escala devido à verificação incorreta: \"Calculação de uma escalaFactor que é baseado em outra escalaFactor parece estranho.\"",
+        "nl": "Waarschuwing met betrekking tot schaalfactor vanwege onjuiste controle: \"Berekenen van een schaalFactor die gebaseerd is op een andere schaalFactor lijkt vreemd.\"",
+        "fr": "Avertissement concernant le facteur d'échelle en raison d'une vérification incorrecte: \"Calcul d'une échelleFactor qui est basée sur une autre échelleFactor semble étrange.\"",
+        "it": "Avvertenza sul fattore di scala a causa di un controllo errato: \"Calcolo di una scalaFattore che si basa su un'altra scalaFattore sembra strano.\"",
+        "es": "Advertencia sobre el factor de escala debido a la comprobación incorrecta: \"Calculación de una escalaFactor que se basa en otra escalaEl actor parece extraño\"",
+        "pl": "Ostrzeżenie dotyczące współczynnika skali z powodu nieprawidłowego sprawdzenia: \"Obliczanie skaleFactor, który jest oparty na innym skaleFactor wydaje się dziwne\"",
+        "uk": "Попередження про фактор масштабу за рахунок неправильної перевірки: «Калкуляція масштабуФактора, який базується на іншому масштабіФактор здається дивним»",
+        "zh-cn": "因检查不正确而显示比例表因素的警告 : \"计算一个尺度的Factor 它基于另一个尺度的Factor似乎很奇怪。\""
+      },
+      "6.2.0": {
+        "en": "String based on 16 bit values big endian as well as little endian\nRaw data as a hex string\nFix issue stringle was always converted to number for slave\nEnable formula for strings and hex strings",
+        "de": "String basierend auf 16 Bit Werten große Endian sowie wenig Endian\nDaten als Hexenzeichen\nFix Problem stringle wurde immer in Nummer für Slave umgewandelt\nFormel aktivieren für Strings und Hexenstrings",
+        "ru": "Стринг основан на 16-битных значениях большого кондиана, а также маленького кондиана\nСырные данные как строка гекса\nФикс-лидер всегда был конвертирован в число для раба\nВключить формулу для строк и строк",
+        "pt": "String baseado em 16 bits valores grande endian, bem como pouco endian\nDados brutos como uma cadeia hex\nCorrigir problema stringle foi sempre convertido em número para escravo\nHabilite a fórmula para strings e caracteres hex",
+        "nl": "Tekenreeks gebaseerd op 16 bit waarden grote endiaan en kleine endiaan\nRaw data als hex string\nFix probleem stringle werd altijd omgezet naar nummer voor slave\nFormule voor tekenreeksen en hextekenreeksen inschakelen",
+        "fr": "String basé sur les valeurs 16 bits grand endian ainsi que peu d'endian\nDonnées brutes comme une chaîne de caractères hexagonaux\nCorrection de la chaîne d'émission a toujours été convertie en nombre pour esclave\nActiver la formule pour les chaînes de caractères et les chaînes de caractères",
+        "it": "String basato su 16 bit valori big endian e piccolo endian\nDati grezzi come stringa esagonale\nFisso problema stringle è sempre stato convertito in numero per schiavo\nAttiva la formula per stringhe e stringhe di esagonale",
+        "es": "Pendiente basado en 16 valores de bits grandes endian así como poco endian\nDatos brutos como cadena hexagonal\nCorrección de números siempre se convirtió en número para esclavo\nActivar fórmula para cadenas y cadenas hexagonales",
+        "pl": "String w oparciu o 16-bitowe wartości duże endian, jak również małe endian\nSurowe dane jako ciąg szesnastkowy\nPoprawiony numer utworu był zawsze przeliczany na numer dla niewolnika\nWłącz formułę dla ciągów i ciągów hex",
+        "uk": "String на основі 16 біт значень великого ендоріана, а також маленького ендоріана\nСирі дані як рядок шестигранної\nВиправлено помилку питання stringle завжди перетворено на номер для раба\nУвімкнути формулу для рядків і шестигранних рядків",
+        "zh-cn": "基于 16 位值的字符串\n作为十六进制字符串的原始数据\nFix issue stringle 总是被转换成奴隶的数字\n启用字符串和十六进制字符串的公式"
+      }
+    },
+    "titleLang": {
+      "en": "ModBus",
+      "de": "ModBus",
+      "ru": "ModBus",
+      "pt": "ModBus",
+      "nl": "ModBus",
+      "fr": "ModBus",
+      "it": "ModBus",
+      "es": "ModBus",
+      "pl": "ModBus",
+      "uk": "ModBus",
+      "zh-cn": "ModBus"
+    },
+    "desc": {
+      "en": "ModBus connection Slave or Master",
+      "de": "ModBus Verbindung Slave oder Master",
+      "ru": "ModBus соединение Slave или Master",
+      "pt": "Conexão ModBus Escravo ou Mestre",
+      "nl": "ModBus-verbinding Slave of Master",
+      "fr": "Connexion ModBus Esclave ou Maître",
+      "it": "Connessione ModBus Slave o Master",
+      "es": "Conexión ModBus Slave o Master",
+      "pl": "Połączenie ModBus Slave lub Master",
+      "zh-cn": "ModBus连接从站或主站"
+    },
+    "authors": [
+      "bluefox <dogafox@gmail.com>"
+    ],
+    "licenseInformation": {
+      "license": "MIT",
+      "type": "free"
+    },
+    "platform": "Javascript/Node.js",
+    "mode": "daemon",
+    "loglevel": "info",
+    "messagebox": true,
+    "icon": "modbus.png",
+    "keywords": [
+      "ModBus"
+    ],
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.modbus/master/admin/modbus.png",
+    "readme": "https://github.com/ioBroker/ioBroker.modbus/blob/master/README.md",
+    "type": "protocols",
+    "plugins": {
+      "sentry": {
+        "dsn": "https://0c7b6d766435448cbf4908f615efe683@sentry.iobroker.net/84"
+      }
+    },
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "tier": 2,
+    "eraseOnUpload": true,
+    "adminUI": {
+      "config": "materialize"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=5.0.19"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=5.1.28"
+      }
+    ],
+    "messages": [
+      {
+        "condition": {
+          "operand": "and",
+          "rules": [
+            "oldVersion<5.0.0",
+            "newVersion>=5.0.0"
+          ]
         },
-        "titleLang": {
-            "en": "ModBus",
-            "de": "ModBus",
-            "ru": "ModBus",
-            "pt": "ModBus",
-            "nl": "ModBus",
-            "fr": "ModBus",
-            "it": "ModBus",
-            "es": "ModBus",
-            "pl": "ModBus",
-            "uk": "ModBus",
-            "zh-cn": "ModBus"
+        "title": {
+          "en": "Objects IDs will change with update!",
+          "de": "Objekt-IDs ändern sich mit dem Update!",
+          "ru": "ID объектов изменятся с обновлением!",
+          "pt": "Os IDs de objetos mudarão com a atualização!",
+          "nl": "Object-ID's veranderen met de update!",
+          "fr": "Les ID d'objets changeront avec la mise à jour !",
+          "it": "Gli ID degli oggetti cambieranno con l'aggiornamento!",
+          "es": "¡Los ID de los objetos cambiarán con la actualización!",
+          "pl": "Identyfikatory obiektów zmienią się wraz z aktualizacją!",
+          "zh-cn": "对象 ID 会随着更新而改变！"
         },
-        "desc": {
-            "en": "ModBus connection Slave or Master",
-            "de": "ModBus Verbindung Slave oder Master",
-            "ru": "ModBus соединение Slave или Master",
-            "pt": "Conexão ModBus Escravo ou Mestre",
-            "nl": "ModBus-verbinding Slave of Master",
-            "fr": "Connexion ModBus Esclave ou Maître",
-            "it": "Connessione ModBus Slave o Master",
-            "es": "Conexión ModBus Slave o Master",
-            "pl": "Połączenie ModBus Slave lub Master",
-            "zh-cn": "ModBus连接从站或主站"
+        "text": {
+          "en": "This update makes sure that all space characters are correctly replaced by underscores on Object-IDs. This means that they will change after this update if you use more then one space in the names of your registers. You need to manually delete the old Object names.",
+          "de": "Dieses Update stellt sicher, dass alle Leerzeichen bei Objekt-IDs korrekt durch Unterstriche ersetzt werden. Das bedeutet, dass sie sich nach diesem Update ändern, wenn mehr als ein Leerzeichen im Namen der Register verwendet wird. Alte Objektnamen müssen manuell gelöscht werden.",
+          "ru": "Это обновление обеспечивает правильную замену всех символов пробела символами подчеркивания в идентификаторах объектов. Это означает, что они изменятся после этого обновления, если вы используете более одного пробела в именах ваших регистров. Вам необходимо вручную удалить старые имена объектов.",
+          "pt": "Essa atualização garante que todos os caracteres de espaço sejam substituídos corretamente por sublinhados em IDs de objeto. Isso significa que eles serão alterados após esta atualização se você usar mais de um espaço nos nomes dos seus registros. Você precisa excluir manualmente os nomes de objetos antigos.",
+          "nl": "Deze update zorgt ervoor dat alle spatietekens correct worden vervangen door onderstrepingstekens op Object-ID's. Dit betekent dat ze na deze update zullen veranderen als u meer dan één spatie gebruikt in de namen van uw registers. U moet de oude objectnamen handmatig verwijderen.",
+          "fr": "Cette mise à jour garantit que tous les espaces sont correctement remplacés par des traits de soulignement sur les ID d'objet. Cela signifie qu'ils changeront après cette mise à jour si vous utilisez plus d'un espace dans les noms de vos registres. Vous devez supprimer manuellement les anciens noms d'objet.",
+          "it": "Questo aggiornamento assicura che tutti i caratteri spazio siano sostituiti correttamente da caratteri di sottolineatura sugli ID oggetto. Ciò significa che cambieranno dopo questo aggiornamento se utilizzi più di uno spazio nei nomi dei tuoi registri. È necessario eliminare manualmente i vecchi nomi degli oggetti.",
+          "es": "Esta actualización garantiza que todos los caracteres de espacio se reemplacen correctamente por guiones bajos en los ID de objetos. Esto significa que cambiarán después de esta actualización si usa más de un espacio en los nombres de sus registros. Debe eliminar manualmente los nombres de objetos antiguos.",
+          "pl": "Ta aktualizacja zapewnia, że wszystkie znaki spacji są poprawnie zastępowane podkreśleniami w identyfikatorach obiektów. Oznacza to, że zmienią się one po tej aktualizacji, jeśli użyjesz więcej niż jednej spacji w nazwach swoich rejestrów. Musisz ręcznie usunąć stare nazwy obiektów.",
+          "zh-cn": "此更新确保所有空格字符都正确替换为对象 ID 上的下划线。这意味着如果您在寄存器名称中使用超过一个空格，它们将在此更新后更改。您需要手动删除旧的对象名称。"
         },
-        "authors": ["bluefox <dogafox@gmail.com>"],
-        "licenseInformation": {
-            "license": "MIT",
-            "type": "free"
-        },
-        "platform": "Javascript/Node.js",
-        "mode": "daemon",
-        "loglevel": "info",
-        "messagebox": true,
-        "icon": "modbus.png",
-        "keywords": ["ModBus"],
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.modbus/master/admin/modbus.png",
-        "readme": "https://github.com/ioBroker/ioBroker.modbus/blob/master/README.md",
-        "type": "protocols",
-        "plugins": {
-            "sentry": {
-                "dsn": "https://0c7b6d766435448cbf4908f615efe683@sentry.iobroker.net/84"
-            }
-        },
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "tier": 2,
-        "eraseOnUpload": true,
-        "adminUI": {
-            "config": "materialize"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=5.0.19"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=5.1.28"
-            }
-        ],
-        "messages": [
-            {
-                "condition": {
-                    "operand": "and",
-                    "rules": ["oldVersion<5.0.0", "newVersion>=5.0.0"]
-                },
-                "title": {
-                    "en": "Objects IDs will change with update!",
-                    "de": "Objekt-IDs ändern sich mit dem Update!",
-                    "ru": "ID объектов изменятся с обновлением!",
-                    "pt": "Os IDs de objetos mudarão com a atualização!",
-                    "nl": "Object-ID's veranderen met de update!",
-                    "fr": "Les ID d'objets changeront avec la mise à jour !",
-                    "it": "Gli ID degli oggetti cambieranno con l'aggiornamento!",
-                    "es": "¡Los ID de los objetos cambiarán con la actualización!",
-                    "pl": "Identyfikatory obiektów zmienią się wraz z aktualizacją!",
-                    "zh-cn": "对象 ID 会随着更新而改变！"
-                },
-                "text": {
-                    "en": "This update makes sure that all space characters are correctly replaced by underscores on Object-IDs. This means that they will change after this update if you use more then one space in the names of your registers. You need to manually delete the old Object names.",
-                    "de": "Dieses Update stellt sicher, dass alle Leerzeichen bei Objekt-IDs korrekt durch Unterstriche ersetzt werden. Das bedeutet, dass sie sich nach diesem Update ändern, wenn mehr als ein Leerzeichen im Namen der Register verwendet wird. Alte Objektnamen müssen manuell gelöscht werden.",
-                    "ru": "Это обновление обеспечивает правильную замену всех символов пробела символами подчеркивания в идентификаторах объектов. Это означает, что они изменятся после этого обновления, если вы используете более одного пробела в именах ваших регистров. Вам необходимо вручную удалить старые имена объектов.",
-                    "pt": "Essa atualização garante que todos os caracteres de espaço sejam substituídos corretamente por sublinhados em IDs de objeto. Isso significa que eles serão alterados após esta atualização se você usar mais de um espaço nos nomes dos seus registros. Você precisa excluir manualmente os nomes de objetos antigos.",
-                    "nl": "Deze update zorgt ervoor dat alle spatietekens correct worden vervangen door onderstrepingstekens op Object-ID's. Dit betekent dat ze na deze update zullen veranderen als u meer dan één spatie gebruikt in de namen van uw registers. U moet de oude objectnamen handmatig verwijderen.",
-                    "fr": "Cette mise à jour garantit que tous les espaces sont correctement remplacés par des traits de soulignement sur les ID d'objet. Cela signifie qu'ils changeront après cette mise à jour si vous utilisez plus d'un espace dans les noms de vos registres. Vous devez supprimer manuellement les anciens noms d'objet.",
-                    "it": "Questo aggiornamento assicura che tutti i caratteri spazio siano sostituiti correttamente da caratteri di sottolineatura sugli ID oggetto. Ciò significa che cambieranno dopo questo aggiornamento se utilizzi più di uno spazio nei nomi dei tuoi registri. È necessario eliminare manualmente i vecchi nomi degli oggetti.",
-                    "es": "Esta actualización garantiza que todos los caracteres de espacio se reemplacen correctamente por guiones bajos en los ID de objetos. Esto significa que cambiarán después de esta actualización si usa más de un espacio en los nombres de sus registros. Debe eliminar manualmente los nombres de objetos antiguos.",
-                    "pl": "Ta aktualizacja zapewnia, że wszystkie znaki spacji są poprawnie zastępowane podkreśleniami w identyfikatorach obiektów. Oznacza to, że zmienią się one po tej aktualizacji, jeśli użyjesz więcej niż jednej spacji w nazwach swoich rejestrów. Musisz ręcznie usunąć stare nazwy obiektów.",
-                    "zh-cn": "此更新确保所有空格字符都正确替换为对象 ID 上的下划线。这意味着如果您在寄存器名称中使用超过一个空格，它们将在此更新后更改。您需要手动删除旧的对象名称。"
-                },
-                "level": "warn",
-                "buttons": ["agree", "cancel"]
-            }
+        "level": "warn",
+        "buttons": [
+          "agree",
+          "cancel"
         ]
-    },
-    "native": {
-        "params": {
-            "type": "tcp",
-            "bind": "127.0.0.1",
-            "port": 502,
-            "comName": "",
-            "baudRate": 9600,
-            "dataBits": 8,
-            "stopBits": 1,
-            "parity": "none",
-            "deviceId": 1,
-            "timeout": 5000,
-            "slave": 0,
-            "poll": 1000,
-            "recon": 60000,
-            "keepAliveInterval": 0,
-            "maxBlock": 100,
-            "maxBoolBlock": 128,
-            "multiDeviceId": false,
-            "pulsetime": 1000,
-            "waitTime": 50,
-            "disInputsOffset": 10001,
-            "coilsOffset": 1,
-            "inputRegsOffset": 30001,
-            "holdingRegsOffset": 40001,
-            "showAliases": true,
-            "directAddresses": false,
-            "doNotIncludeAdrInId": false,
-            "preserveDotsInId": false,
-            "round": 2,
-            "doNotRoundAddressToWord": false,
-            "doNotUseWriteMultipleRegisters": false,
-            "onlyUseWriteMultipleRegisters": false,
-            "writeInterval": 0,
-            "readInterval": 0
-        },
-        "disInputs": [],
-        "coils": [],
-        "inputRegs": [],
-        "holdingRegs": []
-    },
-    "instanceObjects": [
-        {
-            "_id": "",
-            "type": "meta",
-            "common": {
-                "type": "meta"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "role": "indicator.connected",
-                "name": "If master connected",
-                "type": "boolean",
-                "read": true,
-                "write": false,
-                "def": false
-            },
-            "native": {}
-        }
+      }
     ]
+  },
+  "native": {
+    "params": {
+      "type": "tcp",
+      "bind": "127.0.0.1",
+      "port": 502,
+      "comName": "",
+      "baudRate": 9600,
+      "dataBits": 8,
+      "stopBits": 1,
+      "parity": "none",
+      "deviceId": 1,
+      "timeout": 5000,
+      "slave": 0,
+      "poll": 1000,
+      "recon": 60000,
+      "keepAliveInterval": 0,
+      "maxBlock": 100,
+      "maxBoolBlock": 128,
+      "multiDeviceId": false,
+      "pulsetime": 1000,
+      "waitTime": 50,
+      "disInputsOffset": 10001,
+      "coilsOffset": 1,
+      "inputRegsOffset": 30001,
+      "holdingRegsOffset": 40001,
+      "showAliases": true,
+      "directAddresses": false,
+      "doNotIncludeAdrInId": false,
+      "preserveDotsInId": false,
+      "round": 2,
+      "doNotRoundAddressToWord": false,
+      "doNotUseWriteMultipleRegisters": false,
+      "onlyUseWriteMultipleRegisters": false,
+      "writeInterval": 0,
+      "readInterval": 0
+    },
+    "disInputs": [],
+    "coils": [],
+    "inputRegs": [],
+    "holdingRegs": []
+  },
+  "instanceObjects": [
+    {
+      "_id": "",
+      "type": "meta",
+      "common": {
+        "type": "meta"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "If master connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
 }
