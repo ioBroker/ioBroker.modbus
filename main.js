@@ -19,7 +19,7 @@ function startAdapter(options) {
         try {
             SerialPort = require('serialport').SerialPort;
         } catch (err) {
-            adapter.log.warn('Serial is not available');
+            adapter.log.warn(`Serial is not available: ${err}`);
         }
 
         main();
@@ -32,14 +32,16 @@ function startAdapter(options) {
                     if (obj.callback) {
                         if (SerialPort) {
                             // read all found serial ports
-                            SerialPort.list().then(ports => {
-                                ports = listSerial(ports);
-                                adapter.log.info(`List of port: ${JSON.stringify(ports)}`);
-                                adapter.sendTo(obj.from, obj.command, ports, obj.callback);
-                            }).catch(err => {
-                                adapter.log.warn(`Can not get Serial port list: ${err}`);
-                                adapter.sendTo(obj.from, obj.command, [{path: 'Not available'}], obj.callback);
-                            });
+                            SerialPort.list()
+                                .then(ports => {
+                                    ports = listSerial(ports);
+                                    adapter.log.info(`List of port: ${JSON.stringify(ports)}`);
+                                    adapter.sendTo(obj.from, obj.command, ports, obj.callback);
+                                })
+                                .catch(err => {
+                                    adapter.log.warn(`Can not get Serial port list: ${err}`);
+                                    adapter.sendTo(obj.from, obj.command, [{ path: 'Not available' }], obj.callback);
+                                });
                         } else {
                             adapter.log.warn('Module serialport is not available');
                             adapter.sendTo(obj.from, obj.command, [{ path: 'Not available' }], obj.callback);
@@ -55,7 +57,7 @@ function startAdapter(options) {
     adapter.on('stateChange', (id, state) => {
         if (state && !state.ack && id && !infoRegExp.test(id)) {
             if (!modbus) {
-                adapter.log.warn('No connection')
+                adapter.log.warn('No connection');
             } else {
                 adapter.log.debug(`state Changed ack=false: ${id}: ${JSON.stringify(state)}`);
                 if (objects[id]) {
@@ -87,19 +89,18 @@ function stop(callback) {
         adapter.setState('info.connection', adapter.config.params.slave ? '' : false, true);
     }
 
-    adapter.getForeignStatesAsync(`${adapter.namespace}.info.clients.*`)
-        .then(async allStates => {
-            for (let id in allStates) {
-                if (allStates[id] && allStates[id].val) {
-                    await adapter.setStateAsync(id, false, true);
-                }
+    adapter.getForeignStatesAsync(`${adapter.namespace}.info.clients.*`).then(async allStates => {
+        for (let id in allStates) {
+            if (allStates[id] && allStates[id].val) {
+                await adapter.setStateAsync(id, false, true);
             }
-            if (typeof callback === 'function') {
-                return void callback();
-            }
+        }
+        if (typeof callback === 'function') {
+            return void callback();
+        }
 
-            adapter.terminate ? adapter.terminate() : process.exit()
-        });
+        adapter.terminate ? adapter.terminate() : process.exit();
+    });
 }
 
 let objects = {};
@@ -108,13 +109,10 @@ let enums = {};
 function filterSerialPorts(path) {
     fs = fs || require('node:fs');
     // get only serial port names
-    if (!(/(tty(S|ACM|USB|AMA|MFD|XR)|rfcomm)/).test(path)) {
+    if (!/(tty(S|ACM|USB|AMA|MFD|XR)|rfcomm)/.test(path)) {
         return false;
-    } else {
-        return fs
-            .statSync(path)
-            .isCharacterDevice();
     }
+    return fs.statSync(path).isCharacterDevice();
 }
 
 function listSerial(ports) {
@@ -196,14 +194,19 @@ function syncEnums(enumGroup, id, newEnumName, callback) {
     let found = false;
     let count = 0;
     for (let e in enums[enumGroup]) {
-        if (enums[enumGroup].hasOwnProperty(e) &&
+        if (
+            Object.prototype.hasOwnProperty.call(enums[enumGroup], e) &&
             enums[enumGroup][e].common &&
             enums[enumGroup][e].common.members &&
-            enums[enumGroup][e].common.members.includes(id)) {
+            enums[enumGroup][e].common.members.includes(id)
+        ) {
             if (enums[enumGroup][e]._id !== newEnumName) {
                 count++;
-                removeFromEnum(enums[enumGroup][e]._id, id, () =>
-                    !--count && typeof callback === 'function' && callback());
+                removeFromEnum(
+                    enums[enumGroup][e]._id,
+                    id,
+                    () => !--count && typeof callback === 'function' && callback(),
+                );
             } else {
                 found = true;
             }
@@ -211,47 +214,46 @@ function syncEnums(enumGroup, id, newEnumName, callback) {
     }
     if (!found && newEnumName) {
         count++;
-        addToEnum(newEnumName, id, () =>
-            !--count && typeof callback === 'function' && callback());
+        addToEnum(newEnumName, id, () => !--count && typeof callback === 'function' && callback());
     }
 
     !count && typeof callback === 'function' && callback();
 }
 
 const typeItemsLen = {
-    'uint8be': 1,
-    'uint8le': 1,
-    'int8be': 1,
-    'int8le': 1,
-    'uint16be': 1,
-    'uint16le': 1,
-    'int16be': 1,
-    'int16le': 1,
-    'int16be1': 1,
-    'int16le1': 1,
-    'uint32be': 2,
-    'uint32le': 2,
-    'uint32sw': 2,
-    'uint32sb': 2,
-    'int32be': 2,
-    'int32le': 2,
-    'int32sw': 2,
-    'int32sb': 2,
-    'uint64be': 4,
-    'uint64le': 4,
-    'int64be': 4,
-    'int64le': 4,
-    'floatbe': 2,
-    'floatle': 2,
-    'floatsw': 2,
-    'floatsb': 2,
-    'doublebe': 4,
-    'doublele': 4,
-    'string': 0,
-    'stringle': 0,
-    'string16': 0,
-    'string16le': 0,
-    'rawhex': 0
+    uint8be: 1,
+    uint8le: 1,
+    int8be: 1,
+    int8le: 1,
+    uint16be: 1,
+    uint16le: 1,
+    int16be: 1,
+    int16le: 1,
+    int16be1: 1,
+    int16le1: 1,
+    uint32be: 2,
+    uint32le: 2,
+    uint32sw: 2,
+    uint32sb: 2,
+    int32be: 2,
+    int32le: 2,
+    int32sw: 2,
+    int32sb: 2,
+    uint64be: 4,
+    uint64le: 4,
+    int64be: 4,
+    int64le: 4,
+    floatbe: 2,
+    floatle: 2,
+    floatsw: 2,
+    floatsb: 2,
+    doublebe: 4,
+    doublele: 4,
+    string: 0,
+    stringle: 0,
+    string16: 0,
+    string16le: 0,
+    rawhex: 0,
 };
 
 const _rmap = {
@@ -270,7 +272,7 @@ const _rmap = {
     12: 3,
     13: 2,
     14: 1,
-    15: 0
+    15: 0,
 };
 const _dmap = {
     0: 0,
@@ -288,7 +290,7 @@ const _dmap = {
     12: 12,
     13: 13,
     14: 14,
-    15: 15
+    15: 15,
 };
 
 function address2alias(id, address, isDirect, offset) {
@@ -300,9 +302,8 @@ function address2alias(id, address, isDirect, offset) {
         address = ((address >> 4) << 4) + (isDirect ? _dmap[address % 16] : _rmap[address % 16]);
         address += offset;
         return address;
-    } else {
-        return address + offset;
     }
+    return address + offset;
 }
 
 function createExtendObject(id, objData, callback) {
@@ -322,17 +323,20 @@ function processTasks(tasks, callback) {
     let task = tasks.shift();
     try {
         if (task.name === 'add') {
-            createExtendObject(task.id, task.obj, (err) => {
-                err && adapter.log.info(`Can not execute task "add" for ID ${task.id}: ${err.message} (${JSON.stringify(task)}`);
+            createExtendObject(task.id, task.obj, err => {
+                err &&
+                    adapter.log.info(
+                        `Can not execute task "add" for ID ${task.id}: ${err.message} (${JSON.stringify(task)}`,
+                    );
                 setImmediate(processTasks, tasks, callback);
             });
         } else if (task.name === 'del') {
-            adapter.delObject(task.id, (err) => {
+            adapter.delObject(task.id, err => {
                 err && adapter.log.info(`Can not execute task "del" for ID ${task.id}: ${err.message}`);
                 setImmediate(processTasks, tasks, callback);
             });
         } else if (task.name === 'syncEnums') {
-            syncEnums('rooms', task.id, task.obj, (err) => {
+            syncEnums('rooms', task.id, task.obj, err => {
                 err && adapter.log.info(`Can not execute task "syncEnums" for ID ${task.id}: ${err.message}`);
                 setImmediate(processTasks, tasks, callback);
             });
@@ -356,14 +360,17 @@ function prepareConfig(config) {
             alwaysUpdate: params.alwaysUpdate,
             round: parseInt(params.round, 10) || 0,
             timeout: parseInt(params.timeout, 10) || 5000,
-            defaultDeviceId: (params.deviceId === undefined || params.deviceId === null) ? 1 : (parseInt(params.deviceId, 10) || 0),
+            defaultDeviceId:
+                params.deviceId === undefined || params.deviceId === null ? 1 : parseInt(params.deviceId, 10) || 0,
             doNotIncludeAdrInId: params.doNotIncludeAdrInId,
             preserveDotsInId: params.preserveDotsInId,
             writeInterval: parseInt(params.writeInterval, 10) || 0,
-            doNotUseWriteMultipleRegisters: params.doNotUseWriteMultipleRegisters === true || params.doNotUseWriteMultipleRegisters === 'true',
-            onlyUseWriteMultipleRegisters: params.onlyUseWriteMultipleRegisters === true || params.onlyUseWriteMultipleRegisters === 'true',
+            doNotUseWriteMultipleRegisters:
+                params.doNotUseWriteMultipleRegisters === true || params.doNotUseWriteMultipleRegisters === 'true',
+            onlyUseWriteMultipleRegisters:
+                params.onlyUseWriteMultipleRegisters === true || params.onlyUseWriteMultipleRegisters === 'true',
         },
-        devices: {}
+        devices: {},
     };
 
     options.config.round = Math.pow(10, options.config.round);
@@ -390,7 +397,7 @@ function prepareConfig(config) {
         options.config.maxBlock = parseInt(params.maxBlock, 10) || 100;
         options.config.maxBoolBlock = parseInt(params.maxBoolBlock, 10) || 128;
         options.config.pulsetime = parseInt(params.pulsetime || 1000);
-        options.config.waitTime = (params.waitTime === undefined) ? 50 : (parseInt(params.waitTime, 10) || 0);
+        options.config.waitTime = params.waitTime === undefined ? 50 : parseInt(params.waitTime, 10) || 0;
         options.config.readInterval = parseInt(params.readInterval, 10) || 0;
         options.config.keepAliveInterval = parseInt(params.keepAliveInterval, 10) || 0;
     }
@@ -398,7 +405,7 @@ function prepareConfig(config) {
     if (params.type === 'tcp' || params.type === 'tcprtu') {
         options.config.tcp = {
             port: parseInt(params.port, 10) || 502,
-            bind: params.bind
+            bind: params.bind,
         };
     } else {
         options.config.serial = {
@@ -406,7 +413,7 @@ function prepareConfig(config) {
             baudRate: params.baudRate,
             dataBits: params.dataBits,
             stopBits: params.stopBits,
-            parity: params.parity
+            parity: params.parity,
         };
     }
 
@@ -422,7 +429,7 @@ function prepareConfig(config) {
                 addressLow: 0,
                 values: [],
                 mapping: {},
-                offset: parseInt(params.disInputsOffset, 10)
+                offset: parseInt(params.disInputsOffset, 10),
             };
 
             device.coils = {
@@ -432,7 +439,7 @@ function prepareConfig(config) {
                 addressLow: 0,
                 values: [],
                 mapping: {},
-                offset: parseInt(params.coilsOffset, 10)
+                offset: parseInt(params.coilsOffset, 10),
             };
 
             device.inputRegs = {
@@ -442,7 +449,7 @@ function prepareConfig(config) {
                 addressLow: 0,
                 values: [],
                 mapping: {},
-                offset: parseInt(params.inputRegsOffset, 10)
+                offset: parseInt(params.inputRegsOffset, 10),
             };
 
             device.holdingRegs = {
@@ -452,7 +459,7 @@ function prepareConfig(config) {
                 addressLow: 0,
                 values: [],
                 mapping: {},
-                offset: parseInt(params.holdingRegsOffset, 10)
+                offset: parseInt(params.holdingRegsOffset, 10),
             };
         } else {
             device.disInputs = {
@@ -461,7 +468,7 @@ function prepareConfig(config) {
                 length: 0,
                 config: [],
                 blocks: [],
-                offset: parseInt(params.disInputsOffset, 10)
+                offset: parseInt(params.disInputsOffset, 10),
             };
 
             device.coils = {
@@ -471,7 +478,7 @@ function prepareConfig(config) {
                 config: [],
                 blocks: [],
                 cyclicWrite: [], // only holdingRegs and coils
-                offset: parseInt(params.coilsOffset, 10)
+                offset: parseInt(params.coilsOffset, 10),
             };
 
             device.inputRegs = {
@@ -480,7 +487,7 @@ function prepareConfig(config) {
                 length: 0,
                 config: [],
                 blocks: [],
-                offset: parseInt(params.inputRegsOffset, 10)
+                offset: parseInt(params.inputRegsOffset, 10),
             };
 
             device.holdingRegs = {
@@ -490,7 +497,7 @@ function prepareConfig(config) {
                 config: [],
                 blocks: [],
                 cyclicWrite: [], // only holdingRegs and coils
-                offset: parseInt(params.holdingRegsOffset, 10)
+                offset: parseInt(params.holdingRegsOffset, 10),
             };
         }
     }
@@ -502,7 +509,11 @@ function prepareConfig(config) {
 
 function checkDeviceIds(options, config, deviceIds) {
     for (let i = config.length - 1; i >= 0; i--) {
-        config[i].deviceId = !options.config.multiDeviceId ? options.config.defaultDeviceId : (config[i].deviceId !== undefined ? parseInt(config[i].deviceId, 10) : options.config.defaultDeviceId);
+        config[i].deviceId = !options.config.multiDeviceId
+            ? options.config.defaultDeviceId
+            : config[i].deviceId !== undefined
+              ? parseInt(config[i].deviceId, 10)
+              : options.config.defaultDeviceId;
 
         if (isNaN(config[i].deviceId)) {
             config[i].deviceId = options.config.defaultDeviceId;
@@ -532,24 +543,33 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects,
             common: {
                 name: regs[i].description,
                 role: regs[i].role,
-                type: regType === 'coils' || regType === 'disInputs' ? 'boolean' : (['string', 'stringle', 'string16', 'string16le', 'rawhex'].includes(regs[i].type) ? 'string' : 'number'),
+                type:
+                    regType === 'coils' || regType === 'disInputs'
+                        ? 'boolean'
+                        : ['string', 'stringle', 'string16', 'string16le', 'rawhex'].includes(regs[i].type)
+                          ? 'string'
+                          : 'number',
                 read: true,
                 write: !!options.params.slave || regType === 'coils' || regType === 'holdingRegs',
-                def: regType === 'coils' || regType === 'disInputs' ? false : (['string', 'stringle', 'string16', 'string16le', 'rawhex'].includes(regs[i].type) ? '' : 0)
+                def:
+                    regType === 'coils' || regType === 'disInputs'
+                        ? false
+                        : ['string', 'stringle', 'string16', 'string16le', 'rawhex'].includes(regs[i].type)
+                          ? ''
+                          : 0,
             },
             native: {
                 regType: regType,
                 address: regs[i].address,
-                deviceId: regs[i].deviceId
-            }
+                deviceId: regs[i].deviceId,
+            },
         };
 
         if (regType === 'coils') {
             objects[id].native.poll = regs[i].poll;
             objects[id].common.read = !!regs[i].poll;
             objects[id].native.wp = regs[i].wp;
-        } else
-        if (regType === 'inputRegs' || regType === 'holdingRegs') {
+        } else if (regType === 'inputRegs' || regType === 'holdingRegs') {
             objects[id].common.unit = regs[i].unit || '';
 
             objects[id].native.type = regs[i].type;
@@ -570,12 +590,12 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects,
         tasks.push({
             id: regs[i].id,
             name: 'add',
-            obj: objects[id]
+            obj: objects[id],
         });
         tasks.push({
             id,
             name: 'syncEnums',
-            obj: regs[i].room
+            obj: regs[i].room,
         });
         newObjects.push(id);
         adapter.log.debug(`Add ${regs[i].id}: ${JSON.stringify(objects[id])}`);
@@ -588,10 +608,10 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects,
             obj: {
                 type: 'channel',
                 common: {
-                    name: regFullName
+                    name: regFullName,
                 },
-                native: {}
-            }
+                native: {},
+            },
         });
     }
 }
@@ -616,7 +636,7 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
             }
         }
 
-        const address = config[i].address = parseInt(config[i].address, 10);
+        const address = (config[i].address = parseInt(config[i].address, 10));
 
         if (address < 0) {
             continue;
@@ -672,14 +692,14 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
     const config = result.config;
 
     if (config && config.length) {
-        result.addressLow = 0xFFFFFFFF;
+        result.addressLow = 0xffffffff;
         result.addressHigh = 0;
 
         for (let i = config.length - 1; i >= 0; i--) {
             if (config[i].deviceId !== deviceId) {
                 continue;
             }
-            const address = config[i].address = parseInt(config[i].address, 10);
+            const address = (config[i].address = parseInt(config[i].address, 10));
 
             if (address < 0) {
                 adapter.log.error(`Invalid ${regName} address: ${address}`);
@@ -726,7 +746,9 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
         let blockStart = 0;
         let i;
         for (i = 0; i < config.length; i++) {
-            if (config[i].deviceId !== deviceId) continue;
+            if (config[i].deviceId !== deviceId) {
+                continue;
+            }
 
             if (lastAddress === null) {
                 startIndex = i;
@@ -736,9 +758,17 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
 
             // try to detect the next block
             if (result.blocks) {
-                if ((config[i].address - lastAddress > 10 && config[i].len < 10) || (lastAddress - blockStart >= maxBlock)) {
+                if (
+                    (config[i].address - lastAddress > 10 && config[i].len < 10) ||
+                    lastAddress - blockStart >= maxBlock
+                ) {
                     if (!result.blocks.map(obj => obj.start).includes(blockStart)) {
-                        result.blocks.push({ start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i });
+                        result.blocks.push({
+                            start: blockStart,
+                            count: lastAddress - blockStart,
+                            startIndex: startIndex,
+                            endIndex: i,
+                        });
                     }
                     blockStart = config[i].address;
                     startIndex = i;
@@ -746,8 +776,18 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
             }
             lastAddress = config[i].address + config[i].len;
         }
-        if (lastAddress && lastAddress - blockStart && result.blocks && !result.blocks.map(obj => obj.start).includes(blockStart)) {
-            result.blocks.push({ start: blockStart, count: lastAddress - blockStart, startIndex: startIndex, endIndex: i });
+        if (
+            lastAddress &&
+            lastAddress - blockStart &&
+            result.blocks &&
+            !result.blocks.map(obj => obj.start).includes(blockStart)
+        ) {
+            result.blocks.push({
+                start: blockStart,
+                count: lastAddress - blockStart,
+                startIndex: startIndex,
+                endIndex: i,
+            });
         }
 
         if (config.length) {
@@ -775,7 +815,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
                         result.blocks[b].start = (result.blocks[b].start >> 4) << 4;
 
                         // increase the length on the alignment if any
-                        result.blocks[b].count += (_oldStart - result.blocks[b].start);
+                        result.blocks[b].count += _oldStart - result.blocks[b].start;
 
                         if (result.blocks[b].count % 16) {
                             result.blocks[b].count = ((result.blocks[b].count >> 4) + 1) << 4;
@@ -789,7 +829,9 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
 
         if (result.mapping) {
             for (let i = 0; i < config.length; i++) {
-                adapter.log.debug(`Iterate ${regType} ${regName}: ${config[i].address - result.addressLow} = ${config[i].id}`);
+                adapter.log.debug(
+                    `Iterate ${regType} ${regName}: ${config[i].address - result.addressLow} = ${config[i].id}`,
+                );
                 result.mapping[config[i].address - result.addressLow] = `${adapter.namespace}.${config[i].id}`;
             }
         }
@@ -824,17 +866,38 @@ function parseConfig(callback) {
         let tasks = [];
 
         for (let _deviceId in options.devices) {
-            if (!options.devices.hasOwnProperty(_deviceId)) {
+            if (!Object.prototype.hasOwnProperty.call(options.devices, _deviceId)) {
                 continue;
             }
             let device = options.devices[_deviceId];
             let deviceId = parseInt(_deviceId, 10);
 
             // Discrete inputs
-            assignIds(deviceId, adapter.config.disInputs, device.disInputs, 'discreteInputs', 'disInputs', localOptions);
+            assignIds(
+                deviceId,
+                adapter.config.disInputs,
+                device.disInputs,
+                'discreteInputs',
+                'disInputs',
+                localOptions,
+            );
             assignIds(deviceId, adapter.config.coils, device.coils, 'coils', 'coils', localOptions);
-            assignIds(deviceId, adapter.config.inputRegs, device.inputRegs, 'inputRegisters', 'inputRegs', localOptions);
-            assignIds(deviceId, adapter.config.holdingRegs, device.holdingRegs, 'holdingRegisters', 'holdingRegs', localOptions);
+            assignIds(
+                deviceId,
+                adapter.config.inputRegs,
+                device.inputRegs,
+                'inputRegisters',
+                'inputRegs',
+                localOptions,
+            );
+            assignIds(
+                deviceId,
+                adapter.config.holdingRegs,
+                device.holdingRegs,
+                'holdingRegisters',
+                'holdingRegs',
+                localOptions,
+            );
 
             device.disInputs.config = adapter.config.disInputs.filter(e => e.deviceId === deviceId);
             device.coils.config = adapter.config.coils.filter(e => e.poll && e.deviceId === deviceId);
@@ -855,10 +918,10 @@ function parseConfig(callback) {
                             write: false,
                             read: true,
                             def: 0,
-                            unit: 'ms'
+                            unit: 'ms',
                         },
-                        native: {}
-                    }
+                        native: {},
+                    },
                 });
                 newObjects.push(`${adapter.namespace}.info.pollTime`);
             }
@@ -873,13 +936,27 @@ function parseConfig(callback) {
             checkObjects(adapter.config, 'disInputs', 'discreteInputs', 'Discrete inputs', tasks, newObjects, deviceId);
             checkObjects(adapter.config, 'coils', 'coils', 'Coils', tasks, newObjects, deviceId);
             checkObjects(adapter.config, 'inputRegs', 'inputRegisters', 'Input registers', tasks, newObjects, deviceId);
-            checkObjects(adapter.config, 'holdingRegs', 'holdingRegisters', 'Holding registers', tasks, newObjects, deviceId);
+            checkObjects(
+                adapter.config,
+                'holdingRegs',
+                'holdingRegisters',
+                'Holding registers',
+                tasks,
+                newObjects,
+                deviceId,
+            );
 
             if (options.config.slave) {
-                device.disInputs.fullIds = adapter.config.disInputs.filter(e => e.deviceId === deviceId).map(e => e.fullId);
+                device.disInputs.fullIds = adapter.config.disInputs
+                    .filter(e => e.deviceId === deviceId)
+                    .map(e => e.fullId);
                 device.coils.fullIds = adapter.config.coils.filter(e => e.deviceId === deviceId).map(e => e.fullId);
-                device.inputRegs.fullIds = adapter.config.inputRegs.filter(e => e.deviceId === deviceId).map(e => e.fullId);
-                device.holdingRegs.fullIds = adapter.config.holdingRegs.filter(e => e.deviceId === deviceId).map(e => e.fullId);
+                device.inputRegs.fullIds = adapter.config.inputRegs
+                    .filter(e => e.deviceId === deviceId)
+                    .map(e => e.fullId);
+                device.holdingRegs.fullIds = adapter.config.holdingRegs
+                    .filter(e => e.deviceId === deviceId)
+                    .map(e => e.fullId);
             }
 
             if (!options.config.multiDeviceId) {
@@ -893,10 +970,10 @@ function parseConfig(callback) {
             obj: {
                 type: 'channel',
                 common: {
-                    name: 'info'
+                    name: 'info',
                 },
-                native: {}
-            }
+                native: {},
+            },
         });
 
         // create/ update 'info.connection' object
@@ -912,7 +989,7 @@ function parseConfig(callback) {
                     type: options.config.slave ? 'string' : 'boolean',
                     def: options.config.slave ? '' : false,
                 },
-                native: {}
+                native: {},
             };
             await adapter.setObjectAsync('info.connection', obj);
         } else if (options.config.slave && obj.common.type !== 'string') {
@@ -932,7 +1009,11 @@ function parseConfig(callback) {
 
         // clear unused states
         for (let id_ in oldObjects) {
-            if (oldObjects.hasOwnProperty(id_) && !newObjects.includes(id_) && !id_.startsWith(`${adapter.namespace}.info.clients.`)) {
+            if (
+                Object.prototype.hasOwnProperty.call(oldObjects, id_) &&
+                !newObjects.includes(id_) &&
+                !id_.startsWith(`${adapter.namespace}.info.clients.`)
+            ) {
                 adapter.log.debug(`Remove old object ${id_}`);
                 tasks.push({
                     id: id_,
@@ -966,7 +1047,7 @@ function main() {
 function sortByAddress(a, b) {
     let ad = parseFloat(a._address);
     let bd = parseFloat(b._address);
-    return ((ad < bd) ? -1 : (ad > bd ? 1 : 0));
+    return ad < bd ? -1 : ad > bd ? 1 : 0;
 }
 
 // If started as allInOne/compact mode => return function to create instance

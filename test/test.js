@@ -5,9 +5,12 @@ const FC = require('modbus-stack').FUNCTION_CODES;
 const client = require('modbus-stack/client').createClient(502, 'localhost');
 
 // 'req' is an instance of the low-level `ModbusRequestStack` class
-const req = client.request(FC.READ_INPUT_REGISTERS, // Function Code: 4
-        0,   // Start at address 0
-        50)  // Read 50 contiguous registers from 0
+const req = client
+    .request(
+        FC.READ_INPUT_REGISTERS, // Function Code: 4
+        0, // Start at address 0
+        50,
+    ) // Read 50 contiguous registers from 0
     .on('error', err => console.error(err));
 
 // 'response' is emitted after the entire contents of the response have been received.

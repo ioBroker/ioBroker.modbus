@@ -10,3 +10,5 @@ tmp
 /src/.eslintcache
 .DS_Store
 /src/build
+/test/*.log
+/test/RMMS.exe

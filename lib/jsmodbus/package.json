@@ -1,52 +1,50 @@
 {
-  "author": {
-    "name": "Stefan Poeter",
-    "email": "stefan.poeter@cloud-automation.de"
-  },
-  "bugs": {
-    "url": "https://github.com/Cloud-Automation/node-modbus/issues"
-  },
-  "dependencies": {
-    "crc": "4.1.0",
-    "put": "0.0.6",
-    "q": "1.0.1",
-    "serialport": "^10.4.0",
-    "stampit": "^2.1.2",
-    "stampit-event-bus": "^0.1.1",
-    "stampit-log": "^0.3.0",
-    "stampit-state-machine": "^0.2.1"
-  },
-  "deprecated": false,
-  "description": "Implementation for the Serial/TCP Modbus protocol.",
-  "devDependencies": {
-    "mocha": "^9.2.2",
-    "sinon": "^13.0.1"
-  },
-  "directories": {
-    "test": "test",
-    "example": "examples"
-  },
-  "engine": {
-    "node": ">=0.6"
-  },
-  "homepage": "https://github.com/Cloud-Automation/node-modbus#readme",
-  "keywords": [
-    "client",
-    "server",
-    "serial",
-    "port",
-    "modbus",
-    "tcp"
-  ],
-  "license": "MIT",
-  "main": "index.js",
-  "name": "jsmodbus",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Cloud-Automation/node-modbus.git"
-  },
-  "scripts": {
-    "test": "mocha test/*"
-  },
-  "version": "1.2.4"
+    "author": {
+        "name": "Stefan Poeter",
+        "email": "stefan.poeter@cloud-automation.de"
+    },
+    "bugs": {
+        "url": "https://github.com/Cloud-Automation/node-modbus/issues"
+    },
+    "dependencies": {
+        "crc": "4.3.2",
+        "put": "0.0.6",
+        "serialport": "^12.0.0",
+        "stampit": "^2.1.2",
+        "stampit-event-bus": "^0.1.1",
+        "stampit-state-machine": "^0.2.1"
+    },
+    "deprecated": false,
+    "description": "Implementation for the Serial/TCP Modbus protocol.",
+    "devDependencies": {
+        "mocha": "^10.8.2",
+        "sinon": "^19.0.2"
+    },
+    "directories": {
+        "test": "test",
+        "example": "examples"
+    },
+    "engine": {
+        "node": ">=0.6"
+    },
+    "homepage": "https://github.com/Cloud-Automation/node-modbus#readme",
+    "keywords": [
+        "client",
+        "server",
+        "serial",
+        "port",
+        "modbus",
+        "tcp"
+    ],
+    "license": "MIT",
+    "main": "index.js",
+    "name": "jsmodbus",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Cloud-Automation/node-modbus.git"
+    },
+    "scripts": {
+        "test": "mocha test/*"
+    },
+    "version": "1.2.4"
 }
