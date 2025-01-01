@@ -31,7 +31,7 @@
     "serialport": "^12.0.0"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.2.2",
+    "@iobroker/adapter-core": "^3.2.3",
     "crc": "4.3.2",
     "put": "0.0.6",
     "stampit": "^2.1.2",
