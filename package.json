@@ -45,7 +45,7 @@
     "@iobroker/build-tools": "^2.0.13",
     "@iobroker/eslint-config": "^1.0.0",
     "@iobroker/testing": "^5.0.0",
-    "@iobroker/legacy-testing": "^2.0.1",
+    "@iobroker/legacy-testing": "^2.0.2",
     "mocha": "^10.8.2",
     "chai": "^4.5.0",
     "nan": "2.22.0",
