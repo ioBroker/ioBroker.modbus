@@ -46,7 +46,7 @@
     "@iobroker/eslint-config": "^1.0.0",
     "@iobroker/testing": "^5.0.3",
     "@iobroker/legacy-testing": "^2.0.2",
-    "mocha": "^10.8.2",
+    "mocha": "^11.1.0",
     "chai": "^4.5.0",
     "nan": "2.22.2",
     "modbus-stack": "^0.2.1"
