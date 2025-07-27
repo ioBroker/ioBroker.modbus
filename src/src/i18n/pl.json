@@ -36,7 +36,7 @@
     "Max read request length": "Maksymalna długość żądania odczytu (float)",
     "Multi device IDs": "Identyfikatory wielu urządzeń",
     "Name": "Nazwa",
-    "Offset": "Przesunięcie",
+    "Offset": "Offset",
     "PLC Connection": "Połączenie PLC",
     "PLC IP Address": "Adres IP sterownika PLC",
     "PLC Rack": "Rack PLC",
