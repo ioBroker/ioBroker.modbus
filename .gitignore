@@ -12,3 +12,7 @@ tmp
 /src/build
 /test/*.log
 /test/RMMS.exe
+
+# Build artifacts
+admin/assets/
+*.tgz
