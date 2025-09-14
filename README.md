@@ -307,7 +307,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### 6.4.1 (2024-12-XX)
+### **WORK IN PROGRESS**
 * (copilot) Added option to disable connection error logging to avoid log spam when devices are unavailable
 
 ### 6.4.0 (2024-11-22)
