@@ -29,7 +29,7 @@ class BaseRegisters extends Component {
             }
         }
 
-        // Start fetching current values
+        // Start fetching current values using direct state access
         this.fetchCurrentValues();
         this.startRefreshTimer();
     }
@@ -40,29 +40,78 @@ class BaseRegisters extends Component {
         }
     }
 
-    fetchCurrentValues = () => {
-        const registers = this.props.native[this.nativeField] || [];
-        if (registers.length === 0) {
-            return;
+    componentDidUpdate(prevProps) {
+        // If the registers configuration changed, refresh current values
+        if (prevProps.native[this.nativeField] !== this.props.native[this.nativeField]) {
+            this.fetchCurrentValues();
         }
+    }
 
-        // Only fetch for registers that have names
+    fetchCurrentValues = async () => {
+        const registers = this.props.native[this.nativeField] || [];
         const registersWithNames = registers.filter(reg => reg.name && reg.name.length > 0);
         
         if (registersWithNames.length === 0) {
             return;
         }
 
-        this.props.socket
-            .sendTo(`${this.props.adapterName}.${this.props.instance}`, 'getCurrentValues', registersWithNames)
-            .then(result => {
-                if (result && !result.error) {
-                    this.setState({ currentValues: result });
+        const currentValues = {};
+        
+        // Process all registers concurrently
+        const promises = registersWithNames.map(async register => {
+            const stateId = `${this.props.adapterName}.${this.props.instance}.${register.name}`;
+            
+            try {
+                let state = await this.props.socket.getState(stateId);
+                
+                if (state && state.val !== null && state.val !== undefined) {
+                    currentValues[register.name] = {
+                        value: state.val,
+                        timestamp: state.ts,
+                        quality: state.q || 0,
+                    };
+                } else {
+                    // Try alternative naming if primary doesn't exist
+                    const deviceId = register.deviceId || '';
+                    const altStateId = deviceId
+                        ? `${this.props.adapterName}.${this.props.instance}.${deviceId}.${register._address}`
+                        : `${this.props.adapterName}.${this.props.instance}.${register._address}`;
+                    
+                    try {
+                        state = await this.props.socket.getState(altStateId);
+                        if (state && state.val !== null && state.val !== undefined) {
+                            currentValues[register.name] = {
+                                value: state.val,
+                                timestamp: state.ts,
+                                quality: state.q || 0,
+                            };
+                        } else {
+                            currentValues[register.name] = {
+                                value: null,
+                                error: 'No current value available',
+                            };
+                        }
+                    } catch (err) {
+                        console.warn(`Failed to get alternative state ${altStateId}:`, err);
+                        currentValues[register.name] = {
+                            value: null,
+                            error: 'Failed to read state',
+                        };
+                    }
                 }
-            })
-            .catch(err => {
-                console.warn('Failed to fetch current values:', err);
-            });
+            } catch (err) {
+                console.warn(`Failed to get state ${stateId}:`, err);
+                currentValues[register.name] = {
+                    value: null,
+                    error: 'Failed to read state',
+                };
+            }
+        });
+
+        // Wait for all state reads to complete
+        await Promise.all(promises);
+        
+        this.setState({ currentValues });
     };
 
     startRefreshTimer = () => {

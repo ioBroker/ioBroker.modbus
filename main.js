@@ -25,72 +25,6 @@ function startAdapter(options) {
         main();
     });
 
-    // Function to get current values for registers
-    function getCurrentValues(registers, callback) {
-        if (!registers || !Array.isArray(registers)) {
-            return callback('Invalid registers parameter');
-        }
-
-        const results = {};
-        let pending = 0;
-
-        // If no registers provided, return empty result
-        if (registers.length === 0) {
-            return callback(null, results);
-        }
-
-        registers.forEach(register => {
-            if (!register.name || !register._address) {
-                return;
-            }
-
-            pending++;
-            const stateId = `${adapter.namespace}.${register.name}`;
-
-            adapter.getState(stateId, (err, state) => {
-                if (!err && state && state.val !== null && state.val !== undefined) {
-                    results[register.name] = {
-                        value: state.val,
-                        timestamp: state.ts,
-                        quality: state.q || 0,
-                    };
-                } else {
-                    // If state doesn't exist or has no value, try alternative naming
-                    const deviceId = register.deviceId || '';
-                    const altStateId = deviceId
-                        ? `${adapter.namespace}.${deviceId}.${register._address}`
-                        : `${adapter.namespace}.${register._address}`;
-
-                    adapter.getState(altStateId, (err2, state2) => {
-                        if (!err2 && state2 && state2.val !== null && state2.val !== undefined) {
-                            results[register.name] = {
-                                value: state2.val,
-                                timestamp: state2.ts,
-                                quality: state2.q || 0,
-                            };
-                        } else {
-                            results[register.name] = {
-                                value: null,
-                                error: 'No current value available',
-                            };
-                        }
-
-                        pending--;
-                        if (pending === 0) {
-                            callback(null, results);
-                        }
-                    });
-                    return;
-                }
-
-                pending--;
-                if (pending === 0) {
-                    callback(null, results);
-                }
-            });
-        });
-    }
-
     adapter.on('message', obj => {
         if (obj) {
             switch (obj.command) {
@@ -112,14 +46,6 @@ function startAdapter(options) {
                             adapter.log.warn('Module serialport is not available');
                             adapter.sendTo(obj.from, obj.command, [{ path: 'Not available' }], obj.callback);
                         }
-                    }
-                    break;
-
-                case 'getCurrentValues':
-                    if (obj.callback) {
-                        getCurrentValues(obj.message, (err, result) => {
-                            adapter.sendTo(obj.from, obj.command, err ? { error: err } : result, obj.callback);
-                        });
                     }
                     break;
             }
