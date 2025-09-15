@@ -37,7 +37,8 @@ class BaseRegisters extends Component {
     }
 
     addressToCanonical(_address) {
-        let address = _address;
+        // Parse hex addresses (0x prefix) to decimal
+        let address = Utils.parseAddress(_address);
         let params = this.props.native.params;
         if (params.showAliases) {
             if (params.directAddresses) {
@@ -93,11 +94,15 @@ class BaseRegisters extends Component {
             let sort1;
             let sort2;
             if (orderBy === 'deviceId') {
-                sort1 = (parseInt(sortedItem1.item.deviceId, 10) << 16) | parseInt(sortedItem1.item._address, 10);
-                sort2 = (parseInt(sortedItem2.item.deviceId, 10) << 16) | parseInt(sortedItem2.item._address, 10);
+                sort1 = (parseInt(sortedItem1.item.deviceId, 10) << 16) | Utils.parseAddress(sortedItem1.item._address);
+                sort2 = (parseInt(sortedItem2.item.deviceId, 10) << 16) | Utils.parseAddress(sortedItem2.item._address);
             } else if (orderBy === '$index') {
                 sort1 = sortedItem1[orderBy];
                 sort2 = sortedItem2[orderBy];
+            } else if (orderBy === '_address') {
+                // Handle hex addresses for sorting
+                sort1 = Utils.parseAddress(sortedItem1.item[orderBy]);
+                sort2 = Utils.parseAddress(sortedItem2.item[orderBy]);
             } else if (field && field.type === 'number') {
                 sort1 = parseInt(sortedItem1.item[orderBy], 10);
                 sort2 = parseInt(sortedItem2.item[orderBy], 10);
