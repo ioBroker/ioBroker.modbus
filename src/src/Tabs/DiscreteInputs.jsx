@@ -12,6 +12,7 @@ class DiscreteInputs extends BaseRegisters {
             { name: '_address', title: 'Address', type: 'number', sorted: true, width: 20 },
             { name: 'name', title: 'Name', type: 'text', sorted: true },
             { name: 'description', title: 'Description', type: 'text', sorted: true },
+            { name: 'currentValue', title: 'Current Value', type: 'readonly', width: 30, expert: true },
             { name: 'formula', title: 'Formula', type: 'text', expert: true, formulaDisabled: true },
             { name: 'role', title: 'Role', type: 'select', options: roles, sorted: true },
             { name: 'room', title: 'Room', type: 'rooms' },

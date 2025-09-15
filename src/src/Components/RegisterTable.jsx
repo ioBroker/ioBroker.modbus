@@ -140,6 +140,29 @@ const DataCell = props => {
                 </Select>
             );
         }
+    } else if (field.type === 'readonly') {
+        // Display current value (read-only)
+        const currentValue = props.currentValues && props.currentValues[item.name];
+        if (currentValue && currentValue.value !== null && currentValue.value !== undefined) {
+            result = (
+                <Tooltip 
+                    title={`Last updated: ${new Date(currentValue.timestamp).toLocaleString()}`}
+                >
+                    <span style={{ 
+                        color: currentValue.error ? '#f44336' : '#2e7d32',
+                        fontFamily: 'monospace'
+                    }}>
+                        {currentValue.error || currentValue.value}
+                    </span>
+                </Tooltip>
+            );
+        } else {
+            result = (
+                <span style={{ color: '#757575', fontStyle: 'italic' }}>
+                    N/A
+                </span>
+            );
+        }
     } else {
         if (!editMode) {
             result = item[field.name] ? item[field.name] : null;
@@ -165,9 +188,11 @@ const DataCell = props => {
         <TableCell
             style={{ ...styles.tableCell, ...(!editMode ? styles.nonEditMode : undefined) }}
             onClick={() => {
-                setEditMode(true);
-                window.localStorage.setItem('Modbus.editMode', 'true');
-                window.setTimeout(() => ref.current?.focus(), 100);
+                if (field.type !== 'readonly') {
+                    setEditMode(true);
+                    window.localStorage.setItem('Modbus.editMode', 'true');
+                    window.setTimeout(() => ref.current?.focus(), 100);
+                }
             }}
         >
             {result}
@@ -425,6 +450,7 @@ RegisterTable.propTypes = {
     getSortedData: PropTypes.func,
     themeType: PropTypes.string,
     showExtendedModeSwitch: PropTypes.bool,
+    currentValues: PropTypes.object,
 };
 
 export default RegisterTable;

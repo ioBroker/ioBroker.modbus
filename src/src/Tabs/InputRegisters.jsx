@@ -16,6 +16,7 @@ class InputRegisters extends BaseRegisters {
             { name: 'unit', title: 'Unit', type: 'text', width: 30 },
             { name: 'type', title: 'Type', type: 'select', options: types, sorted: true },
             { name: 'len', title: 'Length', type: 'text', width: 20 },
+            { name: 'currentValue', title: 'Current Value', type: 'readonly', width: 30, expert: true },
             { name: 'factor', title: 'Factor', type: 'text', width: 20, expert: true },
             { name: 'offset', title: 'Offset', type: 'text', width: 20, expert: true },
             { name: 'formula', title: 'Formula', type: 'text', formulaDisabled: true, expert: true },

@@ -13,6 +13,8 @@ class BaseRegisters extends Component {
         this.state = {
             order: window.localStorage.getItem('Modbus.order') || 'asc',
             orderBy: window.localStorage.getItem('Modbus.orderBy') || '_address',
+            currentValues: {},
+            refreshTimer: null,
         };
     }
 
@@ -26,7 +28,51 @@ class BaseRegisters extends Component {
                 this.setState({ orderBy });
             }
         }
+
+        // Start fetching current values
+        this.fetchCurrentValues();
+        this.startRefreshTimer();
     }
+
+    componentWillUnmount() {
+        if (this.state.refreshTimer) {
+            clearInterval(this.state.refreshTimer);
+        }
+    }
+
+    fetchCurrentValues = () => {
+        const registers = this.props.native[this.nativeField] || [];
+        if (registers.length === 0) {
+            return;
+        }
+
+        // Only fetch for registers that have names
+        const registersWithNames = registers.filter(reg => reg.name && reg.name.length > 0);
+        
+        if (registersWithNames.length === 0) {
+            return;
+        }
+
+        this.props.socket
+            .sendTo(`${this.props.adapterName}.${this.props.instance}`, 'getCurrentValues', registersWithNames)
+            .then(result => {
+                if (result && !result.error) {
+                    this.setState({ currentValues: result });
+                }
+            })
+            .catch(err => {
+                console.warn('Failed to fetch current values:', err);
+            });
+    };
+
+    startRefreshTimer = () => {
+        // Refresh current values every 5 seconds
+        const refreshTimer = setInterval(() => {
+            this.fetchCurrentValues();
+        }, 5000);
+        
+        this.setState({ refreshTimer });
+    };
 
     isShowExtendedModeSwitch() {
         return true;
@@ -130,6 +176,7 @@ class BaseRegisters extends Component {
                     rooms={this.props.rooms}
                     order={this.state.order}
                     orderBy={this.state.orderBy}
+                    currentValues={this.state.currentValues}
                     onChangeOrder={(orderBy, order) => {
                         this.setState({ orderBy, order });
                         window.localStorage.setItem('Modbus.orderBy', orderBy);
