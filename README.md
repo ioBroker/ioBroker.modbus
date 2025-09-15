@@ -294,23 +294,6 @@ With export / import functionality, you can convert all register data (only of o
 
 You can share your schemas with other users in [modbus-templates](https://github.com/ioBroker/modbus-templates) or you can find some register schemas there.
 
-## Register Enable/Disable Feature
-Each register can be individually enabled or disabled using the "Enabled" checkbox in the register configuration tables. This feature allows you to:
-
-- **Temporarily disable problematic registers** without losing their configuration
-- **Prevent faulty sensors from stopping the entire polling process** - the adapter continues polling other registers even if some fail
-- **Preserve historical data and settings** while a sensor is repaired or replaced
-
-Disabled registers are:
-- Skipped during polling operations
-- Not created as ioBroker objects
-- Ignored in block building and address mapping
-- Logged in debug mode when skipped
-
-When errors occur, the adapter now provides **enhanced error messages** that include specific information about which register block failed, making troubleshooting much easier:
-- Before: `Poll error count: 1 code: "App Timeout"`
-- After: `[DevID_1/holdingRegs] Block 40001-40010: "App Timeout"`
-
 ## Test
 There are some programs in folder `test` to test the TCP communication:
 - Ananas32/64 is a slave simulator (only holding registers and inputs, no coils and digital inputs)
@@ -325,6 +308,7 @@ There are some programs in folder `test` to test the TCP communication:
 -->
 ## Changelog
 ### **WORK IN PROGRESS**
+* (copilot) Improved Modbus error handling and fault tolerance - continue polling working devices even when others fail
 * (copilot) Fixes memory leak
 * (copilot) Added option to disable connection error logging to avoid log spam when devices are unavailable
 
