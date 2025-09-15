@@ -237,7 +237,8 @@
       "doNotUseWriteMultipleRegisters": false,
       "onlyUseWriteMultipleRegisters": false,
       "writeInterval": 0,
-      "readInterval": 0
+      "readInterval": 0,
+      "disableLogging": false
     },
     "disInputs": [],
     "coils": [],
