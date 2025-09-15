@@ -128,5 +128,7 @@
     "doNotIncludeAdrInId_help": "Nie dodawaj adresu w wygenerowanym identyfikatorze ioBroker. „10_Wejście10” kontra „Wejście10”.",
     "preserveDotsInId_help": "Z tą flagą nazwa będzie brzmieć `Inputs.Input10`. Bez => `Inputs_Input10`.",
     "poll_help": "Cykliczny interwał odpytywania w milisekundach (dotyczy tylko mastera)",
-    "recon_help": "Interwał ponownego połączenia w milisekundach. (Dotyczy tylko mastera)\nJeśli nie zostanie nawiązane żadne połączenie, master będzie próbował połączyć się co X milisekund."
+    "recon_help": "Interwał ponownego połączenia w milisekundach. (Dotyczy tylko mastera)\nJeśli nie zostanie nawiązane żadne połączenie, master będzie próbował połączyć się co X milisekund.",
+    "Disable connection error logging": "Wyłącz rejestrowanie błędów połączenia",
+    "disableLogging_help": "Pomiń komunikaty o błędach połączenia w dzienniku. Gdy włączone, błędy połączenia nie będą rejestrowane w celu zmniejszenia szumu dziennika."
 }
