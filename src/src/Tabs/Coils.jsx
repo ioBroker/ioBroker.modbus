@@ -16,6 +16,7 @@ class Coils extends BaseRegisters {
             { name: 'role', title: 'Role', type: 'select', options: roles, sorted: true },
             { name: 'room', title: 'Room', type: 'rooms' },
             { name: 'poll', title: 'Poll', type: 'checkbox' },
+            { name: 'pollInterval', title: 'Poll Interval', type: 'number', width: 25, unit: 'ms', tooltip: 'pollInterval_help' },
             { name: 'wp', title: 'WP', type: 'checkbox', expert: true },
             { name: 'cw', title: 'CW', type: 'checkbox' },
             {
@@ -50,6 +51,7 @@ class Coils extends BaseRegisters {
             newItem.formula = lastItem.formula;
             newItem.role = lastItem.role;
             newItem.poll = lastItem.poll;
+            newItem.pollInterval = lastItem.pollInterval;
             newItem.wp = lastItem.wp;
             newItem.cw = lastItem.cw;
             newItem.isScale = lastItem.isScale;

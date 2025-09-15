@@ -44,6 +44,7 @@
     "Parity": "Parität",
     "Partner IP Address": "Partner IP-Adresse",
     "Poll delay": "Datenabfrageintervall",
+    "Poll Interval": "Abfrageintervall",
     "Port": "Port",
     "Pulse time": "Impluszeit",
     "RTU over TCP": "RTU über TCP",
@@ -128,6 +129,7 @@
     "doNotIncludeAdrInId_help": "Fügen Sie der generierten ioBroker-iD keine Adresse hinzu. „10_Input10“ vs. „Input10“.",
     "preserveDotsInId_help": "Mit diesem Flag lautet der Name „Inputs.Input10“. Ohne => `Inputs_Input10`.",
     "poll_help": "Zyklisches Abfrageintervall in Millisekunden (Nur relevant für Master)",
+    "pollInterval_help": "Benutzerdefiniertes Abfrageintervall für diese spezifische Adresse in Millisekunden. Wenn leer, wird das globale Abfrageintervall verwendet.",
     "recon_help": "Wiederverbindungsintervall in Millisekunden. (Nur relevant für Master)\nWenn keine Verbindung hergestellt wird, versucht der Master alle X Millisekunden, eine Verbindung herzustellen.",
     "Disable connection error logging": "Protokollierung von Verbindungsfehlern deaktivieren",
     "disableLogging_help": "Verbindungsfehlermeldungen im Protokoll unterdrücken. Wenn aktiviert, werden Verbindungsfehler nicht protokolliert, um Rauschen im Protokoll zu reduzieren."
