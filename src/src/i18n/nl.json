@@ -128,5 +128,7 @@
   "doNotIncludeAdrInId_help": "Voeg geen adres toe aan de gegenereerde ioBroker iD. `10_Invoer10` versus `Invoer10`.",
   "preserveDotsInId_help": "Met deze vlag wordt de naam `Inputs.Input10`. Zonder => `Invoer_Invoer10`.",
   "poll_help": "Cyclisch poll-interval in milliseconden (alleen relevant voor master)",
-  "recon_help": "Herverbindingsinterval in milliseconden. (Alleen relevant voor master)\nAls er geen verbinding tot stand is gebracht, probeert de master elke X milliseconden verbinding te maken."
+  "recon_help": "Herverbindingsinterval in milliseconden. (Alleen relevant voor master)\nAls er geen verbinding tot stand is gebracht, probeert de master elke X milliseconden verbinding te maken.",
+  "Disable connection error logging": "Schakel verbindingsfoutlogboekregistratie uit",
+  "disableLogging_help": "Onderdruk verbindingsfoutmeldingen in het logboek. Wanneer ingeschakeld, worden verbindingsfouten niet gelogd om logruis te verminderen."
 }

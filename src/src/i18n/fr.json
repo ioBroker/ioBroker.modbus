@@ -128,5 +128,7 @@
   "doNotIncludeAdrInId_help": "N'ajoutez pas d'adresse dans l'ID ioBroker généré. « 10_Input10 » contre « Input10 ».",
   "preserveDotsInId_help": "Avec cet indicateur, le nom sera « Inputs.Input10 ». Sans => `Inputs_Input10`.",
   "poll_help": "Intervalle d'interrogation cyclique en millisecondes (uniquement pertinent pour le maître)",
-  "recon_help": "Intervalle de reconnexion en millisecondes. (Uniquement pertinent pour le maître)\nSi aucune connexion n'est établie, le maître essaiera de se connecter toutes les X millisecondes."
+  "recon_help": "Intervalle de reconnexion en millisecondes. (Uniquement pertinent pour le maître)\nSi aucune connexion n'est établie, le maître essaiera de se connecter toutes les X millisecondes.",
+  "Disable connection error logging": "Désactiver la journalisation des erreurs de connexion",
+  "disableLogging_help": "Supprimer les messages d'erreur de connexion dans le journal. Lorsqu'elle est activée, les erreurs de connexion ne seront pas journalisées pour réduire le bruit du journal."
 }

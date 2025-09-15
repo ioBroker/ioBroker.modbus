@@ -128,5 +128,7 @@
   "doNotIncludeAdrInId_help": "Non aggiungere indirizzo nell'iD ioBroker generato. \"10_Ingresso10\" rispetto a \"Ingresso10\".",
   "preserveDotsInId_help": "Con questo flag il nome sarà \"Inputs.Input10\". Senza => `Ingressi_Input10`.",
   "poll_help": "Intervallo di interrogazione ciclica in millisecondi (rilevante solo per il master)",
-  "recon_help": "Intervallo di riconnessione in millisecondi. (Rilevante solo per il master)\nSe non viene stabilita alcuna connessione, il master proverà a connettersi ogni X millisecondi."
+  "recon_help": "Intervallo di riconnessione in millisecondi. (Rilevante solo per il master)\nSe non viene stabilita alcuna connessione, il master proverà a connettersi ogni X millisecondi.",
+  "Disable connection error logging": "Disabilita la registrazione degli errori di connessione",
+  "disableLogging_help": "Sopprimere i messaggi di errore di connessione nel registro. Quando abilitato, gli errori di connessione non verranno registrati per ridurre il rumore del registro."
 }

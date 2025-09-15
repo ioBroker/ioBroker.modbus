@@ -128,5 +128,7 @@
   "doNotIncludeAdrInId_help": "不要在生成的 ioBroker iD 中添加地址。 “10_Input10”与“Input10”。",
   "preserveDotsInId_help": "使用此标志，名称将为“Inputs.Input10”。没有 => `Inputs_Input10`。",
   "poll_help": "循环轮询间隔（以毫秒为单位）（仅与主站相关）",
-  "recon_help": "重新连接间隔（以毫秒为单位）。 （仅与master相关）\n如果没有建立连接，master 将每隔 X 毫秒尝试连接。"
+  "recon_help": "重新连接间隔（以毫秒为单位）。 （仅与master相关）\n如果没有建立连接，master 将每隔 X 毫秒尝试连接。",
+  "Disable connection error logging": "禁用连接错误日志记录",
+  "disableLogging_help": "抑制日志中的连接错误消息。启用后，连接错误将不会被记录，以减少日志噪音。"
 }
