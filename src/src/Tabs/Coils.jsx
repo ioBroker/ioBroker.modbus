@@ -18,7 +18,6 @@ class Coils extends BaseRegisters {
             { name: 'poll', title: 'Poll', type: 'checkbox' },
             { name: 'wp', title: 'WP', type: 'checkbox', expert: true },
             { name: 'cw', title: 'CW', type: 'checkbox' },
-            { name: 'enabled', title: 'Enabled', type: 'checkbox', tooltip: 'Enable/disable this register (disabled registers are ignored)', width: 20 },
             {
                 name: 'isScale',
                 title: 'SF',
@@ -54,11 +53,9 @@ class Coils extends BaseRegisters {
             newItem.wp = lastItem.wp;
             newItem.cw = lastItem.cw;
             newItem.isScale = lastItem.isScale;
-            newItem.enabled = lastItem.enabled !== false; // Default to true, preserve if explicitly set
         } else {
             newItem.role = 'level';
             newItem._address = this.props.native.params.showAliases ? 1 : 0;
-            newItem.enabled = true; // Default to enabled for new registers
         }
         newItem.address = this.addressToCanonical(newItem._address);
         data.push(newItem);

@@ -535,14 +535,6 @@ function checkObjects(options, regType, regName, regFullName, tasks, newObjects,
             continue;
         }
 
-        // Skip disabled registers - don't create objects for them
-        if (regs[i].enabled === false) {
-            adapter.log.debug(
-                `Skipping object creation for disabled register ${regName} at address ${regs[i].address || regs[i]._address}`,
-            );
-            continue;
-        }
-
         const id = `${adapter.namespace}.${regs[i].id || i}`;
         regs[i].fullId = id;
         objects[id] = {
@@ -630,11 +622,6 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
             continue;
         }
 
-        // Skip disabled registers
-        if (config[i].enabled === false) {
-            continue;
-        }
-
         if (config[i].address === undefined && config[i]._address !== undefined) {
             if (localOptions.showAliases) {
                 if (config[i]._address >= result.offset) {
@@ -714,14 +701,6 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
                 continue;
             }
 
-            // Skip disabled registers
-            if (config[i].enabled === false) {
-                adapter.log.debug(
-                    `Skipping disabled register ${regName} at address ${config[i].address || config[i]._address}`,
-                );
-                continue;
-            }
-
             const address = (config[i].address = parseInt(config[i].address, 10));
 
             if (address < 0) {
@@ -770,11 +749,6 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
         let i;
         for (i = 0; i < config.length; i++) {
             if (config[i].deviceId !== deviceId) {
-                continue;
-            }
-
-            // Skip disabled registers during block building
-            if (config[i].enabled === false) {
                 continue;
             }
 

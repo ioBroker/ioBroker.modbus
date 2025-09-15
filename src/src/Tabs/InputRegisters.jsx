@@ -22,7 +22,6 @@ class InputRegisters extends BaseRegisters {
             { name: 'role', title: 'Role', type: 'select', options: roles, sorted: true },
             { name: 'room', title: 'Room', type: 'rooms' },
             { name: 'cw', title: 'CW', type: 'checkbox', tooltip: 'Cyclic write' },
-            { name: 'enabled', title: 'Enabled', type: 'checkbox', tooltip: 'Enable/disable this register (disabled registers are ignored)', width: 20 },
             {
                 name: 'isScale',
                 title: 'SF',
@@ -66,13 +65,11 @@ class InputRegisters extends BaseRegisters {
             newItem.role = lastItem.role;
             newItem.cw = lastItem.cw;
             newItem.isScale = lastItem.isScale;
-            newItem.enabled = lastItem.enabled !== false; // Default to true, preserve if explicitly set
         } else {
             newItem.role = 'level';
             newItem.factor = 1;
             newItem.offset = 0;
             newItem._address = this.props.native.params.showAliases ? 30001 : 0;
-            newItem.enabled = true; // Default to enabled for new registers
         }
         newItem.address = this.addressToCanonical(newItem._address);
         data.push(newItem);
