@@ -238,7 +238,12 @@
       "onlyUseWriteMultipleRegisters": false,
       "writeInterval": 0,
       "readInterval": 0,
-      "disableLogging": false
+      "disableLogging": false,
+      "sslEnabled": false,
+      "sslCertPath": "",
+      "sslKeyPath": "",
+      "sslCaPath": "",
+      "sslRejectUnauthorized": true
     },
     "disInputs": [],
     "coils": [],
