@@ -12,3 +12,4 @@ tmp
 /src/build
 /test/*.log
 /test/RMMS.exe
+*.tgz

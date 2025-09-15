@@ -308,6 +308,7 @@ There are some programs in folder `test` to test the TCP communication:
 -->
 ## Changelog
 ### **WORK IN PROGRESS**
+* (copilot) Fixes memory leak
 * (copilot) Added option to disable connection error logging to avoid log spam when devices are unavailable
 
 ### 6.4.0 (2024-11-22)
