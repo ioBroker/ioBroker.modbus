@@ -402,11 +402,31 @@ function prepareConfig(config) {
         options.config.keepAliveInterval = parseInt(params.keepAliveInterval, 10) || 0;
     }
 
-    if (params.type === 'tcp' || params.type === 'tcprtu') {
+    if (params.type === 'tcp' || params.type === 'tcprtu' || params.type === 'tcp-ssl') {
         options.config.tcp = {
             port: parseInt(params.port, 10) || 502,
             bind: params.bind,
         };
+
+        // Add SSL configuration for tcp-ssl type
+        if (params.type === 'tcp-ssl') {
+            options.config.ssl = {
+                rejectUnauthorized: params.sslRejectUnauthorized !== false,
+            };
+
+            // Only add SSL certificate paths if they are provided
+            if (params.sslCertPath) {
+                options.config.ssl.cert = params.sslCertPath;
+            }
+
+            if (params.sslKeyPath) {
+                options.config.ssl.key = params.sslKeyPath;
+            }
+
+            if (params.sslCaPath) {
+                options.config.ssl.ca = params.sslCaPath;
+            }
+        }
     } else {
         options.config.serial = {
             comName: params.comName,

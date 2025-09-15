@@ -162,12 +162,17 @@ class Options extends Component {
     };
 
     inputDisplay = input => {
-        if (['tcp', 'tcprtu'].includes(this.props.native.params.type)) {
+        if (['tcp', 'tcprtu', 'tcp-ssl'].includes(this.props.native.params.type)) {
             if (['comName', 'baudRate', 'dataBits', 'stopBits', 'parity'].includes(input.name)) {
                 return false;
             }
         } else if (['bind', 'port'].includes(input.name)) {
             return false;
+        }
+
+        // Only show SSL options when tcp-ssl is selected
+        if (['sslEnabled', 'sslCertPath', 'sslKeyPath', 'sslCaPath', 'sslRejectUnauthorized'].includes(input.name)) {
+            return this.props.native.params.type === 'tcp-ssl';
         }
 
         return true;

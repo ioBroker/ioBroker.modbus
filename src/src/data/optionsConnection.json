@@ -15,6 +15,10 @@
             {
                 "value": "tcprtu",
                 "title": "RTU over TCP"
+            },
+            {
+                "value": "tcp-ssl",
+                "title": "TCP with SSL/TLS"
             }
         ]
     },
@@ -183,5 +187,35 @@
                 "title": "Slave"
             }
         ]
+    },
+    {
+        "name": "sslEnabled",
+        "type": "checkbox",
+        "title": "Enable SSL/TLS",
+        "newLine": true
+    },
+    {
+        "name": "sslCertPath",
+        "type": "text",
+        "title": "SSL Certificate file path",
+        "help": "Path to SSL certificate file (PEM format)"
+    },
+    {
+        "name": "sslKeyPath",
+        "type": "text",
+        "title": "SSL Private key file path",
+        "help": "Path to SSL private key file (PEM format)"
+    },
+    {
+        "name": "sslCaPath",
+        "type": "text",
+        "title": "SSL CA Certificate file path",
+        "help": "Path to CA certificate file (PEM format) - optional"
+    },
+    {
+        "name": "sslRejectUnauthorized",
+        "type": "checkbox",
+        "title": "Reject unauthorized certificates",
+        "help": "Uncheck to allow self-signed certificates"
     }
 ]
