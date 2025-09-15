@@ -44,6 +44,7 @@
     "Parity": "Parity",
     "Partner IP Address": "Partner IP Address",
     "Poll delay": "Data polling interval",
+    "Poll Interval": "Poll Interval",
     "Port": "Port",
     "Pulse time": "Pulse time",
     "RTU over TCP": "RTU over TCP",
@@ -128,6 +129,7 @@
     "doNotIncludeAdrInId_help": "Do not add address in the generated ioBroker iD. `10_Input10` vs `Input10`.",
     "preserveDotsInId_help": "With this flag the Name will be `Inputs.Input10`. Without => `Inputs_Input10`.",
     "poll_help": "Cyclic poll interval in milliseconds (Only relevant for master)",
+    "pollInterval_help": "Custom polling interval for this specific address in milliseconds. If empty, uses the global poll interval.",
     "recon_help": "Reconnection interval in milliseconds. (Only relevant for master)\nIf no connection established, master will try every X milliseconds to connect.",
     "Disable connection error logging": "Disable connection error logging",
     "disableLogging_help": "Suppress connection error messages in the log. When enabled, connection errors will not be logged to reduce log noise."

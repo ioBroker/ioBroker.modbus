@@ -44,6 +44,7 @@
   "Parity": "Parité",
   "Partner IP Address": "Adresse IP du partenaire",
   "Poll delay": "Délai d'interrogation",
+  "Poll Interval": "Intervalle d'interrogation",
   "Port": "Port",
   "Pulse time": "Temps d'impulsion",
   "RTU over TCP": "RTU sur TCP",
@@ -128,6 +129,7 @@
   "doNotIncludeAdrInId_help": "N'ajoutez pas d'adresse dans l'ID ioBroker généré. « 10_Input10 » contre « Input10 ».",
   "preserveDotsInId_help": "Avec cet indicateur, le nom sera « Inputs.Input10 ». Sans => `Inputs_Input10`.",
   "poll_help": "Intervalle d'interrogation cyclique en millisecondes (uniquement pertinent pour le maître)",
+  "pollInterval_help": "Intervalle d'interrogation personnalisé pour cette adresse spécifique en millisecondes. Si vide, utilise l'intervalle d'interrogation global.",
   "recon_help": "Intervalle de reconnexion en millisecondes. (Uniquement pertinent pour le maître)\nSi aucune connexion n'est établie, le maître essaiera de se connecter toutes les X millisecondes.",
   "Disable connection error logging": "Désactiver la journalisation des erreurs de connexion",
   "disableLogging_help": "Supprimer les messages d'erreur de connexion dans le journal. Lorsqu'elle est activée, les erreurs de connexion ne seront pas journalisées pour réduire le bruit du journal."
