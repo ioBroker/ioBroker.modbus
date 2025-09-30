@@ -69,11 +69,19 @@ function direct2nonDirect(regType, address) {
     }
 }
 
+function parseAddress(addressStr) {
+    if (typeof addressStr === 'string' && addressStr.toLowerCase().startsWith('0x')) {
+        return parseInt(addressStr, 16);
+    }
+    return parseInt(addressStr, 10) || 0;
+}
+
 const Utils = {
     address2alias,
     alias2address,
     nonDirect2direct,
     direct2nonDirect,
+    parseAddress,
 };
 
 export default Utils;

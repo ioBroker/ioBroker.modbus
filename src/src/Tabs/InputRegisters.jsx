@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 import types from '../data/types';
 import roles from '../data/roles';
+import Utils from '../Components/Utils';
 
 import BaseRegisters from './BaseRegisters';
 
@@ -10,7 +11,7 @@ class InputRegisters extends BaseRegisters {
 
     getFields() {
         let result = [
-            { name: '_address', title: 'Address', type: 'number', sorted: true, width: 20 },
+            { name: '_address', title: 'Address', type: 'text', sorted: true, width: 20 },
             { name: 'name', title: 'Name', type: 'text', sorted: true },
             { name: 'description', title: 'Description', type: 'text', sorted: true },
             { name: 'unit', title: 'Unit', type: 'text', width: 30 },
@@ -46,12 +47,12 @@ class InputRegisters extends BaseRegisters {
         if (data.length) {
             let sortedData = this.getSortedData();
             let lastItem = sortedData[sortedData.length - 1].item;
-            newItem._address = parseInt(lastItem._address, 10) + (lastItem.len ? parseInt(lastItem.len, 10) : 1);
+            newItem._address = Utils.parseAddress(lastItem._address) + (lastItem.len ? parseInt(lastItem.len, 10) : 1);
             while (
                 sortedData.find(
                     item =>
-                        item.item._address >= newItem._address &&
-                        item.item._address + parseInt(item.item.len || 1, 10) < newItem._address,
+                        Utils.parseAddress(item.item._address) >= newItem._address &&
+                        Utils.parseAddress(item.item._address) + parseInt(item.item.len || 1, 10) < newItem._address,
                 )
             ) {
                 newItem._address++;

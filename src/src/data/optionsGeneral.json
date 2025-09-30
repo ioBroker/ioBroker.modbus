@@ -113,5 +113,11 @@
         "type": "checkbox",
         "title": "preserve dots in ID",
         "tooltip": "preserveDotsInId_help"
+    },
+    {
+        "name": "disableLogging",
+        "type": "checkbox",
+        "title": "Disable connection error logging",
+        "tooltip": "disableLogging_help"
     }
 ]

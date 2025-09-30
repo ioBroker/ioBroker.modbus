@@ -128,5 +128,7 @@
   "doNotIncludeAdrInId_help": "No agregue la dirección en el ID de ioBroker generado. `10_Entrada10` frente a `Entrada10`.",
   "preserveDotsInId_help": "Con esta bandera el Nombre será `Inputs.Input10`. Sin => `Inputs_Input10`.",
   "poll_help": "Intervalo de sondeo cíclico en milisegundos (solo relevante para maestro)",
-  "recon_help": "Intervalo de reconexión en milisegundos. (Sólo relevante para el maestro)\nSi no se establece ninguna conexión, el maestro intentará conectarse cada X milisegundos."
+  "recon_help": "Intervalo de reconexión en milisegundos. (Sólo relevante para el maestro)\nSi no se establece ninguna conexión, el maestro intentará conectarse cada X milisegundos.",
+  "Disable connection error logging": "Desactivar el registro de errores de conexión",
+  "disableLogging_help": "Suprimir mensajes de error de conexión en el registro. Cuando está habilitado, los errores de conexión no se registrarán para reducir el ruido del registro."
 }
