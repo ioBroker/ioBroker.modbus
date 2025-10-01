@@ -641,6 +641,7 @@ function assignIds(deviceId, config, result, regName, regType, localOptions) {
         if (config[i].deviceId !== deviceId) {
             continue;
         }
+
         if (config[i].address === undefined && config[i]._address !== undefined) {
             if (localOptions.showAliases) {
                 if (config[i]._address >= result.offset) {
@@ -719,6 +720,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
             if (config[i].deviceId !== deviceId) {
                 continue;
             }
+
             const address = (config[i].address = parseInt(config[i].address, 10));
 
             if (address < 0) {
@@ -778,10 +780,10 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
 
             // try to detect the next block
             if (result.blocks) {
-                if (
-                    (config[i].address - lastAddress > 10 && config[i].len < 10) ||
-                    lastAddress - blockStart >= maxBlock
-                ) {
+                const wouldExceedLimit = config[i].address + config[i].len - blockStart > maxBlock;
+                const hasAddressGap = config[i].address - lastAddress > 10 && config[i].len < 10;
+
+                if (hasAddressGap || wouldExceedLimit) {
                     if (!result.blocks.map(obj => obj.start).includes(blockStart)) {
                         result.blocks.push({
                             start: blockStart,

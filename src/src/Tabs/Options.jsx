@@ -137,7 +137,7 @@ class Options extends Component {
     }
 
     inputDisabled = input => {
-        if (input.name === 'slave' && this.props.native.params.type !== 'tcp') {
+        if (input.name === 'slave' && !['tcp', 'serial'].includes(this.props.native.params.type)) {
             return true;
         } else if (input.name === 'directAddresses' && !this.props.native.params.showAliases) {
             return true;
@@ -415,7 +415,7 @@ class Options extends Component {
                 }
             }
         } else if (name === 'type') {
-            if (value !== 'tcp' && (native.params.slave === 1 || native.params.slave === '1')) {
+            if (!['tcp', 'serial'].includes(value) && (native.params.slave === 1 || native.params.slave === '1')) {
                 native.params.slave = '0';
             }
 
