@@ -46,18 +46,17 @@
     "@iobroker/eslint-config": "^2.2.0",
     "@iobroker/testing": "^5.1.1",
     "@iobroker/legacy-testing": "^2.0.2",
-    "mocha": "^11.7.3",
+    "mocha": "^11.7.4",
     "chai": "^4.5.0",
     "nan": "2.23.0",
     "modbus-stack": "^0.2.1"
   },
-  "main": "main.js",
+  "main": "build/main.js",
   "files": [
     "admin/",
-    "img",
-    "lib",
+    "img/",
+    "build/",
     "io-package.json",
-    "main.js",
     "LICENSE"
   ],
   "scripts": {
@@ -67,8 +66,8 @@
     "release-patch": "release-script patch --yes",
     "release-minor": "release-script minor --yes",
     "release-major": "release-script major --yes",
-    "build": "node tasks",
-    "update-packages": "ncu --upgrade && cd src && ncu --upgrade && cd ..",
+    "build": "tsc -p tsconfig.build.json && node tasks",
+    "update-packages": "npx -y npm-check-updates --upgrade && cd src-admin && npx -y npm-check-updates --upgrade",
     "npm": "npm i && cd src && npm i -f",
     "0-clean": "node tasks.js --0-clean",
     "1-npm": "node tasks.js --1-npm",
