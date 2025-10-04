@@ -6,7 +6,7 @@ function clean() {
 }
 
 function copyAllFiles() {
-    copyFiles(['src/build/**/*'], 'admin/');
+    copyFiles(['src-admin/build/**/*'], 'admin/');
 }
 
 function patch() {
@@ -18,12 +18,12 @@ function patch() {
 if (process.argv.includes('--0-clean')) {
     clean();
 } else if (process.argv.includes('--1-npm')) {
-    npmInstall(`${__dirname}/src`).catch(e => {
+    npmInstall(`${__dirname}/src-admin`).catch(e => {
         console.error(`Cannot install npm: ${e}`);
         process.exit(1);
     });
 } else if (process.argv.includes('--2-build')) {
-    buildReact(`${__dirname}/src/`, {
+    buildReact(`${__dirname}/src-admin/`, {
         rootDir: __dirname,
         vite: true,
     }).catch(e => {
@@ -43,9 +43,9 @@ if (process.argv.includes('--0-clean')) {
         });
 } else if (process.argv.includes('--build')) {
     clean();
-    npmInstall(`${__dirname}/src`)
+    npmInstall(`${__dirname}/src-admin`)
         .then(() =>
-            buildReact(`${__dirname}/src/`, {
+            buildReact(`${__dirname}/src-admin/`, {
                 rootDir: __dirname,
                 vite: true,
             }),
@@ -59,9 +59,9 @@ if (process.argv.includes('--0-clean')) {
 } else {
     clean();
 
-    npmInstall(`${__dirname}/src`)
+    npmInstall(`${__dirname}/src-admin`)
         .then(() =>
-            buildReact(`${__dirname}/src/`, {
+            buildReact(`${__dirname}/src-admin/`, {
                 rootDir: __dirname,
                 vite: true,
             }),
