@@ -1,4 +1,4 @@
-const ERROR_CODES = {
+const ERROR_CODES: { [code: number]: { name: string; desc: string } } = {
     1: { name: 'Illegal Function', desc: 'Function code received in the query is not recognized or allowed by slave' },
     2: {
         name: 'Illegal Data Address',
@@ -35,4 +35,4 @@ const ERROR_CODES = {
     },
 };
 
-module.exports = ERROR_CODES;
+export default ERROR_CODES;

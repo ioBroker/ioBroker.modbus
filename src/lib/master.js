@@ -1,5 +1,5 @@
 'use strict';
-const common = require('./common.js');
+const common = require('./common.ts');
 const Modbus = require('./jsmodbus');
 const { createLoggingWrapper } = require('./loggingUtils');
 const scaleFactors = {};

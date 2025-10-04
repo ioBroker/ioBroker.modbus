@@ -58,7 +58,7 @@ The test directory contains ModBus simulators for testing:
 ├── lib/                   -- Core adapter logic
 │   ├── master.js         -- ModBus master implementation
 │   ├── slave.js          -- ModBus slave implementation  
-│   ├── common.js         -- Shared utilities
+│   ├── common.ts         -- Shared utilities
 │   └── jsmodbus/         -- Custom ModBus protocol implementation
 ├── src/                  -- React admin interface source
 │   ├── package.json      -- Frontend dependencies
@@ -82,7 +82,7 @@ The test directory contains ModBus simulators for testing:
 ### Adding ModBus functionality:
 - Modify `lib/master.js` for master mode features
 - Modify `lib/slave.js` for slave mode features  
-- Update `lib/common.js` for shared utilities
+- Update `lib/common.ts` for shared utilities
 - Admin UI changes go in `src/` directory
 
 ### Debugging ModBus communication:
