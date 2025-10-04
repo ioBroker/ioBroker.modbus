@@ -6,10 +6,7 @@ function clean() {
 }
 
 function copyAllFiles() {
-    copyFiles(
-        ['src/build/*/**', 'src/build/*', '!src/build/static/media/*.svg', '!src/build/static/media/*.txt'],
-        'admin/',
-    );
+    copyFiles(['src/build/**/*'], 'admin/');
 }
 
 function patch() {
