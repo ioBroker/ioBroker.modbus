@@ -6,10 +6,10 @@ admin/i18n/*/flat.txt
 test/Ananas64.exe
 iob_npm.done
 tmp
-/src/node_modules
-/src/.eslintcache
+/src-admin/node_modules
+/src-admin/.eslintcache
 .DS_Store
-/src/build
+/src-admin/build
 /test/*.log
 /test/RMMS.exe
 *.tgz
