@@ -1,20 +1,21 @@
-import PropTypes from 'prop-types';
-
-import roles from '../data/roles';
-import Utils from '../Components/Utils';
+import roles from '../data/roles.json';
+import { parseAddress } from '../Components/Utils';
 
 import BaseRegisters from './BaseRegisters';
+import type { Register, RegisterField, RegisterType } from '../types';
 
-class DiscreteInputs extends BaseRegisters {
-    nativeField = 'disInputs';
+const rolesTyped: { value: string; title: string }[] = roles;
 
-    getFields() {
-        let result = [
+export default class DiscreteInputs extends BaseRegisters {
+    nativeField: RegisterType = 'disInputs';
+
+    getFields(): RegisterField[] {
+        const result: RegisterField[] = [
             { name: '_address', title: 'Address', type: 'text', sorted: true, width: 20 },
             { name: 'name', title: 'Name', type: 'text', sorted: true },
             { name: 'description', title: 'Description', type: 'text', sorted: true },
             { name: 'formula', title: 'Formula', type: 'text', expert: true, formulaDisabled: true },
-            { name: 'role', title: 'Role', type: 'select', options: roles, sorted: true },
+            { name: 'role', title: 'Role', type: 'select', options: rolesTyped, sorted: true },
             { name: 'room', title: 'Room', type: 'rooms' },
             { name: 'cw', title: 'CW', type: 'checkbox', tooltip: 'Cyclic write' },
             {
@@ -34,19 +35,28 @@ class DiscreteInputs extends BaseRegisters {
         return result;
     }
 
-    isShowExtendedModeSwitch() {
-        return this.props.native.params.slave !== 1 && this.props.native.params.slave !== '1';
+    isShowExtendedModeSwitch(): boolean {
+        return this.props.native.params.slave !== '1';
     }
 
-    addItem = () => {
-        let data = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
-        let newItem = {};
-        this.getFields().forEach(field => (newItem[field.name] = ''));
+    addItem = (): void => {
+        const data: Register[] = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
+        const newItem: Register = {
+            _address: '',
+            address: 0,
+            name: '',
+            description: '',
+            formula: '',
+            role: '',
+            cw: false,
+            isScale: false,
+        } as Register;
+
         if (data.length) {
-            let sortedData = this.getSortedData();
-            let lastItem = sortedData[sortedData.length - 1].item;
-            newItem._address = Utils.parseAddress(lastItem._address) + 1;
-            while (sortedData.find(item => Utils.parseAddress(item.item._address) === newItem._address)) {
+            const sortedData = this.getSortedData();
+            const lastItem = sortedData[sortedData.length - 1].item;
+            newItem._address = parseAddress(lastItem._address) + 1;
+            while (sortedData.find(item => parseAddress(item.item._address) === newItem._address)) {
                 newItem._address++;
             }
             newItem.deviceId = lastItem.deviceId;
@@ -63,18 +73,3 @@ class DiscreteInputs extends BaseRegisters {
         this.props.onChange(this.nativeField, data);
     };
 }
-
-DiscreteInputs.propTypes = {
-    common: PropTypes.object.isRequired,
-    native: PropTypes.object.isRequired,
-    instance: PropTypes.number.isRequired,
-    adapterName: PropTypes.string.isRequired,
-    onError: PropTypes.func,
-    onLoad: PropTypes.func,
-    onChange: PropTypes.func,
-    changed: PropTypes.bool,
-    socket: PropTypes.object.isRequired,
-    rooms: PropTypes.object,
-};
-
-export default DiscreteInputs;

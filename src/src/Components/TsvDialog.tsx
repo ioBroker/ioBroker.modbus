@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { tsv2json, json2tsv } from 'tsv-json';
-import { useSnackbar } from 'notistack';
 import AceEditor from 'react-ace';
 
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Snackbar } from '@mui/material';
 
 import { Clear as ClearIcon, Save as SaveIcon, FileCopy as FileCopyIcon } from '@mui/icons-material';
 
 import { I18n, Utils } from '@iobroker/adapter-react-v5';
+import type { Register, RegisterField } from '../types';
 
 const styles = {
     tsvEditor: {
@@ -17,51 +16,59 @@ const styles = {
     },
 };
 
-const TsvDialog = props => {
+export default function TsvDialog(props: {
+    onClose: () => void;
+    save: (data: Register[]) => void;
+    fields: RegisterField[];
+    data: Register[];
+}): React.JSX.Element {
     const [tsv, setTsv] = useState('');
+    const [message, setMessage] = useState<React.JSX.Element | null>(null);
 
     useEffect(() => {
-        let tsvResult = [];
+        const tsvResult = [];
         tsvResult.push(props.fields.map(field => field.name));
         props.data.forEach(item =>
             tsvResult.push(
                 props.fields.map(field =>
-                    item[field.name] !== undefined && item[field.name] !== null ? item[field.name].toString() : '',
+                    item[field.name] !== undefined && item[field.name] !== null
+                        ? item[field.name]?.toString() || ''
+                        : '',
                 ),
             ),
         );
         setTsv(json2tsv(tsvResult));
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const { enqueueSnackbar } = useSnackbar();
-
-    const saveTsv = () => {
-        let data = tsv2json(tsv.endsWith('\n') ? tsv : tsv + '\n');
-        let fields = data.shift();
+    const saveTsv = (): void => {
+        const data: (string | boolean)[][] = tsv2json(tsv.endsWith('\n') ? tsv : `${tsv}\n`);
+        const fields = data.shift();
         let success = true;
-        let errors = [];
-        for (let index in props.fields) {
-            if (props.fields[index].name !== fields[index]) {
-                errors.push(
-                    <>
-                        No field <i>{props.fields[index].name}</i> in position <i>{parseInt(index) + 1}</i>!
-                    </>,
-                );
-                success = false;
+        const errors = [];
+        if (fields) {
+            for (const index in props.fields) {
+                if (props.fields[index].name !== fields[index]) {
+                    errors.push(
+                        <>
+                            No field <i>{props.fields[index].name}</i> in position <i>{parseInt(index) + 1}</i>!
+                        </>,
+                    );
+                    success = false;
+                }
             }
         }
 
-        data = data.map((itemValues, itemIndex) => {
-            let item = {};
-            for (let index in props.fields) {
+        const dataTyped: Register[] = data.map((itemValues, itemIndex) => {
+            const item: Register = {} as Register;
+            for (const index in props.fields) {
                 if (
                     props.fields[index].type === 'select' &&
-                    !props.fields[index].options.map(option => option.value).includes(itemValues[index])
+                    !props.fields[index].options?.map(option => option.value).includes(itemValues[index] as string)
                 ) {
                     errors.push(
                         <>
                             Value <i>{itemValues[index]}</i> is wrong for field <i>{props.fields[index].name}</i> in
-                            position <i>{parseInt(itemIndex) + 1}</i>!
+                            position <i>{itemIndex + 1}</i>!
                         </>,
                     );
                     success = false;
@@ -69,23 +76,23 @@ const TsvDialog = props => {
                 if (props.fields[index].type === 'checkbox') {
                     itemValues[index] = itemValues[index] === 'true';
                 }
-                item[props.fields[index].name] = itemValues[index];
+                (item as unknown as Record<string, string | boolean | number>)[props.fields[index].name] =
+                    itemValues[index];
             }
             return item;
         });
 
         if (!success) {
-            enqueueSnackbar(
-                <div>
+            setMessage(
+                <div style={{ color: 'red' }}>
                     {errors.map((error, index) => (
                         <div key={index}>{error}</div>
                     ))}
                 </div>,
-                { variant: 'error' },
             );
             return;
         }
-        props.save(data);
+        props.save(dataTyped);
         props.onClose();
     };
 
@@ -96,6 +103,12 @@ const TsvDialog = props => {
             maxWidth="lg"
             fullWidth
         >
+            <Snackbar
+                open={!!message}
+                autoHideDuration={8000}
+                onClose={() => setMessage(null)}
+                message={message}
+            />
             <DialogTitle>{I18n.t('Edit data as TSV')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>{I18n.t('You can copy, paste and edit data as TSV.')}</DialogContentText>
@@ -108,7 +121,6 @@ const TsvDialog = props => {
                         style={styles.tsvEditor}
                         width="100%"
                         setOptions={{ firstLineNumber: 0 }}
-                        mode={null}
                     />
                 </div>
             </DialogContent>
@@ -118,7 +130,7 @@ const TsvDialog = props => {
                     color="primary"
                     onClick={() => {
                         Utils.copyToClipboard(tsv);
-                        enqueueSnackbar(I18n.t('TSV was copied to clipboard'));
+                        setMessage(<span>{I18n.t('TSV was copied to clipboard')}</span>);
                     }}
                     startIcon={<FileCopyIcon />}
                 >
@@ -143,13 +155,4 @@ const TsvDialog = props => {
             </DialogActions>
         </Dialog>
     );
-};
-
-TsvDialog.propTypes = {
-    onClose: PropTypes.func,
-    save: PropTypes.func,
-    fields: PropTypes.array,
-    data: PropTypes.array,
-};
-
-export default TsvDialog;
+}

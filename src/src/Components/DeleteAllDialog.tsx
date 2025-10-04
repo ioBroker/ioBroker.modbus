@@ -1,12 +1,15 @@
-import PropTypes from 'prop-types';
-
+import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 
 import { Delete as DeleteIcon, Clear as ClearIcon } from '@mui/icons-material';
 
 import { I18n } from '@iobroker/adapter-react-v5';
 
-const DeleteAllDialog = props => {
+export default function DeleteAllDialog(props: {
+    open: boolean;
+    action: () => void;
+    onClose: () => void;
+}): React.JSX.Element | null {
     return props.open ? (
         <Dialog
             open={props.open}
@@ -39,12 +42,4 @@ const DeleteAllDialog = props => {
             </DialogContent>
         </Dialog>
     ) : null;
-};
-
-DeleteAllDialog.propTypes = {
-    open: PropTypes.bool,
-    action: PropTypes.func,
-    onClose: PropTypes.func,
-};
-
-export default DeleteAllDialog;
+}

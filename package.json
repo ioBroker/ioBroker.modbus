@@ -25,10 +25,10 @@
     "url": "https://github.com/ioBroker/ioBroker.modbus"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "optionalDependencies": {
-    "serialport": "^12.0.0"
+    "serialport": "^13.0.0"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.3.2",
@@ -46,7 +46,7 @@
     "@iobroker/eslint-config": "^2.2.0",
     "@iobroker/testing": "^5.1.1",
     "@iobroker/legacy-testing": "^2.0.2",
-    "mocha": "^10.8.2",
+    "mocha": "^11.7.3",
     "chai": "^4.5.0",
     "nan": "2.23.0",
     "modbus-stack": "^0.2.1"

@@ -1,5 +1,4 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
 import {
     Typography,
@@ -11,7 +10,7 @@ import {
     FormControl,
     InputLabel,
     InputAdornment,
-    Grid,
+    Grid2 as Grid,
     Paper,
     Box,
     FormHelperText,
@@ -21,13 +20,17 @@ import {
 
 import { Edit as EditIcon, Info as IconInfo } from '@mui/icons-material';
 
-import { I18n } from '@iobroker/adapter-react-v5';
+import { type AdminConnection, I18n } from '@iobroker/adapter-react-v5';
 
-import Utils from '../Components/Utils';
-import connectionInputs from '../data/optionsConnection';
-import generalInputs from '../data/optionsGeneral';
+import { address2alias, nonDirect2direct, direct2nonDirect, alias2address } from '../Components/Utils';
+import connectionInputs from '../data/optionsConnection.json';
+import generalInputs from '../data/optionsGeneral.json';
+import type { OptionField, ModbusAdapterConfig, RegisterType } from '../types';
 
-const styles = {
+const connectionInputsTyped = connectionInputs as OptionField[];
+const generalInputsTyped = generalInputs as OptionField[];
+
+const styles: Record<string, React.CSSProperties> = {
     optionsSelect: {
         width: 280,
     },
@@ -62,7 +65,7 @@ const styles = {
     },
 };
 
-function text2react(text) {
+function text2react(text: string): React.JSX.Element[] | string {
     if (!text.includes('\n')) {
         return text;
     }
@@ -70,8 +73,28 @@ function text2react(text) {
     return lines.map((line, i) => <p key={i}>{line}</p>);
 }
 
-class Options extends Component {
-    constructor(props) {
+interface OptionsProps {
+    common: ioBroker.InstanceCommon;
+    native: ModbusAdapterConfig;
+    instance: number;
+    adapterName: string;
+    onError?: (error: string) => void;
+    onLoad?: (isLoading: boolean) => void;
+    onChange?: (isChanged: boolean) => void;
+    changed?: boolean;
+    socket: AdminConnection;
+    changeNative: (native: ioBroker.AdapterConfig) => void;
+    rooms?: Record<string, string>;
+}
+
+interface OptionsState {
+    ports: { value: string; title: string }[] | null;
+    customPort: string | boolean;
+    ips: { value: string; title: string }[] | null;
+}
+
+export class Options extends Component<OptionsProps, OptionsState> {
+    constructor(props: OptionsProps) {
         super(props);
 
         this.state = {
@@ -81,87 +104,86 @@ class Options extends Component {
         };
     }
 
-    readPorts() {
-        return this.props.socket
-            .getState(`system.adapter.${this.props.adapterName}.${this.props.instance}.alive`)
-            .then(state => {
-                if (state && state.val) {
-                    return this.props.socket
-                        .sendTo(`${this.props.adapterName}.${this.props.instance}`, 'listUart', null)
-                        .then(list => {
-                            if (list && list.error) {
-                                console.error(`Cannot read ports: ${list.error}`);
-                            } else if (list && list.length === 1 && list[0] && list[0].path === 'Not available') {
-                                console.warn('Cannot read ports');
-                            } else {
-                                const ports = list.map(item => ({
-                                    value: item.path,
-                                    title: item.path + (item.manufacturer ? ` [${item.manufacturer}]` : ''),
-                                }));
-                                const customPort =
-                                    this.props.native.params.comName &&
-                                    !ports.find(item => item.value === this.props.native.params.comName);
+    async readPorts(): Promise<void> {
+        try {
+            const state = await this.props.socket.getState(
+                `system.adapter.${this.props.adapterName}.${this.props.instance}.alive`,
+            );
+            if (state?.val) {
+                try {
+                    const list = await this.props.socket.sendTo(
+                        `${this.props.adapterName}.${this.props.instance}`,
+                        'listUart',
+                        null,
+                    );
+                    if ((list as { error?: string })?.error) {
+                        console.error(`Cannot read ports: ${(list as { error?: string }).error}`);
+                    } else if (
+                        (list as { path: string; manufacturer: string }[])?.length === 1 &&
+                        (list as { path: string; manufacturer: string }[])[0]?.path === 'Not available'
+                    ) {
+                        console.warn('Cannot read ports');
+                    } else {
+                        const ports = (list as { path: string; manufacturer: string }[]).map(item => ({
+                            value: item.path,
+                            title: item.path + (item.manufacturer ? ` [${item.manufacturer}]` : ''),
+                        }));
+                        const customPort =
+                            this.props.native.params.comName &&
+                            !ports.find(item => item.value === this.props.native.params.comName);
 
-                                this.setState({ ports, customPort });
-                            }
-                        })
-                        .catch(e => console.error(`Cannot read ports: ${e}`));
+                        this.setState({ ports, customPort });
+                    }
+                } catch (e) {
+                    return console.error(`Cannot read ports: ${e}`);
                 }
-            })
-            .catch(e => console.error(`Cannot read alive: ${e}`));
+            }
+        } catch (e) {
+            return console.error(`Cannot read alive: ${e}`);
+        }
     }
 
-    readIPs() {
-        return this.props.socket
-            .getIpAddresses(this.props.common.host)
-            .then(ips => {
-                ips = ips || [];
-                ips = ips.map(ip => ({ value: ip, title: ip }));
-                ips.unshift({ value: '0.0.0.0', title: 'Listen on all IPs' });
-                ips.unshift({ value: '127.0.0.1', title: '127.0.0.1 (Localhost)' });
-                this.setState({ ips });
-            })
-            .catch(e => console.error(`Cannot read IP addresses: ${e}`));
+    async readIPs(): Promise<void> {
+        try {
+            const ips = (await this.props.socket.getIpAddresses(this.props.common.host)) || [];
+            const values = ips.map(ip => ({ value: ip, title: ip }));
+            values.unshift({ value: '0.0.0.0', title: 'Listen on all IPs' });
+            values.unshift({ value: '127.0.0.1', title: '127.0.0.1 (Localhost)' });
+            this.setState({ ips: values });
+        } catch (e) {
+            return console.error(`Cannot read IP addresses: ${e}`);
+        }
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         if (this.props.native.params.type === 'serial') {
-            this.readPorts();
+            this.readPorts().catch(e => console.error(`Cannot read ports: ${e}`));
         }
-        if (
-            this.props.native.params.type !== 'serial' &&
-            (this.props.native.params.slave === '1' || this.props.native.params.slave === 1)
-        ) {
-            this.readIPs();
+        if (this.props.native.params.type !== 'serial' && this.props.native.params.slave === '1') {
+            this.readIPs().catch(e => console.error(`Cannot read IPs: ${e}`));
         }
     }
 
-    inputDisabled = input => {
+    inputDisabled(input: OptionField): boolean {
         if (input.name === 'slave' && !['tcp', 'serial'].includes(this.props.native.params.type)) {
             return true;
-        } else if (input.name === 'directAddresses' && !this.props.native.params.showAliases) {
-            return true;
-        } else if (
-            input.name === 'multiDeviceId' &&
-            (this.props.native.params.slave === '1' || this.props.native.params.slave === 1)
-        ) {
-            return true;
-        } else if (
-            input.name === 'doNotUseWriteMultipleRegisters' &&
-            this.props.native.params.onlyUseWriteMultipleRegisters
-        ) {
-            return true;
-        } else if (
-            input.name === 'onlyUseWriteMultipleRegisters' &&
-            this.props.native.params.doNotUseWriteMultipleRegisters
-        ) {
-            return true;
-        } else {
-            return false;
         }
-    };
+        if (input.name === 'directAddresses' && !this.props.native.params.showAliases) {
+            return true;
+        }
+        if (input.name === 'multiDeviceId' && this.props.native.params.slave === '1') {
+            return true;
+        }
+        if (input.name === 'doNotUseWriteMultipleRegisters' && this.props.native.params.onlyUseWriteMultipleRegisters) {
+            return true;
+        }
+        if (input.name === 'onlyUseWriteMultipleRegisters' && this.props.native.params.doNotUseWriteMultipleRegisters) {
+            return true;
+        }
+        return false;
+    }
 
-    inputDisplay = input => {
+    inputDisplay(input: OptionField): boolean {
         if (['tcp', 'tcprtu', 'tcp-ssl'].includes(this.props.native.params.type)) {
             if (['comName', 'baudRate', 'dataBits', 'stopBits', 'parity'].includes(input.name)) {
                 return false;
@@ -176,9 +198,9 @@ class Options extends Component {
         }
 
         return true;
-    };
+    }
 
-    getInputsBlock(inputs, title) {
+    getInputsBlock(inputs: OptionField[], title: string): React.JSX.Element {
         return (
             <Paper style={styles.optionsContainer}>
                 <Typography
@@ -195,7 +217,7 @@ class Options extends Component {
                     if (
                         input.name === 'bind' &&
                         this.props.native.params.type !== 'serial' &&
-                        (this.props.native.params.slave === '1' || this.props.native.params.slave === 1)
+                        this.props.native.params.slave === '1'
                     ) {
                         return (
                             <Box
@@ -231,12 +253,14 @@ class Options extends Component {
                                         disabled={this.inputDisabled(input)}
                                         helperText={input.help ? I18n.t(input.help) : ''}
                                         value={this.props.native.params[input.name]}
-                                        InputProps={{
-                                            endAdornment: input.dimension ? (
-                                                <InputAdornment position="end">
-                                                    {I18n.t(input.dimension)}
-                                                </InputAdornment>
-                                            ) : null,
+                                        slotProps={{
+                                            input: {
+                                                endAdornment: input.dimension ? (
+                                                    <InputAdornment position="end">
+                                                        {I18n.t(input.dimension)}
+                                                    </InputAdornment>
+                                                ) : null,
+                                            },
                                         }}
                                         onChange={e => this.changeParam(input.name, e.target.value)}
                                     />
@@ -255,10 +279,8 @@ class Options extends Component {
                                         label={I18n.t(input.title)}
                                         control={
                                             <Checkbox
-                                                label={I18n.t(input.title)}
-                                                style={styles.optionsCheckbox}
                                                 disabled={this.inputDisabled(input)}
-                                                checked={this.props.native.params[input.name]}
+                                                checked={this.props.native.params[input.name] as boolean}
                                                 onChange={e => this.changeParam(input.name, e.target.checked)}
                                             />
                                         }
@@ -290,7 +312,7 @@ class Options extends Component {
                                         value={this.props.native.params[input.name] || ''}
                                         onChange={e => this.changeParam(input.name, e.target.value)}
                                     >
-                                        {input.options.map(option => (
+                                        {input.options?.map(option => (
                                             <MenuItem
                                                 key={option.value}
                                                 value={option.value}
@@ -363,7 +385,10 @@ class Options extends Component {
                         );
                     }
 
-                    const inputProps = {};
+                    const inputProps: {
+                        min?: number;
+                        max?: number;
+                    } = {};
                     if (input.min !== undefined) {
                         inputProps.min = input.min;
                     }
@@ -381,15 +406,17 @@ class Options extends Component {
                                 type={input.type}
                                 label={I18n.t(input.title)}
                                 style={styles.optionsTextField}
-                                inputProps={inputProps}
+                                slotProps={{
+                                    htmlInput: inputProps,
+                                    input: {
+                                        endAdornment: input.dimension ? (
+                                            <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment>
+                                        ) : null,
+                                    },
+                                }}
                                 disabled={this.inputDisabled(input)}
                                 helperText={input.help ? I18n.t(input.help) : ''}
                                 value={this.props.native.params[input.name]}
-                                InputProps={{
-                                    endAdornment: input.dimension ? (
-                                        <InputAdornment position="end">{I18n.t(input.dimension)}</InputAdornment>
-                                    ) : null,
-                                }}
                                 onChange={e => this.changeParam(input.name, e.target.value)}
                             />
                             {input.tooltip ? (
@@ -404,61 +431,58 @@ class Options extends Component {
         );
     }
 
-    changeParam = (name, value) => {
-        let native = JSON.parse(JSON.stringify(this.props.native));
-        native.params[name] = value;
+    changeParam(name: OptionField['name'], value: string | number | boolean): void {
+        const native: ModbusAdapterConfig = JSON.parse(JSON.stringify(this.props.native));
+        (native.params as any)[name] = value;
         if (name === 'slave') {
             if (value === '1' || value === 1) {
                 native.params.multiDeviceId = false;
                 if (this.props.native.params.type !== 'serial') {
-                    this.readIPs();
+                    this.readIPs().catch(e => console.error(`Cannot read IPs: ${e}`));
                 }
             }
         } else if (name === 'type') {
-            if (!['tcp', 'serial'].includes(value) && (native.params.slave === 1 || native.params.slave === '1')) {
+            if (!['tcp', 'serial'].includes(value as string) && native.params.slave === '1') {
                 native.params.slave = '0';
             }
 
             if (value === 'serial') {
-                this.readPorts();
+                this.readPorts().catch(e => console.error(`Cannot read ports: ${e}`));
             }
-            if (
-                value === 'serial' &&
-                (this.props.native.params.slave === '1' || this.props.native.params.slave === 1)
-            ) {
-                this.readIPs();
+            if (value === 'serial' && this.props.native.params.slave === '1') {
+                this.readIPs().catch(e => console.error(`Cannot read IPs: ${e}`));
             }
         } else if (name === 'showAliases') {
-            ['disInputs', 'inputRegs', 'holdingRegs', 'coils'].forEach(nativeParam => {
+            ['disInputs', 'inputRegs', 'holdingRegs', 'coils'].forEach((nativeParam: RegisterType): void => {
                 native[nativeParam].forEach(item => {
                     if (value) {
-                        item._address = Utils.address2alias(nativeParam, item._address);
+                        item._address = address2alias(nativeParam, item._address);
                         if (native.params.directAddresses) {
-                            item._address = Utils.nonDirect2direct(nativeParam, item._address);
+                            item._address = nonDirect2direct(nativeParam, item._address);
                         }
                     } else {
                         if (native.params.directAddresses) {
-                            item._address = Utils.direct2nonDirect(nativeParam, item._address);
+                            item._address = direct2nonDirect(nativeParam, item._address);
                         }
-                        item._address = Utils.alias2address(nativeParam, item._address);
+                        item._address = alias2address(nativeParam, item._address);
                     }
                 });
             });
         } else if (name === 'directAddresses' && native.params.showAliases) {
-            ['disInputs', 'coils'].forEach(nativeParam => {
-                native[nativeParam].forEach(item => {
+            ['disInputs', 'coils'].forEach((nativeParam: RegisterType): void => {
+                native[nativeParam as 'disInputs' | 'coils'].forEach(item => {
                     if (value) {
-                        item._address = Utils.nonDirect2direct(nativeParam, item._address);
+                        item._address = nonDirect2direct(nativeParam, item._address);
                     } else {
-                        item._address = Utils.direct2nonDirect(nativeParam, item._address);
+                        item._address = direct2nonDirect(nativeParam, item._address);
                     }
                 });
             });
         }
         this.props.changeNative(native);
-    };
+    }
 
-    render() {
+    render(): React.JSX.Element {
         return (
             <form style={{ width: '100%', minHeight: '100%' }}>
                 <Grid
@@ -466,38 +490,19 @@ class Options extends Component {
                     spacing={2}
                 >
                     <Grid
-                        item
-                        xs={12}
-                        md={6}
+                        size={{ xs: 12, md: 6 }}
                         style={styles.optionsGrid}
                     >
-                        {this.getInputsBlock(connectionInputs, 'Connection parameters')}
+                        {this.getInputsBlock(connectionInputsTyped, 'Connection parameters')}
                     </Grid>
                     <Grid
-                        item
-                        xs={12}
-                        md={6}
+                        size={{ xs: 12, md: 6 }}
                         style={styles.optionsGrid}
                     >
-                        {this.getInputsBlock(generalInputs, 'General')}
+                        {this.getInputsBlock(generalInputsTyped, 'General')}
                     </Grid>
                 </Grid>
             </form>
         );
     }
 }
-
-Options.propTypes = {
-    common: PropTypes.object.isRequired,
-    native: PropTypes.object.isRequired,
-    instance: PropTypes.number.isRequired,
-    adapterName: PropTypes.string.isRequired,
-    onError: PropTypes.func,
-    onLoad: PropTypes.func,
-    onChange: PropTypes.func,
-    changed: PropTypes.bool,
-    socket: PropTypes.object.isRequired,
-    rooms: PropTypes.object,
-};
-
-export default Options;

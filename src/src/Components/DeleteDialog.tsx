@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 
 import {
     Dialog,
@@ -15,8 +14,14 @@ import {
 import { Delete as DeleteIcon, Clear as ClearIcon } from '@mui/icons-material';
 
 import { I18n } from '@iobroker/adapter-react-v5';
+import type { Register } from '../types';
 
-const DeleteDialog = props => {
+export default function DeleteDialog(props: {
+    open: boolean;
+    action: (disableWarnings: boolean) => void;
+    onClose: () => void;
+    item: Register;
+}): React.JSX.Element | null {
     const [disableWarnings, setDisableWarnings] = useState(false);
     useEffect(() => {
         setDisableWarnings(false);
@@ -67,13 +72,4 @@ const DeleteDialog = props => {
             </DialogContent>
         </Dialog>
     ) : null;
-};
-
-DeleteDialog.propTypes = {
-    open: PropTypes.bool,
-    onClose: PropTypes.func,
-    action: PropTypes.func,
-    item: PropTypes.object,
-};
-
-export default DeleteDialog;
+}
