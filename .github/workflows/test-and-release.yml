@@ -25,23 +25,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      - name: Use Node.js 18.x
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v5
         with:
-          node-version: 18.x
-
+          node-version: 22.x
 
       - name: Install Dependencies
         run: npm install
 
-#      - name: Perform a type check
-#        run: npm run check:ts
-#        env:
-#          CI: true
-      # - name: Lint TypeScript code
-      #   run: npm run lint
-#      - name: Test package files
-#        run: npm run test:package
+      - name: Build
+        run: npm run build
 
   # Runs adapter tests on all supported node versions and OSes
   adapter-tests:
@@ -52,7 +45,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x, 24.x]
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
@@ -64,6 +57,9 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+
+      - name: Build backend
+        run: npm run build-backend
 
       - name: Run local tests
         run: npm test
@@ -91,10 +87,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Use Node.js 18.x
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v5
         with:
-          node-version: 18.x
+          node-version: 22.x
 
       - name: Extract the version and commit body from the tag
         id: extract_release
