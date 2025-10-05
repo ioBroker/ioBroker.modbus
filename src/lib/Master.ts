@@ -7,7 +7,7 @@ import ModbusClientTcpRtu from './jsmodbus/transports/modbus-client-tcp-rtu';
 import ModbusClientTcpSsl from './jsmodbus/transports/modbus-client-tcp-ssl';
 import { createLoggingWrapper } from './loggingUtils';
 
-export default class Master {
+export class Master {
     private readonly modbusClient;
     private connected = false;
     private connectTimer: ioBroker.Timeout | undefined;
@@ -597,9 +597,7 @@ export default class Master {
                 if (this.options.config.maxBlock! < 2 && regs.config[regBlock.startIndex].cw) {
                     // write immediately the current value
                     const fullId = regs.config[regBlock.startIndex].fullId;
-                    if (this.objects[fullId]) {
-                        await this.#writeFloatsReg(device, this.objects[fullId]);
-                    }
+                    await this.#writeFloatsReg(fullId);
                 }
             } catch (err) {
                 const errorMsg = `[DevID_${regs.deviceId}/${regType}] Block ${regBlock.start}-${regBlock.start + regBlock.count - 1}: ${JSON.stringify(err)}`;
@@ -634,31 +632,15 @@ export default class Master {
         }
     }
 
-    async #writeFloatsReg(device: MasterDevice, obj: ioBroker.StateObject): Promise<void> {
-        const regs = device.holdingRegs;
-        if (obj.native?.len) {
+    async #writeFloatsReg(fullId: string): Promise<void> {
+        const obj = this.objects[fullId];
+        if (obj?.native?.len) {
+            const id = obj._id.substring(this.adapter.namespace.length + 1);
             if (!this.modbusClient || !this.connected || this.isStop) {
                 throw new Error('client disconnected');
             }
-            if (
-                this.options.config.onlyUseWriteMultipleRegisters ||
-                !this.options.config.doNotUseWriteMultipleRegisters
-            ) {
-                const buffer = Buffer.alloc(obj.native.len * 2);
-                for (let b = 0; b < buffer.length; b++) {
-                    buffer[b] = regs.config[(obj.native.address - regs.addressLow) * 2 + b];
-                }
-
-                await this.modbusClient.writeMultipleRegisters(regs.deviceId, obj.native.address, buffer);
-            } else {
-                for (let i = 0; i < obj.native.len; i++) {
-                    const buffer = Buffer.alloc(2);
-                    buffer[0] = regs.config[(obj.native.address - regs.addressLow) * 2];
-                    buffer[1] = regs.config[(obj.native.address - regs.addressLow) * 2 + 1];
-
-                    await this.modbusClient.writeSingleRegister(regs.deviceId, obj.native.address + i, buffer);
-                    await this.#waitAsync(this.options.config.writeInterval);
-                }
+            if (this.ackObjects[id]) {
+                await this.#writeValue(id, this.ackObjects[id].val);
             }
         }
     }
@@ -672,13 +654,8 @@ export default class Master {
         const regs = device.holdingRegs;
 
         if (regs.cyclicWrite) {
-            for (const id of regs.cyclicWrite) {
-                const obj = this.objects[id];
-                if (!obj) {
-                    this.adapter.log.warn(`Cannot find object ${id} to write`);
-                    continue;
-                }
-                await this.#writeFloatsReg(device, obj);
+            for (const fullId of regs.cyclicWrite) {
+                await this.#writeFloatsReg(fullId);
                 await this.#waitAsync(this.options.config.readInterval);
             }
         }
@@ -798,21 +775,13 @@ export default class Master {
         }
     }
 
-    #send(): void {
-        if (!this.modbusClient) {
-            this.adapter.log.error('Client not connected');
-            return;
-        }
-
-        const id = Object.keys(this.sendBuffer)[0];
+    async #writeValue(id: string, val: ioBroker.StateValue): Promise<void> {
         const obj = this.objects[id];
-        if (!obj) {
+        if (!obj || !this.modbusClient) {
             return;
         }
 
         const type: RegisterType = obj.native.regType;
-        let val = this.sendBuffer[id];
-        let promise: Promise<void> | undefined;
 
         try {
             if (type === 'coils') {
@@ -824,18 +793,7 @@ export default class Master {
                 }
                 val = parseFloat(val as string);
 
-                promise = this.modbusClient
-                    .writeSingleCoil(obj.native.deviceId, obj.native.address, !!val)
-                    .then(_response => {
-                        if (this.showDebug) {
-                            this.adapter.log.debug(`Write successfully [${obj.native.address}]: ${val}`);
-                        }
-                    })
-                    .catch(err => {
-                        this.adapter.log.error(`Cannot write [${obj.native.address}]: ${JSON.stringify(err)}`);
-                        // still keep on communication
-                        !this.isStop && !this.reconnectTimeout && this.#reconnect(true);
-                    });
+                await this.modbusClient.writeSingleCoil(obj.native.deviceId, obj.native.address, !!val);
             } else if (type === 'holdingRegs') {
                 if (obj.native.float === undefined) {
                     obj.native.float =
@@ -855,7 +813,8 @@ export default class Master {
                     }
                 }
                 if (!obj.native.type) {
-                    return this.adapter.log.error('No type defined for write.');
+                    this.adapter.log.error('No type defined for write.');
+                    return;
                 }
                 // FC16
                 if (
@@ -864,68 +823,50 @@ export default class Master {
                 ) {
                     const hrBuffer = writeValue(obj.native.type, val as string | number, obj.native.len);
 
-                    promise = this.modbusClient
-                        .writeMultipleRegisters(obj.native.deviceId, obj.native.address, hrBuffer)
-                        .then(_response => {
-                            if (this.showDebug) {
-                                this.adapter.log.debug(`Write successfully [${obj.native.address}]: ${val}`);
-                            }
-                        })
-                        .catch(err => {
-                            this.adapter.log.error(
-                                `Cannot write multiple registers [${obj.native.address}]: ${JSON.stringify(err)}`,
-                            );
-                            // still keep on communication
-                            if (!this.isStop && !this.reconnectTimeout) {
-                                this.#reconnect(true);
-                            }
-                        });
+                    await this.modbusClient.writeMultipleRegisters(obj.native.deviceId, obj.native.address, hrBuffer);
                 } else {
                     // FC06
-                    if (!this.modbusClient) {
-                        return this.adapter.log.error('Client not connected');
-                    }
                     const buffer = writeValue(obj.native.type, val as number, 1);
 
                     if (obj.native.len > 1) {
-                        this.adapter.log.warn(
-                            'Trying to write multiple register at once, but option doNotUseWriteMultipleRegisters is enabled! Only first 16 bits are written',
-                        );
-                    }
-
-                    promise = this.modbusClient
-                        .writeSingleRegister(obj.native.deviceId, obj.native.address, buffer)
-                        .then(_response => {
-                            if (this.showDebug) {
-                                this.adapter.log.debug(`Write successfully [${obj.native.address}]: ${val}`);
-                            }
-                        })
-                        .catch(err => {
-                            this.adapter.log.error(
-                                `Cannot write single register [${obj.native.address}]: ${JSON.stringify(err)}`,
+                        for (let r = 0; r < obj.native.len / 2; r++) {
+                            const subBuffer = buffer.subarray(r * 2, r * 2 + 2);
+                            await this.modbusClient.writeSingleRegister(
+                                obj.native.deviceId,
+                                obj.native.address + r,
+                                subBuffer,
                             );
-                            // still keep on communication
-                            if (!this.isStop && !this.reconnectTimeout) {
-                                this.#reconnect(true);
-                            }
-                        });
+                            await this.#waitAsync(this.options.config.writeInterval);
+                        }
+                    } else {
+                        await this.modbusClient.writeSingleRegister(obj.native.deviceId, obj.native.address, buffer);
+                    }
                 }
+            }
+            if (this.showDebug) {
+                this.adapter.log.debug(`Write successfully [${obj.native.address}]: ${val}`);
             }
         } catch (err) {
             this.adapter.log.warn(`Can not write value ${val}: ${err}`);
+            if (!this.isStop && !this.reconnectTimeout) {
+                this.#reconnect(true);
+            }
         }
+    }
+
+    async #send(): Promise<void> {
+        if (!this.modbusClient) {
+            this.adapter.log.error('Client not connected');
+            return;
+        }
+
+        const id = Object.keys(this.sendBuffer)[0];
+        await this.#writeValue(id, this.sendBuffer[id]);
 
         delete this.sendBuffer[id];
 
         if (Object.keys(this.sendBuffer).length) {
-            promise ||= Promise.resolve();
-            void promise.then(() => {
-                if (this.options.config.writeInterval) {
-                    this.adapter.setTimeout(() => this.#send(), this.options.config.writeInterval);
-                } else {
-                    this.adapter.setTimeout(() => this.#send(), 0);
-                }
-            });
+            this.adapter.setTimeout(() => this.#send(), this.options.config.writeInterval || 0);
         }
     }
 
@@ -933,7 +874,7 @@ export default class Master {
         this.sendBuffer[id] = state.val!;
 
         if (Object.keys(this.sendBuffer).length === 1) {
-            this.#send();
+            this.#send().catch(e => this.adapter.log.error(`Cannot send: ${e}`));
         }
     }
 

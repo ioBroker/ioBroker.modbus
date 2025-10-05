@@ -156,14 +156,14 @@ export interface DeviceSlaveOption extends DeviceOption {
 export interface DeviceMasterOption extends DeviceOption {
     deviceId: number;
     blocks: { start: number; count: number; startIndex: number; endIndex: number }[];
-    // IDs of the objects that must be cyclic written
+    // IDs of the objects that must be cyclic written (full ID)
     cyclicWrite?: string[];
 }
 export type MasterDevice = {
-    disInputs:  DeviceMasterOption;
-    coils:  DeviceMasterOption;
-    inputRegs:  DeviceMasterOption;
-    holdingRegs:  DeviceMasterOption;
+    disInputs: DeviceMasterOption;
+    coils: DeviceMasterOption;
+    inputRegs: DeviceMasterOption;
+    holdingRegs: DeviceMasterOption;
 };
 export type SlaveDevice = {
     disInputs: DeviceSlaveOption;

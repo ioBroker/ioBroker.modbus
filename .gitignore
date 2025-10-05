@@ -13,3 +13,4 @@ tmp
 /test/*.log
 /test/RMMS.exe
 *.tgz
+/build

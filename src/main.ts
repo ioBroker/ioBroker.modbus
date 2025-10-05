@@ -12,7 +12,7 @@ import { join } from 'node:path';
 import { statSync, readdirSync } from 'node:fs';
 import type { PortInfo } from '@serialport/bindings-interface';
 
-import Master from './lib/Master'; // Get common adapter utils
+import { Master } from './lib/Master'; // Get common adapter utils
 import Slave from './lib/Slave'; // Get common adapter utils
 let serialPortList: (() => Promise<PortInfo[]>) | null = null;
 
