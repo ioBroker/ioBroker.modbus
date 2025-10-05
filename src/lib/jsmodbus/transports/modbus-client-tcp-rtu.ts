@@ -63,7 +63,7 @@ export default class ModbusClientTcpRtu extends ModbusClientCore {
         this.on('newState_error', this.#onError);
     }
 
-    #onSocketConnect = () => {
+    #onSocketConnect = (): void => {
         this.emit('connect');
         this.setState('ready');
     };
@@ -156,7 +156,7 @@ export default class ModbusClientTcpRtu extends ModbusClientCore {
         }
     };
 
-    #onError = () => {
+    #onError = (): void => {
         this.log.error('Client in error state.');
         this.socket?.destroy();
     };

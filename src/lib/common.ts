@@ -168,22 +168,22 @@ export function writeValue(type: RegisterEntryType, value: number | string, len?
         case 'uint8be':
             buffer = Buffer.alloc(2);
             buffer[0] = 0;
-            buffer.writeUInt8(value as number & 0xff, 1);
+            buffer.writeUInt8((value as number) & 0xff, 1);
             break;
         case 'uint8le':
             buffer = Buffer.alloc(2);
             buffer[1] = 0;
-            buffer.writeUInt8(value as number & 0xff, 0);
+            buffer.writeUInt8((value as number) & 0xff, 0);
             break;
         case 'int8be':
             buffer = Buffer.alloc(2);
             buffer[0] = 0;
-            buffer.writeInt8(value as number & 0xff, 1);
+            buffer.writeInt8((value as number) & 0xff, 1);
             break;
         case 'int8le':
             buffer = Buffer.alloc(2);
             buffer[1] = 0;
-            buffer.writeInt8(value as number & 0xff, 0);
+            buffer.writeInt8((value as number) & 0xff, 0);
             break;
         case 'uint16be':
             buffer = Buffer.alloc(2);
@@ -260,21 +260,21 @@ export function writeValue(type: RegisterEntryType, value: number | string, len?
         case 'uint64be':
             buffer = Buffer.alloc(8);
             buffer.writeUInt32BE((value as number) >> 32, 0);
-            buffer.writeUInt32BE(value as number & 0xffffffff, 4);
+            buffer.writeUInt32BE((value as number) & 0xffffffff, 4);
             break;
         case 'uint64le':
             buffer = Buffer.alloc(8);
-            buffer.writeUInt32LE(value as number & 0xffffffff, 0);
+            buffer.writeUInt32LE((value as number) & 0xffffffff, 0);
             buffer.writeUInt32LE((value as number) >> 32, 4);
             break;
         case 'int64be':
             buffer = Buffer.alloc(8);
             buffer.writeInt32BE((value as number) >> 32, 0);
-            buffer.writeUInt32BE(value as number & 0xffffffff, 4);
+            buffer.writeUInt32BE((value as number) & 0xffffffff, 4);
             break;
         case 'int64le':
             buffer = Buffer.alloc(8);
-            buffer.writeUInt32LE(value as number & 0xffffffff, 0);
+            buffer.writeUInt32LE((value as number) & 0xffffffff, 0);
             buffer.writeInt32LE((value as number) >> 32, 4);
             break;
         case 'floatbe':

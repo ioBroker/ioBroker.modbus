@@ -54,7 +54,7 @@ export default class ModbusClientTCP extends ModbusClientCore {
         this.on('trashCurrentRequest', this.#onTrashCurrentRequest);
     }
 
-    #onSocketConnect = () => {
+    #onSocketConnect = (): void => {
         this.emit('connect');
         this.setState('ready');
     };
@@ -116,7 +116,7 @@ export default class ModbusClientTCP extends ModbusClientCore {
     #onSend = (pdu: Buffer, unitId?: number): void => {
         this.reqId = (this.reqId + 1) % 0xffff;
 
-        let pkt = new Put()
+        const pkt = new Put()
             .word16be(this.reqId) // transaction id
             .word16be(this.tcp.protocolVersion) // protocol version
             .word16be(pdu.length + 1) // pdu length
@@ -129,7 +129,9 @@ export default class ModbusClientTCP extends ModbusClientCore {
         this.socket?.write(pkt);
     };
 
-    #onTrashCurrentRequest = () => (this.trashRequestId = this.currentRequestId);
+    #onTrashCurrentRequest = (): void => {
+        this.trashRequestId = this.currentRequestId;
+    };
 
     connect(): void {
         this.setState('connect');

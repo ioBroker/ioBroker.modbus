@@ -1,6 +1,6 @@
 import ModbusServerCore from '../modbus-server-core';
 import crc16modbus from '../../crc16modbus';
-import type SerialPort from 'serialPort';
+import type SerialPort from 'serialport';
 
 let SerialPortClass: any;
 
@@ -14,7 +14,7 @@ export default class ModbusServerSerial extends ModbusServerCore {
         portName: string;
         baudRate?: number;
         dataBits?: 5 | 6 | 7 | 8;
-        stopBits?: 1 | 1.5 | 2;
+        stopBits?: 1 | 2;
         parity?: 'none' | 'even' | 'mark' | 'odd' | 'space';
     };
 
@@ -23,12 +23,17 @@ export default class ModbusServerSerial extends ModbusServerCore {
             portName: string;
             baudRate?: number;
             dataBits?: 5 | 6 | 7 | 8;
-            stopBits?: 1 | 1.5 | 2;
+            stopBits?: 1 | 2;
             parity?: 'none' | 'even' | 'mark' | 'odd' | 'space';
         };
         deviceId?: number;
         logger: ioBroker.Logger;
         timeout?: number;
+        responseDelay?: number;
+        coils?: Buffer;
+        holding?: Buffer;
+        input?: Buffer;
+        discrete?: Buffer;
     }) {
         super(options);
         this.serial = options.serial;
@@ -46,7 +51,7 @@ export default class ModbusServerSerial extends ModbusServerCore {
         this.log.debug(`Starting serial server on port ${this.serial.portName} with settings`);
 
         try {
-            import('serialPort')
+            import('serialport')
                 .then(sp => {
                     SerialPortClass = sp.SerialPort;
 
@@ -73,13 +78,13 @@ export default class ModbusServerSerial extends ModbusServerCore {
         this.on('newState_ready', this.#flush);
     }
 
-    #onSerialOpen = () => {
+    #onSerialOpen = (): void => {
         this.log.debug('Serial port opened successfully');
         this.setState('ready');
         this.emit('connection', { port: this.serial.portName });
     };
 
-    #onSerialClose = () => {
+    #onSerialClose = (): void => {
         this.log.debug('Serial port closed');
         this.emit('close');
     };
@@ -183,7 +188,7 @@ export default class ModbusServerSerial extends ModbusServerCore {
         }
     };
 
-    #flush = () => {
+    #flush = (): void => {
         if (this.inState('processing')) {
             return;
         }
@@ -194,7 +199,7 @@ export default class ModbusServerSerial extends ModbusServerCore {
 
         this.setState('processing');
 
-        let current = this.fifo.shift()!;
+        const current = this.fifo.shift()!;
 
         this.onData(current.pdu, response => {
             this.log.debug('Sending RTU response');
@@ -226,7 +231,7 @@ export default class ModbusServerSerial extends ModbusServerCore {
         });
     };
 
-    close = (cb: (err?: Error | null) => void): void => {
+    close(cb?: (err?: Error | null) => void): void {
         if (this.serialPort?.isOpen) {
             this.serialPort.close(err => {
                 if (err) {
@@ -240,10 +245,10 @@ export default class ModbusServerSerial extends ModbusServerCore {
         } else {
             cb?.();
         }
-    };
+    }
 
-    getClients = () => {
+    getClients(): string[] {
         // For serial, we return info about the serial port connection
-        return this.serialPort?.isOpen ? [{ address: () => ({ address: this.serial.portName }) }] : [];
-    };
+        return this.serialPort?.isOpen ? [this.serial.portName] : [];
+    }
 }

@@ -11,25 +11,28 @@ export default class ModbusServerCore extends EventEmitter {
         input: Buffer;
         discrete: Buffer;
     };
-    private coils: Buffer | null = null;
-    private holding: Buffer | null = null;
-    private input: Buffer | null = null;
-    private discrete: Buffer | null = null;
 
     private readonly handler: { [fc: number]: (pdu: Buffer, response: (result: Buffer) => void) => void } = {};
-    public responseDelay = 0;
     private currentState: ModbusFcState = 'init';
 
-    constructor(options: { logger: ioBroker.Logger }) {
+    constructor(options: {
+        logger: ioBroker.Logger;
+        responseDelay?: number;
+        coils?: Buffer;
+        holding?: Buffer;
+        input?: Buffer;
+        discrete?: Buffer;
+    }) {
         super();
         this.log = options.logger;
 
         this.data = {
-            coils: this.coils || Buffer.alloc(1024),
-            holding: this.holding || Buffer.alloc(1024),
-            input: this.input || Buffer.alloc(1024),
-            discrete: this.discrete || Buffer.alloc(1024),
+            coils: options.coils || Buffer.alloc(1024),
+            holding: options.holding || Buffer.alloc(1024),
+            input: options.input || Buffer.alloc(1024),
+            discrete: options.discrete || Buffer.alloc(1024),
         };
+
         this.handler = {
             1: this.onReadCoils,
             2: this.onReadDiscreteInputs,
@@ -41,10 +44,11 @@ export default class ModbusServerCore extends EventEmitter {
             16: this.onWriteMultipleRegisters,
         };
 
-        if (this.responseDelay) {
+        if (options.responseDelay) {
+            const responseDelay = options.responseDelay;
             Object.keys(this.handler).forEach(fc => {
                 const originalHandler = this.handler[parseInt(fc, 10)];
-                this.handler[parseInt(fc, 10)] = (pdu, cb) => setTimeout(originalHandler, this.responseDelay, pdu, cb);
+                this.handler[parseInt(fc, 10)] = (pdu, cb) => setTimeout(originalHandler, responseDelay, pdu, cb);
             });
         } else {
             Object.keys(this.handler).forEach(fc => {
@@ -97,10 +101,10 @@ export default class ModbusServerCore extends EventEmitter {
         }
     };
 
-    getCoils = () => this.data.coils;
-    getInput = () => this.data.input;
-    getHolding = () => this.data.holding;
-    getDiscrete = () => this.data.discrete;
+    getCoils = (): Buffer => this.data.coils;
+    getInput = (): Buffer => this.data.input;
+    getHolding = (): Buffer => this.data.holding;
+    getDiscrete = (): Buffer => this.data.discrete;
 
     // FC 1
     onReadCoils = (pdu: Buffer, cb: (pdu: Buffer, response?: (result: Buffer) => void) => void): void => {
@@ -114,7 +118,7 @@ export default class ModbusServerCore extends EventEmitter {
 
             this.emit('preReadCoilsRequest', start, quantity);
 
-            let mem = this.getCoils();
+            const mem = this.getCoils();
 
             if (!quantity || start + quantity > mem.length * 8) {
                 this.log.warn(
@@ -124,11 +128,11 @@ export default class ModbusServerCore extends EventEmitter {
             } else {
                 let val = 0;
                 let thisByteBitCount = 0;
-                let response = new Put().word8(0x01).word8(Math.floor(quantity / 8) + (quantity % 8 === 0 ? 0 : 1));
+                const response = new Put().word8(0x01).word8(Math.floor(quantity / 8) + (quantity % 8 === 0 ? 0 : 1));
 
                 for (let totalBitCount = start; totalBitCount < start + quantity; totalBitCount += 1) {
-                    let buf = mem.readUInt8(Math.floor(totalBitCount / 8));
-                    let mask = 1 << totalBitCount % 8;
+                    const buf = mem.readUInt8(Math.floor(totalBitCount / 8));
+                    const mask = 1 << totalBitCount % 8;
 
                     if (buf & mask) {
                         val += 1 << thisByteBitCount % 8;
@@ -160,7 +164,7 @@ export default class ModbusServerCore extends EventEmitter {
 
             this.emit('readDiscreteInputsRequest', start, quantity);
 
-            let mem = this.getDiscrete();
+            const mem = this.getDiscrete();
 
             if (!quantity || start + quantity > mem.length * 8) {
                 this.log.warn(
@@ -170,11 +174,11 @@ export default class ModbusServerCore extends EventEmitter {
             } else {
                 let val = 0;
                 let thisByteBitCount = 0;
-                let response = new Put().word8(0x02).word8(Math.floor(quantity / 8) + (quantity % 8 === 0 ? 0 : 1));
+                const response = new Put().word8(0x02).word8(Math.floor(quantity / 8) + (quantity % 8 === 0 ? 0 : 1));
 
                 for (let totalBitCount = start; totalBitCount < start + quantity; totalBitCount += 1) {
-                    let buf = mem.readUInt8(Math.floor(totalBitCount / 8));
-                    let mask = 1 << totalBitCount % 8;
+                    const buf = mem.readUInt8(Math.floor(totalBitCount / 8));
+                    const mask = 1 << totalBitCount % 8;
 
                     if (buf & mask) {
                         val += 1 << thisByteBitCount % 8;
@@ -207,7 +211,7 @@ export default class ModbusServerCore extends EventEmitter {
 
             this.emit('readHoldingRegistersRequest', byteStart, quantity);
 
-            let mem = this.getHolding();
+            const mem = this.getHolding();
 
             if (!quantity || byteStart + quantity * 2 > mem.length) {
                 this.log.warn(
@@ -215,7 +219,7 @@ export default class ModbusServerCore extends EventEmitter {
                 );
                 cb(new Put().word8(0x83).word8(0x02).buffer());
             } else {
-                let response = new Put().word8(0x03).word8(quantity * 2);
+                const response = new Put().word8(0x03).word8(quantity * 2);
 
                 for (let i = byteStart; i < byteStart + quantity * 2; i += 2) {
                     response.word16be(mem.readUInt16BE(i));
@@ -240,7 +244,7 @@ export default class ModbusServerCore extends EventEmitter {
 
             this.emit('readInputRegistersRequest', byteStart, quantity);
 
-            let mem = this.getInput();
+            const mem = this.getInput();
 
             if (!quantity || byteStart + quantity * 2 > mem.length) {
                 this.log.warn(
@@ -248,7 +252,7 @@ export default class ModbusServerCore extends EventEmitter {
                 );
                 cb(new Put().word8(0x84).word8(0x02).buffer());
             } else {
-                let response = new Put().word8(0x04).word8(quantity * 2);
+                const response = new Put().word8(0x04).word8(quantity * 2);
 
                 for (let i = byteStart; i < byteStart + quantity * 2; i += 2) {
                     response.word16be(mem.readUInt16BE(i));
@@ -274,7 +278,7 @@ export default class ModbusServerCore extends EventEmitter {
             } else {
                 this.emit('preWriteSingleCoilRequest', address, value);
 
-                let mem = this.getCoils();
+                const mem = this.getCoils();
 
                 if (address + 1 > mem.length * 8) {
                     this.log.warn(
@@ -282,11 +286,11 @@ export default class ModbusServerCore extends EventEmitter {
                     );
                     cb(new Put().word8(0x85).word8(0x02).buffer());
                 } else {
-                    let response = new Put()
+                    const response = new Put()
                         .word8(0x05)
                         .word16be(address)
                         .word16be(value ? 0xff00 : 0x0000);
-                    let oldValue = mem.readUInt8(Math.floor(address / 8));
+                    const oldValue = mem.readUInt8(Math.floor(address / 8));
                     let newValue;
 
                     if (value) {
@@ -321,7 +325,7 @@ export default class ModbusServerCore extends EventEmitter {
 
             this.emit('preWriteSingleRegisterRequest', byteAddress, value);
 
-            let mem = this.getHolding();
+            const mem = this.getHolding();
 
             if (byteAddress + 2 > mem.length) {
                 this.log.warn(
@@ -329,7 +333,7 @@ export default class ModbusServerCore extends EventEmitter {
                 );
                 cb(new Put().word8(0x86).word8(0x02).buffer());
             } else {
-                let response = new Put().word8(0x06).word16be(address).word16be(value).buffer();
+                const response = new Put().word8(0x06).word16be(address).word16be(value).buffer();
                 mem.writeUInt16BE(value, byteAddress);
                 this.emit('postWriteSingleRegisterRequest', byteAddress, value);
                 // this.log.debug(`FC${fc} finished writing single holding register: at ${address}, value ${value}`);
@@ -353,7 +357,7 @@ export default class ModbusServerCore extends EventEmitter {
 
             this.emit('preWriteMultipleCoilsRequest', start, quantity, byteCount);
 
-            let mem = this.getCoils();
+            const mem = this.getCoils();
 
             // error response
             if (!quantity || start + quantity > mem.length * 8) {
@@ -362,7 +366,7 @@ export default class ModbusServerCore extends EventEmitter {
                 );
                 cb(new Put().word8(0x8f).word8(0x02).buffer());
             } else {
-                let response = new Put().word8(0x0f).word16be(start).word16be(quantity).buffer();
+                const response = new Put().word8(0x0f).word16be(start).word16be(quantity).buffer();
                 let oldValue;
                 let newValue;
                 let current = pdu.readUInt8(6);
@@ -415,7 +419,7 @@ export default class ModbusServerCore extends EventEmitter {
             } else {
                 this.emit('preWriteMultipleRegistersRequest', byteStart, quantity, byteCount);
 
-                let mem = this.getHolding();
+                const mem = this.getHolding();
 
                 if (!quantity || byteStart + quantity * 2 > mem.length) {
                     this.log.warn(
@@ -423,7 +427,7 @@ export default class ModbusServerCore extends EventEmitter {
                     );
                     cb(new Put().word8(0x90).word8(0x02).buffer());
                 } else {
-                    let response = new Put().word8(0x10).word16be(start).word16be(quantity).buffer();
+                    const response = new Put().word8(0x10).word16be(start).word16be(quantity).buffer();
                     let j = 0;
 
                     for (let i = byteStart; i < byteStart + byteCount; i += 1) {

@@ -13,7 +13,7 @@ const ExceptionMessage: { [error: number]: string } = {
     0x0b: 'GATEWAY TARGET DEVICE FAILED TO RESPOND',
 };
 
-type ModbusReadResultBinary = {
+export type ModbusReadResultBinary = {
     unitId: number;
     fc: number;
     byteCount: number;
@@ -279,11 +279,11 @@ export default abstract class ModbusClientCore extends EventEmitter {
     };
     readCoils = (unitId: number, start: number, quantity: number): Promise<ModbusReadResultBinary> => {
         return new Promise<ModbusReadResultBinary>((resolve, reject) => {
-            let pdu = new Put().word8(1).word16be(start).word16be(quantity).buffer();
+            const pdu = new Put().word8(1).word16be(start).word16be(quantity).buffer();
 
             this.queueRequest(unitId, 1, pdu, (err, resp): void => {
                 if (err) {
-                    reject(err);
+                    reject(new Error(err.message));
                 } else {
                     resolve(resp as ModbusReadResultBinary);
                 }
@@ -320,7 +320,7 @@ export default abstract class ModbusClientCore extends EventEmitter {
 
             for (let i = 0; i < byteCount; i++) {
                 let h = 1;
-                let cur = pdu.readUInt8(2 + i);
+                const cur = pdu.readUInt8(2 + i);
                 for (let j = 0; j < 8; j += 1) {
                     resp.data[counter] = (cur & h) > 0;
                     h = h << 1;
@@ -334,14 +334,14 @@ export default abstract class ModbusClientCore extends EventEmitter {
     readDiscreteInputs = (unitId: number, start: number, quantity: number): Promise<ModbusReadResultBinary> => {
         return new Promise<ModbusReadResultBinary>((resolve, reject) => {
             if (quantity > 2000) {
-                return reject('quantity is too big');
+                return reject(new Error('quantity is too big'));
             }
 
-            let pdu = new Put().word8be(2).word16be(start).word16be(quantity).buffer();
+            const pdu = new Put().word8be(2).word16be(start).word16be(quantity).buffer();
 
             this.queueRequest(unitId, 2, pdu, (err, resp) => {
                 if (err) {
-                    reject(err);
+                    reject(new Error(err.message));
                 } else {
                     resolve(resp as ModbusReadResultBinary);
                 }
@@ -390,7 +390,7 @@ export default abstract class ModbusClientCore extends EventEmitter {
 
             this.queueRequest(unitId, 3, pdu, (err, resp) => {
                 if (err) {
-                    reject(err);
+                    reject(new Error(err.message));
                 } else {
                     resolve(resp as ModbusReadResultNumber);
                 }
@@ -446,7 +446,7 @@ export default abstract class ModbusClientCore extends EventEmitter {
 
             this.queueRequest(unitId, 4, pdu, (err, resp) => {
                 if (err) {
-                    reject(err);
+                    reject(new Error(err.message));
                 } else {
                     resolve(resp as ModbusReadResultNumber);
                 }
@@ -476,10 +476,10 @@ export default abstract class ModbusClientCore extends EventEmitter {
     writeSingleCoil = (
         unitId: number,
         address: number,
-        value: number | Buffer,
+        value: boolean | Buffer,
     ): Promise<ModbusWriteResultSingleCoil> => {
         return new Promise((resolve, reject) => {
-            const payload = value instanceof Buffer ? value.readUInt8(0) > 0 : value;
+            const payload: boolean = value instanceof Buffer ? value.readUInt8(0) > 0 : (value as boolean);
             const pdu = new Put()
                 .word8be(5)
                 .word16be(address)
@@ -487,7 +487,7 @@ export default abstract class ModbusClientCore extends EventEmitter {
 
             this.queueRequest(unitId, 5, pdu.buffer(), (err, resp) => {
                 if (err) {
-                    reject(err);
+                    reject(new Error(err.message));
                 } else {
                     resolve(resp as ModbusWriteResultSingleCoil);
                 }
@@ -527,7 +527,7 @@ export default abstract class ModbusClientCore extends EventEmitter {
 
             this.queueRequest(unitId, 6, pdu.buffer(), (err, resp) => {
                 if (err) {
-                    reject(err);
+                    reject(new Error(err.message));
                 } else {
                     resolve(resp as ModbusWriteResultSingleRegister);
                 }
@@ -567,7 +567,7 @@ export default abstract class ModbusClientCore extends EventEmitter {
                 pdu.word16be(N!).word8(data.length).put(data);
             } else if (data instanceof Array) {
                 if (data.length > 1968) {
-                    reject('Length is too big');
+                    reject(new Error('Length is too big'));
                     return;
                 }
 
@@ -591,7 +591,7 @@ export default abstract class ModbusClientCore extends EventEmitter {
 
             this.queueRequest(unitId, 15, pdu.buffer(), (err, resp) => {
                 if (err) {
-                    reject(err);
+                    reject(new Error(err.message));
                 } else {
                     resolve(resp as ModbusWriteResultMultiple);
                 }
@@ -627,7 +627,7 @@ export default abstract class ModbusClientCore extends EventEmitter {
             const pdu = new Put().word8(16).word16be(startAddress);
             if (data instanceof Buffer) {
                 if (data.length / 2 > 0x007b) {
-                    reject('Length is too big');
+                    reject(new Error('Length is too big'));
                     return;
                 }
 
@@ -636,7 +636,7 @@ export default abstract class ModbusClientCore extends EventEmitter {
                     .put(data);
             } else if (data instanceof Array) {
                 if (data.length > 0x007b) {
-                    reject('Length is too big');
+                    reject(new Error('Length is too big'));
                     return;
                 }
 
@@ -647,13 +647,13 @@ export default abstract class ModbusClientCore extends EventEmitter {
                     pdu.word16be(data[i]);
                 }
             } else {
-                reject('Invalid data');
+                reject(new Error('Invalid data'));
                 return;
             }
 
             this.queueRequest(unitId, 16, pdu.buffer(), (err, resp) => {
                 if (err) {
-                    reject(err);
+                    reject(new Error(err.message));
                 } else {
                     resolve(resp as ModbusWriteResultMultiple);
                 }

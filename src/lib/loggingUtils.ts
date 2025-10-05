@@ -9,7 +9,7 @@
  * @param disableLogging - Whether to disable connection error logging
  * @returns The wrapped logger or original logger
  */
-export function createLoggingWrapper(originalLog: ioBroker.Logger, disableLogging: boolean): ioBroker.Logger {
+export function createLoggingWrapper(originalLog: ioBroker.Logger, disableLogging?: boolean): ioBroker.Logger {
     if (!disableLogging) {
         return originalLog;
     }
@@ -30,7 +30,7 @@ export function createLoggingWrapper(originalLog: ioBroker.Logger, disableLoggin
                 return;
             }
             // Allow all other error messages through
-            originalLog.error(msg + (args ? ` ${args.join(', ')}` : ''));
+            originalLog.error(msg.toString() + (args ? ` ${args.join(', ')}` : ''));
         },
     };
 }

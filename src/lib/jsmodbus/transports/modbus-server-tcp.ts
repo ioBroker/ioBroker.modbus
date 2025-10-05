@@ -1,6 +1,6 @@
 import ModbusServerCore from '../modbus-server-core';
 import Put from '../../Put';
-import { createServer, type Socket, type Server } from 'node:net';
+import { createServer, type Socket, type Server, type AddressInfo } from 'node:net';
 
 export default class ModbusServerTcp extends ModbusServerCore {
     private server: Server;
@@ -28,6 +28,12 @@ export default class ModbusServerTcp extends ModbusServerCore {
             hostname?: string;
         };
         logger: ioBroker.Logger;
+        timeout?: number;
+        responseDelay?: number;
+        coils?: Buffer;
+        holding?: Buffer;
+        input?: Buffer;
+        discrete?: Buffer;
     }) {
         super(options);
         this.tcp = {
@@ -38,7 +44,7 @@ export default class ModbusServerTcp extends ModbusServerCore {
         this.server = createServer();
 
         this.server.on('connection', s => {
-            this.log.debug(`new connection ${s.address()}`);
+            this.log.debug(`new connection ${JSON.stringify(s.address())}`);
             this.clients.push(s);
             this.#initiateSocket(s);
             this.emit('connection', s.address());
@@ -54,15 +60,7 @@ export default class ModbusServerTcp extends ModbusServerCore {
         this.setState('ready');
     }
 
-    #onSocketEnd = (socket: Socket, socketId: number): (() => void) => {
-        return (): void => {
-            this.emit('close');
-            this.log.debug(`connection closed, socket ${socketId}`);
-            delete this.clients[socketId - 1];
-        };
-    };
-
-    #onSocketData = (socket: Socket, _socketId: number): ((data: Buffer) => void) => {
+    #onSocketData = (socket: Socket): ((data: Buffer) => void) => {
         return (data: Buffer): void => {
             this.buffer = Buffer.concat([this.buffer, data]);
 
@@ -106,11 +104,11 @@ export default class ModbusServerTcp extends ModbusServerCore {
 
         this.setState('processing');
 
-        let current = this.fifo.shift()!;
+        const current = this.fifo.shift()!;
 
         this.onData(current.pdu, response => {
             this.log.debug('sending tcp data');
-            let pkt = new Put()
+            const pkt = new Put()
                 .word16be(current.request.transId) // transaction id
                 .word16be(current.request.protocolVer) // protocol version
                 .word16be(response.length + 1) // pdu length
@@ -123,32 +121,35 @@ export default class ModbusServerTcp extends ModbusServerCore {
         });
     };
 
-    #onSocketError = (_socket: Socket, _socketCount: number): ((e: Error) => void) => {
-        return e => {
-            this.emit('error', e);
-            this.log.error(`Socket error ${e}`);
-        };
-    };
-
     #initiateSocket = (socket: Socket): void => {
         this.socketCount += 1;
-        socket.on('end', this.#onSocketEnd(socket, this.socketCount));
-        socket.on('data', this.#onSocketData(socket, this.socketCount));
-        socket.on('error', this.#onSocketError(socket, this.socketCount));
+        socket.on('end', () => {
+            this.emit('close');
+            this.log.debug(`connection closed, socket ${JSON.stringify(socket.address())}`);
+            const pos = this.clients.indexOf(socket);
+            if (pos !== -1) {
+                this.clients.splice(pos, 1);
+            }
+        });
+        socket.on('data', this.#onSocketData(socket));
+        socket.on('error', e => {
+            this.emit('error', e);
+            this.log.error(`Socket error ${e}`);
+        });
     };
 
-    close = (cb?: () => void): void => {
-        for (let c in this.clients) {
-            if (Object.prototype.hasOwnProperty.call(this.clients, c)) {
-                this.clients[c].destroy();
-            }
+    close(cb?: () => void): void {
+        for (const socket of this.clients) {
+            socket?.destroy();
         }
 
         this.server.close(() => {
             this.server.unref();
             cb?.();
         });
-    };
+    }
 
-    getClients = () => this.clients;
+    getClients(): string[] {
+        return this.clients?.map(it => (it?.address() as AddressInfo)?.address).filter(it => it) || [];
+    }
 }

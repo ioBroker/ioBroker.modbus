@@ -21,7 +21,7 @@ export default class ModbusClientTcpSsl extends ModbusClientCore {
         rejectUnauthorized?: boolean;
         key: string;
         cert: string;
-        ca: string;
+        ca?: string;
     };
     private unitId: number;
 
@@ -29,7 +29,7 @@ export default class ModbusClientTcpSsl extends ModbusClientCore {
         tcp: {
             host: string;
             port: number;
-            protocolVersion: number;
+            protocolVersion?: number;
             autoReconnect?: boolean;
             reconnectTimeout?: number;
         };
@@ -37,7 +37,7 @@ export default class ModbusClientTcpSsl extends ModbusClientCore {
             rejectUnauthorized?: boolean;
             key: string;
             cert: string;
-            ca: string;
+            ca?: string;
         };
         unitId?: number;
         logger: ioBroker.Logger;
@@ -60,7 +60,7 @@ export default class ModbusClientTcpSsl extends ModbusClientCore {
         this.on('trashCurrentRequest', this.#onTrashCurrentRequest);
     }
 
-    #onSocketConnect = () => {
+    #onSocketConnect = (): void => {
         this.log.debug('SSL/TLS connection established');
 
         // Log certificate information for debugging
@@ -125,7 +125,7 @@ export default class ModbusClientTcpSsl extends ModbusClientCore {
         }
     };
 
-    #onError = () => {
+    #onError = (): void => {
         this.log.error(`SSL/TLS Client in error state.`);
         this.socket?.destroy();
     };
@@ -133,7 +133,7 @@ export default class ModbusClientTcpSsl extends ModbusClientCore {
     #onSend = (pdu: Buffer, unitId?: number): void => {
         this.reqId = (this.reqId + 1) % 0xffff;
 
-        let pkt = new Put()
+        const pkt = new Put()
             .word16be(this.reqId) // transaction id
             .word16be(this.tcp.protocolVersion) // protocol version
             .word16be(pdu.length + 1) // pdu length
@@ -146,9 +146,11 @@ export default class ModbusClientTcpSsl extends ModbusClientCore {
         this.socket?.write(pkt);
     };
 
-    #onTrashCurrentRequest = () => (this.trashRequestId = this.currentRequestId);
+    #onTrashCurrentRequest = (): void => {
+        this.trashRequestId = this.currentRequestId;
+    };
 
-    connect() {
+    connect(): void {
         this.setState('connect');
 
         if (!this.socket) {
@@ -185,9 +187,9 @@ export default class ModbusClientTcpSsl extends ModbusClientCore {
         this.socket?.end();
     }
 
-    close = () => {
+    close(): void {
         this.closedOnPurpose = true;
         this.log.debug('Closing SSL/TLS client on purpose.');
         this.socket?.end();
-    };
+    }
 }

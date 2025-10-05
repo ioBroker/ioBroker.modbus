@@ -46,7 +46,7 @@ export default class ModbusClientSerial extends ModbusClientCore {
         this.unitId = options.unitId || 1;
 
         this.serial = options.serial;
-        import('serialport').then(sp => {
+        void import('serialport').then(sp => {
             SerialPortClass = sp.SerialPort;
         });
 
@@ -55,12 +55,12 @@ export default class ModbusClientSerial extends ModbusClientCore {
         this.connect();
     }
 
-    #onOpen = () => {
+    #onOpen = (): void => {
         this.emit('connect');
         this.setState('ready');
     };
 
-    #onClose = () => {
+    #onClose = (): void => {
         this.emit('close');
         this.setState('closed');
     };
@@ -146,11 +146,11 @@ export default class ModbusClientSerial extends ModbusClientCore {
         this.serialPort?.write(pkt.word16le(crc16).buffer(), err => err && this.emit('error', err));
     };
 
-    connect() {
+    connect(): void {
         this.setState('connect');
 
         if (!this.serialPort) {
-            let serial = this.serial;
+            const serial = this.serial;
 
             if (!serial.portName) {
                 throw new Error('No portname.');
@@ -181,9 +181,9 @@ export default class ModbusClientSerial extends ModbusClientCore {
         }
     }
 
-    reconnect() {}
+    reconnect(): void {}
 
-    close() {
+    close(): void {
         if (this.serialPort) {
             this.serialPort.close();
             this.serialPort = null;
