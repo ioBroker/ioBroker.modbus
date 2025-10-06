@@ -1,0 +1,31 @@
+.value-animate-dark {
+    animation: valueGreenFlashDark 1s;
+}
+
+@keyframes valueGreenFlashDark {
+    0% {
+        color: #44fa44;
+    }
+    80% {
+        color: #46ff46;
+    }
+    100% {
+        color: inherit;
+    }
+}
+.value-animate-light {
+    animation: valueGreenFlashLight 1s;
+}
+
+@keyframes valueGreenFlashLight {
+    0% {
+        color: #004e00;
+    }
+    80% {
+        color: #005e00;
+    }
+    100% {
+        color: inherit;
+    }
+}
+

@@ -8,34 +8,36 @@ import type { ModbusAdapterConfig, Register, RegisterField, RegisterType } from 
 import type { AdminConnection, ThemeType } from '@iobroker/adapter-react-v5';
 
 interface BaseRegistersProps {
-    common: ioBroker.InstanceCommon;
     native: ModbusAdapterConfig;
     instance: number;
     adapterName: string;
-    onError?: (error: string) => void;
-    onLoad?: () => void;
     onChange: (field: string, value: Register[]) => void;
     changed?: boolean;
     socket: AdminConnection;
     rooms?: Record<string, ioBroker.EnumObject>;
     formulaDisabled?: boolean;
     themeType: ThemeType;
+    alive: boolean;
 }
 
 interface BaseRegistersState {
     order: 'asc' | 'desc';
     orderBy: keyof Register | '$index';
+    values: { [id: string]: ioBroker.State | null | undefined };
 }
 
 export default abstract class BaseRegisters extends Component<BaseRegistersProps, BaseRegistersState> {
     protected nativeField: RegisterType;
+    protected nativeFieldName: 'inputRegisters' | 'holdingRegisters' | 'coils' | 'discreteInputs';
+    protected offsetName: 'inputRegsOffset' | 'holdingRegsOffset' | 'coilsOffset' | 'disInputsOffset';
     protected fields: RegisterField[];
 
-    protected constructor(props: BaseRegistersProps) {
+    public constructor(props: BaseRegistersProps) {
         super(props);
         this.state = {
             order: (window.localStorage.getItem('Modbus.order') as 'asc' | 'desc') || 'asc',
             orderBy: (window.localStorage.getItem('Modbus.orderBy') as keyof Register) || '_address',
+            values: {},
         };
     }
 
@@ -49,7 +51,39 @@ export default abstract class BaseRegisters extends Component<BaseRegistersProps
                 this.setState({ orderBy });
             }
         }
+        this.onAliveChanged().catch((error: Error) => console.error(error));
     }
+
+    async onAliveChanged(): Promise<void> {
+        if (!this.props.alive || this.props.changed) {
+            this.setState({ values: {} });
+        } else {
+            // read all values
+            const values = await this.props.socket.getStates(
+                `${this.props.adapterName}.${this.props.instance}.${this.nativeFieldName}.*`,
+            );
+            this.setState({ values: values || {} });
+            // Subscribe on all states changes
+            await this.props.socket.subscribeState(
+                `${this.props.adapterName}.${this.props.instance}.${this.nativeFieldName}.*`,
+                this.onStateChange,
+            );
+        }
+    }
+
+    componentDidUpdate(prevProps: BaseRegistersProps): void {
+        if (prevProps.alive !== this.props.alive || prevProps.changed !== this.props.changed) {
+            this.onAliveChanged().catch((error: Error) => console.error(error));
+        }
+    }
+
+    onStateChange = (id: string, state: ioBroker.State | null | undefined): void => {
+        if (state?.ack && id.startsWith(`${this.props.adapterName}.${this.props.instance}.${this.nativeFieldName}.`)) {
+            const newValues = JSON.parse(JSON.stringify(this.state.values));
+            newValues[id] = state;
+            this.setState({ values: newValues });
+        }
+    };
 
     // eslint-disable-next-line class-methods-use-this
     isShowExtendedModeSwitch(): boolean {
@@ -169,11 +203,19 @@ export default abstract class BaseRegisters extends Component<BaseRegistersProps
                     rooms={this.props.rooms || {}}
                     order={this.state.order}
                     orderBy={this.state.orderBy}
+                    values={this.state.values}
+                    alive={this.props.alive}
+                    changed={this.props.changed}
                     onChangeOrder={(orderBy, order) => {
                         this.setState({ orderBy, order });
                         window.localStorage.setItem('Modbus.orderBy', orderBy);
                         window.localStorage.setItem('Modbus.order', order);
                     }}
+                    registerType={this.nativeField}
+                    offset={this.props.native.params[this.offsetName]}
+                    native={this.props.native}
+                    instance={this.props.instance}
+                    regName={this.nativeFieldName}
                 />
             </Paper>
         );

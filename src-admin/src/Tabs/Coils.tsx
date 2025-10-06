@@ -8,6 +8,8 @@ import type { Register, RegisterField, RegisterType } from '../types';
 
 export default class Coils extends BaseRegisters {
     nativeField: RegisterType = 'coils';
+    nativeFieldName: 'inputRegisters' | 'holdingRegisters' | 'coils' | 'discreteInputs' = 'coils';
+    offsetName: 'inputRegsOffset' | 'holdingRegsOffset' | 'coilsOffset' | 'disInputsOffset' = 'coilsOffset';
 
     getFields(): RegisterField[] {
         const result: RegisterField[] = [

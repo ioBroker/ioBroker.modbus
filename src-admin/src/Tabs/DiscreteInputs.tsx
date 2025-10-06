@@ -8,6 +8,8 @@ const rolesTyped: { value: string; title: string }[] = roles;
 
 export default class DiscreteInputs extends BaseRegisters {
     nativeField: RegisterType = 'disInputs';
+    nativeFieldName: 'inputRegisters' | 'holdingRegisters' | 'coils' | 'discreteInputs' = 'discreteInputs';
+    offsetName: 'inputRegsOffset' | 'holdingRegsOffset' | 'coilsOffset' | 'disInputsOffset' = 'disInputsOffset';
 
     getFields(): RegisterField[] {
         const result: RegisterField[] = [

@@ -78,13 +78,8 @@ interface OptionsProps {
     native: ModbusAdapterConfig;
     instance: number;
     adapterName: string;
-    onError?: (error: string) => void;
-    onLoad?: (isLoading: boolean) => void;
-    onChange?: (isChanged: boolean) => void;
-    changed?: boolean;
     socket: AdminConnection;
     changeNative: (native: ioBroker.AdapterConfig) => void;
-    rooms?: Record<string, string>;
 }
 
 interface OptionsState {

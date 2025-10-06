@@ -25,7 +25,7 @@ function sortByAddress(a: Register, b: Register): 1 | 0 | -1 {
 export class ModbusAdapter extends Adapter {
     declare config: ModbusAdapterConfig;
     private infoRegExp!: RegExp;
-    static _rmap: { [bit: number]: number } = {
+    static readonly _rmap: { [bit: number]: number } = {
         0: 15,
         1: 14,
         2: 13,
@@ -43,7 +43,7 @@ export class ModbusAdapter extends Adapter {
         14: 1,
         15: 0,
     };
-    static _dmap: { [bit: number]: number } = {
+    static readonly _dmap: { [bit: number]: number } = {
         0: 0,
         1: 1,
         2: 2,
@@ -63,7 +63,7 @@ export class ModbusAdapter extends Adapter {
     };
     private objects: { [id: string]: ioBroker.StateObject | null | undefined } = {};
     private enumObjs: { [enumGroup: string]: { [id: string]: ioBroker.EnumObject } } = {};
-    static typeItemsLen: { [type: string]: number } = {
+    static readonly typeItemsLen: { [type: string]: number } = {
         uint8be: 1,
         uint8le: 1,
         int8be: 1,
@@ -278,7 +278,7 @@ export class ModbusAdapter extends Adapter {
         }
     }
 
-    static address2alias(id: string, address: number, isDirect: boolean, offset: number): number {
+    static address2alias(id: RegisterType, address: number | string, isDirect: boolean, offset: number): number {
         if (typeof address === 'string') {
             address = parseInt(address, 10);
         }

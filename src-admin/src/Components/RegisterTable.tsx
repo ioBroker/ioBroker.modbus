@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
 
+import './RegisterTable.css';
+
 import {
     Table,
     TableHead,
@@ -29,7 +31,7 @@ import {
 import TsvDialog from './TsvDialog';
 import DeleteAllDialog from './DeleteAllDialog';
 import DeleteDialog from './DeleteDialog';
-import type { Register, RegisterField } from '../types';
+import type { ModbusAdapterConfig, Register, RegisterField, RegisterType } from '../types';
 
 const styles: Record<string, any> = {
     tableHeader: {
@@ -203,6 +205,56 @@ const DataCell = (props: {
     );
 };
 
+const _rmap: { [bit: number]: number } = {
+    0: 15,
+    1: 14,
+    2: 13,
+    3: 12,
+    4: 11,
+    5: 10,
+    6: 9,
+    7: 8,
+    8: 7,
+    9: 6,
+    10: 5,
+    11: 4,
+    12: 3,
+    13: 2,
+    14: 1,
+    15: 0,
+};
+const _dmap: { [bit: number]: number } = {
+    0: 0,
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
+    7: 7,
+    8: 8,
+    9: 9,
+    10: 10,
+    11: 11,
+    12: 12,
+    13: 13,
+    14: 14,
+    15: 15,
+};
+
+function address2alias(id: RegisterType, address: number | string, isDirect: boolean, offset: number): number {
+    if (typeof address === 'string') {
+        address = parseInt(address, 10);
+    }
+
+    if (id === 'disInputs' || id === 'coils') {
+        address = ((address >> 4) << 4) + (isDirect ? _dmap[address % 16] : _rmap[address % 16]);
+        address += offset;
+        return address;
+    }
+    return address + offset;
+}
+
 export default function RegisterTable(props: {
     data: Register[];
     fields: RegisterField[];
@@ -222,6 +274,14 @@ export default function RegisterTable(props: {
     themeType: ThemeType;
     getDisable: (index: number, field: string) => boolean;
     changeParam: (index: number, field: string, value: string | boolean) => void;
+    alive: boolean;
+    changed?: boolean;
+    values: { [id: string]: ioBroker.State | null | undefined };
+    registerType: RegisterType;
+    offset: number;
+    native: ModbusAdapterConfig;
+    instance: number;
+    regName: string;
 }): React.JSX.Element {
     const [tsvDialogOpen, setTsvDialogOpen] = useState(false);
     const [editMode, setEditMode] = useState(parseInt(window.localStorage.getItem('Modbus.editMode') || '0', 10) || 0);
@@ -350,6 +410,9 @@ export default function RegisterTable(props: {
                                         </TableCell>
                                     );
                                 })}
+                            {props.alive && !props.changed ? (
+                                <TableCell style={styles.tableHeader}>{I18n.t('Value')}</TableCell>
+                            ) : null}
                             <TableCell>
                                 <Tooltip title={I18n.t('Delete all')}>
                                     <div>
@@ -371,64 +434,123 @@ export default function RegisterTable(props: {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sortedData.map(sortedItem => (
-                            <TableRow
-                                hover
-                                key={sortedItem.$index}
-                            >
-                                {props.fields
-                                    .filter(
-                                        item =>
-                                            (extendedMode || !item.expert) &&
-                                            (!props.formulaDisabled || !item.formulaDisabled),
-                                    )
-                                    .map(field => (
-                                        <DataCell
-                                            key={field.name}
-                                            sortedItem={sortedItem}
-                                            field={field}
-                                            editMode={editMode === sortedItem.$index}
-                                            setEditMode={() => setEditMode(sortedItem.$index)}
-                                            {...props}
-                                        />
-                                    ))}
-                                <TableCell>
-                                    <Tooltip title={I18n.t('Delete')}>
-                                        <div>
-                                            <IconButton
-                                                size="small"
-                                                onClick={() => {
-                                                    const lastTime =
-                                                        window.sessionStorage.getItem('disableDeleteDialogs');
-                                                    if (
-                                                        lastTime &&
-                                                        Date.now() - new Date(lastTime).getTime() < 1000 * 60 * 5
-                                                    ) {
-                                                        props.deleteItem(sortedItem.$index);
-                                                        return;
-                                                    }
-                                                    setDeleteDialog({
-                                                        open: true,
-                                                        action: disableDialogs => {
-                                                            if (disableDialogs) {
-                                                                window.sessionStorage.setItem(
-                                                                    'disableDeleteDialogs',
-                                                                    new Date().toISOString(),
-                                                                );
-                                                            }
+                        {sortedData.map(sortedItem => {
+                            let id = `modbus.${props.instance}.`;
+                            if (props.native.params.multiDeviceId) {
+                                id += `${props.regName}.${sortedItem.item.deviceId || 0}.`;
+                            } else {
+                                id += `${props.regName}.`;
+                            }
+
+                            if (props.native.params.showAliases) {
+                                id += address2alias(
+                                    props.registerType,
+                                    sortedItem.item.address,
+                                    props.native.params.directAddresses,
+                                    props.offset,
+                                );
+                            } else if (!props.native.params.doNotIncludeAdrInId || !sortedItem.item.name) {
+                                // add address if not disabled or name not empty
+                                id += sortedItem.item.address;
+                                if (props.native.params.preserveDotsInId) {
+                                    id += '_';
+                                }
+                            }
+
+                            if (props.native.params.preserveDotsInId) {
+                                // preserve dots in name and add to ID
+                                id += sortedItem.item.name ? sortedItem.item.name.replace(/\s/g, '_') : '';
+                            } else {
+                                // replace dots by underlines and add to ID
+                                if (props.native.params.doNotIncludeAdrInId) {
+                                    // It must be so, because of the bug https://github.com/ioBroker/ioBroker.modbus/issues/473
+                                    // config[i].id += config[i].name ? config[i].name.replace(/\./g, '_').replace(/\s/g, '_') : '';
+
+                                    // But because of breaking change
+                                    id += sortedItem.item.name
+                                        ? `_${sortedItem.item.name.replace(/\./g, '_').replace(/\s/g, '_')}`
+                                        : '';
+                                } else {
+                                    id += sortedItem.item.name
+                                        ? `_${sortedItem.item.name.replace(/\./g, '_').replace(/\s/g, '_')}`
+                                        : '';
+                                }
+                            }
+                            if (id.endsWith('.')) {
+                                id += id.substring(0, id.length - 1);
+                            }
+                            const val = props.values[id]?.val;
+                            return (
+                                <TableRow
+                                    hover
+                                    key={sortedItem.$index}
+                                >
+                                    {props.fields
+                                        .filter(
+                                            item =>
+                                                (extendedMode || !item.expert) &&
+                                                (!props.formulaDisabled || !item.formulaDisabled),
+                                        )
+                                        .map(field => (
+                                            <DataCell
+                                                key={field.name}
+                                                sortedItem={sortedItem}
+                                                field={field}
+                                                editMode={editMode === sortedItem.$index}
+                                                setEditMode={() => setEditMode(sortedItem.$index)}
+                                                {...props}
+                                            />
+                                        ))}
+                                    {props.alive && !props.changed ? (
+                                        <TableCell
+                                            style={styles.tableCell}
+                                            className={`value-animate-${props.themeType}`}
+                                            key={val?.toString() || '--'}
+                                        >
+                                            {val === undefined
+                                                ? '--'
+                                                : (val?.toString() || '') +
+                                                  (sortedItem.item.unit ? ` ${sortedItem.item.unit}` : '')}
+                                        </TableCell>
+                                    ) : null}
+                                    <TableCell>
+                                        <Tooltip title={I18n.t('Delete')}>
+                                            <div>
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() => {
+                                                        const lastTime =
+                                                            window.sessionStorage.getItem('disableDeleteDialogs');
+                                                        if (
+                                                            lastTime &&
+                                                            Date.now() - new Date(lastTime).getTime() < 1000 * 60 * 5
+                                                        ) {
                                                             props.deleteItem(sortedItem.$index);
-                                                        },
-                                                        item: sortedItem.item,
-                                                    });
-                                                }}
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </div>
-                                    </Tooltip>
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                                                            return;
+                                                        }
+                                                        setDeleteDialog({
+                                                            open: true,
+                                                            action: disableDialogs => {
+                                                                if (disableDialogs) {
+                                                                    window.sessionStorage.setItem(
+                                                                        'disableDeleteDialogs',
+                                                                        new Date().toISOString(),
+                                                                    );
+                                                                }
+                                                                props.deleteItem(sortedItem.$index);
+                                                            },
+                                                            item: sortedItem.item,
+                                                        });
+                                                    }}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </div>
+                                        </Tooltip>
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
                     </TableBody>
                 </Table>
             </div>

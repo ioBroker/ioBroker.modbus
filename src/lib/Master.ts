@@ -377,9 +377,7 @@ export class Master {
         for (let n = 0; n < regs.length; n++) {
             if (this.connected && !this.isStop) {
                 await this.#pollBinariesBlock(device, regType, n);
-                if (this.options.config.readInterval) {
-                    await this.#waitAsync(this.options.config.readInterval);
-                }
+                await this.#waitAsync(this.options.config.readInterval);
             }
         }
     }
@@ -620,15 +618,11 @@ export class Master {
         regType: 'inputRegs' | 'holdingRegs',
     ): Promise<void> {
         const regs = device[regType];
-        for (let n = 0; n < regs.length; n++) {
+        for (let n = 0; n < regs.blocks.length; n++) {
             if (this.connected && !this.isStop) {
                 await this.#pollFloatBlock(device, regType, n);
                 await this.#waitAsync(this.options.config.readInterval);
             }
-        }
-        if (regs.cyclicWrite?.length && this.options.config.maxBlock! >= 2) {
-            await this.#writeFloatsRegs(device);
-            await this.#waitAsync(this.options.config.writeInterval);
         }
     }
 
@@ -738,6 +732,15 @@ export class Master {
             await this.#pollFloatsBlocks(device, 'holdingRegs');
         } catch (err) {
             pollErrors.push(err);
+        }
+
+        if (device.holdingRegs.cyclicWrite?.length && this.options.config.maxBlock! >= 2) {
+            try {
+                await this.#writeFloatsRegs(device);
+                await this.#waitAsync(this.options.config.writeInterval);
+            } catch (err) {
+                pollErrors.push(err);
+            }
         }
 
         if (this.connected && !this.isStop) {

@@ -322,6 +322,7 @@ There are some programs in folder `test` to test the TCP communication:
 * (copilot) Improved Modbus error handling and fault tolerance - continue polling working devices even when others fail
 * (copilot) Fixes memory leak
 * (copilot) Added option to disable connection error logging to avoid log spam when devices are unavailable
+* (bluefox) Show values directly in configuration
 
 ### 6.4.0 (2024-11-22)
 * (bluefox) Moved GUI compilation to vite
