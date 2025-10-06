@@ -30,7 +30,7 @@ export function createLoggingWrapper(originalLog: ioBroker.Logger, disableLoggin
                 return;
             }
             // Allow all other error messages through
-            originalLog.error(msg.toString() + (args ? ` ${args.join(', ')}` : ''));
+            originalLog.error(msg.toString() + (args.length > 0 ? ` ${args.join(', ')}` : ''));
         },
     };
 }
