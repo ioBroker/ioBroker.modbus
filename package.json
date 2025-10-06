@@ -31,12 +31,7 @@
     "serialport": "^13.0.0"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.3.2",
-    "crc": "4.3.2",
-    "put": "0.0.6",
-    "stampit": "^2.1.2",
-    "stampit-event-bus": "^0.1.1",
-    "stampit-state-machine": "^0.2.1"
+    "@iobroker/adapter-core": "^3.3.2"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.8.0",
@@ -44,12 +39,14 @@
     "@alcalzone/release-script-plugin-license": "^3.7.0",
     "@iobroker/build-tools": "^2.0.15",
     "@iobroker/eslint-config": "^2.2.0",
-    "@iobroker/testing": "^5.1.1",
     "@iobroker/legacy-testing": "^2.0.2",
-    "mocha": "^11.7.4",
+    "@iobroker/testing": "^5.1.1",
+    "@types/node": "^24.6.2",
+    "@types/serialport": "^10.2.0",
     "chai": "^4.5.0",
-    "nan": "2.23.0",
-    "modbus-stack": "^0.2.1"
+    "mocha": "^11.7.4",
+    "modbus-stack": "^0.2.1",
+    "nan": "2.23.0"
   },
   "main": "build/main.js",
   "files": [
@@ -63,10 +60,11 @@
     "test": "node node_modules/mocha/bin/mocha test/testAdapter.js --exit && node node_modules/mocha/bin/mocha test/testPackageFiles.js --exit",
     "release": "release-script",
     "lint": "eslint -c eslint.config.mjs",
+    "build-backend": "tsc -p tsconfig.build.json",
     "release-patch": "release-script patch --yes",
     "release-minor": "release-script minor --yes",
     "release-major": "release-script major --yes",
-    "build": "tsc -p tsconfig.build.json && node tasks",
+    "build": "npm run build-backend && node tasks",
     "update-packages": "npx -y npm-check-updates --upgrade && cd src-admin && npx -y npm-check-updates --upgrade",
     "npm": "npm i && cd src && npm i -f",
     "0-clean": "node tasks.js --0-clean",

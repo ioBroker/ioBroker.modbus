@@ -19,7 +19,7 @@ function iterateAddresses(isBools, deviceId, result, regName, regType, localOpti
                 config.splice(i, 1);
                 continue;
             }
-            const address = config[i].address = parseInt(config[i].address, 10);
+            const address = (config[i].address = parseInt(config[i].address, 10));
 
             if (address < 0) {
                 config.splice(i, 1);
@@ -103,9 +103,9 @@ describe('Max Read Request Length', function () {
             config: [
                 { deviceId: 1, address: 4000, len: 7, type: 'floatbe' },
                 { deviceId: 1, address: 4007, len: 10, type: 'floatbe' }, // 17 total, under limit
-                { deviceId: 1, address: 4017, len: 5, type: 'floatbe' },  // would make 22 total, exceeds 20
+                { deviceId: 1, address: 4017, len: 5, type: 'floatbe' }, // would make 22 total, exceeds 20
                 { deviceId: 1, address: 4022, len: 15, type: 'floatbe' }, // under limit individually
-            ]
+            ],
         };
 
         const localOptions = {
@@ -117,8 +117,10 @@ describe('Max Read Request Length', function () {
 
         // All blocks should respect the maxBlock limit of 20
         result.blocks.forEach((block, index) => {
-            expect(block.count).to.be.at.most(localOptions.maxBlock, 
-                `Block ${index} count ${block.count} exceeds maxBlock limit of ${localOptions.maxBlock}`);
+            expect(block.count).to.be.at.most(
+                localOptions.maxBlock,
+                `Block ${index} count ${block.count} exceeds maxBlock limit of ${localOptions.maxBlock}`,
+            );
         });
 
         // We should have more than one block due to splitting
@@ -142,8 +144,10 @@ describe('Max Read Request Length', function () {
 
         // All blocks should respect the maxBoolBlock limit of 30
         result.blocks.forEach((block, index) => {
-            expect(block.count).to.be.at.most(localOptions.maxBoolBlock, 
-                `Block ${index} count ${block.count} exceeds maxBoolBlock limit of ${localOptions.maxBoolBlock}`);
+            expect(block.count).to.be.at.most(
+                localOptions.maxBoolBlock,
+                `Block ${index} count ${block.count} exceeds maxBoolBlock limit of ${localOptions.maxBoolBlock}`,
+            );
         });
 
         // We should have multiple blocks due to splitting
@@ -154,7 +158,7 @@ describe('Max Read Request Length', function () {
         // Simulate a scenario similar to the original issue
         // where many small registers could be grouped into large blocks
         const result = {
-            config: []
+            config: [],
         };
 
         // Create many single-word registers that could be grouped
@@ -171,8 +175,10 @@ describe('Max Read Request Length', function () {
 
         // All blocks should respect the maxBlock limit of 20
         result.blocks.forEach((block, index) => {
-            expect(block.count).to.be.at.most(localOptions.maxBlock, 
-                `Block ${index} count ${block.count} exceeds maxBlock limit of ${localOptions.maxBlock}`);
+            expect(block.count).to.be.at.most(
+                localOptions.maxBlock,
+                `Block ${index} count ${block.count} exceeds maxBlock limit of ${localOptions.maxBlock}`,
+            );
         });
 
         // Should have created multiple blocks due to the 20-register limit
@@ -182,7 +188,7 @@ describe('Max Read Request Length', function () {
     it('should handle boolean scenario from original issue', function () {
         // Simulate consecutive boolean registers that were creating blocks > 30
         const result = {
-            config: []
+            config: [],
         };
 
         // Create 50 consecutive coil registers
@@ -199,8 +205,10 @@ describe('Max Read Request Length', function () {
 
         // All blocks should respect the maxBoolBlock limit of 30
         result.blocks.forEach((block, index) => {
-            expect(block.count).to.be.at.most(localOptions.maxBoolBlock, 
-                `Block ${index} count ${block.count} exceeds maxBoolBlock limit of ${localOptions.maxBoolBlock}`);
+            expect(block.count).to.be.at.most(
+                localOptions.maxBoolBlock,
+                `Block ${index} count ${block.count} exceeds maxBoolBlock limit of ${localOptions.maxBoolBlock}`,
+            );
         });
 
         // Should have created multiple blocks due to the 30-register limit
@@ -211,8 +219,8 @@ describe('Max Read Request Length', function () {
         const result = {
             config: [
                 { deviceId: 1, address: 4000, len: 18, type: 'floatbe' }, // 18 registers
-                { deviceId: 1, address: 4018, len: 5, type: 'floatbe' },  // would make 23 total, exceeds 20
-            ]
+                { deviceId: 1, address: 4018, len: 5, type: 'floatbe' }, // would make 23 total, exceeds 20
+            ],
         };
 
         const localOptions = {
@@ -225,7 +233,7 @@ describe('Max Read Request Length', function () {
         // Should create two blocks
         expect(result.blocks).to.have.length(2);
         expect(result.blocks[0].count).to.equal(18); // First block
-        expect(result.blocks[1].count).to.equal(5);  // Second block
+        expect(result.blocks[1].count).to.equal(5); // Second block
     });
 });
 

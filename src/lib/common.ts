@@ -1,10 +1,10 @@
-'use strict';
+import type { RegisterEntryType } from '../types';
 
-function extractValue(type, len, buffer, offset) {
-    let i1;
-    let i2;
-    let buf;
-    let _len;
+export function extractValue(type: RegisterEntryType, len: number, buffer: Buffer, offset: number): string | number {
+    let i1: number;
+    let i2: number;
+    let buf: Buffer;
+    let _len: number;
     let str = '';
 
     switch (type) {
@@ -157,7 +157,7 @@ function extractValue(type, len, buffer, offset) {
     }
 }
 
-function writeValue(type, value, len) {
+export function writeValue(type: RegisterEntryType, value: number | string, len?: number): Buffer {
     let a0;
     let a1;
     let a2;
@@ -168,50 +168,50 @@ function writeValue(type, value, len) {
         case 'uint8be':
             buffer = Buffer.alloc(2);
             buffer[0] = 0;
-            buffer.writeUInt8(value & 0xff, 1);
+            buffer.writeUInt8((value as number) & 0xff, 1);
             break;
         case 'uint8le':
             buffer = Buffer.alloc(2);
             buffer[1] = 0;
-            buffer.writeUInt8(value & 0xff, 0);
+            buffer.writeUInt8((value as number) & 0xff, 0);
             break;
         case 'int8be':
             buffer = Buffer.alloc(2);
             buffer[0] = 0;
-            buffer.writeInt8(value & 0xff, 1);
+            buffer.writeInt8((value as number) & 0xff, 1);
             break;
         case 'int8le':
             buffer = Buffer.alloc(2);
             buffer[1] = 0;
-            buffer.writeInt8(value & 0xff, 0);
+            buffer.writeInt8((value as number) & 0xff, 0);
             break;
         case 'uint16be':
             buffer = Buffer.alloc(2);
-            buffer.writeUInt16BE(value, 0);
+            buffer.writeUInt16BE(value as number, 0);
             break;
         case 'uint16le':
             buffer = Buffer.alloc(2);
-            buffer.writeUInt16LE(value, 0);
+            buffer.writeUInt16LE(value as number, 0);
             break;
         case 'int16be':
             buffer = Buffer.alloc(2);
-            buffer.writeInt16BE(value, 0);
+            buffer.writeInt16BE(value as number, 0);
             break;
         case 'int16le':
             buffer = Buffer.alloc(2);
-            buffer.writeInt16LE(value, 0);
+            buffer.writeInt16LE(value as number, 0);
             break;
         case 'uint32be':
             buffer = Buffer.alloc(4);
-            buffer.writeUInt32BE(value, 0);
+            buffer.writeUInt32BE(value as number, 0);
             break;
         case 'uint32le':
             buffer = Buffer.alloc(4);
-            buffer.writeUInt32LE(value, 0);
+            buffer.writeUInt32LE(value as number, 0);
             break;
         case 'uint32sw':
             buffer = Buffer.alloc(4);
-            buffer.writeUInt32BE(value, 0);
+            buffer.writeUInt32BE(value as number, 0);
             a0 = buffer[0];
             a1 = buffer[1];
             buffer[0] = buffer[2];
@@ -221,7 +221,7 @@ function writeValue(type, value, len) {
             break;
         case 'uint32sb':
             buffer = Buffer.alloc(4);
-            buffer.writeUInt32BE(value, 0);
+            buffer.writeUInt32BE(value as number, 0);
             a0 = buffer[0];
             a2 = buffer[2];
             buffer[0] = buffer[1];
@@ -231,15 +231,15 @@ function writeValue(type, value, len) {
             break;
         case 'int32be':
             buffer = Buffer.alloc(4);
-            buffer.writeInt32BE(value, 0);
+            buffer.writeInt32BE(value as number, 0);
             break;
         case 'int32le':
             buffer = Buffer.alloc(4);
-            buffer.writeInt32LE(value, 0);
+            buffer.writeInt32LE(value as number, 0);
             break;
         case 'int32sw':
             buffer = Buffer.alloc(4);
-            buffer.writeInt32BE(value, 0);
+            buffer.writeInt32BE(value as number, 0);
             a0 = buffer[0];
             a1 = buffer[1];
             buffer[0] = buffer[2];
@@ -249,7 +249,7 @@ function writeValue(type, value, len) {
             break;
         case 'int32sb':
             buffer = Buffer.alloc(4);
-            buffer.writeInt32BE(value, 0);
+            buffer.writeInt32BE(value as number, 0);
             a0 = buffer[0];
             a2 = buffer[2];
             buffer[0] = buffer[1];
@@ -259,35 +259,35 @@ function writeValue(type, value, len) {
             break;
         case 'uint64be':
             buffer = Buffer.alloc(8);
-            buffer.writeUInt32BE(value >> 32, 0);
-            buffer.writeUInt32BE(value & 0xffffffff, 4);
+            buffer.writeUInt32BE((value as number) >> 32, 0);
+            buffer.writeUInt32BE((value as number) & 0xffffffff, 4);
             break;
         case 'uint64le':
             buffer = Buffer.alloc(8);
-            buffer.writeUInt32LE(value & 0xffffffff, 0);
-            buffer.writeUInt32LE(value >> 32, 4);
+            buffer.writeUInt32LE((value as number) & 0xffffffff, 0);
+            buffer.writeUInt32LE((value as number) >> 32, 4);
             break;
         case 'int64be':
             buffer = Buffer.alloc(8);
-            buffer.writeInt32BE(value >> 32, 0);
-            buffer.writeUInt32BE(value & 0xffffffff, 4);
+            buffer.writeInt32BE((value as number) >> 32, 0);
+            buffer.writeUInt32BE((value as number) & 0xffffffff, 4);
             break;
         case 'int64le':
             buffer = Buffer.alloc(8);
-            buffer.writeUInt32LE(value & 0xffffffff, 0);
-            buffer.writeInt32LE(value >> 32, 4);
+            buffer.writeUInt32LE((value as number) & 0xffffffff, 0);
+            buffer.writeInt32LE((value as number) >> 32, 4);
             break;
         case 'floatbe':
             buffer = Buffer.alloc(4);
-            buffer.writeFloatBE(value, 0);
+            buffer.writeFloatBE(value as number, 0);
             break;
         case 'floatle':
             buffer = Buffer.alloc(4);
-            buffer.writeFloatLE(value, 0);
+            buffer.writeFloatLE(value as number, 0);
             break;
         case 'floatsw':
             buffer = Buffer.alloc(4);
-            buffer.writeFloatBE(value, 0);
+            buffer.writeFloatBE(value as number, 0);
             a0 = buffer[0];
             a1 = buffer[1];
             buffer[0] = buffer[2];
@@ -297,7 +297,7 @@ function writeValue(type, value, len) {
             break;
         case 'floatsb':
             buffer = Buffer.alloc(4);
-            buffer.writeFloatBE(value, 0);
+            buffer.writeFloatBE(value as number, 0);
             a0 = buffer[0];
             a2 = buffer[2];
             buffer[0] = buffer[1];
@@ -307,11 +307,11 @@ function writeValue(type, value, len) {
             break;
         case 'doublebe':
             buffer = Buffer.alloc(8);
-            buffer.writeDoubleBE(value, 0);
+            buffer.writeDoubleBE(value as number, 0);
             break;
         case 'doublele':
             buffer = Buffer.alloc(8);
-            buffer.writeDoubleLE(value, 0);
+            buffer.writeDoubleLE(value as number, 0);
             break;
         case 'string':
             if (value === null) {
@@ -349,8 +349,8 @@ function writeValue(type, value, len) {
             }
             value = value.toString();
             _len = value.length + 1;
-            buffer = Buffer.alloc(len * 2);
-            for (let b = 0; b < _len && b < len; b++) {
+            buffer = Buffer.alloc(len! * 2);
+            for (let b = 0; b < _len && b < len!; b++) {
                 buffer.writeInt16LE(value.charCodeAt(b) << (type === 'string16' ? 8 : 0), b * 2);
             }
             break;
@@ -361,7 +361,7 @@ function writeValue(type, value, len) {
             value = value.toString();
             const _buffer = Buffer.from(value, 'hex');
             // fix length
-            buffer = Buffer.alloc(len * 2);
+            buffer = Buffer.alloc(len! * 2);
             _buffer.copy(buffer);
             break;
         }
@@ -370,17 +370,3 @@ function writeValue(type, value, len) {
     }
     return buffer;
 }
-
-function getJSModbusPath() {
-    let path = require.resolve('jsmodbus/package.json');
-    const parts__ = path.replace(/\\/g, '/').split('/');
-    parts__.pop();
-    path = parts__.join('/');
-    return path;
-}
-
-module.exports = {
-    writeValue,
-    extractValue,
-    getJSModbusPath,
-};

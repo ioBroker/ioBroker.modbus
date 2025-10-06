@@ -56,40 +56,34 @@ const styles: Record<string, any> = {
 const tabs: {
     name: string;
     title: string;
-    component: any;
     icon?: React.JSX.Element;
     tooltip?: string;
 }[] = [
     {
         name: 'general',
         title: 'General',
-        component: TabOptions,
     },
     {
         name: 'discrete-inputs',
         title: 'Discrete inputs',
-        component: TabDiscreteInputs,
         icon: <BinaryIcon style={{ width: 18, height: 18, marginRight: 4, display: 'inline-block' }} />,
         tooltip: 'Binary inputs (read-only)',
     },
     {
         name: 'coils',
         title: 'Coils',
-        component: TabCoils,
         icon: <BinaryIcon style={{ width: 18, height: 18, marginRight: 4, display: 'inline-block' }} />,
         tooltip: 'Binary inputs and outputs',
     },
     {
         name: 'input-registers',
         title: 'Input Registers',
-        component: TabInputRegisters,
         icon: <DigitsIcon style={{ width: 18, height: 18, marginRight: 4, display: 'inline-block' }} />,
         tooltip: 'Input registers (8-64 bit values, read-only)',
     },
     {
         name: 'holding-registers',
         title: 'Holding Registers',
-        component: TabHoldingRegisters,
         icon: <DigitsIcon style={{ width: 18, height: 18, marginRight: 4, display: 'inline-block' }} />,
         tooltip: 'Input/output registers (8-64 bit values)',
     },
@@ -110,6 +104,7 @@ function sort(data: Register[]): void {
 interface AppState extends GenericAppState {
     moreLoaded: boolean;
     rooms: Record<string, ioBroker.EnumObject> | null;
+    alive: boolean;
 }
 
 class App extends GenericApp<GenericAppProps, AppState> {
@@ -138,6 +133,7 @@ class App extends GenericApp<GenericAppProps, AppState> {
             ...this.state,
             moreLoaded: false,
             rooms: null,
+            alive: false,
         };
     }
 
@@ -152,18 +148,131 @@ class App extends GenericApp<GenericAppProps, AppState> {
         return true;
     }
 
-    onConnectionReady(): void {
+    async onConnectionReady(): Promise<void> {
         super.onConnectionReady();
+        const selectedTab = window.localStorage.getItem(`modbus.${this.instance}.selectedTab`) || 'general';
 
         void this.socket.getEnums('rooms').then(rooms => this.setState({ moreLoaded: true, rooms }));
+
+        const aliveState = await this.socket.getState(`system.adapter.modbus.${this.instance}.alive`);
+        this.setState({ alive: !!aliveState?.val, selectedTab });
+        await this.socket.subscribeState(`system.adapter.modbus.${this.instance}.alive`, this.onAliveChanged);
     }
 
-    getSelectedTab(): number {
-        const selectedTab = this.state.selectedTab;
-        if (!selectedTab) {
-            return 0;
+    onAliveChanged = (id: string, state: ioBroker.State | null | undefined): void => {
+        if (!!state?.val !== this.state.alive) {
+            this.setState({ alive: !!state?.val });
         }
-        return tabs.findIndex(tab => tab.name === selectedTab);
+    };
+
+    renderOptions(): React.JSX.Element {
+        return (
+            <TabOptions
+                common={this.common || ({} as ioBroker.InstanceCommon)}
+                socket={this.socket}
+                native={this.state.native as ModbusAdapterConfig}
+                instance={this.instance}
+                adapterName={this.adapterName}
+                changeNative={(native: ModbusAdapterConfig): void =>
+                    this.setState({ native, changed: this.getIsChanged(native) })
+                }
+            />
+        );
+    }
+
+    renderDiscreteInputs(): React.JSX.Element {
+        return (
+            <TabDiscreteInputs
+                alive={this.state.alive}
+                formulaDisabled={this.state.native.params.slave === '1' || this.state.native.params.slave === 1}
+                socket={this.socket}
+                native={this.state.native as ModbusAdapterConfig}
+                instance={this.instance}
+                adapterName={this.adapterName}
+                changed={this.state.changed}
+                onChange={(attr: keyof ModbusAdapterConfig, value: any, cb?: () => void): void =>
+                    this.updateNativeValue(attr, value, cb)
+                }
+                rooms={this.state.rooms || {}}
+                themeType={this.state.themeType}
+            />
+        );
+    }
+
+    renderCoils(): React.JSX.Element {
+        return (
+            <TabCoils
+                alive={this.state.alive}
+                formulaDisabled={this.state.native.params.slave === '1' || this.state.native.params.slave === 1}
+                socket={this.socket}
+                native={this.state.native as ModbusAdapterConfig}
+                instance={this.instance}
+                adapterName={this.adapterName}
+                changed={this.state.changed}
+                onChange={(attr: keyof ModbusAdapterConfig, value: any, cb?: () => void): void =>
+                    this.updateNativeValue(attr, value, cb)
+                }
+                rooms={this.state.rooms || {}}
+                themeType={this.state.themeType}
+            />
+        );
+    }
+
+    renderInputRegisters(): React.JSX.Element {
+        return (
+            <TabInputRegisters
+                alive={this.state.alive}
+                formulaDisabled={this.state.native.params.slave === '1' || this.state.native.params.slave === 1}
+                socket={this.socket}
+                native={this.state.native as ModbusAdapterConfig}
+                instance={this.instance}
+                adapterName={this.adapterName}
+                changed={this.state.changed}
+                onChange={(attr: keyof ModbusAdapterConfig, value: any, cb?: () => void): void =>
+                    this.updateNativeValue(attr, value, cb)
+                }
+                rooms={this.state.rooms || {}}
+                themeType={this.state.themeType}
+            />
+        );
+    }
+
+    renderHoldingRegisters(): React.JSX.Element {
+        return (
+            <TabHoldingRegisters
+                alive={this.state.alive}
+                formulaDisabled={this.state.native.params.slave === '1' || this.state.native.params.slave === 1}
+                socket={this.socket}
+                native={this.state.native as ModbusAdapterConfig}
+                instance={this.instance}
+                adapterName={this.adapterName}
+                changed={this.state.changed}
+                onChange={(attr: keyof ModbusAdapterConfig, value: any, cb?: () => void): void =>
+                    this.updateNativeValue(attr, value, cb)
+                }
+                rooms={this.state.rooms || {}}
+                themeType={this.state.themeType}
+            />
+        );
+    }
+
+    renderTab(): React.JSX.Element {
+        if (this.state.selectedTab === 'general' || !this.state.selectedTab) {
+            return this.renderOptions();
+        }
+        if (this.state.selectedTab === 'discrete-inputs') {
+            return this.renderDiscreteInputs();
+        }
+        if (this.state.selectedTab === 'coils') {
+            return this.renderCoils();
+        }
+        if (this.state.selectedTab === 'input-registers') {
+            return this.renderInputRegisters();
+        }
+        if (this.state.selectedTab === 'holding-registers') {
+            return this.renderHoldingRegisters();
+        }
+        return <div>{I18n.t('Unknown tab')}</div>;
     }
 
     render(): React.JSX.Element {
@@ -191,7 +300,10 @@ class App extends GenericApp<GenericAppProps, AppState> {
                             <Tabs
                                 indicatorColor="secondary"
                                 value={this.state.selectedTab || tabs[0].name}
-                                onChange={(e, value) => this.setState({ selectedTab: value })}
+                                onChange={(e, value) => {
+                                    this.setState({ selectedTab: value });
+                                    window.localStorage.setItem(`modbus.${this.instance}.selectedTab`, value);
+                                }}
                                 variant="scrollable"
                                 scrollButtons="auto"
                                 sx={{ '&.Mui-indicator': styles.indicator }}
@@ -218,47 +330,7 @@ class App extends GenericApp<GenericAppProps, AppState> {
                             </Tabs>
                         </AppBar>
                         <div style={this.isIFrame ? styles.tabContentIFrame : styles.tabContent}>
-                            {tabs.map((tab, index) => {
-                                const TabComponent = tab.component;
-                                if (this.state.selectedTab) {
-                                    if (this.state.selectedTab !== tab.name) {
-                                        return null;
-                                    }
-                                } else if (index !== 0) {
-                                    return null;
-                                }
-
-                                return (
-                                    <TabComponent
-                                        key={tab.name}
-                                        formulaDisabled={
-                                            this.state.native.params.slave === '1' ||
-                                            this.state.native.params.slave === 1
-                                        }
-                                        common={this.common}
-                                        socket={this.socket}
-                                        native={this.state.native}
-                                        onError={(text: string | Error): void =>
-                                            this.setState({
-                                                errorText: text && typeof text !== 'string' ? text.toString() : text,
-                                            })
-                                        }
-                                        onLoad={(native: ModbusAdapterConfig): void => this.onLoadConfig(native)}
-                                        instance={this.instance}
-                                        adapterName={this.adapterName}
-                                        changed={this.state.changed}
-                                        onChange={(
-                                            attr: keyof ModbusAdapterConfig,
-                                            value: any,
-                                            cb?: () => void,
-                                        ): void => this.updateNativeValue(attr, value, cb)}
-                                        changeNative={(native: ModbusAdapterConfig): void =>
-                                            this.setState({ native, changed: this.getIsChanged(native) })
-                                        }
-                                        rooms={this.state.rooms}
-                                    />
-                                );
-                            })}
+                            {this.renderTab()}
                         </div>
                         {this.renderError()}
                         {this.renderSaveCloseButtons()}

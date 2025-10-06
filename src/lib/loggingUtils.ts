@@ -5,11 +5,11 @@
 /**
  * Create a logging wrapper that can filter connection error messages
  *
- * @param {object} originalLog - The original logger object
- * @param {boolean} disableLogging - Whether to disable connection error logging
- * @returns {object} The wrapped logger or original logger
+ * @param originalLog - The original logger object
+ * @param disableLogging - Whether to disable connection error logging
+ * @returns The wrapped logger or original logger
  */
-function createLoggingWrapper(originalLog, disableLogging) {
+export function createLoggingWrapper(originalLog: ioBroker.Logger, disableLogging?: boolean): ioBroker.Logger {
     if (!disableLogging) {
         return originalLog;
     }
@@ -18,22 +18,19 @@ function createLoggingWrapper(originalLog, disableLogging) {
     const suppressedErrorMessages = ['Socket Error', 'Client in error state'];
 
     return {
+        silly: originalLog.silly.bind(originalLog),
+        level: originalLog.level,
         debug: originalLog.debug.bind(originalLog),
         info: originalLog.info.bind(originalLog),
         warn: originalLog.warn.bind(originalLog),
-        error: (msg, ...args) => {
+        error: (msg: string | Error, ...args: any[]): void => {
             // Check if this is a connection error message that should be suppressed
             if (typeof msg === 'string' && suppressedErrorMessages.some(pattern => msg.includes(pattern))) {
                 // Suppress this error message when logging is disabled
                 return;
             }
             // Allow all other error messages through
-            originalLog.error(msg, ...args);
+            originalLog.error(msg.toString() + (args.length > 0 ? ` ${args.join(', ')}` : ''));
         },
-        log: originalLog.log ? originalLog.log.bind(originalLog) : originalLog.debug.bind(originalLog),
     };
 }
-
-module.exports = {
-    createLoggingWrapper,
-};

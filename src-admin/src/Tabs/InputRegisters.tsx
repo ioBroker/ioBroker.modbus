@@ -7,6 +7,8 @@ import type { Register, RegisterEntryType, RegisterField, RegisterType } from '.
 
 export default class InputRegisters extends BaseRegisters {
     nativeField: RegisterType = 'inputRegs';
+    nativeFieldName: 'inputRegisters' | 'holdingRegisters' | 'coils' | 'discreteInputs' = 'inputRegisters';
+    offsetName: 'inputRegsOffset' | 'holdingRegsOffset' | 'coilsOffset' | 'disInputsOffset' = 'inputRegsOffset';
 
     getFields(): RegisterField[] {
         const result: RegisterField[] = [
