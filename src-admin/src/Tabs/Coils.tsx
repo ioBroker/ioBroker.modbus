@@ -4,10 +4,11 @@ import { parseAddress } from '../Components/Utils';
 const rolesTyped: { value: string; title: string }[] = roles;
 
 import BaseRegisters from './BaseRegisters';
-import type { Register, RegisterField, RegisterType } from '../types';
+import type { RegisterField } from '../types';
+import type { Modbus } from '@iobroker/modbus';
 
 export default class Coils extends BaseRegisters {
-    nativeField: RegisterType = 'coils';
+    nativeField: Modbus.RegisterType = 'coils';
     nativeFieldName: 'inputRegisters' | 'holdingRegisters' | 'coils' | 'discreteInputs' = 'coils';
     offsetName: 'inputRegsOffset' | 'holdingRegsOffset' | 'coilsOffset' | 'disInputsOffset' = 'coilsOffset';
 
@@ -40,8 +41,8 @@ export default class Coils extends BaseRegisters {
     }
 
     addItem = (): void => {
-        const data: Register[] = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
-        const newItem: Register = {
+        const data: Modbus.Register[] = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
+        const newItem: Modbus.Register = {
             _address: '',
             address: 0,
             name: '',
@@ -52,7 +53,7 @@ export default class Coils extends BaseRegisters {
             wp: false,
             cw: false,
             isScale: false,
-        } as Register;
+        } as Modbus.Register;
 
         if (data.length) {
             const sortedData = this.getSortedData();

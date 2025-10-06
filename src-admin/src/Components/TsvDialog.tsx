@@ -9,7 +9,8 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, B
 import { Clear as ClearIcon, Save as SaveIcon, FileCopy as FileCopyIcon } from '@mui/icons-material';
 
 import { I18n, type ThemeType, Utils } from '@iobroker/adapter-react-v5';
-import type { Register, RegisterField } from '../types';
+import type { RegisterField } from '../types';
+import type { Modbus } from '@iobroker/modbus';
 
 const styles = {
     tsvEditor: {
@@ -20,9 +21,9 @@ const styles = {
 
 export default function TsvDialog(props: {
     onClose: () => void;
-    save: (data: Register[]) => void;
+    save: (data: Modbus.Register[]) => void;
     fields: RegisterField[];
-    data: Register[];
+    data: Modbus.Register[];
     themeType: ThemeType;
 }): React.JSX.Element {
     const [tsv, setTsv] = useState('');
@@ -61,8 +62,8 @@ export default function TsvDialog(props: {
             }
         }
 
-        const dataTyped: Register[] = data.map((itemValues, itemIndex) => {
-            const item: Register = {} as Register;
+        const dataTyped: Modbus.Register[] = data.map((itemValues, itemIndex) => {
+            const item: Modbus.Register = {} as Modbus.Register;
             for (const index in props.fields) {
                 if (
                     props.fields[index].type === 'select' &&

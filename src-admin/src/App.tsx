@@ -33,7 +33,7 @@ import esLang from './i18n/es.json';
 import plLang from './i18n/pl.json';
 import ukLang from './i18n/uk.json';
 import zhCnLang from './i18n/zh-cn.json';
-import type { ModbusAdapterConfig, Register } from './types';
+import type { Modbus } from '@iobroker/modbus';
 
 const styles: Record<string, any> = {
     tabContent: {
@@ -94,7 +94,7 @@ const tabs: {
     },
 ];
 
-function sort(data: Register[]): void {
+function sort(data: Modbus.Register[]): void {
     data.sort((item1, item2) => {
         item1.deviceId = parseInt(item1.deviceId as string, 10) || 1;
         item2.deviceId = parseInt(item2.deviceId as string, 10) || 1;
@@ -143,7 +143,7 @@ class App extends GenericApp<GenericAppProps, AppState> {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    onPrepareSave(native: ModbusAdapterConfig): boolean {
+    onPrepareSave(native: Modbus.ModbusAdapterConfig): boolean {
         // sort all arrays by device:address
         native.disInputs && sort(native.disInputs);
         native.coils && sort(native.coils);
@@ -175,10 +175,10 @@ class App extends GenericApp<GenericAppProps, AppState> {
             <TabConnection
                 common={this.common || ({} as ioBroker.InstanceCommon)}
                 socket={this.socket}
-                native={this.state.native as ModbusAdapterConfig}
+                native={this.state.native as Modbus.ModbusAdapterConfig}
                 instance={this.instance}
                 adapterName={this.adapterName}
-                changeNative={(native: ModbusAdapterConfig): void =>
+                changeNative={(native: Modbus.ModbusAdapterConfig): void =>
                     this.setState({ native, changed: this.getIsChanged(native) })
                 }
             />
@@ -190,10 +190,10 @@ class App extends GenericApp<GenericAppProps, AppState> {
             <TabSettings
                 common={this.common || ({} as ioBroker.InstanceCommon)}
                 socket={this.socket}
-                native={this.state.native as ModbusAdapterConfig}
+                native={this.state.native as Modbus.ModbusAdapterConfig}
                 instance={this.instance}
                 adapterName={this.adapterName}
-                changeNative={(native: ModbusAdapterConfig): void =>
+                changeNative={(native: Modbus.ModbusAdapterConfig): void =>
                     this.setState({ native, changed: this.getIsChanged(native) })
                 }
             />
@@ -206,11 +206,11 @@ class App extends GenericApp<GenericAppProps, AppState> {
                 alive={this.state.alive}
                 formulaDisabled={this.state.native.params.slave === '1' || this.state.native.params.slave === 1}
                 socket={this.socket}
-                native={this.state.native as ModbusAdapterConfig}
+                native={this.state.native as Modbus.ModbusAdapterConfig}
                 instance={this.instance}
                 adapterName={this.adapterName}
                 changed={this.state.changed}
-                onChange={(attr: keyof ModbusAdapterConfig, value: any, cb?: () => void): void =>
+                onChange={(attr: keyof Modbus.ModbusAdapterConfig, value: any, cb?: () => void): void =>
                     this.updateNativeValue(attr, value, cb)
                 }
                 rooms={this.state.rooms || {}}
@@ -225,11 +225,11 @@ class App extends GenericApp<GenericAppProps, AppState> {
                 alive={this.state.alive}
                 formulaDisabled={this.state.native.params.slave === '1' || this.state.native.params.slave === 1}
                 socket={this.socket}
-                native={this.state.native as ModbusAdapterConfig}
+                native={this.state.native as Modbus.ModbusAdapterConfig}
                 instance={this.instance}
                 adapterName={this.adapterName}
                 changed={this.state.changed}
-                onChange={(attr: keyof ModbusAdapterConfig, value: any, cb?: () => void): void =>
+                onChange={(attr: keyof Modbus.ModbusAdapterConfig, value: any, cb?: () => void): void =>
                     this.updateNativeValue(attr, value, cb)
                 }
                 rooms={this.state.rooms || {}}
@@ -244,11 +244,11 @@ class App extends GenericApp<GenericAppProps, AppState> {
                 alive={this.state.alive}
                 formulaDisabled={this.state.native.params.slave === '1' || this.state.native.params.slave === 1}
                 socket={this.socket}
-                native={this.state.native as ModbusAdapterConfig}
+                native={this.state.native as Modbus.ModbusAdapterConfig}
                 instance={this.instance}
                 adapterName={this.adapterName}
                 changed={this.state.changed}
-                onChange={(attr: keyof ModbusAdapterConfig, value: any, cb?: () => void): void =>
+                onChange={(attr: keyof Modbus.ModbusAdapterConfig, value: any, cb?: () => void): void =>
                     this.updateNativeValue(attr, value, cb)
                 }
                 rooms={this.state.rooms || {}}
@@ -263,11 +263,11 @@ class App extends GenericApp<GenericAppProps, AppState> {
                 alive={this.state.alive}
                 formulaDisabled={this.state.native.params.slave === '1' || this.state.native.params.slave === 1}
                 socket={this.socket}
-                native={this.state.native as ModbusAdapterConfig}
+                native={this.state.native as Modbus.ModbusAdapterConfig}
                 instance={this.instance}
                 adapterName={this.adapterName}
                 changed={this.state.changed}
-                onChange={(attr: keyof ModbusAdapterConfig, value: any, cb?: () => void): void =>
+                onChange={(attr: keyof Modbus.ModbusAdapterConfig, value: any, cb?: () => void): void =>
                     this.updateNativeValue(attr, value, cb)
                 }
                 rooms={this.state.rooms || {}}

@@ -3,10 +3,11 @@ import roles from '../data/roles.json';
 import { parseAddress } from '../Components/Utils';
 
 import BaseRegisters from './BaseRegisters';
-import type { Register, RegisterEntryType, RegisterField, RegisterType } from '../types';
+import type { RegisterField } from '../types';
+import type { Modbus } from '@iobroker/modbus';
 
 export default class InputRegisters extends BaseRegisters {
-    nativeField: RegisterType = 'inputRegs';
+    nativeField: Modbus.RegisterType = 'inputRegs';
     nativeFieldName: 'inputRegisters' | 'holdingRegisters' | 'coils' | 'discreteInputs' = 'inputRegisters';
     offsetName: 'inputRegsOffset' | 'holdingRegsOffset' | 'coilsOffset' | 'disInputsOffset' = 'inputRegsOffset';
 
@@ -42,8 +43,8 @@ export default class InputRegisters extends BaseRegisters {
     }
 
     addItem = (): void => {
-        const data: Register[] = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
-        const newItem: Register = {
+        const data: Modbus.Register[] = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
+        const newItem: Modbus.Register = {
             _address: '',
             address: 0,
             name: '',
@@ -58,7 +59,7 @@ export default class InputRegisters extends BaseRegisters {
             room: '',
             cw: false,
             isScale: false,
-        } as Register;
+        } as Modbus.Register;
         if (data.length) {
             const sortedData = this.getSortedData();
             const lastItem = sortedData[sortedData.length - 1].item;
@@ -94,7 +95,7 @@ export default class InputRegisters extends BaseRegisters {
         this.props.onChange(this.nativeField, data);
     };
 
-    getDisable = (index: number, name: keyof Register): boolean => {
+    getDisable = (index: number, name: keyof Modbus.Register): boolean => {
         if (name === 'len') {
             if (
                 !['string', 'stringle', 'string16', 'string16le', 'rawhex'].includes(
@@ -107,13 +108,13 @@ export default class InputRegisters extends BaseRegisters {
         return false;
     };
 
-    changeParam = (index: number, name: keyof Register, value: boolean | string | number): void => {
-        const data: Register[] = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
+    changeParam = (index: number, name: keyof Modbus.Register, value: boolean | string | number): void => {
+        const data: Modbus.Register[] = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
         (data[index] as unknown as Record<string, string | boolean | number>)[name] = value;
         if (name === 'type') {
             if (
                 ['', 'uint16be', 'uint16le', 'int16be', 'int16le', 'uint8be', 'uint8le', 'int8be', 'int8le'].includes(
-                    value as RegisterEntryType,
+                    value as Modbus.RegisterEntryType,
                 )
             ) {
                 data[index].len = 1;
@@ -137,11 +138,11 @@ export default class InputRegisters extends BaseRegisters {
                     'string16',
                     'string16le',
                     'rawhex',
-                ].includes(value as RegisterEntryType)
+                ].includes(value as Modbus.RegisterEntryType)
             ) {
                 data[index].len = 2;
             }
-            if (['uint64be', 'uint64le', 'doublebe', 'doublele'].includes(value as RegisterEntryType)) {
+            if (['uint64be', 'uint64le', 'doublebe', 'doublele'].includes(value as Modbus.RegisterEntryType)) {
                 data[index].len = 4;
             }
         }

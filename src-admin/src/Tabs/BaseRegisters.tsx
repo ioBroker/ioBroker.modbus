@@ -4,14 +4,16 @@ import { Paper } from '@mui/material';
 
 import RegisterTable from '../Components/RegisterTable';
 import { parseAddress, direct2nonDirect, alias2address } from '../Components/Utils';
-import type { ModbusAdapterConfig, Register, RegisterField, RegisterType } from '../types';
+import type { RegisterField } from '../types';
+import type { Modbus } from '@iobroker/modbus';
+
 import type { AdminConnection, ThemeType } from '@iobroker/adapter-react-v5';
 
 interface BaseRegistersProps {
-    native: ModbusAdapterConfig;
+    native: Modbus.ModbusAdapterConfig;
     instance: number;
     adapterName: string;
-    onChange: (field: string, value: Register[]) => void;
+    onChange: (field: string, value: Modbus.Register[]) => void;
     changed?: boolean;
     socket: AdminConnection;
     rooms?: Record<string, ioBroker.EnumObject>;
@@ -22,12 +24,12 @@ interface BaseRegistersProps {
 
 interface BaseRegistersState {
     order: 'asc' | 'desc';
-    orderBy: keyof Register | '$index';
+    orderBy: keyof Modbus.Register | '$index';
     values: { [id: string]: ioBroker.State | null | undefined };
 }
 
 export default abstract class BaseRegisters extends Component<BaseRegistersProps, BaseRegistersState> {
-    protected nativeField: RegisterType;
+    protected nativeField: Modbus.RegisterType;
     protected nativeFieldName: 'inputRegisters' | 'holdingRegisters' | 'coils' | 'discreteInputs';
     protected offsetName: 'inputRegsOffset' | 'holdingRegsOffset' | 'coilsOffset' | 'disInputsOffset';
     protected fields: RegisterField[];
@@ -36,7 +38,7 @@ export default abstract class BaseRegisters extends Component<BaseRegistersProps
         super(props);
         this.state = {
             order: (window.localStorage.getItem('Modbus.order') as 'asc' | 'desc') || 'asc',
-            orderBy: (window.localStorage.getItem('Modbus.orderBy') as keyof Register) || '_address',
+            orderBy: (window.localStorage.getItem('Modbus.orderBy') as keyof Modbus.Register) || '_address',
             values: {},
         };
     }
@@ -105,8 +107,8 @@ export default abstract class BaseRegisters extends Component<BaseRegistersProps
         return address;
     }
 
-    changeParam = (index: number, name: keyof Register, value: string | boolean | number): void => {
-        const data: Register[] = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
+    changeParam = (index: number, name: keyof Modbus.Register, value: string | boolean | number): void => {
+        const data: Modbus.Register[] = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
         (data[index] as unknown as Record<string, string | boolean | number>)[name] = value;
         if (name === '_address') {
             data[index].address = this.addressToCanonical(value as string);
@@ -123,24 +125,24 @@ export default abstract class BaseRegisters extends Component<BaseRegistersProps
         this.props.onChange(this.nativeField, data);
     };
 
-    changeData = (data: Register[]): void => {
+    changeData = (data: Modbus.Register[]): void => {
         this.props.onChange(this.nativeField, data);
     };
 
     // eslint-disable-next-line class-methods-use-this
-    getDisable = (_index: number, _name: keyof Register): boolean => {
+    getDisable = (_index: number, _name: keyof Modbus.Register): boolean => {
         return false;
     };
 
     getSortedData = (
-        data?: Register[],
-        orderBy?: keyof Register | '$index',
+        data?: Modbus.Register[],
+        orderBy?: keyof Modbus.Register | '$index',
         order?: 'asc' | 'desc',
-    ): { item: Register; $index: number }[] => {
+    ): { item: Modbus.Register; $index: number }[] => {
         data ||= this.props.native[this.nativeField];
         orderBy ||= this.state.orderBy;
         order ||= this.state.order;
-        const sortedData: { item: Register; $index: number }[] = [];
+        const sortedData: { item: Modbus.Register; $index: number }[] = [];
         data.forEach((item, index) => {
             sortedData[index] = { item, $index: index };
         });

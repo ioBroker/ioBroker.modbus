@@ -22,7 +22,8 @@ import { Edit as EditIcon, Info as IconInfo } from '@mui/icons-material';
 import { type AdminConnection, I18n } from '@iobroker/adapter-react-v5';
 
 import connectionInputs from '../data/optionsConnection.json';
-import type { OptionField, ModbusAdapterConfig } from '../types';
+import type { OptionField } from '../types';
+import type { Modbus } from '@iobroker/modbus';
 
 const connectionInputsTyped = connectionInputs as OptionField[];
 
@@ -71,7 +72,7 @@ function text2react(text: string): React.JSX.Element[] | string {
 
 interface ConnectionProps {
     common: ioBroker.InstanceCommon;
-    native: ModbusAdapterConfig;
+    native: Modbus.ModbusAdapterConfig;
     instance: number;
     adapterName: string;
     socket: AdminConnection;
@@ -491,7 +492,7 @@ export default class Connection extends Component<ConnectionProps, ConnectionSta
     }
 
     changeParam(name: OptionField['name'], value: string | number | boolean): void {
-        const native: ModbusAdapterConfig = JSON.parse(JSON.stringify(this.props.native));
+        const native: Modbus.ModbusAdapterConfig = JSON.parse(JSON.stringify(this.props.native));
         (native.params as any)[name] = value;
         if (name === 'slave') {
             if (value === '1' || value === 1) {
