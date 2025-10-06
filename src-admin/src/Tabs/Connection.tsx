@@ -10,7 +10,6 @@ import {
     FormControl,
     InputLabel,
     InputAdornment,
-    Grid2 as Grid,
     Paper,
     Box,
     FormHelperText,
@@ -22,13 +21,10 @@ import { Edit as EditIcon, Info as IconInfo } from '@mui/icons-material';
 
 import { type AdminConnection, I18n } from '@iobroker/adapter-react-v5';
 
-import { address2alias, nonDirect2direct, direct2nonDirect, alias2address } from '../Components/Utils';
 import connectionInputs from '../data/optionsConnection.json';
-import generalInputs from '../data/optionsGeneral.json';
-import type { OptionField, ModbusAdapterConfig, RegisterType } from '../types';
+import type { OptionField, ModbusAdapterConfig } from '../types';
 
 const connectionInputsTyped = connectionInputs as OptionField[];
-const generalInputsTyped = generalInputs as OptionField[];
 
 const styles: Record<string, React.CSSProperties> = {
     optionsSelect: {
@@ -73,7 +69,7 @@ function text2react(text: string): React.JSX.Element[] | string {
     return lines.map((line, i) => <p key={i}>{line}</p>);
 }
 
-interface OptionsProps {
+interface ConnectionProps {
     common: ioBroker.InstanceCommon;
     native: ModbusAdapterConfig;
     instance: number;
@@ -82,20 +78,30 @@ interface OptionsProps {
     changeNative: (native: ioBroker.AdapterConfig) => void;
 }
 
-interface OptionsState {
+interface ConnectionState {
     ports: { value: string; title: string }[] | null;
     customPort: string | boolean;
     ips: { value: string; title: string }[] | null;
+    certificates: {
+        priv: string[];
+        pub: string[];
+        ca: string[];
+    };
 }
 
-export class Options extends Component<OptionsProps, OptionsState> {
-    constructor(props: OptionsProps) {
+export default class Connection extends Component<ConnectionProps, ConnectionState> {
+    constructor(props: ConnectionProps) {
         super(props);
 
         this.state = {
             ports: null,
             customPort: false,
             ips: null,
+            certificates: {
+                priv: [],
+                pub: [],
+                ca: [],
+            },
         };
     }
 
@@ -150,13 +156,37 @@ export class Options extends Component<OptionsProps, OptionsState> {
         }
     }
 
-    componentDidMount(): void {
+    async componentDidMount(): Promise<void> {
         if (this.props.native.params.type === 'serial') {
             this.readPorts().catch(e => console.error(`Cannot read ports: ${e}`));
         }
         if (this.props.native.params.type !== 'serial' && this.props.native.params.slave === '1') {
             this.readIPs().catch(e => console.error(`Cannot read IPs: ${e}`));
         }
+        const certs = await this.props.socket.getObject('system.certificates');
+        const certificates: {
+            priv: string[];
+            pub: string[];
+            ca: string[];
+        } = {
+            priv: [],
+            pub: [],
+            ca: [],
+        };
+        if (certs?.native?.certificates) {
+            Object.keys(certs.native.certificates).forEach(certName => {
+                Object.keys(certificates).forEach((attr: 'priv' | 'pub' | 'ca'): void => {
+                    if (certName.toLowerCase().includes(attr)) {
+                        certificates[attr].push(certName);
+                    } else if (certs.native.certificates[certName].includes('CERTIFICATE') && attr === 'pub') {
+                        certificates[attr].push(certName);
+                    } else if (certs.native.certificates[certName].includes('PRIVATE') && attr === 'priv') {
+                        certificates[attr].push(certName);
+                    }
+                });
+            });
+        }
+        this.setState({ certificates });
     }
 
     inputDisabled(input: OptionField): boolean {
@@ -167,12 +197,6 @@ export class Options extends Component<OptionsProps, OptionsState> {
             return true;
         }
         if (input.name === 'multiDeviceId' && this.props.native.params.slave === '1') {
-            return true;
-        }
-        if (input.name === 'doNotUseWriteMultipleRegisters' && this.props.native.params.onlyUseWriteMultipleRegisters) {
-            return true;
-        }
-        if (input.name === 'onlyUseWriteMultipleRegisters' && this.props.native.params.doNotUseWriteMultipleRegisters) {
             return true;
         }
         return false;
@@ -188,7 +212,7 @@ export class Options extends Component<OptionsProps, OptionsState> {
         }
 
         // Only show SSL options when tcp-ssl is selected
-        if (['sslEnabled', 'sslCertPath', 'sslKeyPath', 'sslCaPath', 'sslRejectUnauthorized'].includes(input.name)) {
+        if (['certPublic', 'certChained', 'certPrivate', 'sslAllowSelfSigned'].includes(input.name)) {
             return this.props.native.params.type === 'tcp-ssl';
         }
 
@@ -326,6 +350,46 @@ export class Options extends Component<OptionsProps, OptionsState> {
                             </Box>
                         );
                     }
+                    if (input.type === 'cert') {
+                        return (
+                            <Box
+                                style={styles.optionContainer}
+                                key={input.name}
+                            >
+                                <FormControl style={{ marginRight: 8 }}>
+                                    <InputLabel>{I18n.t(input.title)}</InputLabel>
+                                    <Select
+                                        variant="standard"
+                                        style={styles.optionsSelect}
+                                        disabled={this.inputDisabled(input)}
+                                        value={this.props.native.params[input.name] || ''}
+                                        onChange={e => this.changeParam(input.name, e.target.value)}
+                                    >
+                                        {this.state.certificates[
+                                            input.name === 'certPublic'
+                                                ? 'pub'
+                                                : input.name === 'certPrivate'
+                                                  ? 'priv'
+                                                  : 'ca'
+                                        ]?.map(option => (
+                                            <MenuItem
+                                                key={option}
+                                                value={option}
+                                            >
+                                                {option}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                {input.dimension ? I18n.t(input.dimension) : null}
+                                {input.tooltip ? (
+                                    <Tooltip title={text2react(I18n.t(input.tooltip))}>
+                                        <IconInfo />
+                                    </Tooltip>
+                                ) : null}
+                            </Box>
+                        );
+                    }
                     if (input.type === 'ports') {
                         return (
                             <Box
@@ -447,57 +511,15 @@ export class Options extends Component<OptionsProps, OptionsState> {
             if (value === 'serial' && this.props.native.params.slave === '1') {
                 this.readIPs().catch(e => console.error(`Cannot read IPs: ${e}`));
             }
-        } else if (name === 'showAliases') {
-            ['disInputs', 'inputRegs', 'holdingRegs', 'coils'].forEach((nativeParam: RegisterType): void => {
-                native[nativeParam].forEach(item => {
-                    if (value) {
-                        item._address = address2alias(nativeParam, item._address);
-                        if (native.params.directAddresses) {
-                            item._address = nonDirect2direct(nativeParam, item._address);
-                        }
-                    } else {
-                        if (native.params.directAddresses) {
-                            item._address = direct2nonDirect(nativeParam, item._address);
-                        }
-                        item._address = alias2address(nativeParam, item._address);
-                    }
-                });
-            });
-        } else if (name === 'directAddresses' && native.params.showAliases) {
-            ['disInputs', 'coils'].forEach((nativeParam: RegisterType): void => {
-                native[nativeParam as 'disInputs' | 'coils'].forEach(item => {
-                    if (value) {
-                        item._address = nonDirect2direct(nativeParam, item._address);
-                    } else {
-                        item._address = direct2nonDirect(nativeParam, item._address);
-                    }
-                });
-            });
         }
         this.props.changeNative(native);
     }
 
     render(): React.JSX.Element {
         return (
-            <form style={{ width: '100%', minHeight: '100%' }}>
-                <Grid
-                    container
-                    spacing={2}
-                >
-                    <Grid
-                        size={{ xs: 12, md: 6 }}
-                        style={styles.optionsGrid}
-                    >
-                        {this.getInputsBlock(connectionInputsTyped, 'Connection parameters')}
-                    </Grid>
-                    <Grid
-                        size={{ xs: 12, md: 6 }}
-                        style={styles.optionsGrid}
-                    >
-                        {this.getInputsBlock(generalInputsTyped, 'General')}
-                    </Grid>
-                </Grid>
-            </form>
+            <div style={{ width: '100%', minHeight: '100%' }}>
+                {this.getInputsBlock(connectionInputsTyped, 'Connection parameters')}
+            </div>
         );
     }
 }

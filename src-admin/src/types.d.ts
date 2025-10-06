@@ -21,6 +21,8 @@ export type RegisterEntryType =
     | 'int32le'
     | 'int32sw'
     | 'int32sb'
+    | 'int64be'
+    | 'int64le'
     | 'floatbe'
     | 'floatle'
     | 'floatsw'
@@ -29,6 +31,7 @@ export type RegisterEntryType =
     | 'uint64le'
     | 'doublebe'
     | 'doublele';
+
 export interface Register {
     address: number;
     _address: string | number;
@@ -50,48 +53,59 @@ export interface Register {
     offset?: number | string;
     isScale?: boolean;
 }
+
+export interface RegisterInternal extends Omit<Register, '_address' | 'len' | 'factor' | 'offset'> {
+    _address: number;
+    id: string;
+    fullId: string;
+    len: number;
+    offset: number;
+    factor: number;
+}
 export type RegisterType = 'disInputs' | 'coils' | 'inputRegs' | 'holdingRegs';
+export type ModbusTransport = 'tcp' | 'serial' | 'tcprtu' | 'tcp-ssl';
 
 export interface ModbusAdapterConfig extends ioBroker.AdapterConfig {
     params: {
-        type: 'tcp' | 'serial' | 'tcprtu' | 'tcp-ssl';
+        type: ModbusTransport;
         bind: string;
         port: number | string;
         comName: string;
         baudRate: number;
-        dataBits: number;
-        stopBits: number;
+        dataBits: 5 | 6 | 7 | 8 | string;
+        stopBits: 1 | 2 | string;
         parity: 'none' | 'even' | 'mark' | 'odd' | 'space';
-        deviceId: number;
-        timeout: number;
+        deviceId?: number | string | null;
+        timeout: number | string;
         slave: '0' | '1';
-        poll: number;
-        recon: number;
-        keepAliveInterval: number;
-        maxBlock: number;
-        maxBoolBlock: number;
-        multiDeviceId: boolean;
-        pulsetime: number;
-        waitTime: number;
-        disInputsOffset: number;
-        coilsOffset: number;
-        inputRegsOffset: number;
-        holdingRegsOffset: number;
-        showAliases: true;
-        directAddresses: boolean;
-        doNotIncludeAdrInId: boolean;
-        preserveDotsInId: boolean;
-        round: number;
-        doNotRoundAddressToWord: boolean;
-        doNotUseWriteMultipleRegisters: boolean;
-        onlyUseWriteMultipleRegisters: boolean;
-        writeInterval: number;
-        readInterval: number;
+        poll: number | string;
+        recon: number | string;
+        keepAliveInterval: number | string;
+        maxBlock: number | string;
+        maxBoolBlock: number | string;
+        multiDeviceId: boolean | 'true';
+        pulsetime: number | string;
+        waitTime: number | string;
+        disInputsOffset: number | string;
+        coilsOffset: number | string;
+        inputRegsOffset: number | string;
+        holdingRegsOffset: number | string;
+        showAliases: true | 'true';
+        directAddresses: boolean | 'true';
+        doNotIncludeAdrInId: boolean | 'true';
+        preserveDotsInId: boolean | 'true';
+        round: number | string;
+        alwaysUpdate: boolean;
+        doNotRoundAddressToWord: boolean | 'true';
+        doNotUseWriteMultipleRegisters: boolean | 'true';
+        onlyUseWriteMultipleRegisters: boolean | 'true';
+        writeInterval: number | string;
+        readInterval: number | string;
         disableLogging: boolean;
         certPrivate: string;
         certPublic: string;
         certChained: string;
-        sslRejectUnauthorized: true;
+        sslAllowSelfSigned: true;
     };
     disInputs: Register[];
     coils: Register[];
@@ -101,7 +115,7 @@ export interface ModbusAdapterConfig extends ioBroker.AdapterConfig {
 
 export interface OptionField {
     name: keyof ModbusAdapterConfig['params'];
-    type: 'checkbox' | 'text' | 'number' | 'select' | 'ports';
+    type: 'checkbox' | 'text' | 'number' | 'select' | 'ports' | 'cert';
     dimension?: string;
     help?: string;
     tooltip?: string;
@@ -121,4 +135,91 @@ export interface RegisterField {
     sorted?: boolean;
     tooltip?: string;
     options?: Array<{ value: string; title: string }>;
+}
+
+interface DeviceOption {
+    fullIds: string[];
+    addressHigh: number;
+    addressLow: number;
+    length: number;
+    offset: number;
+    config: RegisterInternal[];
+}
+export interface DeviceSlaveOption extends DeviceOption {
+    changed: boolean;
+    values: (number | boolean)[];
+    mapping: { [address: number]: string };
+
+    lastStart?: number;
+    lastEnd?: number;
+}
+export interface DeviceMasterOption extends DeviceOption {
+    deviceId: number;
+    blocks: { start: number; count: number; startIndex: number; endIndex: number }[];
+    // IDs of the objects that must be cyclic written (full ID)
+    cyclicWrite?: string[];
+}
+export type MasterDevice = {
+    disInputs: DeviceMasterOption;
+    coils: DeviceMasterOption;
+    inputRegs: DeviceMasterOption;
+    holdingRegs: DeviceMasterOption;
+};
+export type SlaveDevice = {
+    disInputs: DeviceSlaveOption;
+    coils: DeviceSlaveOption;
+    inputRegs: DeviceSlaveOption;
+    holdingRegs: DeviceSlaveOption;
+};
+
+export interface Options {
+    config: {
+        type: ModbusTransport;
+        slave: boolean;
+        alwaysUpdate: boolean;
+        round: number;
+        timeout: number;
+        defaultDeviceId: number;
+        doNotIncludeAdrInId: boolean;
+        preserveDotsInId: boolean;
+        writeInterval: number;
+        doNotUseWriteMultipleRegisters: boolean;
+        onlyUseWriteMultipleRegisters: boolean;
+        multiDeviceId?: boolean;
+
+        // Only for master
+        poll?: number;
+        recon?: number;
+        maxBlock?: number;
+        maxBoolBlock?: number;
+        pulseTime?: number;
+        waitTime?: number;
+        readInterval?: number;
+        keepAliveInterval?: number;
+        disableLogging?: boolean;
+
+        tcp?: {
+            port: number;
+            bind?: string;
+        };
+
+        ssl?: {
+            rejectUnauthorized: boolean;
+            key: string;
+            cert: string;
+            ca?: string;
+        };
+
+        serial?: {
+            comName: string;
+            baudRate: number;
+            dataBits: 5 | 6 | 7 | 8;
+            stopBits: 1 | 2;
+            parity: 'none' | 'even' | 'mark' | 'odd' | 'space';
+        };
+    };
+    devices: {
+        [deviceId: number]: MasterDevice | SlaveDevice;
+    };
+    objects: { [id: string]: ioBroker.StateObject | null | undefined };
 }

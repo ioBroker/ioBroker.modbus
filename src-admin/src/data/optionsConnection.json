@@ -189,33 +189,23 @@
         ]
     },
     {
-        "name": "sslEnabled",
+        "name": "certPublic",
+        "type": "cert",
+        "title": "SSL Certificate"
+    },
+    {
+        "name": "certPrivate",
+        "type": "cert",
+        "title": "SSL Private key"
+    },
+    {
+        "name": "certChained",
+        "type": "cert",
+        "title": "SSL CA Certificate"
+    },
+    {
+        "name": "sslAllowSelfSigned",
         "type": "checkbox",
-        "title": "Enable SSL/TLS",
-        "newLine": true
-    },
-    {
-        "name": "sslCertPath",
-        "type": "text",
-        "title": "SSL Certificate file path",
-        "help": "Path to SSL certificate file (PEM format)"
-    },
-    {
-        "name": "sslKeyPath",
-        "type": "text",
-        "title": "SSL Private key file path",
-        "help": "Path to SSL private key file (PEM format)"
-    },
-    {
-        "name": "sslCaPath",
-        "type": "text",
-        "title": "SSL CA Certificate file path",
-        "help": "Path to CA certificate file (PEM format) - optional"
-    },
-    {
-        "name": "sslRejectUnauthorized",
-        "type": "checkbox",
-        "title": "Reject unauthorized certificates",
-        "help": "Uncheck to allow self-signed certificates"
+        "title": "Allow self-signed certificates"
     }
 ]

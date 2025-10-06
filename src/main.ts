@@ -329,7 +329,7 @@ export class ModbusAdapter extends Adapter {
         }
     }
 
-    prepareConfig(): Options {
+    async prepareConfig(): Promise<Options> {
         const params = this.config.params;
 
         const options: Options = {
@@ -394,12 +394,21 @@ export class ModbusAdapter extends Adapter {
 
             // Add SSL configuration for tcp-ssl type
             if (params.type === 'tcp-ssl') {
-                options.config.ssl = {
-                    rejectUnauthorized: params.sslRejectUnauthorized !== false,
-                    key: params.certPrivate,
-                    cert: params.certPublic,
-                    ca: params.certChained,
-                };
+                try {
+                    const [certificates] = await this.getCertificatesAsync(
+                        this.config.params.certPublic,
+                        this.config.params.certPrivate,
+                        this.config.params.certChained,
+                    );
+                    options.config.ssl = {
+                        rejectUnauthorized: !params.sslAllowSelfSigned,
+                        key: certificates.key,
+                        cert: certificates.cert,
+                        ca: certificates.ca,
+                    };
+                } catch (err) {
+                    this.log.error(`Cannot get certificates: ${err}`);
+                }
             }
         } else {
             options.config.serial = {
@@ -912,7 +921,7 @@ export class ModbusAdapter extends Adapter {
     }
 
     async parseConfig(): Promise<Options> {
-        const options = this.prepareConfig();
+        const options = await this.prepareConfig();
         const params = this.config.params;
 
         // not for master or slave

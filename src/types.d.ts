@@ -105,7 +105,7 @@ export interface ModbusAdapterConfig extends ioBroker.AdapterConfig {
         certPrivate: string;
         certPublic: string;
         certChained: string;
-        sslRejectUnauthorized?: boolean;
+        sslAllowSelfSigned: true;
     };
     disInputs: Register[];
     coils: Register[];
