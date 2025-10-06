@@ -15,11 +15,12 @@ import {
     type GenericAppState,
 } from '@iobroker/adapter-react-v5';
 
-import { Options as TabOptions } from './Tabs/Options';
+import TabSettings from './Tabs/Settings';
 import TabInputRegisters from './Tabs/InputRegisters';
 import TabHoldingRegisters from './Tabs/HoldingRegisters';
 import TabDiscreteInputs from './Tabs/DiscreteInputs';
 import TabCoils from './Tabs/Coils';
+import TabConnection from './Tabs/Connection';
 
 import enLang from './i18n/en.json';
 import deLang from './i18n/de.json';
@@ -60,8 +61,12 @@ const tabs: {
     tooltip?: string;
 }[] = [
     {
-        name: 'general',
-        title: 'General',
+        name: 'connection',
+        title: 'Connection',
+    },
+    {
+        name: 'settings',
+        title: 'Settings',
     },
     {
         name: 'discrete-inputs',
@@ -159,15 +164,30 @@ class App extends GenericApp<GenericAppProps, AppState> {
         await this.socket.subscribeState(`system.adapter.modbus.${this.instance}.alive`, this.onAliveChanged);
     }
 
-    onAliveChanged = (id: string, state: ioBroker.State | null | undefined): void => {
+    onAliveChanged = (_id: string, state: ioBroker.State | null | undefined): void => {
         if (!!state?.val !== this.state.alive) {
             this.setState({ alive: !!state?.val });
         }
     };
 
-    renderOptions(): React.JSX.Element {
+    renderConnection(): React.JSX.Element {
         return (
-            <TabOptions
+            <TabConnection
+                common={this.common || ({} as ioBroker.InstanceCommon)}
+                socket={this.socket}
+                native={this.state.native as ModbusAdapterConfig}
+                instance={this.instance}
+                adapterName={this.adapterName}
+                changeNative={(native: ModbusAdapterConfig): void =>
+                    this.setState({ native, changed: this.getIsChanged(native) })
+                }
+            />
+        );
+    }
+
+    renderSettings(): React.JSX.Element {
+        return (
+            <TabSettings
                 common={this.common || ({} as ioBroker.InstanceCommon)}
                 socket={this.socket}
                 native={this.state.native as ModbusAdapterConfig}
@@ -257,8 +277,11 @@ class App extends GenericApp<GenericAppProps, AppState> {
     }
 
     renderTab(): React.JSX.Element {
-        if (this.state.selectedTab === 'general' || !this.state.selectedTab) {
-            return this.renderOptions();
+        if (this.state.selectedTab === 'connection' || !this.state.selectedTab) {
+            return this.renderConnection();
+        }
+        if (this.state.selectedTab === 'settings') {
+            return this.renderSettings();
         }
         if (this.state.selectedTab === 'discrete-inputs') {
             return this.renderDiscreteInputs();
@@ -300,7 +323,7 @@ class App extends GenericApp<GenericAppProps, AppState> {
                             <Tabs
                                 indicatorColor="secondary"
                                 value={this.state.selectedTab || tabs[0].name}
-                                onChange={(e, value) => {
+                                onChange={(_e, value) => {
                                     this.setState({ selectedTab: value });
                                     window.localStorage.setItem(`modbus.${this.instance}.selectedTab`, value);
                                 }}

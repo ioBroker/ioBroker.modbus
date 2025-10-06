@@ -323,6 +323,7 @@ There are some programs in folder `test` to test the TCP communication:
 * (copilot) Fixes memory leak
 * (copilot) Added option to disable connection error logging to avoid log spam when devices are unavailable
 * (bluefox) Show values directly in configuration
+* (bluefox) Implemented TLS connection (master)
 
 ### 6.4.0 (2024-11-22)
 * (bluefox) Moved GUI compilation to vite
