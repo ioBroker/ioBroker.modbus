@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "6.4.0",
+    "version": "7.0.0",
     "news": {
+      "7.0.0": {
+        "en": "Improved Modbus error handling and fault tolerance - continue polling working devices even when others fail\nFixes memory leak\nAdded option to disable connection error logging to avoid log spam when devices are unavailable\nShow values directly in configuration\nImplemented TLS connection (master)",
+        "de": "Verbesserte Modbus-Fehlerhandling und Fehlertoleranz - auch bei Ausfall anderer Arbeitsgeräte weiter verschmutzen\nBehebt Speicherleck\nOption hinzugefügt, um Verbindungsfehler zu deaktivieren Log Spam zu vermeiden, wenn Geräte nicht verfügbar sind\nWerte direkt in Konfiguration anzeigen\nTLS-Verbindung (Master)",
+        "ru": "Улучшенная обработка ошибок Modbus и отказоустойчивость - продолжайте опрос рабочих устройств, даже когда другие терпят неудачу\nИсправление утечки памяти\nДобавлена опция отключения регистрации ошибок подключения, чтобы избежать спама при недоступности устройств\nПоказать значения непосредственно в конфигурации\nРеализованное соединение TLS (master)",
+        "pt": "Manuseamento de erros Modbus melhorado e tolerância a falhas - continue pesquisando dispositivos de trabalho mesmo quando outros falham\nCorrige a fuga de memória\nOpção adicionada para desativar o registro de erros de conexão para evitar spam de log quando os dispositivos não estiverem disponíveis\nMostrar os valores directamente na configuração\nConexão TLS implementada (mestre)",
+        "nl": "Verbeterde Modbus fout behandeling en fouttolerantie - blijven peilen werkende apparaten, zelfs als anderen falen\nHerstelt geheugenlek\nToegevoegde optie voor het uitschakelen van verbinding fout logging om log spam te voorkomen wanneer apparaten niet beschikbaar zijn\nToon waarden direct in configuratie\nUitvoerde TLS-verbinding (master)",
+        "fr": "Amélioration de la gestion des erreurs Modbus et de la tolérance aux défauts - continuer les dispositifs de travail des sondages même lorsque d'autres échouent\nCorrige la fuite de mémoire\nAjout d'une option pour désactiver l'enregistrement des erreurs de connexion pour éviter le log spam lorsque les appareils ne sont pas disponibles\nAfficher les valeurs directement dans la configuration\nConnexion TLS mise en œuvre (maître)",
+        "it": "Miglioramento della gestione degli errori Modbus e della tolleranza ai guasti - continuare a inquinare i dispositivi di lavoro anche quando altri falliscono\nRisolve la perdita di memoria\nAggiunta opzione per disabilitare l'errore di connessione registrazione per evitare lo spam di registro quando i dispositivi non sono disponibili\nMostra i valori direttamente nella configurazione\nCollegamento TLS implementato (master)",
+        "es": "Mejor manejo de errores Modbus y tolerancia a fallas - continuar encuestando dispositivos de trabajo incluso cuando otros fallan\nFija la fuga de memoria\nOpción adicional para deshabilitar la conexión de registro de errores para evitar el spam de registro cuando los dispositivos no están disponibles\nMostrar valores directamente en la configuración\nImplemented TLS connection (master)",
+        "pl": "Ulepszona obsługa błędów i tolerancja błędów w modbusie - kontynuuj sondowanie urządzeń roboczych nawet wtedy, gdy inne zawiodą\nFixes wyciek pamięci\nDodano opcję wyłączenia logowania błędów połączenia, aby uniknąć spamu logowania, gdy urządzenia są niedostępne\nPokaż wartości bezpośrednio w konfiguracji\nWdrożone połączenie TLS (master)",
+        "uk": "Удосконалено процес обробки помилок Modbus та толерантності до несправностей - продовжуйте опитування робочих пристроїв навіть коли інші не можуть\nВиправлення витоку пам'яті\nДодана можливість відхилити помилки з'єднання, щоб уникнути спаму в журналі, коли пристрої недоступні\nПоказати значення безпосередньо в конфігурації\nРеалізовано підключення TLS (майстер)",
+        "zh-cn": "改进 Modbus 错误处理和容错度 -- -- 即使在其他故障时继续投票工作装置\n修复内存泄漏\n添加了禁用连接错误记录的选项, 以避免设备无法使用时的日志垃圾邮件\n在配置中直接显示值\n已执行 TLS 连接( 主机)"
+      },
       "6.4.0": {
         "en": "Moved GUI compilation to vite\nAdded error message if the response length is invalid",
         "de": "Versetzte GUI-Compilation zu vite\nFehlermeldung hinzugefügt, wenn die Antwortlänge ungültig ist",
@@ -80,19 +93,6 @@
         "pl": "Ostrzeżenie dotyczące współczynnika skali z powodu nieprawidłowego sprawdzenia: \"Obliczanie skaleFactor, który jest oparty na innym skaleFactor wydaje się dziwne\"",
         "uk": "Попередження про фактор масштабу за рахунок неправильної перевірки: «Калкуляція масштабуФактора, який базується на іншому масштабіФактор здається дивним»",
         "zh-cn": "因检查不正确而显示比例表因素的警告 : \"计算一个尺度的Factor 它基于另一个尺度的Factor似乎很奇怪。\""
-      },
-      "6.2.0": {
-        "en": "String based on 16 bit values big endian as well as little endian\nRaw data as a hex string\nFix issue stringle was always converted to number for slave\nEnable formula for strings and hex strings",
-        "de": "String basierend auf 16 Bit Werten große Endian sowie wenig Endian\nDaten als Hexenzeichen\nFix Problem stringle wurde immer in Nummer für Slave umgewandelt\nFormel aktivieren für Strings und Hexenstrings",
-        "ru": "Стринг основан на 16-битных значениях большого кондиана, а также маленького кондиана\nСырные данные как строка гекса\nФикс-лидер всегда был конвертирован в число для раба\nВключить формулу для строк и строк",
-        "pt": "String baseado em 16 bits valores grande endian, bem como pouco endian\nDados brutos como uma cadeia hex\nCorrigir problema stringle foi sempre convertido em número para escravo\nHabilite a fórmula para strings e caracteres hex",
-        "nl": "Tekenreeks gebaseerd op 16 bit waarden grote endiaan en kleine endiaan\nRaw data als hex string\nFix probleem stringle werd altijd omgezet naar nummer voor slave\nFormule voor tekenreeksen en hextekenreeksen inschakelen",
-        "fr": "String basé sur les valeurs 16 bits grand endian ainsi que peu d'endian\nDonnées brutes comme une chaîne de caractères hexagonaux\nCorrection de la chaîne d'émission a toujours été convertie en nombre pour esclave\nActiver la formule pour les chaînes de caractères et les chaînes de caractères",
-        "it": "String basato su 16 bit valori big endian e piccolo endian\nDati grezzi come stringa esagonale\nFisso problema stringle è sempre stato convertito in numero per schiavo\nAttiva la formula per stringhe e stringhe di esagonale",
-        "es": "Pendiente basado en 16 valores de bits grandes endian así como poco endian\nDatos brutos como cadena hexagonal\nCorrección de números siempre se convirtió en número para esclavo\nActivar fórmula para cadenas y cadenas hexagonales",
-        "pl": "String w oparciu o 16-bitowe wartości duże endian, jak również małe endian\nSurowe dane jako ciąg szesnastkowy\nPoprawiony numer utworu był zawsze przeliczany na numer dla niewolnika\nWłącz formułę dla ciągów i ciągów hex",
-        "uk": "String на основі 16 біт значень великого ендоріана, а також маленького ендоріана\nСирі дані як рядок шестигранної\nВиправлено помилку питання stringle завжди перетворено на номер для раба\nУвімкнути формулу для рядків і шестигранних рядків",
-        "zh-cn": "基于 16 位值的字符串\n作为十六进制字符串的原始数据\nFix issue stringle 总是被转换成奴隶的数字\n启用字符串和十六进制字符串的公式"
       }
     },
     "titleLang": {
