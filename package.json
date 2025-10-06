@@ -66,7 +66,7 @@
     "release-major": "release-script major --yes",
     "build": "npm run build-backend && node tasks",
     "update-packages": "npx -y npm-check-updates --upgrade && cd src-admin && npx -y npm-check-updates --upgrade",
-    "npm": "npm i && cd src && npm i -f",
+    "npm": "npm i && cd src-admin && npm i -f",
     "0-clean": "node tasks.js --0-clean",
     "1-npm": "node tasks.js --1-npm",
     "2-build": "node tasks.js --2-build",

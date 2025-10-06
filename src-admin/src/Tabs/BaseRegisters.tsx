@@ -212,7 +212,7 @@ export default abstract class BaseRegisters extends Component<BaseRegistersProps
                         window.localStorage.setItem('Modbus.order', order);
                     }}
                     registerType={this.nativeField}
-                    offset={this.props.native.params[this.offsetName]}
+                    offset={parseInt(this.props.native.params[this.offsetName] as string, 10)}
                     native={this.props.native}
                     instance={this.props.instance}
                     regName={this.nativeFieldName}

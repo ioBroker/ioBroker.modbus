@@ -446,7 +446,8 @@ export default function RegisterTable(props: {
                                 id += address2alias(
                                     props.registerType,
                                     sortedItem.item.address,
-                                    props.native.params.directAddresses,
+                                    props.native.params.directAddresses === true ||
+                                        props.native.params.directAddresses === 'true',
                                     props.offset,
                                 );
                             } else if (!props.native.params.doNotIncludeAdrInId || !sortedItem.item.name) {
@@ -556,6 +557,7 @@ export default function RegisterTable(props: {
             </div>
             {tsvDialogOpen ? (
                 <TsvDialog
+                    themeType={props.themeType}
                     save={props.changeData}
                     onClose={() => setTsvDialogOpen(false)}
                     data={props.data}

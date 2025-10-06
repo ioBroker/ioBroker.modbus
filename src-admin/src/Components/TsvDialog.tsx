@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { tsv2json, json2tsv } from 'tsv-json';
 import AceEditor from 'react-ace';
+import 'ace-builds/src-min-noconflict/theme-clouds_midnight';
+import 'ace-builds/src-min-noconflict/theme-chrome';
 
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Snackbar } from '@mui/material';
 
 import { Clear as ClearIcon, Save as SaveIcon, FileCopy as FileCopyIcon } from '@mui/icons-material';
 
-import { I18n, Utils } from '@iobroker/adapter-react-v5';
+import { I18n, type ThemeType, Utils } from '@iobroker/adapter-react-v5';
 import type { Register, RegisterField } from '../types';
 
 const styles = {
@@ -21,6 +23,7 @@ export default function TsvDialog(props: {
     save: (data: Register[]) => void;
     fields: RegisterField[];
     data: Register[];
+    themeType: ThemeType;
 }): React.JSX.Element {
     const [tsv, setTsv] = useState('');
     const [message, setMessage] = useState<React.JSX.Element | null>(null);
@@ -114,6 +117,7 @@ export default function TsvDialog(props: {
                 <DialogContentText>{I18n.t('You can copy, paste and edit data as TSV.')}</DialogContentText>
                 <div>
                     <AceEditor
+                        theme={props.themeType === 'dark' ? 'clouds_midnight' : 'chrome'}
                         onChange={e => setTsv(e)}
                         height="400px"
                         showPrintMargin={false}
