@@ -317,6 +317,7 @@ There are some programs in folder `test` to test the TCP communication:
 ## Changelog
 ### **WORK IN PROGRESS**
 * (bluefox) Redesign of the configuration tabs
+* (bluefox) Added option to remove leading underscores in the object names
 
 ### 7.0.0 (2025-10-06)
 * (copilot) Improved Modbus error handling and fault tolerance - continue polling working devices even when others fail
