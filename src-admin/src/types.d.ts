@@ -1,17 +1,5 @@
 import type { Modbus } from '@iobroker/modbus';
 
-export interface OptionField {
-    name: keyof Modbus.ModbusParametersTyped;
-    type: 'checkbox' | 'text' | 'number' | 'select' | 'ports' | 'cert';
-    dimension?: string;
-    help?: string;
-    tooltip?: string;
-    title: string;
-    options?: { value: string; title: string }[];
-    min?: number;
-    max?: number;
-}
-
 export interface RegisterField {
     name: keyof Modbus.Register;
     title: string;

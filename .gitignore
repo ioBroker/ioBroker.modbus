@@ -14,3 +14,4 @@ tmp
 /test/RMMS.exe
 *.tgz
 /build
+/test/RaModSter.ini

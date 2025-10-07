@@ -13,6 +13,7 @@ import {
     type IobTheme,
     type GenericAppProps,
     type GenericAppState,
+    AdminConnection,
 } from '@iobroker/adapter-react-v5';
 
 import TabSettings from './Tabs/Settings';
@@ -110,6 +111,7 @@ interface AppState extends GenericAppState {
     moreLoaded: boolean;
     rooms: Record<string, ioBroker.EnumObject> | null;
     alive: boolean;
+    systemConfig: ioBroker.SystemConfigObject | null;
 }
 
 class App extends GenericApp<GenericAppProps, AppState> {
@@ -131,6 +133,9 @@ class App extends GenericApp<GenericAppProps, AppState> {
             'zh-cn': zhCnLang,
         };
 
+        // @ts-expect-error tbd
+        extendedProps.Connection = AdminConnection;
+
         extendedProps.sentryDSN = window.sentryDSN;
 
         super(props, extendedProps);
@@ -139,6 +144,7 @@ class App extends GenericApp<GenericAppProps, AppState> {
             moreLoaded: false,
             rooms: null,
             alive: false,
+            systemConfig: null,
         };
     }
 
@@ -159,8 +165,9 @@ class App extends GenericApp<GenericAppProps, AppState> {
 
         void this.socket.getEnums('rooms').then(rooms => this.setState({ moreLoaded: true, rooms }));
 
+        const systemConfig = await this.socket.getSystemConfig();
         const aliveState = await this.socket.getState(`system.adapter.modbus.${this.instance}.alive`);
-        this.setState({ alive: !!aliveState?.val, selectedTab });
+        this.setState({ alive: !!aliveState?.val, selectedTab, systemConfig });
         await this.socket.subscribeState(`system.adapter.modbus.${this.instance}.alive`, this.onAliveChanged);
     }
 
@@ -171,6 +178,9 @@ class App extends GenericApp<GenericAppProps, AppState> {
     };
 
     renderConnection(): React.JSX.Element {
+        if (!this.state.systemConfig) {
+            return <div>{I18n.t('Loading...')}</div>;
+        }
         return (
             <TabConnection
                 common={this.common || ({} as ioBroker.InstanceCommon)}
@@ -181,11 +191,18 @@ class App extends GenericApp<GenericAppProps, AppState> {
                 changeNative={(native: Modbus.ModbusAdapterConfig): void =>
                     this.setState({ native, changed: this.getIsChanged(native) })
                 }
+                themeType={this.state.themeType}
+                theme={this.state.theme}
+                themeName={this.state.themeName}
+                systemConfig={this.state.systemConfig}
             />
         );
     }
 
     renderSettings(): React.JSX.Element {
+        if (!this.state.systemConfig) {
+            return <div>{I18n.t('Loading...')}</div>;
+        }
         return (
             <TabSettings
                 common={this.common || ({} as ioBroker.InstanceCommon)}
@@ -196,6 +213,10 @@ class App extends GenericApp<GenericAppProps, AppState> {
                 changeNative={(native: Modbus.ModbusAdapterConfig): void =>
                     this.setState({ native, changed: this.getIsChanged(native) })
                 }
+                themeType={this.state.themeType}
+                theme={this.state.theme}
+                themeName={this.state.themeName}
+                systemConfig={this.state.systemConfig}
             />
         );
     }

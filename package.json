@@ -28,7 +28,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@iobroker/modbus": "^7.0.5"
+    "@iobroker/modbus": "^7.0.15"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.8.0",
