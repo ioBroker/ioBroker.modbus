@@ -161,7 +161,7 @@ class App extends GenericApp<GenericAppProps, AppState> {
 
     async onConnectionReady(): Promise<void> {
         super.onConnectionReady();
-        const selectedTab = window.localStorage.getItem(`modbus.${this.instance}.selectedTab`) || 'general';
+        const selectedTab = window.localStorage.getItem(`modbus.${this.instance}.selectedTab`) || 'connection';
 
         void this.socket.getEnums('rooms').then(rooms => this.setState({ moreLoaded: true, rooms }));
 
