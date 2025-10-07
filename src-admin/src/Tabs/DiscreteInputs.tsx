@@ -2,12 +2,13 @@ import roles from '../data/roles.json';
 import { parseAddress } from '../Components/Utils';
 
 import BaseRegisters from './BaseRegisters';
-import type { Register, RegisterField, RegisterType } from '../types';
+import type { RegisterField } from '../types';
+import type { Modbus } from '@iobroker/modbus';
 
 const rolesTyped: { value: string; title: string }[] = roles;
 
 export default class DiscreteInputs extends BaseRegisters {
-    nativeField: RegisterType = 'disInputs';
+    nativeField: Modbus.RegisterType = 'disInputs';
     nativeFieldName: 'inputRegisters' | 'holdingRegisters' | 'coils' | 'discreteInputs' = 'discreteInputs';
     offsetName: 'inputRegsOffset' | 'holdingRegsOffset' | 'coilsOffset' | 'disInputsOffset' = 'disInputsOffset';
 
@@ -42,8 +43,8 @@ export default class DiscreteInputs extends BaseRegisters {
     }
 
     addItem = (): void => {
-        const data: Register[] = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
-        const newItem: Register = {
+        const data: Modbus.Register[] = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
+        const newItem: Modbus.Register = {
             _address: '',
             address: 0,
             name: '',
@@ -52,7 +53,7 @@ export default class DiscreteInputs extends BaseRegisters {
             role: '',
             cw: false,
             isScale: false,
-        } as Register;
+        } as Modbus.Register;
 
         if (data.length) {
             const sortedData = this.getSortedData();

@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const path = require('path');
+const path = require('node:path');
 
 // Test that serial transport can be loaded
 describe('Test serial slave transport', function () {

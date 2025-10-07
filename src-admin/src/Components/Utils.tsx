@@ -1,4 +1,4 @@
-import type { RegisterType } from '../types';
+import type { Modbus } from '@iobroker/modbus';
 
 const _rmap: { [bit: number]: number } = {
     0: 15,
@@ -44,15 +44,15 @@ const offsets: { [registerType: string]: number } = {
     holdingRegs: 40001,
 };
 
-export function address2alias(regType: RegisterType, address: string | number): number {
+export function address2alias(regType: Modbus.RegisterType, address: string | number): number {
     return parseInt(address as string, 10) + offsets[regType];
 }
 
-export function alias2address(regType: RegisterType, alias: string | number): number {
+export function alias2address(regType: Modbus.RegisterType, alias: string | number): number {
     return parseInt(alias as string, 10) - offsets[regType];
 }
 
-export function nonDirect2direct(regType: RegisterType, address: string | number): number {
+export function nonDirect2direct(regType: Modbus.RegisterType, address: string | number): number {
     if (regType === 'disInputs' || regType === 'coils') {
         address = parseInt(address as string, 10) || 0;
         address = Math.floor(address / 16) * 16 + _dmap[address % 16];
@@ -61,7 +61,7 @@ export function nonDirect2direct(regType: RegisterType, address: string | number
     return parseInt(address as string, 10) || 0;
 }
 
-export function direct2nonDirect(regType: RegisterType, address: string | number): number {
+export function direct2nonDirect(regType: Modbus.RegisterType, address: string | number): number {
     if (regType === 'disInputs' || regType === 'coils') {
         address = parseInt(address as string, 10) || 0;
         address = Math.floor(address / 16) * 16 + _rmap[address % 16];

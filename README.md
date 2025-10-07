@@ -311,13 +311,13 @@ There are some programs in folder `test` to test the TCP communication:
 - RMMS is master simulator
 - mod_RSsim.exe is a slave simulator. It can be that you need [Microsoft Visual C++ 2008 SP1 Redistributable Package](https://www.microsoft.com/en-us/download/details.aspx?id=5582) to start it (because of Side-By-Side error).
 
-## Todo
-- [ ] Parse files on https://github.com/ioBroker/modbus-templates and allow to import them directly from adapter
-
 <!--
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
+### **WORK IN PROGRESS**
+* (bluefox) Redesign of the configuration tabs
+
 ### 7.0.0 (2025-10-06)
 * (copilot) Improved Modbus error handling and fault tolerance - continue polling working devices even when others fail
 * (copilot) Fixes memory leak

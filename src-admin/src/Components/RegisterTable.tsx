@@ -31,7 +31,8 @@ import {
 import TsvDialog from './TsvDialog';
 import DeleteAllDialog from './DeleteAllDialog';
 import DeleteDialog from './DeleteDialog';
-import type { ModbusAdapterConfig, Register, RegisterField, RegisterType } from '../types';
+import type { RegisterField } from '../types';
+import type { Modbus } from '@iobroker/modbus';
 
 const styles: Record<string, any> = {
     tableHeader: {
@@ -242,7 +243,7 @@ const _dmap: { [bit: number]: number } = {
     15: 15,
 };
 
-function address2alias(id: RegisterType, address: number | string, isDirect: boolean, offset: number): number {
+function address2alias(id: Modbus.RegisterType, address: number | string, isDirect: boolean, offset: number): number {
     if (typeof address === 'string') {
         address = parseInt(address, 10);
     }
@@ -256,20 +257,20 @@ function address2alias(id: RegisterType, address: number | string, isDirect: boo
 }
 
 export default function RegisterTable(props: {
-    data: Register[];
+    data: Modbus.Register[];
     fields: RegisterField[];
     addItem: () => void;
-    changeData: (data: Register[]) => void;
+    changeData: (data: Modbus.Register[]) => void;
     deleteItem: (index: number) => void;
     rooms: Record<string, ioBroker.EnumObject>;
     formulaDisabled?: boolean;
-    onChangeOrder: (orderBy: keyof Register, order: 'asc' | 'desc') => void;
+    onChangeOrder: (orderBy: keyof Modbus.Register, order: 'asc' | 'desc') => void;
     getSortedData: (
-        data?: Register[],
-        orderBy?: keyof Register | '$index',
+        data?: Modbus.Register[],
+        orderBy?: keyof Modbus.Register | '$index',
         order?: 'asc' | 'desc',
-    ) => { item: Register; $index: number }[];
-    orderBy: keyof Register | '$index';
+    ) => { item: Modbus.Register; $index: number }[];
+    orderBy: keyof Modbus.Register | '$index';
     order: 'asc' | 'desc';
     themeType: ThemeType;
     getDisable: (index: number, field: string) => boolean;
@@ -277,9 +278,9 @@ export default function RegisterTable(props: {
     alive: boolean;
     changed?: boolean;
     values: { [id: string]: ioBroker.State | null | undefined };
-    registerType: RegisterType;
+    registerType: Modbus.RegisterType;
     offset: number;
-    native: ModbusAdapterConfig;
+    native: Modbus.ModbusAdapterConfig;
     instance: number;
     regName: string;
 }): React.JSX.Element {
@@ -293,7 +294,7 @@ export default function RegisterTable(props: {
     const [deleteDialog, setDeleteDialog] = useState<{
         open: boolean;
         action: ((disableWarnings: boolean) => void) | null;
-        item: Register | null;
+        item: Modbus.Register | null;
     }>({
         open: false,
         item: null,
@@ -378,7 +379,7 @@ export default function RegisterTable(props: {
                                                         indeterminate={indeterminate}
                                                         checked={isChecked}
                                                         onChange={e => {
-                                                            const newData: Register[] = JSON.parse(
+                                                            const newData: Modbus.Register[] = JSON.parse(
                                                                 JSON.stringify(props.data),
                                                             );
                                                             newData.forEach(

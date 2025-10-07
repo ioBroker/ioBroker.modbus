@@ -14,13 +14,13 @@ import {
 import { Delete as DeleteIcon, Clear as ClearIcon } from '@mui/icons-material';
 
 import { I18n } from '@iobroker/adapter-react-v5';
-import type { Register } from '../types';
+import type { Modbus } from '@iobroker/modbus';
 
 export default function DeleteDialog(props: {
     open: boolean;
     action: (disableWarnings: boolean) => void;
     onClose: () => void;
-    item: Register;
+    item: Modbus.Register;
 }): React.JSX.Element | null {
     const [disableWarnings, setDisableWarnings] = useState(false);
     useEffect(() => {
