@@ -315,8 +315,9 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### 7.0.3 (2025-10-08)
+### **WORK IN PROGRESS**
 * (bluefox) Added migration procedure from 6 to 7
+* (bluefox) Corrected serial communication
 
 ### 7.0.1 (2025-10-07)
 * (bluefox) Redesign of the configuration tabs

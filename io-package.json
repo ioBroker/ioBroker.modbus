@@ -3,19 +3,6 @@
     "name": "modbus",
     "version": "7.0.3",
     "news": {
-      "7.0.3": {
-        "en": "Added migration procedure from 6 to 7",
-        "de": "Zusätzlicher Migrationsvorgang von 6 bis 7",
-        "ru": "Процедура миграции с 6 до 7",
-        "pt": "Procedimento de migração adicional de 6 a 7",
-        "nl": "Toegevoegde migratieprocedure van 6 tot 7",
-        "fr": "Procédure de migration ajoutée de 6 à 7",
-        "it": "Procedura di migrazione aggiuntiva da 6 a 7",
-        "es": "Procedimiento de migración adicional de 6 a 7",
-        "pl": "Dodano procedurę migracji od 6 do 7",
-        "uk": "Додано процедуру міграції від 6 до 7",
-        "zh-cn": "将移徙程序从6增加到7"
-      },
       "7.0.1": {
         "en": "Redesign of the configuration tabs\nAdded option to remove leading underscores in the object names",
         "de": "Neugestaltung der Konfigurations-Tabs\nOption hinzugefügt, führende Unterpunkte in den Objektnamen zu entfernen",
