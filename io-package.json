@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "7.0.1",
+    "version": "7.0.2",
     "news": {
+      "7.0.2": {
+        "en": "Added migration procedure from 6 to 7",
+        "de": "Zusätzlicher Migrationsvorgang von 6 bis 7",
+        "ru": "Процедура миграции с 6 до 7",
+        "pt": "Procedimento de migração adicional de 6 a 7",
+        "nl": "Toegevoegde migratieprocedure van 6 tot 7",
+        "fr": "Procédure de migration ajoutée de 6 à 7",
+        "it": "Procedura di migrazione aggiuntiva da 6 a 7",
+        "es": "Procedimiento de migración adicional de 6 a 7",
+        "pl": "Dodano procedurę migracji od 6 do 7",
+        "uk": "Додано процедуру міграції від 6 до 7",
+        "zh-cn": "将移徙程序从6增加到7"
+      },
       "7.0.1": {
         "en": "Redesign of the configuration tabs\nAdded option to remove leading underscores in the object names",
         "de": "Neugestaltung der Konfigurations-Tabs\nOption hinzugefügt, führende Unterpunkte in den Objektnamen zu entfernen",
@@ -80,19 +93,6 @@
         "pl": "Naprawiony błąd przy dostosowywaniu adresów do słowa\nDodano id urządzenia do niektórych błędów",
         "uk": "Виправлена помилка при вирівнюванні адрес в слово\nДодано пристрій id до деяких помилок",
         "zh-cn": "对齐地址和单词时的固定错误\n添加到一些错误中的设备 ID"
-      },
-      "6.2.2": {
-        "en": "Downgrade gulp to 4.0.2 to fix build",
-        "de": "Downgrade Gulp auf 4.0.2 zu reparieren Build",
-        "ru": "4.0.2 для фиксации сборки",
-        "pt": "Downgrade gulp para 4.0.2 para corrigir a compilação",
-        "nl": "Downgrade gulp naar 4.0.2 om build te repareren",
-        "fr": "Goupe de qualité inférieure à 4.0.2 pour fixer la construction",
-        "it": "Golp downgrade a 4.0.2 per fissare la costruzione",
-        "es": "Golp degradado a 4.0.2 para fijar la construcción",
-        "pl": "Przewód downgrade do 4.0.2, aby naprawić budowę",
-        "uk": "Downgrade gulp до 4.0.2 для кріплення",
-        "zh-cn": "将gulp降级为4. 0.2,以修复建筑"
       }
     },
     "titleLang": {
