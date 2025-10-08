@@ -174,7 +174,7 @@ const schema: ConfigItemPanel = {
             xs: 12,
             hidden: 'data.slave === "1"',
         },
-        pulsetime: {
+        pulseTime: {
             type: 'number',
             label: 'Pulse time',
             unit: 'ms',
