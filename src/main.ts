@@ -8,11 +8,9 @@ export class ModbusAdapter extends ModbusTemplate {
             onBeforeReady: async (): Promise<void> => {
                 // Backwards compatibility
                 if (
-                    ((this.config.params.slave === '0' || (this.config.params.slave as any) === 0) &&
-                        !this.config.params.host &&
-                        this.config.params.bind) ||
+                    (!this.config.params.host && this.config.params.bind) ||
                     // @ts-expect-error backwards compatibility
-                    (this.config.params.pulsetime !== undefined && this.config.params.pulseTime === undefined)
+                    (this.config.params.pulseTime === undefined && this.config.params.pulsetime !== undefined)
                 ) {
                     const obj = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
                     if (obj) {
