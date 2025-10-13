@@ -68,19 +68,6 @@
         "uk": "Виправлено помилку з вирівнюванням адрес",
         "zh-cn": "在地址对齐时纠正了错误"
       },
-      "6.3.0": {
-        "en": "Fix Timeout management to prevent leaking memory\nAdded information about connected clients in the server mode\nTried to fix error with aligning addresses\nGUI was migrated to admin 7",
-        "de": "Fix Timeout-Management, um zu verhindern, dass Leckspeicher\nWeitere Informationen zu verbundenen Clients im Servermodus\nVersuche, Fehler mit Ausrichtadressen zu beheben\nGUI wurde zu admin 7 migriert",
-        "ru": "Управление тайм-аутом для предотвращения утечки памяти\nДобавлена информация о подключенных клиентах в серверном режиме\nПопытка исправить ошибку с выравниванием адресов\nGUI был перенесен на admin 7",
-        "pt": "Corrigir gerenciamento de tempo limite para evitar vazamento de memória\nInformaÃ§Ãμes adicionais sobre clientes conectados no modo servidor\nTentei corrigir o erro com os endereços de alinhamento\nGUI foi migrado para admin 7",
-        "nl": "Fix Timeout management om het lekken van geheugen te voorkomen\nInformatie over verbonden clients toegevoegd in de servermodus\nProbeerde fout te herstellen met uitlijnen van adressen\nGUI is gemigreerd naar admin 7",
-        "fr": "Correction de la gestion du délai pour éviter les fuites de mémoire\nAjout d'informations sur les clients connectés en mode serveur\nEssai de corriger l'erreur avec les adresses d'alignement\nGUI a été migré vers admin 7",
-        "it": "Fissare la gestione Timeout per evitare perdite di memoria\nAggiunte informazioni sui client connessi nella modalità server\nHo cercato di correggere l'errore con gli indirizzi di allineamento\nGUI è stata migrata ad admin 7",
-        "es": "Arreglar la gestión del tiempo para evitar fugas de memoria\nInformación adicional sobre clientes conectados en el modo servidor\nTrató de corregir el error con direcciones alineadas\nGUI was migrated to admin 7",
-        "pl": "Zarządzanie timeout, aby zapobiec wyciekom pamięci\nDodano informacje o podłączonych klientach w trybie serwera\nPróbowano naprawić błąd z adresami dostosowującymi\nGUI został przeniesiony do admin 7",
-        "uk": "Виправлення часу управління для запобігання витоку пам'яті\nДодано інформацію про підключені клієнти в режимі сервера\nПеревірити помилку з вирівнюванням адрес\nGUI був мігрований до адмін 7",
-        "zh-cn": "修正超时管理以防止内存泄漏\n在服务器模式中添加了连接客户端的信息\n尝试用对齐地址修正错误\nGUI 已迁移到管理员 7"
-      },
       "6.2.3": {
         "en": "Fixed error at aligning addresses to word\nAdded device id to some errors",
         "de": "Fehler beim Ausrichten von Adressen zu Wort behoben\nHinzugefügt Gerät id zu einigen Fehlern",
