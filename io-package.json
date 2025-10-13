@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "7.0.4",
+    "version": "7.0.5",
     "news": {
+      "7.0.5": {
+        "en": "Prohibited installation from github",
+        "de": "Prohibitierte Installation von github",
+        "ru": "Запрещенная установка с github",
+        "pt": "Instalação proibida do github",
+        "nl": "Verboden installatie van github",
+        "fr": "Installation interdite de github",
+        "it": "Installazione corretta da github",
+        "es": "Instalación prohibida desde github",
+        "pl": "Zakaz instalacji z github",
+        "uk": "Прохідна установка з github",
+        "zh-cn": "禁止安装 Github"
+      },
       "7.0.4": {
         "en": "Added migration procedure from 6 to 7\nCorrected serial communication",
         "de": "Zusätzlicher Migrationsvorgang von 6 bis 7\nKorrigierte serielle Kommunikation",
