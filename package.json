@@ -1,78 +1,78 @@
 {
-  "name": "iobroker.modbus",
-  "version": "7.0.5",
-  "description": "Connect devices oder Modbus protocol to ioBroker",
-  "author": {
-    "name": "bluefox",
-    "email": "dogafox@gmail.com"
-  },
-  "contributors": [
-    {
-      "name": "bluefox",
-      "email": "dogafox@gmail.com"
-    }
-  ],
-  "homepage": "https://github.com/ioBroker/ioBroker.modbus",
-  "license": "MIT",
-  "keywords": [
-    "ioBroker",
-    "modbus",
-    "Smart Home",
-    "home automation"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ioBroker/ioBroker.modbus"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "optionalDependencies": {
-    "serialport": "^13.0.0"
-  },
-  "dependencies": {
-    "@iobroker/adapter-core": "^3.3.2",
-    "@iobroker/modbus": "^7.0.20"
-  },
-  "devDependencies": {
-    "@alcalzone/release-script": "^4.0.0",
-    "@alcalzone/release-script-plugin-iobroker": "^4.0.0",
-    "@alcalzone/release-script-plugin-license": "^4.0.0",
-    "@iobroker/build-tools": "^2.0.15",
-    "@iobroker/eslint-config": "^2.2.0",
-    "@iobroker/legacy-testing": "^2.0.2",
-    "@iobroker/testing": "^5.1.1",
-    "@types/node": "^24.7.2",
-    "modbus-stack": "^0.2.1",
-    "nan": "2.23.0"
-  },
-  "main": "build/main.js",
-  "files": [
-    "admin/",
-    "img/",
-    "build/",
-    "io-package.json",
-    "LICENSE"
-  ],
-  "scripts": {
-    "test": "node node_modules/mocha/bin/mocha test/testAdapter.js --exit && node node_modules/mocha/bin/mocha test/testPackageFiles.js --exit",
-    "release": "release-script",
-    "lint": "eslint -c eslint.config.mjs",
-    "build-backend": "tsc -p tsconfig.build.json",
-    "release-patch": "release-script patch --yes",
-    "release-minor": "release-script minor --yes",
-    "release-major": "release-script major --yes",
-    "build": "npm run build-backend && node tasks",
-    "update-packages": "npx -y npm-check-updates --upgrade && cd src-admin && npx -y npm-check-updates --upgrade",
-    "npm": "npm i && cd src-admin && npm i -f",
-    "0-clean": "node tasks.js --0-clean",
-    "1-npm": "node tasks.js --1-npm",
-    "2-build": "node tasks.js --2-build",
-    "3-copy": "node tasks.js --3-copy",
-    "4-patch": "node tasks.js --4-patch"
-  },
-  "bugs": {
-    "url": "https://github.com/ioBroker/ioBroker.modbus/issues"
-  },
-  "readmeFilename": "README.md"
+    "name": "iobroker.modbus",
+    "version": "7.0.5",
+    "description": "Connect devices oder Modbus protocol to ioBroker",
+    "author": {
+        "name": "bluefox",
+        "email": "dogafox@gmail.com"
+    },
+    "contributors": [
+        {
+            "name": "bluefox",
+            "email": "dogafox@gmail.com"
+        }
+    ],
+    "homepage": "https://github.com/ioBroker/ioBroker.modbus",
+    "license": "MIT",
+    "keywords": [
+        "ioBroker",
+        "modbus",
+        "Smart Home",
+        "home automation"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ioBroker/ioBroker.modbus"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "optionalDependencies": {
+        "serialport": "^13.0.0"
+    },
+    "dependencies": {
+        "@iobroker/adapter-core": "^3.3.2",
+        "@iobroker/modbus": "^7.0.20"
+    },
+    "devDependencies": {
+        "@alcalzone/release-script": "^5.0.0",
+        "@alcalzone/release-script-plugin-iobroker": "^4.0.0",
+        "@alcalzone/release-script-plugin-license": "^4.0.0",
+        "@iobroker/build-tools": "^2.0.15",
+        "@iobroker/eslint-config": "^2.2.0",
+        "@iobroker/legacy-testing": "^2.0.2",
+        "@iobroker/testing": "^5.1.1",
+        "@types/node": "^24.9.2",
+        "modbus-stack": "^0.2.1",
+        "nan": "2.23.0"
+    },
+    "main": "build/main.js",
+    "files": [
+        "admin/",
+        "img/",
+        "build/",
+        "io-package.json",
+        "LICENSE"
+    ],
+    "scripts": {
+        "test": "node node_modules/mocha/bin/mocha test/testAdapter.js --exit && node node_modules/mocha/bin/mocha test/testPackageFiles.js --exit",
+        "release": "release-script",
+        "lint": "eslint -c eslint.config.mjs",
+        "build-backend": "tsc -p tsconfig.build.json",
+        "release-patch": "release-script patch --yes",
+        "release-minor": "release-script minor --yes",
+        "release-major": "release-script major --yes",
+        "build": "npm run build-backend && node tasks",
+        "update-packages": "npx -y npm-check-updates --upgrade && cd src-admin && npx -y npm-check-updates --upgrade",
+        "npm": "npm i && cd src-admin && npm i -f",
+        "0-clean": "node tasks.js --0-clean",
+        "1-npm": "node tasks.js --1-npm",
+        "2-build": "node tasks.js --2-build",
+        "3-copy": "node tasks.js --3-copy",
+        "4-patch": "node tasks.js --4-patch"
+    },
+    "bugs": {
+        "url": "https://github.com/ioBroker/ioBroker.modbus/issues"
+    },
+    "readmeFilename": "README.md"
 }
