@@ -42,7 +42,7 @@
     "@iobroker/eslint-config": "^2.2.0",
     "@iobroker/legacy-testing": "^2.0.2",
     "@iobroker/testing": "^5.1.1",
-    "@types/node": "^24.9.2",
+    "@types/node": "^24.10.1",
     "modbus-stack": "^0.2.1",
     "nan": "2.23.1"
   },
