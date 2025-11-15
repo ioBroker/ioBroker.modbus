@@ -41,8 +41,10 @@ export class ModbusAdapter extends ModbusTemplate {
 
     /**
      * Build a map of register configurations for quick lookup during sanitization
+     *
+     * but exported for testing
      */
-    private buildRegisterConfigMap(): void {
+    buildRegisterConfigMap(): void {
         const registerTypes: Array<'disInputs' | 'coils' | 'inputRegs' | 'holdingRegs'> = [
             'disInputs',
             'coils',
@@ -66,8 +68,10 @@ export class ModbusAdapter extends ModbusTemplate {
 
     /**
      * Check if a value is invalid (NaN, Infinity, extreme floats, null, undefined)
+     *
+     * but exported for testing
      */
-    private isInvalidValue(value: unknown): boolean {
+    isInvalidValue(value: unknown): boolean {
         if (value === null || value === undefined) {
             return true;
         }
@@ -87,8 +91,10 @@ export class ModbusAdapter extends ModbusTemplate {
 
     /**
      * Check if a value is outside the configured min/max range
+     *
+     * but exported for testing
      */
-    private isOutOfRange(value: number, register: ExtendedRegister): boolean {
+    isOutOfRange(value: number, register: ExtendedRegister): boolean {
         if (register.minValue !== undefined && register.minValue !== '') {
             const minVal = typeof register.minValue === 'string' ? parseFloat(register.minValue) : register.minValue;
             if (!isNaN(minVal) && value < minVal) {
@@ -106,8 +112,10 @@ export class ModbusAdapter extends ModbusTemplate {
 
     /**
      * Sanitize a value based on register configuration
+     *
+     * but exported for testing
      */
-    private sanitizeValue(id: string, value: unknown, register?: ExtendedRegister): unknown {
+    sanitizeValue(id: string, value: unknown, register?: ExtendedRegister): unknown {
         // If no register config or sanitization not enabled, pass through
         if (!register || !register.sanitizeInvalid) {
             return value;
@@ -143,21 +151,33 @@ export class ModbusAdapter extends ModbusTemplate {
 
     /**
      * Find register config by state ID
+     *
+     * but exported for testing
      */
-    private findRegisterConfig(id: string): ExtendedRegister | undefined {
+    findRegisterConfig(id: string): ExtendedRegister | undefined {
         // Try exact match first
         if (this.registerConfig.has(id)) {
             return this.registerConfig.get(id);
         }
 
         // Extract the register name from the full state ID
-        // Format is typically: modbus.X.registerName or modbus.X.device.registerName
+        // Format is typically: modbus.X.holdingRegisters.40001_registerName
         const parts = id.split('.');
         if (parts.length >= 3) {
-            // Try matching by the last part (register name)
-            const registerName = parts[parts.length - 1];
-            if (this.registerConfig.has(registerName)) {
-                return this.registerConfig.get(registerName);
+            // Get the last part which may include address prefix
+            const lastPart = parts[parts.length - 1];
+
+            // Check if it contains underscore (address_name format)
+            if (lastPart.includes('_')) {
+                const registerName = lastPart.substring(lastPart.indexOf('_') + 1);
+                if (this.registerConfig.has(registerName)) {
+                    return this.registerConfig.get(registerName);
+                }
+            }
+
+            // Try matching by the last part directly (register name)
+            if (this.registerConfig.has(lastPart)) {
+                return this.registerConfig.get(lastPart);
             }
 
             // Try matching by multiple parts combined

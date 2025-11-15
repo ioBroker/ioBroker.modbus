@@ -55,7 +55,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node node_modules/mocha/bin/mocha test/testAdapter.js --exit && node node_modules/mocha/bin/mocha test/testPackageFiles.js --exit",
+    "test": "node node_modules/mocha/bin/mocha test/testAdapter.js --exit && node node_modules/mocha/bin/mocha test/testSanitizationUnit.js --exit && node node_modules/mocha/bin/mocha test/testPackageFiles.js --exit",
     "release": "release-script",
     "lint": "eslint -c eslint.config.mjs",
     "build-backend": "tsc -p tsconfig.build.json",
