@@ -44,7 +44,7 @@
     "@iobroker/testing": "^5.2.2",
     "@types/node": "^24.10.1",
     "modbus-stack": "^0.2.1",
-    "nan": "2.23.1"
+    "nan": "2.24.0"
   },
   "main": "build/main.js",
   "files": [
