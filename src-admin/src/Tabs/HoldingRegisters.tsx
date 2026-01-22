@@ -15,6 +15,11 @@ export default class HoldingRegisters extends BaseRegisters {
         //let rooms = this.getRooms();
         //rooms.unshift({value: '', title: ''});
 
+        const sanitizeModeOptions = [
+            { value: 'keepLast', title: 'Keep last valid value' },
+            { value: 'setZero', title: 'Set to zero' },
+        ];
+
         const result: RegisterField[] = [
             { name: '_address', title: 'Address', type: 'text', sorted: true, width: 20 },
             { name: 'name', title: 'Name', type: 'text', sorted: true },
@@ -38,6 +43,24 @@ export default class HoldingRegisters extends BaseRegisters {
                 expert: true,
                 formulaDisabled: true,
             },
+            {
+                name: 'sanitizeInvalid',
+                title: 'Sanitize',
+                type: 'checkbox',
+                tooltip: 'Sanitize invalid values (NaN, Infinity, extreme floats)',
+                expert: true,
+            },
+            {
+                name: 'sanitizeMode',
+                title: 'Sanitize Mode',
+                type: 'select',
+                options: sanitizeModeOptions,
+                tooltip: 'How to handle invalid values',
+                expert: true,
+                width: 30,
+            },
+            { name: 'minValue', title: 'Min Value', type: 'text', width: 20, expert: true, tooltip: 'Minimum valid value' },
+            { name: 'maxValue', title: 'Max Value', type: 'text', width: 20, expert: true, tooltip: 'Maximum valid value' },
         ];
 
         if (this.props.native.params.multiDeviceId) {
@@ -66,6 +89,10 @@ export default class HoldingRegisters extends BaseRegisters {
             wp: false,
             cw: false,
             isScale: false,
+            sanitizeInvalid: false,
+            sanitizeMode: 'keepLast',
+            minValue: '',
+            maxValue: '',
         };
 
         if (data.length) {
