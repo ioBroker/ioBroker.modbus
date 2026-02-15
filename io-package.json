@@ -118,6 +118,7 @@
       "it": "Connessione ModBus Slave o Master",
       "es": "Conexión ModBus Slave o Master",
       "pl": "Połączenie ModBus Slave lub Master",
+      "uk": "ModBus з'єднання Slave або Master",
       "zh-cn": "ModBus连接从站或主站"
     },
     "authors": [
@@ -155,12 +156,12 @@
     },
     "dependencies": [
       {
-        "js-controller": ">=5.0.19"
+        "js-controller": ">=6.0.11"
       }
     ],
     "globalDependencies": [
       {
-        "admin": ">=5.1.28"
+        "admin": ">=6.17.14"
       }
     ],
     "messages": [
