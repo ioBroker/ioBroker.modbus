@@ -315,7 +315,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 8.0.0 (2026-02-15)
 * (bluefox) Minimal Node.js version is 20
 * (bluefox) Corrected `info.connected` type
 * (bluefox) Fixed writing of registers

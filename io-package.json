@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "7.0.6",
+    "version": "8.0.0",
     "news": {
+      "8.0.0": {
+        "en": "Minimal Node.js version is 20\nCorrected `info.connected` type\nFixed writing of registers",
+        "de": "Minimal Node.js Version ist 20\nKorrigiert `info.connected` Typ\nFestes Schreiben von Registern",
+        "ru": "Минимальная версия Node.js 20\nИсправлено \"info.connected\" тип\nФиксированная запись регистров",
+        "pt": "Versão mínima Node.js é 20\nCorrigido `info.connected` tipo\nEscrita fixa dos registos",
+        "nl": "Minimale Node.js versie is 20\nOnbewerkte informatie.connected type\nVast schrijven van registers",
+        "fr": "Minimal Node.js version est 20\nCorrigé `info.connected` type\nRédaction fixe des registres",
+        "it": "Versione Minimal Node.js 20\nCorretto `info.connected` tipo\nScrittura fissa dei registri",
+        "es": "Minimal Node.js versión es 20\nCorregido `info.connected` Tipo\nRedacción fija de registros",
+        "pl": "Minimal Node.js wersja jest 20\nPoprawiono 'info.connected' typ\nStałe pisanie rejestrów",
+        "uk": "Minimal Node.js версія 20\nВиправлено `info.connected` тип\nФіксоване написання реєстрів",
+        "zh-cn": "最小节点.js 版本为 20\n已更正“ info. connect” 类型\n登记册的固定写法"
+      },
       "7.0.6": {
         "en": "Updated packages",
         "de": "Aktualisierte Pakete",
@@ -80,19 +93,6 @@
         "pl": "Przeniesiony GUI kompilacja vite\nDodano komunikat błędu, jeśli długość odpowiedzi jest nieprawidłowa",
         "uk": "Переміщення графічних інтерфейсів для vite\nДодано повідомлення про помилку, якщо довжина відповіді недійсна",
         "zh-cn": "将 GUI 编译为 vite\n如果响应长度无效, 则添加错误消息"
-      },
-      "6.3.2": {
-        "en": "Corrected the error with alignment of addresses",
-        "de": "Korrektur des Fehlers bei der Ausrichtung von Adressen",
-        "ru": "Исправлена ошибка с выравниванием адресов",
-        "pt": "Corrigido o erro com o alinhamento de endereços",
-        "nl": "De fout gecorrigeerd met het uitlijnen van adressen",
-        "fr": "Correction de l'erreur avec l'alignement des adresses",
-        "it": "Corretto l'errore con allineamento degli indirizzi",
-        "es": "Corregido el error con la alineación de direcciones",
-        "pl": "Poprawiono błąd z ustawieniem adresów",
-        "uk": "Виправлено помилку з вирівнюванням адрес",
-        "zh-cn": "在地址对齐时纠正了错误"
       }
     },
     "titleLang": {

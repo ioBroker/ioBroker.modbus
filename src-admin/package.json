@@ -1,6 +1,6 @@
 {
     "name": "modebus-admin",
-    "version": "7.0.6",
+    "version": "8.0.0",
     "private": true,
     "dependencies": {
         "@iobroker/adapter-react-v5": "^8.0.21",
