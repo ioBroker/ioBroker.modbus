@@ -16,3 +16,4 @@ tmp
 /build
 /test/RaModSter.ini
 .commitinfo
+/.claude/settings.local.json
