@@ -133,7 +133,7 @@ export class ModbusAdapter extends ModbusTemplate {
     /**
      * Check if a value is invalid (NaN, Infinity, or extreme float values)
      */
-    private isInvalidValue(value: any): boolean {
+    private isInvalidValue(value: unknown): boolean {
         if (typeof value !== 'number') {
             return value === null || value === undefined;
         }
@@ -180,10 +180,10 @@ export class ModbusAdapter extends ModbusTemplate {
     /**
      * Sanitize a value according to register configuration
      */
-    private sanitizeValue(id: string, value: any, config: ExtendedRegister): any {
+    private sanitizeValue(id: string, value: unknown, config: ExtendedRegister): number | ioBroker.StateValue {
         // Check if value is invalid
         if (this.isInvalidValue(value)) {
-            this.log.warn(`Invalid value detected for ${id}: ${value} - applying sanitization`);
+            this.log.warn(`Invalid value detected for ${id}: ${String(value)} - applying sanitization`);
             return this.applySanitization(id, value, config);
         }
 
@@ -204,13 +204,13 @@ export class ModbusAdapter extends ModbusTemplate {
             this.lastValidValues.set(id, value);
         }
 
-        return value;
+        return value as ioBroker.StateValue;
     }
 
     /**
      * Apply sanitization action
      */
-    private applySanitization(id: string, invalidValue: any, config: ExtendedRegister): any {
+    private applySanitization(id: string, invalidValue: unknown, config: ExtendedRegister): number {
         const action = config.sanitizeAction || 'keepLastValid';
 
         if (action === 'replaceWithZero') {

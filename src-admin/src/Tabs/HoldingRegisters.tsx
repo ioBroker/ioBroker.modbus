@@ -83,7 +83,7 @@ export default class HoldingRegisters extends BaseRegisters {
 
     addItem = (): void => {
         const data: Modbus.Register[] = JSON.parse(JSON.stringify(this.props.native[this.nativeField]));
-        const newItem: Modbus.Register = {
+        const newItem = {
             _address: '',
             address: 0,
             name: '',
@@ -100,17 +100,12 @@ export default class HoldingRegisters extends BaseRegisters {
             wp: false,
             cw: false,
             isScale: false,
-        };
-
-        // Add sanitization fields (with @ts-expect-error for extended fields)
-        // @ts-expect-error - Extended register fields
-        newItem.sanitize = false;
-        // @ts-expect-error - Extended register fields
-        newItem.sanitizeAction = 'keepLastValid';
-        // @ts-expect-error - Extended register fields
-        newItem.minValidValue = undefined;
-        // @ts-expect-error - Extended register fields
-        newItem.maxValidValue = undefined;
+            // Extended sanitization fields
+            sanitize: false,
+            sanitizeAction: 'keepLastValid',
+            minValidValue: undefined,
+            maxValidValue: undefined,
+        } as Modbus.Register;
 
         if (data.length) {
             const sortedData = this.getSortedData();
