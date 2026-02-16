@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "8.0.0",
+    "version": "8.0.1",
     "news": {
+      "8.0.1": {
+        "en": "Disable logging of request timeout if `disableLogging` parameter is set to true",
+        "de": "Deaktivieren Sie die Registrierung der Anfrage-Timeout, wenn `disable Logging` Parameter wird auf true gesetzt",
+        "ru": "Отключить регистрацию тайм-аута запроса, если \"отключить\" Параметр «Логирование» установлен на истинное",
+        "pt": "Desactivar o registo do tempo- limite da requisição se ` desactivar O parâmetro logging` é definido como true",
+        "nl": "Logging van de timeout van het verzoek deactiveren als het programma wordt uitgeschakeld De logging-parameter is ingesteld op true",
+        "fr": "Désactiver l'enregistrement du délai de requête si `désactiver Le paramètre Logging` est défini à true",
+        "it": "Disattivare la registrazione di richiesta timeout se `disable Il parametro di registrazione è impostato su true",
+        "es": "Inhabilitación de registro de tiempo de solicitud si `deshable Parámetro de registro se establece a la verdad",
+        "pl": "Wyłącz logowanie timeout żądania, jeśli 'wyłącz Parametr logowania jest ustawiony na true",
+        "uk": "Вимкнути логування запиту, якщо `disable параметр Logging` встановлюється на true",
+        "zh-cn": "如果“ 无法” , 则禁用请求超时记录 日志参数设置为真"
+      },
       "8.0.0": {
         "en": "Minimal Node.js version is 20\nCorrected `info.connected` type\nFixed writing of registers",
         "de": "Minimal Node.js Version ist 20\nKorrigiert `info.connected` Typ\nFestes Schreiben von Registern",
@@ -80,19 +93,6 @@
         "pl": "Ulepszona obsługa błędów i tolerancja błędów w modbusie - kontynuuj sondowanie urządzeń roboczych nawet wtedy, gdy inne zawiodą\nFixes wyciek pamięci\nDodano opcję wyłączenia logowania błędów połączenia, aby uniknąć spamu logowania, gdy urządzenia są niedostępne\nPokaż wartości bezpośrednio w konfiguracji\nWdrożone połączenie TLS (master)",
         "uk": "Удосконалено процес обробки помилок Modbus та толерантності до несправностей - продовжуйте опитування робочих пристроїв навіть коли інші не можуть\nВиправлення витоку пам'яті\nДодана можливість відхилити помилки з'єднання, щоб уникнути спаму в журналі, коли пристрої недоступні\nПоказати значення безпосередньо в конфігурації\nРеалізовано підключення TLS (майстер)",
         "zh-cn": "改进 Modbus 错误处理和容错度 -- -- 即使在其他故障时继续投票工作装置\n修复内存泄漏\n添加了禁用连接错误记录的选项, 以避免设备无法使用时的日志垃圾邮件\n在配置中直接显示值\n已执行 TLS 连接( 主机)"
-      },
-      "6.4.0": {
-        "en": "Moved GUI compilation to vite\nAdded error message if the response length is invalid",
-        "de": "Versetzte GUI-Compilation zu vite\nFehlermeldung hinzugefügt, wenn die Antwortlänge ungültig ist",
-        "ru": "Перемещение GUI-компиляция в vite\nДобавить сообщение об ошибке, если длина ответа недействительна",
-        "pt": "Compilação de GUI movido para vite\nAdicionado mensagem de erro se o comprimento de resposta é inválido",
-        "nl": "GUI compilatie verplaatst naar vite\nFoutmelding toegevoegd als de responslengte ongeldig is",
-        "fr": "Compilation GUI déplacée sur rite\nAjout du message d'erreur si la longueur de réponse est invalide",
-        "it": "Spostato compilazione GUI a vite\nAggiunto messaggio di errore se la lunghezza di risposta è invalida",
-        "es": "Mueve la compilación GUI para vite\nMensaje de error añadido si la longitud de respuesta es inválida",
-        "pl": "Przeniesiony GUI kompilacja vite\nDodano komunikat błędu, jeśli długość odpowiedzi jest nieprawidłowa",
-        "uk": "Переміщення графічних інтерфейсів для vite\nДодано повідомлення про помилку, якщо довжина відповіді недійсна",
-        "zh-cn": "将 GUI 编译为 vite\n如果响应长度无效, 则添加错误消息"
       }
     },
     "titleLang": {
