@@ -106,6 +106,24 @@ Delay between two write requests in ms. Default 0.
 Normally, if the value has not changed, it will not be written into ioBroker.
 This flag allows updating the value's timestamp by every cycle.
 
+### Value Sanitization
+Enable automatic sanitization of invalid register values (NaN, Infinity, extreme float values like ±3.4e38).
+This feature helps prevent corrupted Modbus float values from propagating into ioBroker states, which is especially useful for devices like SolarEdge inverters that occasionally return invalid values due to timeouts or internal scaling errors.
+
+When enabled, you can configure per-register sanitization options:
+- **Sanitize**: Enable sanitization for this specific register
+- **Sanitize Action**: Choose how to handle invalid values
+  - *Keep Last Valid*: Keeps the last known valid value when an invalid value is detected
+  - *Replace with 0*: Replaces invalid values with 0
+- **Min Valid Value**: Optional minimum valid value threshold
+- **Max Valid Value**: Optional maximum valid value threshold
+
+Invalid values detected:
+- `NaN` (Not a Number)
+- `Infinity` or `-Infinity`
+- Extreme float values (≥3.4e38 or ≤-3.4e38) - typical Modbus error values
+- Values outside the configured min/max range
+
 ### Do not include addresses in ID
 Do not add address in the generated ioBroker iD. `10_Input10` vs `_Input10`.
 
@@ -172,6 +190,17 @@ Use value as a scaling factor.
 This is necessary to be used by dynamic scaling factors which are on some systems provided through values on interface.
 If a value is marked with this flag, then the value will be stored into a variable with the following naming convention: `sf['Modbus_address']`.
 This variable can be then later used in any formula for other parameters. E.g., the following formula can set: `(x * sf['40065']) + 50;`
+
+### Sanitize (Expert Mode)
+Enable value sanitization for this register. Only available when "Value Sanitization" is enabled globally in the adapter settings.
+
+### Sanitize Action (Expert Mode)
+Choose the action to take when an invalid value is detected:
+- **Keep Last Valid**: Retains the last known valid value
+- **Replace with 0**: Replaces the invalid value with 0
+
+### Min Valid / Max Valid (Expert Mode)
+Optional minimum and maximum value thresholds for range validation. Values outside this range will be treated as invalid and sanitized according to the Sanitize Action.
 
 ## Data types
 - `uint16be`  - `Unsigned 16 bit (Big Endian): AABB => AABB`
