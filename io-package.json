@@ -244,7 +244,8 @@
       "certPrivate": "",
       "certPublic": "",
       "certChained": "",
-      "sslAllowSelfSigned": true
+      "sslAllowSelfSigned": true,
+      "enableSanitization": false
     },
     "disInputs": [],
     "coils": [],

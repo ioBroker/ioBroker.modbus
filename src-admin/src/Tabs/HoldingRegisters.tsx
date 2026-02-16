@@ -38,6 +38,40 @@ export default class HoldingRegisters extends BaseRegisters {
                 expert: true,
                 formulaDisabled: true,
             },
+            {
+                name: 'sanitize',
+                title: 'Sanitize',
+                type: 'checkbox',
+                tooltip: 'Enable value sanitization for invalid values',
+                expert: true,
+            },
+            {
+                name: 'sanitizeAction',
+                title: 'Sanitize Action',
+                type: 'select',
+                options: [
+                    { value: 'keepLastValid', title: 'Keep Last Valid' },
+                    { value: 'replaceWithZero', title: 'Replace with 0' },
+                ],
+                expert: true,
+                tooltip: 'Action to take when invalid value is detected',
+            },
+            {
+                name: 'minValidValue',
+                title: 'Min Valid',
+                type: 'text',
+                width: 30,
+                expert: true,
+                tooltip: 'Minimum valid value (optional)',
+            },
+            {
+                name: 'maxValidValue',
+                title: 'Max Valid',
+                type: 'text',
+                width: 30,
+                expert: true,
+                tooltip: 'Maximum valid value (optional)',
+            },
         ];
 
         if (this.props.native.params.multiDeviceId) {
@@ -68,6 +102,16 @@ export default class HoldingRegisters extends BaseRegisters {
             isScale: false,
         };
 
+        // Add sanitization fields (with @ts-expect-error for extended fields)
+        // @ts-expect-error - Extended register fields
+        newItem.sanitize = false;
+        // @ts-expect-error - Extended register fields
+        newItem.sanitizeAction = 'keepLastValid';
+        // @ts-expect-error - Extended register fields
+        newItem.minValidValue = undefined;
+        // @ts-expect-error - Extended register fields
+        newItem.maxValidValue = undefined;
+
         if (data.length) {
             const sortedData = this.getSortedData();
             const lastItem = sortedData[sortedData.length - 1].item;
@@ -94,6 +138,14 @@ export default class HoldingRegisters extends BaseRegisters {
             newItem.wp = lastItem.wp;
             newItem.cw = lastItem.cw;
             newItem.isScale = lastItem.isScale;
+            // @ts-expect-error - Extended register fields
+            newItem.sanitize = lastItem.sanitize || false;
+            // @ts-expect-error - Extended register fields
+            newItem.sanitizeAction = lastItem.sanitizeAction || 'keepLastValid';
+            // @ts-expect-error - Extended register fields
+            newItem.minValidValue = lastItem.minValidValue;
+            // @ts-expect-error - Extended register fields
+            newItem.maxValidValue = lastItem.maxValidValue;
         } else {
             newItem.role = 'level';
             newItem.factor = 1;

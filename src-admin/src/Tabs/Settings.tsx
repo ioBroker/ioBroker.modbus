@@ -221,6 +221,27 @@ const schema: ConfigItemPanel = {
             label: 'Disable connection error logging',
             help: 'disableLogging_help',
         },
+
+        _headerSanitization: {
+            newLine: true,
+            type: 'header',
+            label: 'Value Sanitization',
+            xs: 12,
+        },
+        _sanitizationInfo: {
+            newLine: true,
+            type: 'infoBox',
+            text: 'Enable automatic sanitization of invalid register values (NaN, Infinity, extreme float values). Configure per-register options in the register tables.',
+            title: 'Value Sanitization',
+            xs: 12,
+        },
+        enableSanitization: {
+            newLine: true,
+            type: 'checkbox',
+            label: 'Enable value sanitization',
+            help: 'Automatically detect and handle invalid values from Modbus registers',
+            xs: 12,
+        },
     },
 };
 
