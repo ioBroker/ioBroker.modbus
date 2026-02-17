@@ -315,7 +315,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 8.0.3 (2026-02-17)
 * (@GermanBluefox) Set default value of slave to '0' and not to 0
 * (@GermanBluefox) Showed address 0
 
