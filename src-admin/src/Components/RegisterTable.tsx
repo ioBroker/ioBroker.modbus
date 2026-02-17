@@ -171,7 +171,7 @@ const DataCell = (props: {
         }
     } else {
         if (!editMode) {
-            result = item[field.name] ? item[field.name] : null;
+            result = item[field.name] !== undefined && item[field.name] !== null ? item[field.name] : null;
         } else {
             result = (
                 <TextField

@@ -3,19 +3,6 @@
     "name": "modbus",
     "version": "8.0.2",
     "news": {
-      "8.0.2": {
-        "en": "Set default value of slave to '0' and not to 0",
-        "de": "Standardwert von Slave auf '0' festlegen und nicht auf 0",
-        "ru": "Установить значение раба по умолчанию до «0», а не до 0",
-        "pt": "Definir o valor padrão do escravo para '0' e não para 0",
-        "nl": "Stel de standaard waarde van slave in op '0' en niet op 0",
-        "fr": "Définir la valeur par défaut de l'esclave à '0' et non à 0",
-        "it": "Imposta il valore predefinito di slave a '0' e non a 0",
-        "es": "Establecer valor predeterminado de esclavo a '0' y no a 0",
-        "pl": "Ustaw domyślną wartość niewolnika na '0' i nie na 0",
-        "uk": "Встановити значення за замовчуванням раба до '0' і не до 0",
-        "zh-cn": "将奴隶的默认值设定为“ 0 ” 而不是“ 0 ”"
-      },
       "8.0.1": {
         "en": "Disable logging of request timeout if `disableLogging` parameter is set to true",
         "de": "Deaktivieren Sie die Registrierung der Anfrage-Timeout, wenn `disable Logging` Parameter wird auf true gesetzt",
