@@ -315,6 +315,9 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
+### **WORK IN PROGRESS**
+* (@GermanBluefox) Set default value of slave to '0' and not to 0
+
 ### 8.0.1 (2026-02-16)
 * (@GermanBluefox) Disable logging of request timeout if `disableLogging` parameter is set to true
 

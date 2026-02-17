@@ -217,7 +217,7 @@
       "parity": "none",
       "deviceId": 1,
       "timeout": 5000,
-      "slave": 0,
+      "slave": "0",
       "poll": 1000,
       "recon": 60000,
       "keepAliveInterval": 0,
