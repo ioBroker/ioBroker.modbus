@@ -80,7 +80,7 @@ describe(`Test ${adapterShortName} adapter`, function () {
         });
     });
 
-    it.only(`Test alignment`, function (done) {
+    it(`Test alignment`, function (done) {
         const isBools = true;
         const localOptions = {
             doNotRoundAddressToWord: false,

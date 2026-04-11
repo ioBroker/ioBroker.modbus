@@ -76,9 +76,9 @@ export default class HoldingRegisters extends BaseRegisters {
             while (
                 sortedData.find(
                     item =>
-                        parseAddress(item.item._address) >= (newItem._address as number) &&
-                        parseAddress(item.item._address) + parseInt((item.item.len as string) || '1', 10) <
-                            (newItem._address as number),
+                        (newItem._address as number) >= parseAddress(item.item._address) &&
+                        (newItem._address as number) <
+                            parseAddress(item.item._address) + parseInt((item.item.len as string) || '1', 10),
                 )
             ) {
                 newItem._address++;
