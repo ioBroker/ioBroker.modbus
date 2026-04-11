@@ -315,7 +315,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 8.0.4 (2026-04-11)
 * (@GermanBluefox) Fixed possible errors
 
 ### 8.0.3 (2026-02-17)
