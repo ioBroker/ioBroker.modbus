@@ -215,7 +215,7 @@ const schema: ConfigItemPanel = {
         bind: {
             type: 'ip',
             label: 'Bind address',
-            hidden: 'data.type === "serial" || data.slave !== "1"',
+            hidden: 'data.type === "serial" || (data.slave !== "1" && data.slave !== 1 && data.slave !== true)',
             xs: 12,
             sm: 6,
             lg: 4,
@@ -224,7 +224,7 @@ const schema: ConfigItemPanel = {
             type: 'text',
             label: 'Slave address',
             help: 'IP address of the Modbus TCP server',
-            hidden: 'data.type === "serial" || data.slave !== "0"',
+            hidden: 'data.type === "serial" || (data.slave !== "0" && data.slave !== 0 && data.slave !== false)',
             xs: 12,
             sm: 6,
             lg: 4,
@@ -268,7 +268,7 @@ const schema: ConfigItemPanel = {
         multiDeviceId: {
             type: 'checkbox',
             label: 'Multi device IDs',
-            hidden: 'data.slave === "1"',
+            hidden: 'data.slave === "1" || data.slave === 1 || data.slave === true',
             xs: 12,
             sm: 6,
             lg: 2,

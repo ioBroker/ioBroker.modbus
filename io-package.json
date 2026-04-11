@@ -1,8 +1,34 @@
 {
   "common": {
     "name": "modbus",
-    "version": "8.0.0",
+    "version": "8.0.3",
     "news": {
+      "8.0.3": {
+        "en": "Set default value of slave to '0' and not to 0\nShowed address 0",
+        "de": "Standardwert von Slave auf '0' festlegen und nicht auf 0\nGezeigte Adresse 0",
+        "ru": "Установить значение раба по умолчанию до «0», а не до 0\nПоказанный адрес 0",
+        "pt": "Definir o valor padrão do escravo para '0' e não para 0\nEndereço mostrado 0",
+        "nl": "Stel de standaard waarde van slave in op '0' en niet op 0\nToon adres 0",
+        "fr": "Définir la valeur par défaut de l'esclave à '0' et non à 0\nAdresse indiquée 0",
+        "it": "Imposta il valore predefinito di slave a '0' e non a 0\nIndirizzo 0",
+        "es": "Establecer valor predeterminado de esclavo a '0' y no a 0\nDirección 0",
+        "pl": "Ustaw domyślną wartość niewolnika na '0' i nie na 0\nPokazany adres 0",
+        "uk": "Встановити значення за замовчуванням раба до '0' і не до 0\nПоштова адреса 0",
+        "zh-cn": "将奴隶的默认值设定为“ 0 ” 而不是“ 0 ”\n显示地址 0"
+      },
+      "8.0.1": {
+        "en": "Disable logging of request timeout if `disableLogging` parameter is set to true",
+        "de": "Deaktivieren Sie die Registrierung der Anfrage-Timeout, wenn `disable Logging` Parameter wird auf true gesetzt",
+        "ru": "Отключить регистрацию тайм-аута запроса, если \"отключить\" Параметр «Логирование» установлен на истинное",
+        "pt": "Desactivar o registo do tempo- limite da requisição se ` desactivar O parâmetro logging` é definido como true",
+        "nl": "Logging van de timeout van het verzoek deactiveren als het programma wordt uitgeschakeld De logging-parameter is ingesteld op true",
+        "fr": "Désactiver l'enregistrement du délai de requête si `désactiver Le paramètre Logging` est défini à true",
+        "it": "Disattivare la registrazione di richiesta timeout se `disable Il parametro di registrazione è impostato su true",
+        "es": "Inhabilitación de registro de tiempo de solicitud si `deshable Parámetro de registro se establece a la verdad",
+        "pl": "Wyłącz logowanie timeout żądania, jeśli 'wyłącz Parametr logowania jest ustawiony na true",
+        "uk": "Вимкнути логування запиту, якщо `disable параметр Logging` встановлюється на true",
+        "zh-cn": "如果“ 无法” , 则禁用请求超时记录 日志参数设置为真"
+      },
       "8.0.0": {
         "en": "Minimal Node.js version is 20\nCorrected `info.connected` type\nFixed writing of registers",
         "de": "Minimal Node.js Version ist 20\nKorrigiert `info.connected` Typ\nFestes Schreiben von Registern",
@@ -67,32 +93,6 @@
         "pl": "Redagowanie kart konfiguracyjnych\nDodano opcję usunięcia wiodących podkreśleń w nazwach obiektów",
         "uk": "Редизайн вкладок конфігурації\nДодана можливість видалити провідні джгути в назвах об'єкта",
         "zh-cn": "配置标签的重新设计\n添加了删除对象名称中前置下划线的选项"
-      },
-      "7.0.0": {
-        "en": "Improved Modbus error handling and fault tolerance - continue polling working devices even when others fail\nFixes memory leak\nAdded option to disable connection error logging to avoid log spam when devices are unavailable\nShow values directly in configuration\nImplemented TLS connection (master)",
-        "de": "Verbesserte Modbus-Fehlerhandling und Fehlertoleranz - auch bei Ausfall anderer Arbeitsgeräte weiter verschmutzen\nBehebt Speicherleck\nOption hinzugefügt, um Verbindungsfehler zu deaktivieren Log Spam zu vermeiden, wenn Geräte nicht verfügbar sind\nWerte direkt in Konfiguration anzeigen\nTLS-Verbindung (Master)",
-        "ru": "Улучшенная обработка ошибок Modbus и отказоустойчивость - продолжайте опрос рабочих устройств, даже когда другие терпят неудачу\nИсправление утечки памяти\nДобавлена опция отключения регистрации ошибок подключения, чтобы избежать спама при недоступности устройств\nПоказать значения непосредственно в конфигурации\nРеализованное соединение TLS (master)",
-        "pt": "Manuseamento de erros Modbus melhorado e tolerância a falhas - continue pesquisando dispositivos de trabalho mesmo quando outros falham\nCorrige a fuga de memória\nOpção adicionada para desativar o registro de erros de conexão para evitar spam de log quando os dispositivos não estiverem disponíveis\nMostrar os valores directamente na configuração\nConexão TLS implementada (mestre)",
-        "nl": "Verbeterde Modbus fout behandeling en fouttolerantie - blijven peilen werkende apparaten, zelfs als anderen falen\nHerstelt geheugenlek\nToegevoegde optie voor het uitschakelen van verbinding fout logging om log spam te voorkomen wanneer apparaten niet beschikbaar zijn\nToon waarden direct in configuratie\nUitvoerde TLS-verbinding (master)",
-        "fr": "Amélioration de la gestion des erreurs Modbus et de la tolérance aux défauts - continuer les dispositifs de travail des sondages même lorsque d'autres échouent\nCorrige la fuite de mémoire\nAjout d'une option pour désactiver l'enregistrement des erreurs de connexion pour éviter le log spam lorsque les appareils ne sont pas disponibles\nAfficher les valeurs directement dans la configuration\nConnexion TLS mise en œuvre (maître)",
-        "it": "Miglioramento della gestione degli errori Modbus e della tolleranza ai guasti - continuare a inquinare i dispositivi di lavoro anche quando altri falliscono\nRisolve la perdita di memoria\nAggiunta opzione per disabilitare l'errore di connessione registrazione per evitare lo spam di registro quando i dispositivi non sono disponibili\nMostra i valori direttamente nella configurazione\nCollegamento TLS implementato (master)",
-        "es": "Mejor manejo de errores Modbus y tolerancia a fallas - continuar encuestando dispositivos de trabajo incluso cuando otros fallan\nFija la fuga de memoria\nOpción adicional para deshabilitar la conexión de registro de errores para evitar el spam de registro cuando los dispositivos no están disponibles\nMostrar valores directamente en la configuración\nImplemented TLS connection (master)",
-        "pl": "Ulepszona obsługa błędów i tolerancja błędów w modbusie - kontynuuj sondowanie urządzeń roboczych nawet wtedy, gdy inne zawiodą\nFixes wyciek pamięci\nDodano opcję wyłączenia logowania błędów połączenia, aby uniknąć spamu logowania, gdy urządzenia są niedostępne\nPokaż wartości bezpośrednio w konfiguracji\nWdrożone połączenie TLS (master)",
-        "uk": "Удосконалено процес обробки помилок Modbus та толерантності до несправностей - продовжуйте опитування робочих пристроїв навіть коли інші не можуть\nВиправлення витоку пам'яті\nДодана можливість відхилити помилки з'єднання, щоб уникнути спаму в журналі, коли пристрої недоступні\nПоказати значення безпосередньо в конфігурації\nРеалізовано підключення TLS (майстер)",
-        "zh-cn": "改进 Modbus 错误处理和容错度 -- -- 即使在其他故障时继续投票工作装置\n修复内存泄漏\n添加了禁用连接错误记录的选项, 以避免设备无法使用时的日志垃圾邮件\n在配置中直接显示值\n已执行 TLS 连接( 主机)"
-      },
-      "6.4.0": {
-        "en": "Moved GUI compilation to vite\nAdded error message if the response length is invalid",
-        "de": "Versetzte GUI-Compilation zu vite\nFehlermeldung hinzugefügt, wenn die Antwortlänge ungültig ist",
-        "ru": "Перемещение GUI-компиляция в vite\nДобавить сообщение об ошибке, если длина ответа недействительна",
-        "pt": "Compilação de GUI movido para vite\nAdicionado mensagem de erro se o comprimento de resposta é inválido",
-        "nl": "GUI compilatie verplaatst naar vite\nFoutmelding toegevoegd als de responslengte ongeldig is",
-        "fr": "Compilation GUI déplacée sur rite\nAjout du message d'erreur si la longueur de réponse est invalide",
-        "it": "Spostato compilazione GUI a vite\nAggiunto messaggio di errore se la lunghezza di risposta è invalida",
-        "es": "Mueve la compilación GUI para vite\nMensaje de error añadido si la longitud de respuesta es inválida",
-        "pl": "Przeniesiony GUI kompilacja vite\nDodano komunikat błędu, jeśli długość odpowiedzi jest nieprawidłowa",
-        "uk": "Переміщення графічних інтерфейсів для vite\nДодано повідомлення про помилку, якщо довжина відповіді недійсна",
-        "zh-cn": "将 GUI 编译为 vite\n如果响应长度无效, 则添加错误消息"
       }
     },
     "titleLang": {
@@ -217,7 +217,7 @@
       "parity": "none",
       "deviceId": 1,
       "timeout": 5000,
-      "slave": 0,
+      "slave": "0",
       "poll": 1000,
       "recon": 60000,
       "keepAliveInterval": 0,
