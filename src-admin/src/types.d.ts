@@ -10,4 +10,6 @@ export interface RegisterField {
     sorted?: boolean;
     tooltip?: string;
     options?: Array<{ value: string; title: string }>;
+    /** If true, this field belongs to the sanitization group and is toggled separately */
+    sanitize?: boolean;
 }

@@ -44,6 +44,7 @@ export default class HoldingRegisters extends BaseRegisters {
                 type: 'checkbox',
                 tooltip: 'Enable value sanitization for invalid values',
                 expert: true,
+                sanitize: true,
             },
             {
                 name: 'sanitizeAction',
@@ -54,6 +55,7 @@ export default class HoldingRegisters extends BaseRegisters {
                     { value: 'replaceWithZero', title: 'Replace with 0' },
                 ],
                 expert: true,
+                sanitize: true,
                 tooltip: 'Action to take when invalid value is detected',
             },
             {
@@ -62,6 +64,7 @@ export default class HoldingRegisters extends BaseRegisters {
                 type: 'text',
                 width: 30,
                 expert: true,
+                sanitize: true,
                 tooltip: 'Minimum valid value (optional)',
             },
             {
@@ -70,6 +73,7 @@ export default class HoldingRegisters extends BaseRegisters {
                 type: 'text',
                 width: 30,
                 expert: true,
+                sanitize: true,
                 tooltip: 'Maximum valid value (optional)',
             },
         ];
@@ -133,13 +137,9 @@ export default class HoldingRegisters extends BaseRegisters {
             newItem.wp = lastItem.wp;
             newItem.cw = lastItem.cw;
             newItem.isScale = lastItem.isScale;
-            // @ts-expect-error - Extended register fields
             newItem.sanitize = lastItem.sanitize || false;
-            // @ts-expect-error - Extended register fields
             newItem.sanitizeAction = lastItem.sanitizeAction || 'keepLastValid';
-            // @ts-expect-error - Extended register fields
             newItem.minValidValue = lastItem.minValidValue;
-            // @ts-expect-error - Extended register fields
             newItem.maxValidValue = lastItem.maxValidValue;
         } else {
             newItem.role = 'level';

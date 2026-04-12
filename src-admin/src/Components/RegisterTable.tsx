@@ -17,7 +17,7 @@ import {
     Tooltip,
 } from '@mui/material';
 
-import { Delete as DeleteIcon, Add as AddIcon, ImportExport } from '@mui/icons-material';
+import { Delete as DeleteIcon, Add as AddIcon, ImportExport, CleaningServices } from '@mui/icons-material';
 
 import {
     I18n,
@@ -287,6 +287,7 @@ export default function RegisterTable(props: {
     const [tsvDialogOpen, setTsvDialogOpen] = useState(false);
     const [editMode, setEditMode] = useState(parseInt(window.localStorage.getItem('Modbus.editMode') || '0', 10) || 0);
     const [extendedMode, setExtendedMode] = useState(window.localStorage.getItem('Modbus.extendedMode') === 'true');
+    const [sanitizeMode, setSanitizeMode] = useState(window.localStorage.getItem('Modbus.sanitizeMode') === 'true');
     const [deleteAllDialog, setDeleteAllDialog] = useState<{ open: boolean; action: (() => void) | null }>({
         open: false,
         action: null,
@@ -327,6 +328,19 @@ export default function RegisterTable(props: {
                         <IconExpert />
                     </IconButton>
                 </Tooltip>
+                {extendedMode && props.fields.some(f => f.sanitize) ? (
+                    <Tooltip title={I18n.t('Toggle sanitize columns')}>
+                        <IconButton
+                            color={sanitizeMode ? 'primary' : 'inherit'}
+                            onClick={() => {
+                                window.localStorage.setItem('Modbus.sanitizeMode', sanitizeMode ? 'false' : 'true');
+                                setSanitizeMode(!sanitizeMode);
+                            }}
+                        >
+                            <CleaningServices />
+                        </IconButton>
+                    </Tooltip>
+                ) : null}
             </div>
             <div style={styles.tableContainer}>
                 <Table
@@ -340,6 +354,7 @@ export default function RegisterTable(props: {
                                 .filter(
                                     item =>
                                         (extendedMode || !item.expert) &&
+                                        (sanitizeMode || !item.sanitize) &&
                                         (!props.formulaDisabled || !item.formulaDisabled),
                                 )
                                 .map(field => {
@@ -491,6 +506,7 @@ export default function RegisterTable(props: {
                                         .filter(
                                             item =>
                                                 (extendedMode || !item.expert) &&
+                                                (sanitizeMode || !item.sanitize) &&
                                                 (!props.formulaDisabled || !item.formulaDisabled),
                                         )
                                         .map(field => (
