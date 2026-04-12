@@ -3,19 +3,6 @@
     "name": "modbus",
     "version": "8.1.0",
     "news": {
-      "8.1.0": {
-        "en": "Added sanitizing of the values",
-        "de": "Hinzugefügte Sanitizing der Werte",
-        "ru": "Добавлена санация ценностей",
-        "pt": "Adicionado higienização dos valores",
-        "nl": "Toegevoegde zuivering van de waarden",
-        "fr": "Ajout d'assainissement des valeurs",
-        "it": "Aggiunta sanificazione dei valori",
-        "es": "Se agregó sanitizante de los valores",
-        "pl": "Dodano oczyszczanie wartości",
-        "uk": "Додано дезінфекцію значень",
-        "zh-cn": "添加数值的消毒"
-      },
       "8.0.5": {
         "en": "Fixed possible errors",
         "de": "Mögliche Fehler behoben",
@@ -161,7 +148,7 @@
     ],
     "globalDependencies": [
       {
-        "admin": ">=6.17.14"
+        "admin": ">=7.6.17"
       }
     ],
     "messages": [
