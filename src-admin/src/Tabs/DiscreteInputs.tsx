@@ -39,7 +39,7 @@ export default class DiscreteInputs extends BaseRegisters {
     }
 
     isShowExtendedModeSwitch(): boolean {
-        return this.props.native.params.slave !== '1';
+        return this.props.native.params.slave !== '1' && this.props.native.params.slave as any !== 1;
     }
 
     addItem = (): void => {

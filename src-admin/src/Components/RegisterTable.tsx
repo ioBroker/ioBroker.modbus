@@ -479,7 +479,7 @@ export default function RegisterTable(props: {
                                 }
                             }
                             if (id.endsWith('.')) {
-                                id += id.substring(0, id.length - 1);
+                                id = id.substring(0, id.length - 1);
                             }
                             const val = props.values[id]?.val;
                             return (
