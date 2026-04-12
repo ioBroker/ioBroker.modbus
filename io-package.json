@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "8.0.5",
+    "version": "8.1.0",
     "news": {
+      "8.1.0": {
+        "en": "Added sanitizing of the values",
+        "de": "Hinzugefügte Sanitizing der Werte",
+        "ru": "Добавлена санация ценностей",
+        "pt": "Adicionado higienização dos valores",
+        "nl": "Toegevoegde zuivering van de waarden",
+        "fr": "Ajout d'assainissement des valeurs",
+        "it": "Aggiunta sanificazione dei valori",
+        "es": "Se agregó sanitizante de los valores",
+        "pl": "Dodano oczyszczanie wartości",
+        "uk": "Додано дезінфекцію значень",
+        "zh-cn": "添加数值的消毒"
+      },
       "8.0.5": {
         "en": "Fixed possible errors",
         "de": "Mögliche Fehler behoben",
@@ -80,19 +93,6 @@
         "pl": "Zakaz instalacji z github",
         "uk": "Прохідна установка з github",
         "zh-cn": "禁止安装 Github"
-      },
-      "7.0.4": {
-        "en": "Added migration procedure from 6 to 7\nCorrected serial communication",
-        "de": "Zusätzlicher Migrationsvorgang von 6 bis 7\nKorrigierte serielle Kommunikation",
-        "ru": "Процедура миграции с 6 до 7\nИсправленная серийная связь",
-        "pt": "Procedimento de migração adicional de 6 a 7\nComunicação em série corrigida",
-        "nl": "Toegevoegde migratieprocedure van 6 tot 7\nGecorrigeerde seriecommunicatie",
-        "fr": "Procédure de migration ajoutée de 6 à 7\nCommunication série corrigée",
-        "it": "Procedura di migrazione aggiuntiva da 6 a 7\nComunicazione seriale corretta",
-        "es": "Procedimiento de migración adicional de 6 a 7\nComunicación en serie corregida",
-        "pl": "Dodano procedurę migracji od 6 do 7\nSkorygowana komunikacja szeregowa",
-        "uk": "Додано процедуру міграції від 6 до 7\nВиправлено послідовне спілкування",
-        "zh-cn": "将移徙程序从6增加到7\n更正的系列通信"
       }
     },
     "titleLang": {

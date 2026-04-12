@@ -344,7 +344,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### **WORK IN PROGRESS**
+### 8.1.0 (2026-04-12)
 * (@GermanBluefox) Added sanitizing of the values
 
 ### 8.0.5 (2026-04-11)
