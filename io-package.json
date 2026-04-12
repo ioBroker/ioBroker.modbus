@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "8.1.0",
+    "version": "8.1.1",
     "news": {
+      "8.1.1": {
+        "en": "Added sanitizing of the values\nAdded \"ttyADM***\" to the list of possible serial ports\nWrite cyclic values even if they are not polled",
+        "de": "Hinzugefügte Sanitizing der Werte\n\"ttyADM****\" zur Liste möglicher serieller Ports hinzugefügt\nSchreibe zyklische Werte, auch wenn sie nicht abgefragt sind",
+        "ru": "Добавлена санация ценностей\nДобавлен «ttyADM***» в список возможных серийных портов\nПишите циклические значения, даже если они не опрошены",
+        "pt": "Adicionado higienização dos valores\nAdicionado \"ttyADM***\" à lista de possíveis portas seriais\nEscreva valores cíclicos mesmo que não sejam pesquisados",
+        "nl": "Toegevoegde zuivering van de waarden\n\"ttyADM***\" toegevoegd aan de lijst met mogelijke seriële poorten\nSchrijf cyclische waarden, zelfs als ze niet worden ondervraagd",
+        "fr": "Ajout d'assainissement des valeurs\nAjout de \"ttyADM***\" à la liste des éventuels ports série\nÉcrire des valeurs cycliques même si elles ne sont pas sondées",
+        "it": "Aggiunta sanificazione dei valori\nAggiunto \"ttyADM***\" alla lista delle possibili porte seriali\nScrivere valori ciclici anche se non sono inquinati",
+        "es": "Se agregó sanitizante de los valores\nAñadido \"ttyADM***\" a la lista de posibles puertos serie\nEscribir valores cíclicos incluso si no son encuestados",
+        "pl": "Dodano oczyszczanie wartości\nDodano \"ttyADM *** do listy możliwych portów szeregowych \nZapisz wartości cykliczne, nawet jeśli nie są badane",
+        "uk": "Додано дезінфекцію значень\nДодано \"ttyADM***\" до списку можливих серійних портів\nНаписати циклічні значення навіть якщо вони не запилюються",
+        "zh-cn": "添加数值的消毒\n在可能的序列端口列表中添加“ ttyADM*** ”\n写入循环值, 即使没有被调查"
+      },
       "8.0.5": {
         "en": "Fixed possible errors",
         "de": "Mögliche Fehler behoben",
