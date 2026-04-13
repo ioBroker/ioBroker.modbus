@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "8.1.2",
+    "version": "8.1.3",
     "news": {
+      "8.1.3": {
+        "en": "Corrected room definition for the first register",
+        "de": "Korrigierte Raumdefinition für das erste Register",
+        "ru": "Исправленное определение номера для первого регистра",
+        "pt": "Definição da sala corrigida para o primeiro registo",
+        "nl": "Gecorrigeerde kamerdefinitie voor het eerste register",
+        "fr": "Définition de chambre corrigée pour le premier registre",
+        "it": "Definizione corretta della camera per il primo registro",
+        "es": "Definición de habitación corregida para el primer registro",
+        "pl": "Skorygowana definicja pokoju dla pierwszego rejestru",
+        "uk": "Правильне визначення приміщення для першого реєстру",
+        "zh-cn": "修改了第一个登记册的房间定义"
+      },
       "8.1.2": {
         "en": "Added sanitizing of the values\nAdded \"ttyADM***\" to the list of possible serial ports\nWrite cyclic values even if they are not polled",
         "de": "Hinzugefügte Sanitizing der Werte\n\"ttyADM****\" zur Liste möglicher serieller Ports hinzugefügt\nSchreibe zyklische Werte, auch wenn sie nicht abgefragt sind",
@@ -80,19 +93,6 @@
         "pl": "Aktualizacja pakietów",
         "uk": "Оновлені пакети",
         "zh-cn": "更新软件包"
-      },
-      "7.0.5": {
-        "en": "Prohibited installation from github",
-        "de": "Prohibitierte Installation von github",
-        "ru": "Запрещенная установка с github",
-        "pt": "Instalação proibida do github",
-        "nl": "Verboden installatie van github",
-        "fr": "Installation interdite de github",
-        "it": "Installazione corretta da github",
-        "es": "Instalación prohibida desde github",
-        "pl": "Zakaz instalacji z github",
-        "uk": "Прохідна установка з github",
-        "zh-cn": "禁止安装 Github"
       }
     },
     "titleLang": {
