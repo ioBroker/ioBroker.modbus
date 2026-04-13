@@ -344,7 +344,7 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
-### 8.1.1 (2026-04-12)
+### **WORK IN PROGRESS**
 * (@GermanBluefox) Added sanitizing of the values
 * (@GermanBluefox) Added "ttyADM***" to the list of possible serial ports
 * (@GermanBluefox) Write cyclic values even if they are not polled
