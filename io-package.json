@@ -3,6 +3,19 @@
     "name": "modbus",
     "version": "8.1.1",
     "news": {
+      "8.0.5": {
+        "en": "Fixed possible errors",
+        "de": "Mögliche Fehler behoben",
+        "ru": "Исправлены возможные ошибки",
+        "pt": "Erros possíveis corrigidos",
+        "nl": "Vaste mogelijke fouten",
+        "fr": "Erreurs éventuelles corrigées",
+        "it": "Risolto eventuali errori",
+        "es": "Errores corregidos posibles",
+        "pl": "Naprawiono możliwe błędy",
+        "uk": "Виправлено можливі помилки",
+        "zh-cn": "固定可能的错误"
+      },
       "8.0.3": {
         "en": "Set default value of slave to '0' and not to 0\nShowed address 0",
         "de": "Standardwert von Slave auf '0' festlegen und nicht auf 0\nGezeigte Adresse 0",
