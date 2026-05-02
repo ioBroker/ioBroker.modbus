@@ -344,6 +344,9 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ## Changelog
+### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
+
 ### 8.1.3 (2026-04-13)
 - (@GermanBluefox) Corrected room definition for the first register
 
