@@ -699,6 +699,8 @@ There are some programs in folder `test` to test the TCP communication:
 ### 0.0.1
 * (bluefox) initial commit
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 The MIT License (MIT)
 
