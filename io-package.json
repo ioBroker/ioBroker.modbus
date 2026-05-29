@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "8.1.3",
+    "version": "8.2.0",
     "news": {
+      "8.2.0": {
+        "en": "Added selection of the serial device by its stable USB ID (vendor/product/serial), so the connection keeps working even if the OS reassigns the port name",
+        "de": "Auswahl des seriellen Gerätes durch seine stabile USB-ID (Anbieter/Produkt/Serial) hinzugefügt, so dass die Verbindung weiterhin funktioniert, auch wenn das Betriebssystem den Portnamen zurückweist",
+        "ru": "Добавлен выбор последовательного устройства по его стабильному USB ID (поставщик/продукт/сериал), поэтому соединение продолжает работать, даже если ОС переназначает название порта",
+        "pt": "Adicionado seleção do dispositivo serial pelo seu ID USB estável (vendor/produto/serial), assim a conexão continua funcionando mesmo se o SO reatribui o nome da porta",
+        "nl": "Toegevoegde selectie van het seriële apparaat door zijn stabiele USB-ID (vendor/product/serieel), zodat de verbinding blijft werken, zelfs als het besturingssysteem de poortnaam opnieuw toewijst",
+        "fr": "Ajout de la sélection du périphérique série par son identifiant USB stable (vendor/product/serial), de sorte que la connexion continue de fonctionner même si l'OS réassigne le nom du port",
+        "it": "Aggiunta la selezione del dispositivo seriale tramite il suo stabile ID USB (vendor/product/serial), così la connessione continua a funzionare anche se il sistema operativo riassegna il nome della porta",
+        "es": "Se agregó la selección del dispositivo serie por su ID USB estable (vendor/product/serial), por lo que la conexión sigue funcionando incluso si el sistema operativo reasigna el nombre del puerto",
+        "pl": "Dodano wybór urządzenia szeregowego za pomocą stabilnego identyfikatora USB (sprzedawca / produkt / serial), więc połączenie nadal działa, nawet jeśli system operacyjny zmienia nazwę portu",
+        "uk": "Додано вибір серійного пристрою за стабільним ідентифікатором USB (вендор/product/serial), тому підключення продовжує працювати навіть якщо ОС відзначає назву порту",
+        "zh-cn": "由其稳定的 USB ID( vendor/ products/ serial) 添加了串行设备的选择, 因此即使 OS 重新指定端口名称, 连接也会继续工作 "
+      },
       "8.1.3": {
         "en": "Corrected room definition for the first register",
         "de": "Korrigierte Raumdefinition für das erste Register",
@@ -80,19 +93,6 @@
         "pl": "Minimal Node.js wersja jest 20\nPoprawiono 'info.connected' typ\nStałe pisanie rejestrów",
         "uk": "Minimal Node.js версія 20\nВиправлено `info.connected` тип\nФіксоване написання реєстрів",
         "zh-cn": "最小节点.js 版本为 20\n已更正“ info. connect” 类型\n登记册的固定写法"
-      },
-      "7.0.6": {
-        "en": "Updated packages",
-        "de": "Aktualisierte Pakete",
-        "ru": "Обновленные пакеты",
-        "pt": "Pacotes atualizados",
-        "nl": "Bijgewerkte pakketten",
-        "fr": "Paquets mis à jour",
-        "it": "Pacchetti aggiornati",
-        "es": "Paquetes actualizados",
-        "pl": "Aktualizacja pakietów",
-        "uk": "Оновлені пакети",
-        "zh-cn": "更新软件包"
       }
     },
     "titleLang": {
