@@ -166,5 +166,10 @@
   "showAliasesExplanation": "Normalement, tous les registres peuvent avoir une adresse comprise entre 0 et 65 535. L'utilisation d'alias permet de définir des champs d'adresse virtuels pour chaque type de registre. Généralement :\n- les entrées discrètes ont une adresse comprise entre 10 001 et 20 000\n- les bobines ont une adresse comprise entre 1 et 1 000\n- les registres d'entrée ont une adresse comprise entre 30 001 et 40 000\n- les registres de maintien ont une adresse comprise entre 40 001 et 60 000\n\nChaque alias est associé en interne à une adresse ; par exemple, 30 011 est associé au registre d'entrée 10, et ainsi de suite.",
   "timeout_help": "Délai d'expiration des demandes de lecture en millisecondes. Si aucune réponse n'est reçue d'un esclave dans ce délai, la connexion sera interrompue.",
   "waitTime_help": "Temps d'attente entre l'interrogation de deux ID d'appareil différents en millisecondes.",
-  "writeInterval_help": "Délai entre deux requêtes d'écriture en millisecondes. Par défaut 0."
+  "writeInterval_help": "Délai entre deux requêtes d'écriture en millisecondes. Par défaut 0.",
+  "Select device by": "Sélectionner l’appareil par",
+  "Serial port": "Port série",
+  "USB device ID": "ID de périphérique USB",
+  "USB device": "Périphérique USB",
+  "Identified by vendor and product ID, so the OS may reassign the port name": "Identifié par l’ID du fabricant et du produit, afin que le système puisse réattribuer le nom du port"
 }

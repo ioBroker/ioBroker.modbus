@@ -166,5 +166,10 @@
   "showAliasesExplanation": "Normalmente, todos los registros pueden tener direcciones de 0 a 65535. Mediante alias, se pueden definir campos de dirección virtual para cada tipo de registro. Normalmente:\n- Las entradas discretas van de 10001 a 20000\n- Las bobinas van de 1 a 1000\n- Los registros de entrada van de 30001 a 40000\n- Los registros de retención van de 40001 a 60000\n\nCada alias se asigna internamente a una dirección; por ejemplo, 30011 se asigna al registro de entrada 10, y así sucesivamente.",
   "timeout_help": "Tiempo de espera para solicitudes de lectura en milisegundos. Si no se recibe respuesta de un esclavo en este tiempo, se terminará la conexión.",
   "waitTime_help": "Tiempo de espera entre el sondeo de dos ID de dispositivo diferentes en milisegundos.",
-  "writeInterval_help": "Retraso entre dos solicitudes de escritura en milisegundos. Predeterminado 0."
+  "writeInterval_help": "Retraso entre dos solicitudes de escritura en milisegundos. Predeterminado 0.",
+  "Select device by": "Seleccionar dispositivo por",
+  "Serial port": "Puerto serie",
+  "USB device ID": "ID de dispositivo USB",
+  "USB device": "Dispositivo USB",
+  "Identified by vendor and product ID, so the OS may reassign the port name": "Identificado por el ID de fabricante y producto, de modo que el SO pueda reasignar el nombre del puerto"
 }

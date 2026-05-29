@@ -166,5 +166,10 @@
   "showAliasesExplanation": "通常，所有寄存器的地址范围都是 0 到 65535。通过使用别名，您可以为每种类型的寄存器定义虚拟地址字段。通常：\n- 离散输入的地址范围是 10001 到 20000\n- 线圈的地址范围是 1 到 1000\n- 输入寄存器的地址范围是 30001 到 40000\n- 保持寄存器的地址范围是 40001 到 60000\n\n每个别名都会在内部映射到地址，例如，30011 将映射到输入寄存器 10，依此类推。",
   "timeout_help": "读取请求的超时时间（以毫秒为单位）。如果这段时间内没有收到从站的响应，连接将被终止。",
   "waitTime_help": "轮询两个不同设备 ID 之间的等待时间（以毫秒为单位）。",
-  "writeInterval_help": "两个写入请求之间的延迟（以毫秒为单位）。默认 0。"
+  "writeInterval_help": "两个写入请求之间的延迟（以毫秒为单位）。默认 0。",
+  "Select device by": "设备选择方式",
+  "Serial port": "串行端口",
+  "USB device ID": "USB 设备 ID",
+  "USB device": "USB 设备",
+  "Identified by vendor and product ID, so the OS may reassign the port name": "通过供应商和产品 ID 识别，因此操作系统可以重新分配端口名称"
 }

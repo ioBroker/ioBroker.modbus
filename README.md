@@ -40,6 +40,11 @@ Modbus Device ID. Important if TCP/Modbus bridge is used.
 ### Type
 Slave (Server) or Master (Client).
 
+### Select device by (serial)
+For serial connections you can choose how the device is addressed:
+- **Serial port**: pick a fixed port path (e.g. `COM3` or `/dev/ttyUSB0`).
+- **USB device ID**: pick the device by its stable USB identifier (vendor ID / product ID / serial number). The actual port is resolved at start, so the connection keeps working even if the operating system assigns a different port name (e.g. after a reboot or replugging).
+
 ### Use aliases as address
 Normally, all registers can have address from 0 to 65535. By using of aliases, you can define virtual address fields for every type of registers. Normally:
 - discrete inputs are from 10001 to 20000
@@ -340,10 +345,10 @@ There are some programs in folder `test` to test the TCP communication:
 - RMMS is a master simulator
 - mod_RSsim.exe is a slave simulator. It can be that you need [Microsoft Visual C++ 2008 SP1 Redistributable Package](https://www.microsoft.com/en-us/download/details.aspx?id=5582) to start it (because of a Side-By-Side error).
 
-<!--
-	### **WORK IN PROGRESS**
--->
 ## Changelog
+### **WORK IN PROGRESS**
+- (@GermanBluefox) Added selection of the serial device by its stable USB ID (vendor/product/serial), so the connection keeps working even if the OS reassigns the port name
+
 ### 8.1.3 (2026-04-13)
 - (@GermanBluefox) Corrected room definition for the first register
 

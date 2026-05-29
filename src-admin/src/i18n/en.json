@@ -166,5 +166,10 @@
     "showAliasesExplanation": "Normally, all registers can have address from 0 to 65535. By using of aliases, you can define virtual address fields for every type of registers. Usually:\n- discrete inputs are from 10001 to 20000\n- coils are from 1 to 1000\n- input registers are from 30001 to 40000\n- holding registers are from 40001 to 60000\n\nEvery alias will be mapped internally to address, e.g., 30011 will be mapped to input register 10. and so on.",
     "timeout_help": "Timeout for read requests in milliseconds. If no response is received from a slave in this time, the connection will be terminated.",
     "waitTime_help": "Wait time between polling of two different device IDs in milliseconds.",
-    "writeInterval_help": "Delay between two write requests in milliseconds. Default 0."
+    "writeInterval_help": "Delay between two write requests in milliseconds. Default 0.",
+    "Select device by": "Select device by",
+    "Serial port": "Serial port",
+    "USB device ID": "USB device ID",
+    "USB device": "USB device",
+    "Identified by vendor and product ID, so the OS may reassign the port name": "Identified by vendor and product ID, so the OS may reassign the port name"
 }

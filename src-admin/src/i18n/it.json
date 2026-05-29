@@ -166,5 +166,10 @@
   "showAliasesExplanation": "Normalmente, tutti i registri possono avere indirizzi da 0 a 65535. Utilizzando gli alias, è possibile definire campi di indirizzo virtuali per ogni tipo di registro. Solitamente:\n- gli ingressi discreti sono da 10001 a 20000\n- le bobine sono da 1 a 1000\n- i registri di ingresso sono da 30001 a 40000\n- i registri di mantenimento sono da 40001 a 60000\n\nOgni alias verrà mappato internamente all'indirizzo, ad esempio, 30011 verrà mappato al registro di ingresso 10 e così via.",
   "timeout_help": "Timeout per le richieste di lettura in millisecondi. Se entro questo tempo non viene ricevuta alcuna risposta da uno slave, la connessione verrà interrotta.",
   "waitTime_help": "Tempo di attesa tra il polling di due diversi ID dispositivo in millisecondi.",
-  "writeInterval_help": "Ritardo tra due richieste di scrittura in millisecondi. Predefinito 0."
+  "writeInterval_help": "Ritardo tra due richieste di scrittura in millisecondi. Predefinito 0.",
+  "Select device by": "Seleziona dispositivo per",
+  "Serial port": "Porta seriale",
+  "USB device ID": "ID dispositivo USB",
+  "USB device": "Dispositivo USB",
+  "Identified by vendor and product ID, so the OS may reassign the port name": "Identificato tramite ID fornitore e prodotto, così il sistema operativo può riassegnare il nome della porta"
 }

@@ -166,5 +166,10 @@
     "showAliasesExplanation": "Normalerweise können alle Register Adressen von 0 bis 65535 haben. Mithilfe von Aliasen können Sie virtuelle Adressfelder für jeden Registertyp definieren. In der Regel:\n– Diskrete Eingänge reichen von 10001 bis 20000\n– Spulen reichen von 1 bis 1000\n– Eingangsregister reichen von 30001 bis 40000\n– Halteregister reichen von 40001 bis 60000\n\nJeder Alias wird intern einer Adresse zugeordnet, z. B. wird 30011 dem Eingangsregister 10 zugeordnet usw.",
     "timeout_help": "Timeout für Leseanfragen in Millisekunden. Erfolgt innerhalb dieser Zeit keine Antwort von einem Slave, wird die Verbindung abgebrochen.",
     "waitTime_help": "Wartezeit zwischen der Abfrage zweier unterschiedlicher Geräte-IDs in Millisekunden.",
-    "writeInterval_help": "Verzögerung zwischen zwei Schreibanforderungen in Millisekunden. Standard 0."
+    "writeInterval_help": "Verzögerung zwischen zwei Schreibanforderungen in Millisekunden. Standard 0.",
+    "Select device by": "Gerät auswählen nach",
+    "Serial port": "Serielle Schnittstelle",
+    "USB device ID": "USB-Geräte-ID",
+    "USB device": "USB-Gerät",
+    "Identified by vendor and product ID, so the OS may reassign the port name": "Anhand von Hersteller- und Produkt-ID identifiziert, sodass das Betriebssystem den Portnamen neu vergeben darf"
 }

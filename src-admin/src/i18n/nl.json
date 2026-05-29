@@ -166,5 +166,10 @@
   "showAliasesExplanation": "Normaal gesproken kunnen alle registers een adres hebben van 0 tot en met 65535. Door gebruik te maken van aliassen kunt u virtuele adresvelden definiëren voor elk type register. Meestal:\n- discrete ingangen van 10001 tot en met 20000\n- spoelen van 1 tot en met 1000\n- ingangsregisters van 30001 tot en met 40000\n- holdingregisters van 40001 tot en met 60000\n\nElke alias wordt intern toegewezen aan een adres, bijvoorbeeld 30011 wordt toegewezen aan ingangsregister 10, enzovoort.",
   "timeout_help": "Time-out voor leesverzoeken in milliseconden. Als er binnen deze tijd geen reactie van een slave wordt ontvangen, wordt de verbinding verbroken.",
   "waitTime_help": "Wachttijd tussen het opvragen van twee verschillende apparaat-ID's in milliseconden.",
-  "writeInterval_help": "Vertraging tussen twee schrijfverzoeken in milliseconden. Standaard 0."
+  "writeInterval_help": "Vertraging tussen twee schrijfverzoeken in milliseconden. Standaard 0.",
+  "Select device by": "Apparaat selecteren op",
+  "Serial port": "Seriële poort",
+  "USB device ID": "USB-apparaat-ID",
+  "USB device": "USB-apparaat",
+  "Identified by vendor and product ID, so the OS may reassign the port name": "Geïdentificeerd op leveranciers- en product-ID, zodat het besturingssysteem de poortnaam opnieuw kan toewijzen"
 }

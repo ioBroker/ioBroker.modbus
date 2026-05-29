@@ -166,5 +166,10 @@
   "showAliasesExplanation": "Normalmente, todos os registradores podem ter endereços de 0 a 65535. Usando aliases, você pode definir campos de endereço virtual para cada tipo de registrador. Normalmente:\n- entradas discretas são de 10001 a 20000\n- bobinas são de 1 a 1000\n- registradores de entrada são de 30001 a 40000\n- registradores de retenção são de 40001 a 60000\n\nCada alias será mapeado internamente para o endereço, por exemplo, 30011 será mapeado para o registrador de entrada 10, e assim por diante.",
   "timeout_help": "Tempo limite para solicitações de leitura em milissegundos. Se nenhuma resposta for recebida de um escravo neste período, a conexão será encerrada.",
   "waitTime_help": "Tempo de espera entre a pesquisa de dois IDs de dispositivos diferentes em milissegundos.",
-  "writeInterval_help": "Atraso entre duas solicitações de gravação em milissegundos. Padrão 0."
+  "writeInterval_help": "Atraso entre duas solicitações de gravação em milissegundos. Padrão 0.",
+  "Select device by": "Selecionar dispositivo por",
+  "Serial port": "Porta serial",
+  "USB device ID": "ID do dispositivo USB",
+  "USB device": "Dispositivo USB",
+  "Identified by vendor and product ID, so the OS may reassign the port name": "Identificado pelo ID do fornecedor e do produto, para que o SO possa reatribuir o nome da porta"
 }

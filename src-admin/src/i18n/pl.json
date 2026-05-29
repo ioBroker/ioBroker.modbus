@@ -166,5 +166,10 @@
     "showAliasesExplanation": "Zwykle wszystkie rejestry mogą mieć adresy od 0 do 65535. Używając aliasów, można zdefiniować wirtualne pola adresowe dla każdego typu rejestrów. Zazwyczaj:\n- wejścia dyskretne mają numery od 10001 do 20000\n- cewki mają numery od 1 do 1000\n- rejestry wejściowe mają numery od 30001 do 40000\n- rejestry kontrolne mają numery od 40001 do 60000\n\nKażdy alias będzie wewnętrznie mapowany na adres, np. 30011 będzie mapowany na rejestr wejściowy 10 itd.",
     "timeout_help": "Limit czasu dla żądań odczytu w milisekundach. Jeśli w tym czasie nie zostanie odebrana żadna odpowiedź od urządzenia podrzędnego, połączenie zostanie zakończone.",
     "waitTime_help": "Czas oczekiwania pomiędzy odpytywaniem dwóch różnych identyfikatorów urządzeń w milisekundach.",
-    "writeInterval_help": "Opóźnienie między dwoma żądaniami zapisu w milisekundach. Domyślnie 0."
+    "writeInterval_help": "Opóźnienie między dwoma żądaniami zapisu w milisekundach. Domyślnie 0.",
+    "Select device by": "Wybierz urządzenie według",
+    "Serial port": "Port szeregowy",
+    "USB device ID": "Identyfikator urządzenia USB",
+    "USB device": "Urządzenie USB",
+    "Identified by vendor and product ID, so the OS may reassign the port name": "Identyfikowane na podstawie identyfikatora producenta i produktu, dzięki czemu system może zmienić nazwę portu"
 }
