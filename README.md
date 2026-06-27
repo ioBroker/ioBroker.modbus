@@ -346,6 +346,13 @@ There are some programs in folder `test` to test the TCP communication:
 - mod_RSsim.exe is a slave simulator. It can be that you need [Microsoft Visual C++ 2008 SP1 Redistributable Package](https://www.microsoft.com/en-us/download/details.aspx?id=5582) to start it (because of a Side-By-Side error).
 
 ## Changelog
+<!--
+	Placeholder for the next version (at the beginning of the line):
+	### **WORK IN PROGRESS**
+-->
+### **WORK IN PROGRESS**
+- (@GermanBluefox) Allowed the selection of port by USB path
+
 ### 8.2.0 (2026-05-29)
 - (@GermanBluefox) Added selection of the serial device by its stable USB ID (vendor/product/serial), so the connection keeps working even if the OS reassigns the port name
 

@@ -7,6 +7,7 @@
         "skipLibCheck": true, // Don't report errors in 3rd party definitions
         "noEmitOnError": true,
         "outDir": "./build",
+        "rootDir": "./src",
         "removeComments": false,
         "module": "Node16",
         "moduleResolution": "node16",
