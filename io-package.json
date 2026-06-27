@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "8.2.0",
+    "version": "8.2.1",
     "news": {
+      "8.2.1": {
+        "en": "Allowed the selection of port by USB path",
+        "de": "Ermöglichte die Auswahl des Ports über den USB-Pfad",
+        "ru": "Разрешен выбор порта по USB-пути.",
+        "pt": "Permitida a seleção da porta pelo caminho USB.",
+        "nl": "Maakte het mogelijk om de poort te selecteren via het USB-pad.",
+        "fr": "Permet la sélection du port par chemin USB",
+        "it": "Consente la selezione della porta tramite percorso USB",
+        "es": "Permitió la selección del puerto mediante la ruta USB.",
+        "pl": "Umożliwiono wybór portu według ścieżki USB",
+        "uk": "Дозволено вибір порту за USB-шляхом",
+        "zh-cn": "允许通过 USB 路径选择端口"
+      },
       "8.2.0": {
         "en": "Added selection of the serial device by its stable USB ID (vendor/product/serial), so the connection keeps working even if the OS reassigns the port name",
         "de": "Auswahl des seriellen Gerätes durch seine stabile USB-ID (Anbieter/Produkt/Serial) hinzugefügt, so dass die Verbindung weiterhin funktioniert, auch wenn das Betriebssystem den Portnamen zurückweist",
@@ -80,19 +93,6 @@
         "pl": "Wyłącz logowanie timeout żądania, jeśli 'wyłącz Parametr logowania jest ustawiony na true",
         "uk": "Вимкнути логування запиту, якщо `disable параметр Logging` встановлюється на true",
         "zh-cn": "如果“ 无法” , 则禁用请求超时记录 日志参数设置为真"
-      },
-      "8.0.0": {
-        "en": "Minimal Node.js version is 20\nCorrected `info.connected` type\nFixed writing of registers",
-        "de": "Minimal Node.js Version ist 20\nKorrigiert `info.connected` Typ\nFestes Schreiben von Registern",
-        "ru": "Минимальная версия Node.js 20\nИсправлено \"info.connected\" тип\nФиксированная запись регистров",
-        "pt": "Versão mínima Node.js é 20\nCorrigido `info.connected` tipo\nEscrita fixa dos registos",
-        "nl": "Minimale Node.js versie is 20\nOnbewerkte informatie.connected type\nVast schrijven van registers",
-        "fr": "Minimal Node.js version est 20\nCorrigé `info.connected` type\nRédaction fixe des registres",
-        "it": "Versione Minimal Node.js 20\nCorretto `info.connected` tipo\nScrittura fissa dei registri",
-        "es": "Minimal Node.js versión es 20\nCorregido `info.connected` Tipo\nRedacción fija de registros",
-        "pl": "Minimal Node.js wersja jest 20\nPoprawiono 'info.connected' typ\nStałe pisanie rejestrów",
-        "uk": "Minimal Node.js версія 20\nВиправлено `info.connected` тип\nФіксоване написання реєстрів",
-        "zh-cn": "最小节点.js 版本为 20\n已更正“ info. connect” 类型\n登记册的固定写法"
       }
     },
     "titleLang": {
