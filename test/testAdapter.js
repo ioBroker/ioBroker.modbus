@@ -1,4 +1,4 @@
-const expect = require('chai').expect;
+const assert = require('node:assert');
 const setup = require('@iobroker/legacy-testing');
 
 let objects = null;
@@ -8,19 +8,19 @@ let onStateChanged = null;
 const adapterShortName = setup.adapterName.substring(setup.adapterName.indexOf('.') + 1);
 
 function checkConnectionOfAdapter(cb, counter) {
-    counter = counter || 0;
+    counter ||= 0;
     console.log(`Try check #${counter}`);
     if (counter > 30) {
-        if (cb) cb('Cannot check connection');
+        cb?.('Cannot check connection');
         return;
     }
 
     states.getState(`system.adapter.${adapterShortName}.0.alive`, (err, state) => {
-        if (err) console.error(err);
-        if (state && state.val) {
-            if (cb) {
-                cb();
-            }
+        if (err) {
+            console.error(err);
+        }
+        if (state?.val) {
+            cb?.();
         } else {
             setTimeout(() => checkConnectionOfAdapter(cb, counter + 1), 1000);
         }
@@ -42,11 +42,7 @@ describe(`Test ${adapterShortName} adapter`, function () {
             setup.startController(
                 true,
                 (id, obj) => {},
-                (id, state) => {
-                    if (onStateChanged) {
-                        onStateChanged(id, state);
-                    }
-                },
+                (id, state) => onStateChanged?.(id, state),
                 (_objects, _states) => {
                     objects = _objects;
                     states = _states;
@@ -56,16 +52,13 @@ describe(`Test ${adapterShortName} adapter`, function () {
         });
     });
 
-    /*
-    ENABLE THIS WHEN ADAPTER RUNS IN DEMON MODE TO CHECK THAT IT HAS STARTED SUCCESSFULLY
-*/
     it(`Test ${adapterShortName} adapter: Check if adapter started`, function (done) {
         this.timeout(60000);
         checkConnectionOfAdapter(res => {
             if (res) {
                 console.log(res);
             }
-            expect(res).not.to.be.equal('Cannot check connection');
+            assert.notStrictEqual(res, 'Cannot check connection');
             objects.setObject(
                 'system.adapter.test.0',
                 {
@@ -101,7 +94,7 @@ describe(`Test ${adapterShortName} adapter`, function () {
 
         // old code
         if (isBools && !localOptions.doNotRoundAddressToWord) {
-            // align addresses to 16 bit. E.g 30 => 16, 31 => 16, 32 => 32
+            // align addresses to 16 bit. E.g. 30 => 16, 31 => 16, 32 => 32
             result.addressLow = (result.addressLow >> 4) << 4;
 
             // If the length is not a multiple of 16
@@ -141,7 +134,7 @@ describe(`Test ${adapterShortName} adapter`, function () {
         // new code
         if (isBools && !localOptions.doNotRoundAddressToWord) {
             const oldStart = result.addressLow;
-            // align addresses to 16 bit. E.g 30 => 16, 31 => 16, 32 => 32
+            // align addresses to 16 bit. E.g. 30 => 16, 31 => 16, 32 => 32
             result.addressLow = (result.addressLow >> 4) << 4;
 
             // increase the length on the alignment if any

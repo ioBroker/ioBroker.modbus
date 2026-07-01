@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const { expect } = require('chai');
+const assert = require('node:assert');
 
 // Import the splitByAddress logic from main.js
 function iterateAddresses(isBools, deviceId, result, regName, regType, localOptions) {
@@ -117,14 +117,14 @@ describe('Max Read Request Length', function () {
 
         // All blocks should respect the maxBlock limit of 20
         result.blocks.forEach((block, index) => {
-            expect(block.count).to.be.at.most(
-                localOptions.maxBlock,
+            assert.ok(
+                block.count <= localOptions.maxBlock,
                 `Block ${index} count ${block.count} exceeds maxBlock limit of ${localOptions.maxBlock}`,
             );
         });
 
         // We should have more than one block due to splitting
-        expect(result.blocks.length).to.be.greaterThan(1);
+        assert.ok(result.blocks.length > 1);
     });
 
     it('should respect maxBoolBlock for boolean registers', function () {
@@ -144,14 +144,14 @@ describe('Max Read Request Length', function () {
 
         // All blocks should respect the maxBoolBlock limit of 30
         result.blocks.forEach((block, index) => {
-            expect(block.count).to.be.at.most(
-                localOptions.maxBoolBlock,
+            assert.ok(
+                block.count <= localOptions.maxBoolBlock,
                 `Block ${index} count ${block.count} exceeds maxBoolBlock limit of ${localOptions.maxBoolBlock}`,
             );
         });
 
         // We should have multiple blocks due to splitting
-        expect(result.blocks.length).to.be.greaterThan(1);
+        assert.ok(result.blocks.length > 1);
     });
 
     it('should handle the original issue scenario correctly', function () {
@@ -175,14 +175,14 @@ describe('Max Read Request Length', function () {
 
         // All blocks should respect the maxBlock limit of 20
         result.blocks.forEach((block, index) => {
-            expect(block.count).to.be.at.most(
-                localOptions.maxBlock,
+            assert.ok(
+                block.count <= localOptions.maxBlock,
                 `Block ${index} count ${block.count} exceeds maxBlock limit of ${localOptions.maxBlock}`,
             );
         });
 
         // Should have created multiple blocks due to the 20-register limit
-        expect(result.blocks.length).to.be.greaterThan(1);
+        assert.ok(result.blocks.length > 1);
     });
 
     it('should handle boolean scenario from original issue', function () {
@@ -205,14 +205,14 @@ describe('Max Read Request Length', function () {
 
         // All blocks should respect the maxBoolBlock limit of 30
         result.blocks.forEach((block, index) => {
-            expect(block.count).to.be.at.most(
-                localOptions.maxBoolBlock,
+            assert.ok(
+                block.count <= localOptions.maxBoolBlock,
                 `Block ${index} count ${block.count} exceeds maxBoolBlock limit of ${localOptions.maxBoolBlock}`,
             );
         });
 
         // Should have created multiple blocks due to the 30-register limit
-        expect(result.blocks.length).to.be.greaterThan(1);
+        assert.ok(result.blocks.length > 1);
     });
 
     it('should split blocks correctly when approaching limit', function () {
@@ -231,9 +231,9 @@ describe('Max Read Request Length', function () {
         iterateAddresses(false, 1, result, 'holdingRegisters', 'holdingRegs', localOptions);
 
         // Should create two blocks
-        expect(result.blocks).to.have.length(2);
-        expect(result.blocks[0].count).to.equal(18); // First block
-        expect(result.blocks[1].count).to.equal(5); // Second block
+        assert.strictEqual(result.blocks.length, 2);
+        assert.strictEqual(result.blocks[0].count, 18); // First block
+        assert.strictEqual(result.blocks[1].count, 5); // Second block
     });
 });
 
