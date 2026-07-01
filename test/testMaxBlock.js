@@ -237,6 +237,83 @@ describe('Max Read Request Length', function () {
     });
 });
 
+describe('Bool address alignment to 16 bit', function () {
+    // Previous ("old") behaviour: rounding addressLow down to a 16-bit boundary
+    // without growing the length -> the aligned block no longer reached the upper
+    // end of the original address range.
+    function alignOld(result) {
+        result.addressLow = (result.addressLow >> 4) << 4;
+        if (result.length % 16) {
+            result.length = ((result.length >> 4) + 1) << 4;
+        }
+        for (const block of result.blocks) {
+            block.start = (block.start >> 4) << 4;
+            if (block.count % 16) {
+                block.count = ((block.count >> 4) + 1) << 4;
+            }
+        }
+        result.addressEnd = result.addressLow + result.length;
+        result.blocks[0].end = result.blocks[0].start + result.blocks[0].count;
+        return result;
+    }
+
+    // Current ("new") behaviour: the length is increased by the alignment offset,
+    // so the aligned block still covers the whole original range.
+    function alignNew(result) {
+        const oldStart = result.addressLow;
+        result.addressLow = (result.addressLow >> 4) << 4;
+        result.length += oldStart - result.addressLow;
+        if (result.length % 16) {
+            result.length = ((result.length >> 4) + 1) << 4;
+        }
+        for (const block of result.blocks) {
+            const blockOldStart = block.start;
+            block.start = (block.start >> 4) << 4;
+            block.count += blockOldStart - block.start;
+            if (block.count % 16) {
+                block.count = ((block.count >> 4) + 1) << 4;
+            }
+        }
+        result.addressEnd = result.addressLow + result.length;
+        result.blocks[0].end = result.blocks[0].start + result.blocks[0].count;
+        return result;
+    }
+
+    // Original range: addresses 30..60 (addressLow=30, length=30).
+    const makeInput = () => ({
+        addressLow: 30,
+        length: 30,
+        blocks: [{ start: 30, count: 30, end: 60 }],
+        addressEnd: 60,
+    });
+
+    it('new alignment still covers the original address range (30..60)', function () {
+        const aligned = alignNew(makeInput());
+
+        // 30 rounds down to 16; length grows by 14 to compensate and rounds up to 48.
+        assert.strictEqual(aligned.addressLow, 16);
+        assert.strictEqual(aligned.length, 48);
+        assert.strictEqual(aligned.addressEnd, 64);
+        assert.strictEqual(aligned.blocks[0].start, 16);
+        assert.strictEqual(aligned.blocks[0].count, 48);
+        assert.strictEqual(aligned.blocks[0].end, 64);
+
+        // The aligned range must fully contain the original 30..60 range.
+        assert.ok(aligned.addressLow <= 30, 'aligned start must not exceed original start');
+        assert.ok(aligned.addressEnd >= 60, 'aligned end must cover original end');
+        assert.ok(aligned.blocks[0].end >= 60, 'aligned block end must cover original end');
+    });
+
+    it('old alignment failed to cover the upper end of the range', function () {
+        const aligned = alignOld(makeInput());
+
+        // Old behaviour: 16..48 no longer reaches the original end address 60.
+        assert.strictEqual(aligned.addressLow, 16);
+        assert.strictEqual(aligned.addressEnd, 48);
+        assert.ok(aligned.addressEnd < 60, 'documents the bug the new alignment fixes');
+    });
+});
+
 module.exports = {
     iterateAddresses,
 };

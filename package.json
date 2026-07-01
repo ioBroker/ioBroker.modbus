@@ -40,7 +40,6 @@
     "@alcalzone/release-script-plugin-license": "^5.2.0",
     "@iobroker/build-tools": "^3.0.1",
     "@iobroker/eslint-config": "^2.3.4",
-    "@iobroker/legacy-testing": "^2.0.2",
     "@iobroker/testing": "^5.2.2",
     "@types/node": "^25.9.3",
     "modbus-stack": "^0.2.1",
@@ -57,7 +56,8 @@
   "scripts": {
     "test:integration": "mocha test/testAdapter.js --exit",
     "test:package": "mocha test/testPackageFiles.js --exit",
-    "test": "npm run test:integration",
+    "test:unit": "mocha test/testUnit.js test/testMaxBlock.js --exit",
+    "test": "npm run test:package && npm run test:unit && npm run test:integration",
     "release": "release-script",
     "lint": "eslint -c eslint.config.mjs",
     "build-backend": "tsc -p tsconfig.build.json",
