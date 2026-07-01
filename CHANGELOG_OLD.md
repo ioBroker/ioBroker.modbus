@@ -1,4 +1,7 @@
 # Older changes
+## 8.0.5 (2026-04-11)
+* (@GermanBluefox) Fixed possible errors
+
 ## 8.0.3 (2026-02-17)
 * (@GermanBluefox) Set the default value of a slave to '0' and not to 0
 * (@GermanBluefox) Showed address 0
