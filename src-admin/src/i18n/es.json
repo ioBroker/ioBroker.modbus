@@ -162,7 +162,7 @@
     "doNotRoundAddressToWord_help": "Normalmente, las direcciones de las bobinas y las entradas discretas están alineadas a 16 bits. Las direcciones similares del 3 al 20 se alinearán del 0 al 32.\nSi esta opción está activa, las direcciones no estarán alineadas.",
     "doNotUseWriteMultipleRegisters_help": "Si el esclavo no admite el comando \"escribir registros múltiples\", puede activarlo para recibir advertencias cuando se escribirán los registros múltiples.",
     "formula": "formula",
-    "ms": "ms",
+    "ms": "EM",
     "poll": "encuesta",
     "poll_help": "Intervalo de sondeo cíclico en milisegundos (solo relevante para maestro)",
     "preserve dots in ID": "preservar puntos en ID",
