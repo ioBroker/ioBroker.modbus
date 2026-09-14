@@ -162,7 +162,7 @@
     "doNotRoundAddressToWord_help": "Zwykle adresy cewek i wejść dyskretnych są ustawione na 16 bitów. Podobnie jak adresy od 3 do 20 zostaną wyrównane do 0 do 32.\nJeżeli ta opcja jest włączona, adresy nie zostaną wyrównane.",
     "doNotUseWriteMultipleRegisters_help": "Jeśli urządzenie slave nie obsługuje polecenia „zapisz wiele rejestrów”, możesz je aktywować, aby uzyskać ostrzeżenia, gdy zostanie zapisanych wiele rejestrów.",
     "formula": "formula",
-    "ms": "ms",
+    "ms": "SM",
     "poll": "Zapytanie",
     "poll_help": "Cykliczny interwał odpytywania w milisekundach (dotyczy tylko mastera)",
     "preserve dots in ID": "zachowaj kropki w ID",
