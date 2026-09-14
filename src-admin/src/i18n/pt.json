@@ -162,7 +162,7 @@
     "doNotRoundAddressToWord_help": "Normalmente, as bobinas e os endereços das entradas discretas são alinhados em 16 bits. Endereços semelhantes de 3 a 20 serão alinhados de 0 a 32.\nSe esta opção estiver ativa, os endereços não ficarão alinhados.",
     "doNotUseWriteMultipleRegisters_help": "Se o escravo não suportar o comando \"escrever múltiplos registros\", você pode ativá-lo para receber avisos quando os múltiplos registros serão gravados.",
     "formula": "formula",
-    "ms": "ms",
+    "ms": "EM",
     "poll": "votação",
     "poll_help": "Intervalo de pesquisa cíclica em milissegundos (relevante apenas para mestre)",
     "preserve dots in ID": "preservar pontos no ID",
