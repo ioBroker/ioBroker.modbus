@@ -162,7 +162,7 @@
     "doNotRoundAddressToWord_help": "Normaal gesproken zijn de spoelen en de discrete ingangsadressen uitgelijnd op 16 bit. Soortgelijke adressen van 3 tot 20 worden uitgelijnd op 0 tot 32.\nAls deze optie actief is, worden de adressen niet uitgelijnd.",
     "doNotUseWriteMultipleRegisters_help": "Als de slave de opdracht \"meerdere registers schrijven\" niet ondersteunt, kunt u deze activeren om waarschuwingen te krijgen wanneer de meerdere registers zullen worden geschreven.",
     "formula": "formula",
-    "ms": "ms",
+    "ms": "mevrouw",
     "poll": "poll",
     "poll_help": "Cyclisch poll-interval in milliseconden (alleen relevant voor master)",
     "preserve dots in ID": "bewaar stippen in ID",
