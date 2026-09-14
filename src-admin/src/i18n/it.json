@@ -162,7 +162,7 @@
     "doNotRoundAddressToWord_help": "Normalmente le bobine e gli indirizzi degli ingressi discreti sono allineati a 16 bit. Gli indirizzi simili da 3 a 20 verranno allineati da 0 a 32.\nSe questa opzione è attiva gli indirizzi non verranno allineati.",
     "doNotUseWriteMultipleRegisters_help": "Se lo slave non supporta il comando \"scrivi più registri\", puoi attivarlo per ricevere avvisi quando verranno scritti più registri.",
     "formula": "formula",
-    "ms": "ms",
+    "ms": "SM",
     "poll": "sondaggio",
     "poll_help": "Intervallo di interrogazione ciclica in millisecondi (rilevante solo per il master)",
     "preserve dots in ID": "conserva punti nell'ID",
