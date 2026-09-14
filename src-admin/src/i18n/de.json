@@ -162,7 +162,7 @@
     "doNotRoundAddressToWord_help": "Normalerweise sind die Adressen der diskrete Ausgänge und der diskreten Eingänge auf 16 Bit ausgerichtet. Gleiche Adressen von 3 bis 20 werden auf 0 bis 32 ausgerichtet.\nWenn diese Option aktiv ist, werden die Adressen nicht abgeglichen.",
     "doNotUseWriteMultipleRegisters_help": "Wenn der Slave den Befehl „Mehrere Register schreiben“ nicht unterstützt, können Sie ihn aktivieren, um Warnungen zu erhalten, wenn mehrere Register geschrieben werden.",
     "formula": "Formel",
-    "ms": "ms",
+    "ms": "MS",
     "poll": "Poll",
     "poll_help": "Zyklisches Abfrageintervall in Millisekunden (Nur relevant für Master)",
     "preserve dots in ID": "Punkte in IDs erhalten",
