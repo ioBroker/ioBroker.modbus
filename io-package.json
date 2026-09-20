@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "9.1.1",
+    "version": "9.1.2",
     "news": {
+      "9.1.2": {
+        "en": "Added explanations of timings in GUI\nCorrected proxy mode with multiple DeviceIDs\nAdded better problem logging",
+        "de": "Zeiterklärungen in GUI hinzugefügt\nProxymodus mit mehreren Geräte-IDs korrigiert\nBessere Problemmeldung hinzugefügt",
+        "ru": "Добавлены объяснения таймингов в графическом интерфейсе\nИсправлен режим прокси-сервера с несколькими идентификаторами устройств\nДобавлено улучшенное ведение журнала проблем",
+        "pt": "Mais explicações de horários na GUI\nModo proxy corrigido com vários DeviceIDs\nMelhor registro de problemas",
+        "nl": "Uitleg over de tijdstippen in de GUI toegevoegd\nProxy-modus gecorrigeerd met meerdere apparaat-ID's\nBetere probleemregistratie toegevoegd",
+        "fr": "Ajout de détails sur les horaires dans l'interface\nMode proxy corrigé avec plusieurs DeviceID\nAjout d'une meilleure journalisation",
+        "it": "Aggiunti i tempi nella GUI\nModo proxy corretto con più deviceID\nAggiunto un log migliore",
+        "es": "Se han añadido explicaciones de los tiempos en la GUI\nModo proxy corregido con varios DeviceID\nAñadió mejor registro de problemas",
+        "pl": "Dodano wyjaśnienia czasów w GUI\nPoprawiony tryb proxy z wieloma urządzeniami\nDodano lepsze rejestrowanie problemów",
+        "uk": "Додано пояснення таймінгу в графічному інтерфейсі\nВиправлений режим проксі з декількома ідентифікаторами пристроїв\nДодано кращу реєстрацію проблем",
+        "zh-cn": "在 GUI 中添加了对时机的解释\n更正了使用多个 deviceID 的代理模式\n添加了更好的问题日志"
+      },
       "9.1.1": {
         "en": "Fixed stale and overlapping polling cycles after a reconnect (ioBroker.modbus issue #595): a block read error was logged and swallowed, so the polling loop kept running after the request timeout had already trashed the socket and cleared the request FIFO. The next register request was queued after that cleanup and was therefore sent on the reconnected socket, before the fresh cycle started by the connect handler — two polling cycles then ran in parallel. A pending reconnect, a lost connection or a stopping master now aborts the remaining blocks, register types and device IDs of the running cycle\nLimited that abort to connection failures: a plain Modbus exception response (illegal data address, illegal function, device busy) leaves the socket intact, so the remaining blocks of that register type are read as before. Otherwise a single register the device rejects would have permanently hidden every block behind it, because the block order is fixed\nFixed a second source of stale requests: the block loops only checked connected, which is still true while a reconnect is pending. A connection that died during the wait between two blocks therefore queued the next request into the already cleared FIFO\nA pending reconnect timer is now cancelled when the client reports connect, so the timer of the deliberately dropped socket cannot tear the fresh connection down again\nAdded a regression test for the polling of the remaining blocks after a device rejects one of them with an exception response",
         "de": "Behebung veralteter und sich überschneidender Abfragezyklen nach einer Wiederverbindung (ioBroker.modbus-Problem #595): Ein Lesefehler eines Blocks wurde protokolliert und ignoriert, sodass die Abfrageschleife weiterlief, nachdem das Anforderungs-Timeout den Socket bereits gelöscht und die Anforderungs-FIFO geleert hatte. Die nächste Registeranforderung wurde nach dieser Bereinigung in die Warteschlange gestellt und daher über den wiederhergestellten Socket gesendet, bevor der Verbindungshandler einen neuen Zyklus startete – zwei Abfragezyklen liefen somit parallel. Eine ausstehende Wiederverbindung, ein Verbindungsverlust oder ein stoppender Master brechen nun die verbleibenden Blöcke, Registertypen und Geräte-IDs des laufenden Zyklus ab.\nDer Abbruch ist auf Verbindungsfehler beschränkt: Eine einfache Modbus-Ausnahmeantwort (ungültige Datenadresse, ungültige Funktion, Gerät belegt) lässt den Socket intakt, sodass die verbleibenden Blöcke dieses Registertyps wie zuvor gelesen werden. Andernfalls würde ein einzelnes vom Gerät abgelehntes Register alle dahinter liegenden Blöcke dauerhaft verdecken, da die Blockreihenfolge feststeht.\nEine zweite Ursache für veraltete Anfragen wurde behoben: Die Blockschleifen prüften nur, ob eine Verbindung bestand, was auch dann noch der Fall war, wenn eine Wiederverbindung ausstand. Eine Verbindung, die während der Wartezeit zwischen zwei Blöcken abbrach, führte daher dazu, dass die nächste Anfrage in die bereits geleerte FIFO-Warteschlange eingereiht wurde.\nEin ausstehender Wiederverbindungstimer wird nun abgebrochen, sobald der Client die Verbindung meldet, sodass der Timer der absichtlich getrennten Socket-Verbindung die neue Verbindung nicht erneut unterbrechen kann.\nEs wurde ein Regressionstest für das Abfragen der verbleibenden Blöcke hinzugefügt, nachdem ein Gerät einen davon mit einer Ausnahmeantwort abgelehnt hat.",
@@ -80,19 +93,6 @@
         "pl": "Naprawiono odczyty cewki FC1 zwracające nieaktualne dane: teraz urządzenie podrzędne odświeża bufor cewki przed odpowiedzią (nazwa zdarzenia jest zgodna z nasłuchiwaczem)\nNaprawiono awarię serwera TCP slave w przypadku błędów nasłuchiwania serwera (np. adres już używany lub port uprzywilejowany bez uprawnień); takie błędy są teraz rejestrowane\nNaprawiono błąd polegający na zapisywaniu odczytów z cewki/wejścia dyskretnego do niewłaściwego bitu bufora dla adresów początkowych innych niż 0\nNaprawiono rozmiar bufora cewki/wejścia dyskretnego, gdy najwyższy adres jest wielokrotnością 8 (`ceil(addressHigh / 8)`)\n",
         "uk": "Виправлено зчитування котушки FC1, що повертає застарілі дані: ведомий пристрій тепер оновлює буфер котушки перед відповіддю (назва події збігалася з прослуховувачем).\nВиправлено збій TCP slave-адаптера через помилки прослуховування сервера (наприклад, адреса вже використовується або привілейований порт без дозволу); тепер такі помилки реєструються.\nВиправлено запис читання котушки/дискретного входу в неправильний біт буфера для початкових адрес, відмінних від 0\nВиправлено розмір буфера котушки/дискретного входу, коли найвища адреса кратна 8 (`ceil(addressHigh / 8)`)\n",
         "zh-cn": "修复了 FC1 线圈读取返回过期数据的问题：从设备现在会在响应之前刷新线圈缓冲区（事件名称与监听器匹配）。\n修复了 TCP 从设备在服务器监听错误（例如地址已被占用或未经授权使用特权端口）时崩溃的问题；现在此类错误会被记录下来。\n对于起始地址非 0 的情况，固定线圈/离散输入读取的数据被写入了错误的缓冲区位。\n当最高地址为 8 的倍数时，固定线圈/离散输入缓冲区大小（`ceil(addressHigh / 8)`）。\n"
-      },
-      "8.2.1": {
-        "en": "Allowed the selection of port by USB path",
-        "de": "Ermöglichte die Auswahl des Ports über den USB-Pfad",
-        "ru": "Разрешен выбор порта по USB-пути.",
-        "pt": "Permitida a seleção da porta pelo caminho USB.",
-        "nl": "Maakte het mogelijk om de poort te selecteren via het USB-pad.",
-        "fr": "Permet la sélection du port par chemin USB",
-        "it": "Consente la selezione della porta tramite percorso USB",
-        "es": "Permitió la selección del puerto mediante la ruta USB.",
-        "pl": "Umożliwiono wybór portu według ścieżki USB",
-        "uk": "Дозволено вибір порту за USB-шляхом",
-        "zh-cn": "允许通过 USB 路径选择端口"
       }
     },
     "titleLang": {

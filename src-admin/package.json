@@ -1,6 +1,6 @@
 {
     "name": "modbus-admin",
-    "version": "9.1.1",
+    "version": "9.1.2",
     "private": true,
     "type": "module",
     "dependencies": {
