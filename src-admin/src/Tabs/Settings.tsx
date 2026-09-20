@@ -4,6 +4,7 @@ import type { AdminConnection, IobTheme, ThemeName, ThemeType } from '@iobroker/
 
 import { address2alias, nonDirect2direct, direct2nonDirect, alias2address } from '../Components/Utils';
 import { type ConfigItemPanel, JsonConfigComponent } from '@iobroker/json-config';
+import ConfigTimingHelp from '../Components/ConfigTimingHelp';
 import type { Modbus } from '@iobroker/modbus';
 
 interface SettingsProps {
@@ -174,7 +175,16 @@ const schema: ConfigItemPanel = {
             label: 'Poll delay',
             unit: 'ms',
             help: 'poll_help',
-            xs: 12,
+            xs: 9,
+            md: 5,
+            hidden: 'data.slave === "1"',
+        },
+        _pollDiagram: {
+            type: 'component',
+            subType: 'timingHelp',
+            diagram: 'poll',
+            xs: 3,
+            md: 1,
             hidden: 'data.slave === "1"',
         },
         recon: {
@@ -182,16 +192,36 @@ const schema: ConfigItemPanel = {
             min: 1,
             label: 'Reconnect time',
             unit: 'ms',
-            xs: 12,
+            help: 'recon_help',
+            xs: 9,
+            md: 5,
+            hidden: 'data.slave === "1"',
+        },
+        _reconDiagram: {
+            type: 'component',
+            subType: 'timingHelp',
+            diagram: 'recon',
+            xs: 3,
+            md: 1,
             hidden: 'data.slave === "1"',
         },
         timeout: {
+            newLine: true,
             type: 'number',
             min: 100,
             label: 'Read timeout',
             unit: 'ms',
             help: 'timeout_help',
-            xs: 12,
+            xs: 9,
+            md: 5,
+            hidden: 'data.slave === "1"',
+        },
+        _timeoutDiagram: {
+            type: 'component',
+            subType: 'timingHelp',
+            diagram: 'timeout',
+            xs: 3,
+            md: 1,
             hidden: 'data.slave === "1"',
         },
         pulseTime: {
@@ -199,34 +229,69 @@ const schema: ConfigItemPanel = {
             label: 'Pulse time',
             unit: 'ms',
             help: 'pulsetime_help',
-            xs: 12,
+            xs: 9,
+            md: 5,
+            hidden: 'data.slave === "1"',
+        },
+        _pulseTimeDiagram: {
+            type: 'component',
+            subType: 'timingHelp',
+            diagram: 'pulseTime',
+            xs: 3,
+            md: 1,
             hidden: 'data.slave === "1"',
         },
         waitTime: {
+            newLine: true,
             type: 'number',
             label: 'Wait time',
             unit: 'ms',
             help: 'waitTime_help',
-            xs: 12,
+            xs: 9,
+            md: 5,
+            hidden: 'data.slave === "1"',
+        },
+        _waitTimeDiagram: {
+            type: 'component',
+            subType: 'timingHelp',
+            diagram: 'waitTime',
+            xs: 3,
+            md: 1,
             hidden: 'data.slave === "1"',
         },
         readInterval: {
-            newLine: true,
             type: 'number',
             label: 'Read interval',
             unit: 'ms',
             help: 'readInterval_help',
-            xs: 12,
-            md: 6,
+            xs: 9,
+            md: 5,
+            hidden: 'data.slave === "1"',
+        },
+        _readIntervalDiagram: {
+            type: 'component',
+            subType: 'timingHelp',
+            diagram: 'readInterval',
+            xs: 3,
+            md: 1,
             hidden: 'data.slave === "1"',
         },
         writeInterval: {
+            newLine: true,
             type: 'number',
             label: 'Write interval',
             unit: 'ms',
             help: 'writeInterval_help',
-            xs: 12,
-            md: 6,
+            xs: 9,
+            md: 5,
+            hidden: 'data.slave === "1"',
+        },
+        _writeIntervalDiagram: {
+            type: 'component',
+            subType: 'timingHelp',
+            diagram: 'writeInterval',
+            xs: 3,
+            md: 1,
             hidden: 'data.slave === "1"',
         },
 
@@ -285,8 +350,16 @@ const schema: ConfigItemPanel = {
             label: 'Counter expire time',
             unit: 's',
             help: 'notifyOnReadExpire_help',
-            xs: 12,
-            md: 6,
+            xs: 9,
+            md: 5,
+            hidden: 'data.slave !== "1"',
+        },
+        _notifyOnReadExpireDiagram: {
+            type: 'component',
+            subType: 'timingHelp',
+            diagram: 'notifyOnReadExpire',
+            xs: 3,
+            md: 1,
             hidden: 'data.slave !== "1"',
         },
         notifyOnReadCoils: {
@@ -338,6 +411,7 @@ export default function Settings(props: SettingsProps): React.JSX.Element {
                 isFloatComma={props.systemConfig.common.isFloatComma}
                 dateFormat={props.systemConfig.common.dateFormat}
                 schema={schema}
+                customComponents={{ timingHelp: ConfigTimingHelp }}
                 onChange={(params): void => {
                     const native: Modbus.ModbusAdapterConfig = JSON.parse(JSON.stringify(props.native));
                     native.params = params as Modbus.ModbusParametersTyped;

@@ -1,0 +1,221 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 1540" width="1060" height="1540" role="img" aria-labelledby="ttl dsc">
+<title id="ttl">ioBroker.modbus - timeouts and intervals of the configuration GUI</title>
+<desc id="dsc">Timing diagram explaining Poll delay, Read interval, Wait time, Read timeout, Reconnect time, Write interval, Pulse time and Counter expire time.</desc>
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path class="mk" d="M0,0 L10,5 L0,10 Z"/>
+  </marker>
+  <style>
+    text { font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .bg      { fill:#f5f7fa; }
+    .panel   { fill:#ffffff; stroke:#e1e5ec; }
+    .stripe  { fill:#f6f8fb; }
+    .title   { fill:#171c26; font-size:21px; font-weight:600; }
+    .sec     { fill:#171c26; font-size:14px; font-weight:700; }
+    .sub, .secsub, .note { fill:#606a7b; font-size:11.5px; }
+    .key     { fill:#78828f; font-size:10px; }
+    .devtext { fill:#5a6478; font-size:10.5px; }
+    .lab     { font-size:12px; font-weight:600; fill:#5a6478; }
+    .th      { fill:#171c26; font-size:11px; font-weight:700; }
+    .td      { fill:#3c4757; font-size:11.5px; }
+    .tdk     { fill:#606a7b; font-size:11px; font-family:Consolas,"Courier New",monospace; }
+    .axis    { stroke:#d3d9e2; stroke-width:1; fill:none; }
+    .guide   { stroke:#b9c1cd; stroke-width:1; stroke-dasharray:3 3; fill:none; }
+    .sig     { fill:none; stroke-width:2.4; stroke-linejoin:round; }
+    .req     { stroke:#0f9d58; }
+    .res     { stroke:#e08e0b; }
+    .state   { stroke:#7c4dff; }
+    .conn    { stroke:#0b7fd4; }
+    .chipg   { fill:#0f9d58; }
+    .chipo   { fill:#e08e0b; }
+    .tgreen  { fill:#0f9d58; }
+    .torange { fill:#b97407; }
+    .tpurple { fill:#6d3fe0; }
+    .tblue   { fill:#0b7fd4; }
+    .meas    { stroke:#1a56db; stroke-width:1.5; fill:none; }
+    .measlab { fill:#1a56db; font-size:11.5px; font-weight:700; }
+    .mk      { fill:#1a56db; }
+    .errtext { fill:#c62828; font-size:10.5px; font-weight:600; }
+    .devbox  { fill:#eef2ff; stroke:#cbd5f5; }
+    @media (prefers-color-scheme: dark) {
+      .bg      { fill:#12161f; }
+      .panel   { fill:#1a1f2b; stroke:#2c3444; }
+      .stripe  { fill:#1f2534; }
+      .title, .sec, .th { fill:#e8ecf4; }
+      .sub, .secsub, .note, .key, .devtext { fill:#98a2b6; }
+      .lab     { fill:#c2cad8; }
+      .td      { fill:#d3d9e4; }
+      .tdk     { fill:#9aa4b8; }
+      .axis    { stroke:#333c4e; }
+      .guide   { stroke:#4a5470; }
+      .req     { stroke:#4ade80; }
+      .res     { stroke:#fbbf24; }
+      .state   { stroke:#a78bfa; }
+      .conn    { stroke:#38bdf8; }
+      .chipg   { fill:#4ade80; }
+      .chipo   { fill:#fbbf24; }
+      .tgreen  { fill:#4ade80; }
+      .torange { fill:#fbbf24; }
+      .tpurple { fill:#a78bfa; }
+      .tblue   { fill:#38bdf8; }
+      .meas    { stroke:#60a5fa; }
+      .measlab { fill:#60a5fa; }
+      .mk      { fill:#60a5fa; }
+      .errtext { fill:#f87171; }
+      .devbox  { fill:#252c3d; stroke:#3b455c; }
+    }
+  </style>
+</defs>
+
+<rect class="bg" x="0" y="0" width="1060" height="1540"/>
+
+<!-- ============ header ============ -->
+<text class="title" x="32" y="42">ioBroker.modbus &#183; timeouts and intervals of the configuration GUI</text>
+<text class="sub" x="32" y="64">Tab &#8220;Settings&#8221; &#8594; sections &#8220;Timings&#8221; (master) and &#8220;Read notification&#8221; (slave). All values in ms, except where noted.</text>
+<rect class="chipg" x="878" y="26" width="12" height="12" rx="2"/>
+<text class="sub" x="898" y="36">master &#8594; slave</text>
+<rect class="chipo" x="878" y="48" width="12" height="12" rx="2"/>
+<text class="sub" x="898" y="58">slave &#8594; master</text>
+
+<!-- ============ A: polling cycle ============ -->
+<rect class="panel" x="24" y="86" width="1012" height="358" rx="10"/>
+<text class="sec" x="44" y="112">A &#183; Polling cycle &#8212; master</text>
+<text class="secsub" x="44" y="130">One cycle reads all blocks of all device IDs. &#8220;Poll delay&#8221; starts at the end of the cycle, so the real cycle time = duration + poll delay.</text>
+
+<path class="axis" d="M210,157 V151 H502 V157"/>
+<text class="key" x="356" y="146" text-anchor="middle">one polling cycle</text>
+
+<text class="lab tgreen" x="176" y="187" text-anchor="end">Request</text>
+<text class="lab torange" x="176" y="239" text-anchor="end">Response</text>
+<text class="lab" x="176" y="281" text-anchor="end">Device ID</text>
+
+<path class="guide" d="M210,158 V320 M252,158 V320 M274,158 V354 M310,158 V354 M374,158 V388 M438,158 V388 M502,158 V422 M616,158 V422"/>
+
+<path class="sig req" d="M190,198 H210 V168 H226 V198 H310 V168 H326 V198 H438 V168 H454 V198 H616 V168 H632 V198 H716 V168 H732 V198 H844 V168 H860 V198 H1000 V168 H1014"/>
+<path class="sig res" d="M190,250 H252 V220 H274 V250 H352 V220 H374 V250 H480 V220 H502 V250 H658 V220 H680 V250 H758 V220 H780 V250 H886 V220 H908 V250 H1014"/>
+
+<rect class="devbox" x="204" y="266" width="176" height="22" rx="5"/>
+<text class="devtext" x="292" y="281" text-anchor="middle">device ID 1</text>
+<rect class="devbox" x="432" y="266" width="76" height="22" rx="5"/>
+<text class="devtext" x="470" y="281" text-anchor="middle">ID 2</text>
+<rect class="devbox" x="610" y="266" width="176" height="22" rx="5"/>
+<text class="devtext" x="698" y="281" text-anchor="middle">device ID 1</text>
+<rect class="devbox" x="838" y="266" width="76" height="22" rx="5"/>
+<text class="devtext" x="876" y="281" text-anchor="middle">ID 2</text>
+
+<path class="meas" marker-start="url(#arr)" marker-end="url(#arr)" d="M210,320 H252"/>
+<text x="262" y="324"><tspan class="measlab">Read timeout</tspan><tspan class="key" dx="8">params.timeout &#183; max. time to wait for the answer &#8212; when it expires the connection is dropped (see C)</tspan></text>
+
+<path class="meas" marker-start="url(#arr)" marker-end="url(#arr)" d="M274,354 H310"/>
+<text x="320" y="358"><tspan class="measlab">Read interval</tspan><tspan class="key" dx="8">params.readInterval &#183; pause between two read requests of the same device</tspan></text>
+
+<path class="meas" marker-start="url(#arr)" marker-end="url(#arr)" d="M374,388 H438"/>
+<text x="448" y="392"><tspan class="measlab">Wait time</tspan><tspan class="key" dx="8">params.waitTime &#183; pause before the next device ID is polled</tspan></text>
+
+<path class="meas" marker-start="url(#arr)" marker-end="url(#arr)" d="M502,422 H616"/>
+<text x="626" y="426"><tspan class="measlab">Poll delay</tspan><tspan class="key" dx="8">params.poll &#183; pause between two polling cycles</tspan></text>
+
+<!-- ============ B: writing ============ -->
+<rect class="panel" x="24" y="460" width="1012" height="250" rx="10"/>
+<text class="sec" x="44" y="486">B &#183; Writing &#8212; master</text>
+<text class="secsub" x="44" y="504">Write requests are sent one after the other. &#8220;Pulse time&#8221; applies only to coils / holding registers with the WP (write pulse) flag.</text>
+
+<text class="lab tgreen" x="176" y="549" text-anchor="end">Write request</text>
+<text class="lab tpurple" x="176" y="601" text-anchor="end">Coil in device</text>
+
+<path class="guide" d="M226,522 V646 M300,522 V646 M528,522 V680 M668,522 V680"/>
+
+<path class="sig req" d="M190,560 H210 V530 H226 V560 H300 V530 H316 V560 H520 V530 H536 V560 H660 V530 H676 V560 H1014"/>
+<path class="sig state" d="M190,612 H528 V582 H668 V612 H1014"/>
+
+<text class="key" x="520" y="524">write true</text>
+<text class="key" x="660" y="524">write false (automatically by the adapter)</text>
+<text class="key" x="598" y="576" text-anchor="middle">coil is ON</text>
+
+<path class="meas" marker-start="url(#arr)" marker-end="url(#arr)" d="M226,646 H300"/>
+<text x="310" y="650"><tspan class="measlab">Write interval</tspan><tspan class="key" dx="8">params.writeInterval &#183; pause between two write requests</tspan></text>
+
+<path class="meas" marker-start="url(#arr)" marker-end="url(#arr)" d="M528,680 H668"/>
+<text x="678" y="684"><tspan class="measlab">Pulse time</tspan><tspan class="key" dx="8">params.pulseTime &#183; how long the coil stays set</tspan></text>
+
+<!-- ============ C: connection loss ============ -->
+<rect class="panel" x="24" y="726" width="1012" height="224" rx="10"/>
+<text class="sec" x="44" y="752">C &#183; Missing answer and reconnect &#8212; master</text>
+<text class="secsub" x="44" y="770">If no answer arrives within &#8220;Read timeout&#8221;, the connection is closed. After &#8220;Reconnect time&#8221; the adapter connects again and starts a new cycle.</text>
+
+<text class="lab tgreen" x="176" y="815" text-anchor="end">Request</text>
+<text class="lab tblue" x="176" y="867" text-anchor="end">info.connection</text>
+
+<path class="guide" d="M380,788 V916 M470,788 V916 M740,788 V916"/>
+
+<path class="sig req" d="M190,826 H380 V796 H396 V826 H760 V796 H776 V826 H1014"/>
+<path class="sig conn" d="M190,848 H470 V878 H740 V848 H1014"/>
+
+<text class="errtext" x="406" y="808">no answer from the slave</text>
+<text class="key" x="478" y="872">connection = false</text>
+<text class="key" x="748" y="842">reconnected &#8594; polling restarts</text>
+
+<path class="meas" marker-start="url(#arr)" marker-end="url(#arr)" d="M380,916 H470"/>
+<text class="measlab" x="425" y="909" text-anchor="middle">Read timeout</text>
+<text class="key" x="425" y="932" text-anchor="middle">params.timeout</text>
+
+<path class="meas" marker-start="url(#arr)" marker-end="url(#arr)" d="M470,916 H740"/>
+<text class="measlab" x="605" y="909" text-anchor="middle">Reconnect time</text>
+<text class="key" x="605" y="932" text-anchor="middle">params.recon</text>
+
+<!-- ============ D: slave read notification ============ -->
+<rect class="panel" x="24" y="966" width="1012" height="214" rx="10"/>
+<text class="sec" x="44" y="992">D &#183; Read notification &#8212; slave</text>
+<text class="secsub" x="44" y="1010">Every read by the master increments modbus.0.readNotify.&lt;state&gt;. &#8220;Counter expire time&#8221; lets that state expire when the reads stop (watchdog). 0 = no expiry.</text>
+
+<text class="lab tgreen" x="176" y="1055" text-anchor="end">Read by master</text>
+<text class="lab tpurple" x="176" y="1107" text-anchor="end">readNotify.&#8230;</text>
+
+<path class="guide" d="M518,1028 V1152 M818,1080 V1152"/>
+
+<path class="sig req" d="M190,1066 H250 V1036 H266 V1066 H380 V1036 H396 V1066 H510 V1036 H526 V1066 H1014"/>
+<path class="sig state" d="M190,1118 H258 V1088 H818 V1118 H1014"/>
+
+<text class="key" x="258" y="1030" text-anchor="middle">counter 1</text>
+<text class="key" x="388" y="1030" text-anchor="middle">2</text>
+<text class="key" x="518" y="1030" text-anchor="middle">3</text>
+<text class="key" x="534" y="1083">state exists, every read renews the expiry</text>
+<text class="errtext" x="826" y="1112">expired &#8594; value null</text>
+
+<path class="meas" marker-start="url(#arr)" marker-end="url(#arr)" d="M518,1152 H818"/>
+<text class="measlab" x="668" y="1145" text-anchor="middle">Counter expire time</text>
+<text class="key" x="668" y="1168" text-anchor="middle">params.notifyOnReadExpire &#183; in seconds, counted from the last read</text>
+
+<!-- ============ E: overview table ============ -->
+<rect class="panel" x="24" y="1196" width="1012" height="314" rx="10"/>
+<text class="sec" x="44" y="1222">E &#183; Overview of all fields</text>
+
+<text class="th" x="48" y="1250">GUI label</text>
+<text class="th" x="230" y="1250">Config key</text>
+<text class="th" x="400" y="1250">Default</text>
+<text class="th" x="478" y="1250">Diagram</text>
+<text class="th" x="540" y="1250">Meaning</text>
+<path class="axis" d="M44,1258 H1016"/>
+
+<rect class="stripe" x="44" y="1264" width="972" height="26" rx="3"/>
+<text class="td" x="48" y="1282">Poll delay</text><text class="tdk" x="230" y="1282">params.poll</text><text class="td" x="400" y="1282">1000 ms</text><text class="td" x="478" y="1282">A</text><text class="td" x="540" y="1282">Pause between two polling cycles</text>
+
+<text class="td" x="48" y="1308">Read interval</text><text class="tdk" x="230" y="1308">params.readInterval</text><text class="td" x="400" y="1308">0 ms</text><text class="td" x="478" y="1308">A</text><text class="td" x="540" y="1308">Pause between two read requests</text>
+
+<rect class="stripe" x="44" y="1316" width="972" height="26" rx="3"/>
+<text class="td" x="48" y="1334">Wait time</text><text class="tdk" x="230" y="1334">params.waitTime</text><text class="td" x="400" y="1334">50 ms</text><text class="td" x="478" y="1334">A</text><text class="td" x="540" y="1334">Pause when switching to the next device ID</text>
+
+<text class="td" x="48" y="1360">Read timeout</text><text class="tdk" x="230" y="1360">params.timeout</text><text class="td" x="400" y="1360">5000 ms</text><text class="td" x="478" y="1360">A, C</text><text class="td" x="540" y="1360">Max. time to wait for an answer, then the connection is dropped</text>
+
+<rect class="stripe" x="44" y="1368" width="972" height="26" rx="3"/>
+<text class="td" x="48" y="1386">Reconnect time</text><text class="tdk" x="230" y="1386">params.recon</text><text class="td" x="400" y="1386">60000 ms</text><text class="td" x="478" y="1386">C</text><text class="td" x="540" y="1386">Delay before the connection is established again (min. 1000 ms)</text>
+
+<text class="td" x="48" y="1412">Write interval</text><text class="tdk" x="230" y="1412">params.writeInterval</text><text class="td" x="400" y="1412">0 ms</text><text class="td" x="478" y="1412">B</text><text class="td" x="540" y="1412">Pause between two write requests</text>
+
+<rect class="stripe" x="44" y="1420" width="972" height="26" rx="3"/>
+<text class="td" x="48" y="1438">Pulse time</text><text class="tdk" x="230" y="1438">params.pulseTime</text><text class="td" x="400" y="1438">1000 ms</text><text class="td" x="478" y="1438">B</text><text class="td" x="540" y="1438">Length of the pulse for registers with the WP flag</text>
+
+<text class="td" x="48" y="1464">Counter expire time</text><text class="tdk" x="230" y="1464">params.notifyOnReadExpire</text><text class="td" x="400" y="1464">0 s = off</text><text class="td" x="478" y="1464">D</text><text class="td" x="540" y="1464">Expiry of the readNotify counter state (slave only)</text>
+
+<text class="note" x="48" y="1492">Tab &#8220;Connection&#8221;: with &#8220;Multi device IDs&#8221; enabled, &#8220;Read timeout&#8221; and &#8220;Wait time&#8221; can be overridden per device ID in the table &#8220;Per-device timeouts&#8221;.</text>
+</svg>
