@@ -353,6 +353,7 @@ There are some programs in folder `test` to test the TCP communication:
 ### **WORK IN PROGRESS**
 - (@GermanBluefox) Added explanations of timings in GUI
 - (@GermanBluefox) Corrected proxy mode with multiple DeviceIDs
+- (@GermanBluefox) Added better problem logging
 
 ### 9.1.1 (2026-08-27)
 - (@nobl) Fixed stale and overlapping polling cycles after a reconnect (ioBroker.modbus issue #595): a block read error was logged and swallowed, so the polling loop kept running after the request timeout had already trashed the socket and cleared the request FIFO. The next register request was queued after that cleanup and was therefore sent on the reconnected socket, before the fresh cycle started by the connect handler — two polling cycles then ran in parallel. A pending reconnect, a lost connection or a stopping master now aborts the remaining blocks, register types and device IDs of the running cycle
