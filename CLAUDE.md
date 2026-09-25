@@ -38,6 +38,12 @@ All core Modbus logic (master polling, slave serving, protocol transports, CRC, 
 
 Supports compact mode (all-in-one) and standalone daemon mode.
 
+`common.declareUsedResources: true` in `io-package.json` means the instance tells js-controller 8
+itself which exclusive resources it occupies (serial port in RTU mode, listening port as TCP slave or
+in proxy mode). The reporting itself lives in `@iobroker/modbus` (`src/lib/usedResources.ts` there);
+the flag only enables it — and it also stops the controller from deriving an entry from `native.port`,
+which does not exist here anyway (the settings live in `native.params`).
+
 ### Admin UI (src-admin/)
 
 React 18 + Material-UI v6 + Vite application. Uses `@iobroker/adapter-react-v5` for ioBroker admin integration.

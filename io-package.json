@@ -133,6 +133,7 @@
       }
     },
     "compact": true,
+    "declareUsedResources": true,
     "connectionType": "local",
     "dataSource": "poll",
     "tier": 2,

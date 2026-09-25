@@ -4,8 +4,8 @@
     "private": true,
     "type": "module",
     "dependencies": {
-        "@iobroker/gui-components": "^10.3.1",
-        "@iobroker/json-config": "^10.0.5",
+        "@iobroker/gui-components": "^10.3.5",
+        "@iobroker/json-config": "^10.0.6",
         "@mui/icons-material": "^9.4.0",
         "@mui/material": "^9.4.0",
         "@vitejs/plugin-react": "^6.1.1",
@@ -17,7 +17,7 @@
         "react-dom": "^19.3.0",
         "react-icons": "^5.7.0",
         "tsv-json": "^2.0.0",
-        "vite": "^8.3.0"
+        "vite": "^8.3.1"
     },
     "scripts": {
         "lint": "eslint -c eslint.config.mjs",
