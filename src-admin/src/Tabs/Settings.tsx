@@ -306,6 +306,13 @@ const schema: ConfigItemPanel = {
             label: 'Disable connection error logging',
             help: 'disableLogging_help',
         },
+        ignoreTransactionId: {
+            newLine: true,
+            type: 'checkbox',
+            label: 'Ignore transaction ID of responses',
+            help: 'ignoreTransactionId_help',
+            hidden: 'data.slave === "1" || (data.type !== "tcp" && data.type !== "udp" && data.type !== "tcp-ssl")',
+        },
 
         _headerSanitization: {
             newLine: true,

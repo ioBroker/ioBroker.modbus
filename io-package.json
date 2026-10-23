@@ -248,6 +248,7 @@
       "writeInterval": 0,
       "readInterval": 0,
       "disableLogging": false,
+      "ignoreTransactionId": false,
       "certPrivate": "",
       "certPublic": "",
       "certChained": "",

@@ -111,6 +111,12 @@ Delay between two write requests in milliseconds. Default 0.
 Normally, if the value has not changed, it will not be written into ioBroker.
 This flag allows updating the value's timestamp by every cycle.
 
+### Ignore transaction ID of responses
+Only for a master over TCP, UDP or TCP with SSL. Normally a response is taken only if its transaction ID is the one of the request,
+otherwise it is dropped with the warning `Dropped a response with transaction ID ...`. A stale or duplicated answer could otherwise be
+taken for the next request, and the registers of another block would be stored (issue #829).
+Enable this option only if the device does not echo the transaction ID, i.e. every response is dropped.
+
 ### Value Sanitization
 Enable automatic sanitization of invalid register values (NaN, Infinity, extreme float values like ±3.4e38).
 This feature helps prevent corrupted Modbus float values from propagating into ioBroker states, which is especially useful for devices like SolarEdge inverters that occasionally return invalid values due to timeouts or internal scaling errors.
@@ -350,6 +356,11 @@ There are some programs in folder `test` to test the TCP communication:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (@GermanBluefox) A response is taken only for the request it belongs to (issue #829): over TCP, SSL and UDP a response with another transaction ID is dropped, over RTU one from another unit. Before, a stale or duplicated answer - e.g. in the first poll cycle on a fresh connection - shifted every following response by one request, so the registers of another block were stored
+* (@GermanBluefox) New option "Ignore transaction ID of responses" for devices that do not echo the transaction ID
+* (@GermanBluefox) If a device returns fewer registers than requested, the whole block is discarded with a warning instead of storing the registers that fit
+* (@GermanBluefox) The debug check of the scale factor read block works with aliases
 ### 9.2.1 (2026-10-13)
 * (@GermanBluefox) Admin 7.6.20+ is required. The adapter is tested now also on Windows and macOS
 
