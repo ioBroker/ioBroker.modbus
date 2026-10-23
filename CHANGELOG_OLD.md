@@ -1,4 +1,10 @@
 # Older changes
+## 9.1.0 (2026-08-14)
+- (@johannes-lode) Slave mode: added a read-notification UI. Requires `@iobroker/modbus` >= 7.7.0. In slave mode you can now enable per-namespace read notifications (coils, discrete inputs, input registers, holding registers) and a counter expire time from the instance settings. A read-only counter state under `readNotify.<register id>` increments whenever an external master reads a register; the notification fires after the response has already gone out, so an updated value only takes effect on the master's next read
+- (@johannes-lode) Added signed and string-typed 64-bit integer register types to the register-type dropdown (`int64be`/`int64le` and the `uint64`/`int64` be/le "as string" variants) for exact values beyond 2^53; selecting a 64-bit type also sets the register length to 4. Requires `@iobroker/modbus` >= 7.7.0
+- (@johannes-lode) Added sign-extended int8 register types `signExtendedInt8be`/`signExtendedInt8le` to the register-type dropdown, so a foreign master reading the register as int16 gets the correct signed value. Requires `@iobroker/modbus` >= 7.7.0
+- (@GermanBluefox) Updated `@iobroker/modbus` to 7.7.0: fixes the encoding/decoding of 64-bit registers, negative int8 values, and the slave write-back of single (FC6) and multiple (FC16) registers; removes the 100 ms response delay of the TCP slave server
+
 ## 9.0.1 (2026-08-06)
 - (@GermanBluefox) Node.js 22 is required or higher
 - (@GermanBluefox) GUI migrated to React 19/MUI9

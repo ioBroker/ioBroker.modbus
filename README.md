@@ -356,11 +356,12 @@ There are some programs in folder `test` to test the TCP communication:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 9.2.2 (2026-10-23)
 * (@GermanBluefox) A response is taken only for the request it belongs to (issue #829): over TCP, SSL and UDP a response with another transaction ID is dropped, over RTU one from another unit. Before, a stale or duplicated answer - e.g. in the first poll cycle on a fresh connection - shifted every following response by one request, so the registers of another block were stored
 * (@GermanBluefox) New option "Ignore transaction ID of responses" for devices that do not echo the transaction ID
 * (@GermanBluefox) If a device returns fewer registers than requested, the whole block is discarded with a warning instead of storing the registers that fit
 * (@GermanBluefox) The debug check of the scale factor read block works with aliases
+
 ### 9.2.1 (2026-10-13)
 * (@GermanBluefox) Admin 7.6.20+ is required. The adapter is tested now also on Windows and macOS
 
@@ -378,12 +379,6 @@ There are some programs in folder `test` to test the TCP communication:
 - (@GermanBluefox) Fixed a second source of stale requests: the block loops only checked connected, which is still true while a reconnect is pending. A connection that died during the wait between two blocks therefore queued the next request into the already cleared FIFO
 - (@GermanBluefox) A pending reconnect timer is now cancelled when the client reports connect, so the timer of the deliberately dropped socket cannot tear the fresh connection down again
 - (@GermanBluefox) Added a regression test for the polling of the remaining blocks after a device rejects one of them with an exception response
-
-### 9.1.0 (2026-08-14)
-- (@johannes-lode) Slave mode: added a read-notification UI. Requires `@iobroker/modbus` >= 7.7.0. In slave mode you can now enable per-namespace read notifications (coils, discrete inputs, input registers, holding registers) and a counter expire time from the instance settings. A read-only counter state under `readNotify.<register id>` increments whenever an external master reads a register; the notification fires after the response has already gone out, so an updated value only takes effect on the master's next read
-- (@johannes-lode) Added signed and string-typed 64-bit integer register types to the register-type dropdown (`int64be`/`int64le` and the `uint64`/`int64` be/le "as string" variants) for exact values beyond 2^53; selecting a 64-bit type also sets the register length to 4. Requires `@iobroker/modbus` >= 7.7.0
-- (@johannes-lode) Added sign-extended int8 register types `signExtendedInt8be`/`signExtendedInt8le` to the register-type dropdown, so a foreign master reading the register as int16 gets the correct signed value. Requires `@iobroker/modbus` >= 7.7.0
-- (@GermanBluefox) Updated `@iobroker/modbus` to 7.7.0: fixes the encoding/decoding of 64-bit registers, negative int8 values, and the slave write-back of single (FC6) and multiple (FC16) registers; removes the 100 ms response delay of the TCP slave server
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
