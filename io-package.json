@@ -240,6 +240,7 @@
       "showAliases": true,
       "directAddresses": false,
       "doNotIncludeAdrInId": false,
+      "padAddressInId": false,
       "preserveDotsInId": false,
       "round": 2,
       "doNotRoundAddressToWord": false,
