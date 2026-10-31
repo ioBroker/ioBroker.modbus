@@ -83,6 +83,13 @@ const schema: ConfigItemPanel = {
             xs: 12,
             hidden: '!!data.showAliases || !data.doNotIncludeAdrInId',
         },
+        padAddressInId: {
+            type: 'checkbox',
+            label: 'padAddressInId',
+            help: 'padAddressInId_help',
+            xs: 12,
+            hidden: '!!data.showAliases || !!data.doNotIncludeAdrInId',
+        },
 
         _header2: {
             newLine: true,
