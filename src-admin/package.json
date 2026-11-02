@@ -5,7 +5,7 @@
     "type": "module",
     "dependencies": {
         "@iobroker/gui-components": "^10.3.10",
-        "@iobroker/json-config": "^10.1.2",
+        "@iobroker/json-config": "^10.1.7",
         "@mui/icons-material": "^9.5.0",
         "@mui/material": "^9.5.0",
         "@vitejs/plugin-react": "^6.1.2",
