@@ -4,7 +4,7 @@
     "private": true,
     "type": "module",
     "dependencies": {
-        "@iobroker/gui-components": "^10.3.10",
+        "@iobroker/gui-components": "^10.3.14",
         "@iobroker/json-config": "^10.1.2",
         "@mui/icons-material": "^9.5.0",
         "@mui/material": "^9.5.0",
