@@ -160,6 +160,8 @@
     "Min Valid": "Min gültig",
     "Max Valid": "Max gültig",
     "do not include address in ID": "Adresse nicht in ID aufnehmen",
+    "padAddressInId": "Adresse in ID mit Nullen auffüllen",
+    "padAddressInId_help": "Füllt die Adresse in der ID auf die Breite der höchsten Adresse auf, damit die IDs numerisch sortieren: `011_Input` und `119_Input` statt `11_Input` und `119_Input`.",
     "doNotIncludeAdrInId_help": "Fügen Sie der generierten ioBroker-iD keine Adresse hinzu. „10_Input10“ vs. „Input10“.",
     "doNotRoundAddressToWord_help": "Normalerweise sind die Adressen der diskrete Ausgänge und der diskreten Eingänge auf 16 Bit ausgerichtet. Gleiche Adressen von 3 bis 20 werden auf 0 bis 32 ausgerichtet.\nWenn diese Option aktiv ist, werden die Adressen nicht abgeglichen.",
     "doNotUseWriteMultipleRegisters_help": "Wenn der Slave den Befehl „Mehrere Register schreiben“ nicht unterstützt, können Sie ihn aktivieren, um Warnungen zu erhalten, wenn mehrere Register geschrieben werden.",
