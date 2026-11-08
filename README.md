@@ -356,6 +356,10 @@ There are some programs in folder `test` to test the TCP communication:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### 9.2.3 (2026-11-08)
+* (@MMeinhardt1) Updated `@iobroker/modbus` to 7.9.0: the new instance parameter `padAddressInId` pads the address in state IDs with zeros to 5 digits, so they sort numerically (issue #317). It is off by default and not yet available in the admin UI
+* (@GermanBluefox) Updated dependencies
+
 ### 9.2.2 (2026-10-23)
 * (@GermanBluefox) A response is taken only for the request it belongs to (issue #829): over TCP, SSL and UDP a response with another transaction ID is dropped, over RTU one from another unit. Before, a stale or duplicated answer - e.g. in the first poll cycle on a fresh connection - shifted every following response by one request, so the registers of another block were stored
 * (@GermanBluefox) New option "Ignore transaction ID of responses" for devices that do not echo the transaction ID
@@ -372,13 +376,6 @@ There are some programs in folder `test` to test the TCP communication:
 - (@GermanBluefox) Added explanations of timings in GUI
 - (@GermanBluefox) Corrected proxy mode with multiple DeviceIDs
 - (@GermanBluefox) Added better problem logging
-
-### 9.1.1 (2026-08-27)
-- (@nobl) Fixed stale and overlapping polling cycles after a reconnect (ioBroker.modbus issue #595): a block read error was logged and swallowed, so the polling loop kept running after the request timeout had already trashed the socket and cleared the request FIFO. The next register request was queued after that cleanup and was therefore sent on the reconnected socket, before the fresh cycle started by the connect handler — two polling cycles then ran in parallel. A pending reconnect, a lost connection or a stopping master now aborts the remaining blocks, register types and device IDs of the running cycle
-- (@GermanBluefox) Limited that abort to connection failures: a plain Modbus exception response (illegal data address, illegal function, device busy) leaves the socket intact, so the remaining blocks of that register type are read as before. Otherwise a single register the device rejects would have permanently hidden every block behind it, because the block order is fixed
-- (@GermanBluefox) Fixed a second source of stale requests: the block loops only checked connected, which is still true while a reconnect is pending. A connection that died during the wait between two blocks therefore queued the next request into the already cleared FIFO
-- (@GermanBluefox) A pending reconnect timer is now cancelled when the client reports connect, so the timer of the deliberately dropped socket cannot tear the fresh connection down again
-- (@GermanBluefox) Added a regression test for the polling of the remaining blocks after a device rejects one of them with an exception response
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
