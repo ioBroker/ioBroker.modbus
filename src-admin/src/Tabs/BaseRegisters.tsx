@@ -20,6 +20,8 @@ interface BaseRegistersProps {
     formulaDisabled?: boolean;
     themeType: ThemeType;
     alive: boolean;
+    /** opens the template library */
+    onOpenTemplates?: () => void;
 }
 
 interface BaseRegistersState {
@@ -218,6 +220,7 @@ export default abstract class BaseRegisters extends Component<BaseRegistersProps
                     native={this.props.native}
                     instance={this.props.instance}
                     regName={this.nativeFieldName}
+                    onOpenTemplates={this.props.onOpenTemplates}
                 />
             </Paper>
         );
