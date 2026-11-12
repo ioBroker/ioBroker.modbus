@@ -233,5 +233,13 @@
     "Share your registers as template": "Поделитесь своими регистрами как шаблоном",
     "Bit order in the template (coils, discrete inputs)": "Порядок битов в шаблоне (coils, дискретные входы)",
     "Not direct (alias 10001 = bit 15)": "Не прямые (алиас 10001 = бит 15)",
-    "Direct addresses (alias 10001 = bit 0)": "Прямые адреса (алиас 10001 = бит 0)"
+    "Direct addresses (alias 10001 = bit 0)": "Прямые адреса (алиас 10001 = бит 0)",
+    "Detect device": "Определить устройство",
+    "Reads a few registers from the device (read only). The instance must be connected.": "Читает несколько регистров устройства (только чтение). Экземпляр должен быть подключён.",
+    "The instance must be running": "Экземпляр должен быть запущен",
+    "Device detection failed: %s": "Не удалось определить устройство: %s",
+    "Possibly: %s": "Возможно: %s",
+    "Detected: %s": "Определено: %s",
+    "Select": "Выбрать",
+    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "Известное устройство не найдено (ответов: %s из %s). Определение пока доступно для %s устройств."
 }

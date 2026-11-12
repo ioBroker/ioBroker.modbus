@@ -233,5 +233,13 @@
     "Share your registers as template": "Share your registers as template",
     "Bit order in the template (coils, discrete inputs)": "Bit order in the template (coils, discrete inputs)",
     "Not direct (alias 10001 = bit 15)": "Not direct (alias 10001 = bit 15)",
-    "Direct addresses (alias 10001 = bit 0)": "Direct addresses (alias 10001 = bit 0)"
+    "Direct addresses (alias 10001 = bit 0)": "Direct addresses (alias 10001 = bit 0)",
+    "Detect device": "Detect device",
+    "Reads a few registers from the device (read only). The instance must be connected.": "Reads a few registers from the device (read only). The instance must be connected.",
+    "The instance must be running": "The instance must be running",
+    "Device detection failed: %s": "Device detection failed: %s",
+    "Possibly: %s": "Possibly: %s",
+    "Detected: %s": "Detected: %s",
+    "Select": "Select",
+    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "No known device detected (%s of %s requests answered). Detection is available for %s devices so far."
 }

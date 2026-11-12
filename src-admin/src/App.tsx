@@ -194,6 +194,10 @@ export default class App extends GenericApp<GenericAppProps, AppState> {
                 native={this.state.native as Modbus.ModbusAdapterConfig}
                 onImport={this.onTemplateImport}
                 onClose={() => this.setState({ templatesDialog: false })}
+                socket={this.socket}
+                adapterName={this.adapterName}
+                instance={this.instance}
+                alive={this.state.alive}
             />
         );
     }

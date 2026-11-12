@@ -233,5 +233,13 @@
     "Share your registers as template": "Udostępnij swoje rejestry jako szablon",
     "Bit order in the template (coils, discrete inputs)": "Kolejność bitów w szablonie (coils, wejścia dyskretne)",
     "Not direct (alias 10001 = bit 15)": "Nie bezpośrednie (alias 10001 = bit 15)",
-    "Direct addresses (alias 10001 = bit 0)": "Adresy bezpośrednie (alias 10001 = bit 0)"
+    "Direct addresses (alias 10001 = bit 0)": "Adresy bezpośrednie (alias 10001 = bit 0)",
+    "Detect device": "Wykryj urządzenie",
+    "Reads a few registers from the device (read only). The instance must be connected.": "Odczytuje kilka rejestrów urządzenia (tylko odczyt). Instancja musi być połączona.",
+    "The instance must be running": "Instancja musi być uruchomiona",
+    "Device detection failed: %s": "Wykrywanie nie powiodło się: %s",
+    "Possibly: %s": "Możliwe: %s",
+    "Detected: %s": "Wykryto: %s",
+    "Select": "Wybierz",
+    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "Nie wykryto znanego urządzenia (odpowiedzi: %s z %s). Wykrywanie jest na razie dostępne dla %s urządzeń."
 }

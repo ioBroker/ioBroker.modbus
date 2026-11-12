@@ -233,5 +233,13 @@
     "Share your registers as template": "将您的寄存器分享为模板",
     "Bit order in the template (coils, discrete inputs)": "模板中的位顺序（线圈、离散输入）",
     "Not direct (alias 10001 = bit 15)": "非直接（别名 10001 = 位 15）",
-    "Direct addresses (alias 10001 = bit 0)": "直接地址（别名 10001 = 位 0）"
+    "Direct addresses (alias 10001 = bit 0)": "直接地址（别名 10001 = 位 0）",
+    "Detect device": "识别设备",
+    "Reads a few registers from the device (read only). The instance must be connected.": "从设备读取少量寄存器（只读）。实例必须已连接。",
+    "The instance must be running": "实例必须正在运行",
+    "Device detection failed: %s": "设备识别失败：%s",
+    "Possibly: %s": "可能：%s",
+    "Detected: %s": "已识别：%s",
+    "Select": "选择",
+    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "未识别到已知设备（%s / %s 个请求有响应）。目前支持识别 %s 种设备。"
 }
