@@ -35,7 +35,7 @@ import { I18n, IconRefresh, IconResult, type AdminConnection } from '@iobroker/g
 import type { Modbus } from '@iobroker/modbus';
 
 import { parseAddress } from './Utils';
-import { DEFAULT_OFFSETS, isBitType, rawToInstance, templateToRaw } from './templateAddress';
+import { convertScaleRefs, DEFAULT_OFFSETS, isBitType, rawToInstance, templateToRaw } from './templateAddress';
 import {
     collectReads,
     matchTemplates,
@@ -306,6 +306,14 @@ export function convertTemplateFile(
             item.type = type;
             const len = parseInt(String(item.len), 10);
             item.len = TYPE_LENGTH[type] || len || 1;
+            if (typeof item.formula === 'string' && item.formula.includes('sf[')) {
+                item.formula = convertScaleRefs(item.formula, address => {
+                    const rawScale = templateToRaw(address, regType, options.addressing, options.directAddresses);
+                    return Number.isNaN(rawScale)
+                        ? NaN
+                        : rawToInstance(rawScale, regType, showAliases, instanceDirect, instanceOffset);
+                });
+            }
             if (item.factor === '') {
                 item.factor = 1;
             }

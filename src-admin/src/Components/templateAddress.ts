@@ -47,6 +47,17 @@ export function templateToRaw(
     return isBitType(regType) && !directAddresses ? reverseInBlock(address) : address;
 }
 
+/**
+ * The adapter looks scale factors up by `_address` (`sf['40083']`), so a formula must be converted together with the
+ * addresses. A reference that cannot be converted stays as it is.
+ */
+export function convertScaleRefs(formula: string, convert: (templateAddress: number) => number): string {
+    return formula.replace(/sf\[\s*(['"]?)(\d+)\1\s*\]/g, (match: string, quote: string, address: string) => {
+        const converted = convert(parseInt(address, 10));
+        return Number.isNaN(converted) ? match : `sf[${quote}${converted}${quote}]`;
+    });
+}
+
 /** Modbus address on the wire -> `_address` as shown in an instance with the given settings */
 export function rawToInstance(
     raw: number,

@@ -250,6 +250,7 @@
       "readInterval": 0,
       "disableLogging": false,
       "ignoreTransactionId": false,
+      "keepConnectionOnTimeout": false,
       "certPrivate": "",
       "certPublic": "",
       "certChained": "",

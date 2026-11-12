@@ -145,6 +145,8 @@
     "directAddresses_help": "Utilizado para entradas binarias y bobinas.\nSin este indicador, los bits se direccionarán desde: `0 => 15, 1 => 14, 2 => 13, ..., 15 => 0`.\nCon este flag activado los bits serán direccionados como: `0 => 0, 1 => 1, 2 => 2, ..., 15 => 15`.",
     "disableLogging_help": "Suprimir mensajes de error de conexión en el registro. Cuando está habilitado, los errores de conexión no se registrarán para reducir el ruido del registro.",
     "ignoreTransactionId_help": "Solo para dispositivos que no devuelven el ID de transacción de la solicitud (cada respuesta se descarta con \"Dropped a response with transaction ID\"). De lo contrario, una respuesta antigua o duplicada puede asignarse a la solicitud incorrecta.",
+    "Keep the connection on a timeout": "Mantener la conexión ante un tiempo de espera",
+    "keepConnectionOnTimeout_help": "Para pasarelas con varios dispositivos (Slave ID) detrás: si un dispositivo no responde, solo falla su solicitud y la conexión permanece abierta para los demás dispositivos. Una respuesta tardía se descarta por su ID de transacción. La conexión se sigue restableciendo cuando ya no responde ningún dispositivo.",
     "Value Sanitization": "Saneamiento de valores",
     "Enable automatic sanitization of invalid register values (NaN, Infinity, extreme float values). Configure per-register options in the register tables.": "Habilitar el saneamiento automático de valores de registro no válidos (NaN, Infinity, valores flotantes extremos). Configure las opciones por registro en las tablas de registros.",
     "Enable value sanitization": "Habilitar saneamiento de valores",

@@ -145,6 +145,8 @@
     "directAddresses_help": "Gebruikt voor binaire ingangen en spoelen.\nZonder deze vlag worden de bits geadresseerd als volgt: `0 => 15, 1 => 14, 2 => 13, ..., 15 => 0`.\nAls deze vlag geactiveerd is, worden de bits geadresseerd als: `0 => 0, 1 => 1, 2 => 2, ..., 15 => 15`.",
     "disableLogging_help": "Onderdruk verbindingsfoutmeldingen in het logboek. Wanneer ingeschakeld, worden verbindingsfouten niet gelogd om logruis te verminderen.",
     "ignoreTransactionId_help": "Alleen voor apparaten die de transactie-ID van het verzoek niet terugsturen (elk antwoord wordt verworpen met \"Dropped a response with transaction ID\"). Anders kan een verouderd of dubbel antwoord aan het verkeerde verzoek worden toegewezen.",
+    "Keep the connection on a timeout": "Verbinding behouden bij een time-out",
+    "keepConnectionOnTimeout_help": "Voor gateways met meerdere apparaten (Slave-ID's) erachter: als één apparaat niet antwoordt, mislukt alleen zijn verzoek en blijft de verbinding open voor de andere apparaten. Een laat antwoord wordt op basis van de transactie-ID verworpen. De verbinding wordt nog steeds opnieuw opgebouwd als geen enkel apparaat meer antwoordt.",
     "Value Sanitization": "Waardeopschoning",
     "Enable automatic sanitization of invalid register values (NaN, Infinity, extreme float values). Configure per-register options in the register tables.": "Schakel automatische opschoning van ongeldige registerwaarden in (NaN, Infinity, extreme float-waarden). Configureer de opties per register in de registertabellen.",
     "Enable value sanitization": "Waardeopschoning inschakelen",

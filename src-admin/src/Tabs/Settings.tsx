@@ -320,6 +320,14 @@ const schema: ConfigItemPanel = {
             help: 'ignoreTransactionId_help',
             hidden: 'data.slave === "1" || (data.type !== "tcp" && data.type !== "udp" && data.type !== "tcp-ssl")',
         },
+        keepConnectionOnTimeout: {
+            newLine: true,
+            type: 'checkbox',
+            label: 'Keep the connection on a timeout',
+            help: 'keepConnectionOnTimeout_help',
+            // without the transaction ID check a late answer could be taken for the next request
+            hidden: 'data.slave === "1" || !!data.ignoreTransactionId || (data.type !== "tcp" && data.type !== "udp" && data.type !== "tcp-ssl")',
+        },
 
         _headerSanitization: {
             newLine: true,
