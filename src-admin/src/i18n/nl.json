@@ -241,5 +241,12 @@
     "Possibly: %s": "Mogelijk: %s",
     "Detected: %s": "Herkend: %s",
     "Select": "Selecteren",
-    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "Geen bekend apparaat herkend (%s van %s verzoeken beantwoord). Herkenning is tot nu toe beschikbaar voor %s apparaten."
+    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "Geen bekend apparaat herkend (%s van %s verzoeken beantwoord). Herkenning is tot nu toe beschikbaar voor %s apparaten.",
+    "Instance is running": "Instantie draait",
+    "Instance is not running": "Instantie draait niet",
+    "Connected to the device": "Verbonden met het apparaat",
+    "Connecting to the device...": "Verbinden met het apparaat...",
+    "Connected masters: %s": "Verbonden masters: %s",
+    "Waiting for masters": "Wachten op masters",
+    "Or drop a file on the editor": "Of sleep een bestand naar de editor"
 }

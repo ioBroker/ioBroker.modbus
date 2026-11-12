@@ -1,0 +1,326 @@
+/*
+ * Own animations of the admin UI. The animated icons come from @iobroker/gui-components.
+ * Everything is switched off, if the user asked the system for less motion (see the end of the file).
+ */
+
+/* ---------- Tab content: slides in when the tab is changed ---------- */
+.modbus-tab-enter {
+    animation: modbusTabEnter 220ms ease-out;
+}
+@keyframes modbusTabEnter {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* ---------- Register table rows ---------- */
+
+/* new row: slides in from the left and glows shortly */
+.modbus-row-new > td {
+    animation:
+        modbusRowNewSlide 320ms cubic-bezier(0.2, 0.8, 0.3, 1.2),
+        modbusRowNewGlow 1600ms ease-out;
+}
+@keyframes modbusRowNewSlide {
+    from {
+        opacity: 0;
+        transform: translateX(-24px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+@keyframes modbusRowNewGlow {
+    0%,
+    30% {
+        background-color: rgba(76, 175, 80, 0.28);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+/* deleted row: tinted red, slides out to the right and fades */
+.modbus-row-removing > td {
+    animation: modbusRowRemove 260ms ease-in forwards;
+    pointer-events: none;
+}
+@keyframes modbusRowRemove {
+    0% {
+        background-color: rgba(244, 67, 54, 0.25);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(40px);
+        background-color: rgba(244, 67, 54, 0.25);
+    }
+}
+
+/* rows of an unfolded group of a slave ID: drop out from under the header, one after another */
+.modbus-row-unfold > td {
+    animation: modbusRowUnfold 240ms ease-out both;
+    animation-delay: calc(var(--modbus-row-i, 0) * 18ms);
+}
+@keyframes modbusRowUnfold {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* ---------- Live values: flash when a new value arrives ---------- */
+.value-animate-dark {
+    animation:
+        valueGreenFlashDark 1s,
+        valueGlowDark 1.2s ease-out;
+}
+@keyframes valueGreenFlashDark {
+    0% {
+        color: #44fa44;
+    }
+    80% {
+        color: #46ff46;
+    }
+    100% {
+        color: inherit;
+    }
+}
+@keyframes valueGlowDark {
+    0% {
+        background-color: rgba(68, 250, 68, 0.22);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+.value-animate-light {
+    animation:
+        valueGreenFlashLight 1s,
+        valueGlowLight 1.2s ease-out;
+}
+@keyframes valueGreenFlashLight {
+    0% {
+        color: #004e00;
+    }
+    80% {
+        color: #005e00;
+    }
+    100% {
+        color: inherit;
+    }
+}
+@keyframes valueGlowLight {
+    0% {
+        background-color: rgba(0, 128, 0, 0.16);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+/* ---------- Toolbar buttons of the register table ---------- */
+.modbus-btn svg {
+    transition: transform 200ms ease;
+}
+/* add: the plus turns */
+.modbus-btn-add:hover svg,
+.modbus-btn-add:focus-visible svg {
+    transform: rotate(90deg) scale(1.1);
+}
+/* import/export: the arrows move up and down */
+.modbus-btn-io:hover svg,
+.modbus-btn-io:focus-visible svg {
+    animation: modbusBob 700ms ease-in-out infinite;
+}
+@keyframes modbusBob {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    25% {
+        transform: translateY(-2px);
+    }
+    75% {
+        transform: translateY(2px);
+    }
+}
+/* template library: the books tilt */
+.modbus-btn-library:hover svg,
+.modbus-btn-library:focus-visible svg {
+    transform: rotate(-10deg) translateY(-1px);
+}
+/* sanitize: the brush sweeps */
+.modbus-btn-sanitize:hover svg,
+.modbus-btn-sanitize:focus-visible svg {
+    animation: modbusSweep 600ms ease-in-out infinite;
+    transform-origin: 50% 90%;
+}
+@keyframes modbusSweep {
+    0%,
+    100% {
+        transform: rotate(0);
+    }
+    30% {
+        transform: rotate(-14deg);
+    }
+    70% {
+        transform: rotate(14deg);
+    }
+}
+
+/* device detection: the magnifier tilts on hover and searches in a circle while the device is read */
+.modbus-btn-detect:hover svg,
+.modbus-btn-detect:focus-visible svg {
+    transform: rotate(-15deg) scale(1.1);
+}
+.modbus-detecting svg {
+    animation: modbusSearch 1.2s linear infinite;
+}
+@keyframes modbusSearch {
+    0% {
+        transform: translate(2px, 0);
+    }
+    25% {
+        transform: translate(0, 2px);
+    }
+    50% {
+        transform: translate(-2px, 0);
+    }
+    75% {
+        transform: translate(0, -2px);
+    }
+    100% {
+        transform: translate(2px, 0);
+    }
+}
+
+/* toggle buttons: the icon pops, when the state changes */
+.modbus-pop {
+    display: inline-flex;
+    animation: modbusPop 320ms cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+@keyframes modbusPop {
+    0% {
+        transform: scale(0.6);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* frozen order: the sort icon gets a lock-like squeeze */
+.modbus-frozen svg {
+    animation: modbusFreeze 420ms ease-out;
+}
+@keyframes modbusFreeze {
+    0% {
+        transform: scaleY(1);
+        filter: none;
+    }
+    40% {
+        transform: scaleY(0.6);
+        filter: drop-shadow(0 0 3px rgba(100, 181, 246, 0.9));
+    }
+    100% {
+        transform: scaleY(1);
+        filter: none;
+    }
+}
+
+/* ---------- Tabs: the icon of the register tabs jumps on hover ---------- */
+.modbus-tab-icon {
+    transition: transform 200ms ease;
+}
+.MuiTab-root:hover .modbus-tab-icon {
+    transform: translateY(-2px) scale(1.12);
+}
+
+/* ---------- Dialogs ---------- */
+
+/* save to file: the arrow drops into the tray */
+.modbus-btn-download:hover svg,
+.modbus-btn-download:focus-visible svg {
+    animation: modbusDrop 800ms ease-in infinite;
+}
+@keyframes modbusDrop {
+    0% {
+        transform: translateY(-3px);
+        opacity: 0.4;
+    }
+    60% {
+        transform: translateY(1px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(1px);
+        opacity: 1;
+    }
+}
+
+/* editor of the data: a file can be dropped on it, the frame pulses while a file is dragged over it */
+.modbus-drop-zone {
+    border-radius: 4px;
+    outline: 2px dashed transparent;
+    outline-offset: 3px;
+    transition: outline-color 150ms;
+}
+.modbus-drop-active {
+    outline-color: #2196f3;
+    animation: modbusDropPulse 1s ease-in-out infinite;
+}
+@keyframes modbusDropPulse {
+    0%,
+    100% {
+        outline-offset: 3px;
+        box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.35);
+    }
+    50% {
+        outline-offset: 6px;
+        box-shadow: 0 0 0 6px rgba(33, 150, 243, 0.12);
+    }
+}
+
+.modbus-fade-in {
+    animation: modbusTabEnter 240ms ease-out both;
+}
+/* counter in a button: pops when the number changes */
+.modbus-count {
+    display: inline-block;
+    animation: modbusPop 300ms cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+/* ---------- Less motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .modbus-tab-enter,
+    .modbus-row-new > td,
+    .modbus-row-removing > td,
+    .modbus-row-unfold > td,
+    .value-animate-dark,
+    .value-animate-light,
+    .modbus-btn svg,
+    .modbus-pop,
+    .modbus-frozen svg,
+    .modbus-detecting svg,
+    .modbus-tab-icon,
+    .modbus-fade-in,
+    .modbus-count,
+    .modbus-drop-active {
+        animation: none !important;
+        transition: none !important;
+    }
+    .modbus-btn:hover svg,
+    .modbus-btn:focus-visible svg,
+    .MuiTab-root:hover .modbus-tab-icon {
+        transform: none !important;
+    }
+}

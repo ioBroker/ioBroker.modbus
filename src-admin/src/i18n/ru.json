@@ -241,5 +241,12 @@
     "Possibly: %s": "Возможно: %s",
     "Detected: %s": "Определено: %s",
     "Select": "Выбрать",
-    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "Известное устройство не найдено (ответов: %s из %s). Определение пока доступно для %s устройств."
+    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "Известное устройство не найдено (ответов: %s из %s). Определение пока доступно для %s устройств.",
+    "Instance is running": "Экземпляр запущен",
+    "Instance is not running": "Экземпляр не запущен",
+    "Connected to the device": "Подключено к устройству",
+    "Connecting to the device...": "Подключение к устройству...",
+    "Connected masters: %s": "Подключённые мастеры: %s",
+    "Waiting for masters": "Ожидание мастеров",
+    "Or drop a file on the editor": "Или перетащите файл в редактор"
 }

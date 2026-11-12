@@ -241,5 +241,12 @@
     "Possibly: %s": "Possibly: %s",
     "Detected: %s": "Detected: %s",
     "Select": "Select",
-    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "No known device detected (%s of %s requests answered). Detection is available for %s devices so far."
+    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.",
+    "Instance is running": "Instance is running",
+    "Instance is not running": "Instance is not running",
+    "Connected to the device": "Connected to the device",
+    "Connecting to the device...": "Connecting to the device...",
+    "Connected masters: %s": "Connected masters: %s",
+    "Waiting for masters": "Waiting for masters",
+    "Or drop a file on the editor": "Or drop a file on the editor"
 }

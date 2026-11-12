@@ -19,15 +19,9 @@ import {
     InputLabel,
 } from '@mui/material';
 
-import {
-    Clear as ClearIcon,
-    Save as SaveIcon,
-    FileCopy as FileCopyIcon,
-    FileDownload as FileDownloadIcon,
-    FileUpload as FileUploadIcon,
-} from '@mui/icons-material';
+import { Clear as ClearIcon, Save as SaveIcon, FileDownload as FileDownloadIcon } from '@mui/icons-material';
 
-import { I18n, type ThemeType, Utils } from '@iobroker/gui-components';
+import { I18n, IconCopyToClipboard, IconResult, IconUpload, type ThemeType, Utils } from '@iobroker/gui-components';
 import type { RegisterField } from '../types';
 import type { Modbus } from '@iobroker/modbus';
 
@@ -94,6 +88,17 @@ function csvToRows(text: string): string[][] {
     return rows;
 }
 
+/**
+ * Empty or missing value of a select of the sanitization group (`sanitizeAction`): use its default, the first option.
+ * Exports of older versions and hand-written files often have these columns empty (issue #835).
+ */
+function selectDefault(field: RegisterField, value: string | undefined): string {
+    if (field.type === 'select' && field.sanitize && !value && field.options?.length) {
+        return field.options[0].value;
+    }
+    return value ?? '';
+}
+
 /** Serialize the register list into the chosen text format. */
 function serialize(fields: RegisterField[], data: Modbus.Register[], format: ExportFormat): string {
     if (format === 'json') {
@@ -153,7 +158,7 @@ function parse(
                 if (field.type === 'checkbox') {
                     (item as unknown as Record<string, boolean>)[field.name] = raw === true || raw === 'true';
                 } else {
-                    const value = raw === undefined || raw === null ? '' : String(raw);
+                    const value = selectDefault(field, raw === undefined || raw === null ? '' : String(raw));
                     if (field.type === 'select' && !field.options?.map(option => option.value).includes(value)) {
                         errors.push(
                             <>
@@ -193,6 +198,9 @@ function parse(
         const item = {} as Modbus.Register;
         for (let index = 0; index < fields.length; index++) {
             let value: string | boolean = itemValues[index];
+            if (typeof value !== 'boolean') {
+                value = selectDefault(fields[index], value);
+            }
             if (
                 fields[index].type === 'select' &&
                 !fields[index].options?.map(option => option.value).includes(value as string)
@@ -228,7 +236,25 @@ export default function TsvDialog(props: {
     );
     const [text, setText] = useState('');
     const [message, setMessage] = useState<React.JSX.Element | null>(null);
+    const [errorCount, setErrorCount] = useState(0);
+    /** a file is being read */
+    const [reading, setReading] = useState(false);
+    /** a file is dragged over the editor */
+    const [dragging, setDragging] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+    const showError = (content: React.ReactNode): void => {
+        setErrorCount(errorCount + 1);
+        setMessage(
+            <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', color: 'red' }}>
+                <IconResult
+                    type="error"
+                    replay={errorCount + 1}
+                />
+                <div>{content}</div>
+            </div>,
+        );
+    };
 
     useEffect(() => {
         setText(serialize(props.fields, props.data, format));
@@ -244,13 +270,7 @@ export default function TsvDialog(props: {
     const importData = (): void => {
         const { data, errors } = parse(props.fields, text, format);
         if (errors.length) {
-            setMessage(
-                <div style={{ color: 'red' }}>
-                    {errors.map((error, index) => (
-                        <div key={index}>{error}</div>
-                    ))}
-                </div>,
-            );
+            showError(errors.map((error, index) => <div key={index}>{error}</div>));
             return;
         }
         props.save(data);
@@ -271,12 +291,10 @@ export default function TsvDialog(props: {
         URL.revokeObjectURL(url);
     };
 
-    const onFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        const file = e.target.files?.[0];
-        e.target.value = ''; // allow re-selecting the same file
-        if (!file) {
-            return;
-        }
+    const isFileDrag = (e: React.DragEvent): boolean => Array.from(e.dataTransfer.types).includes('Files');
+
+    const readFile = (file: File): void => {
+        setReading(true);
         file.text()
             .then(content => {
                 // auto-detect the format from the file extension
@@ -295,7 +313,17 @@ export default function TsvDialog(props: {
                 }
                 setText(content);
             })
-            .catch(error => setMessage(<span style={{ color: 'red' }}>{error.toString()}</span>));
+            .catch(error => showError(error.toString()))
+            // let the arrow move up at least once
+            .finally(() => window.setTimeout(() => setReading(false), 600));
+    };
+
+    const onFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        const file = e.target.files?.[0];
+        e.target.value = ''; // allow re-selecting the same file
+        if (file) {
+            readFile(file);
+        }
     };
 
     return (
@@ -321,14 +349,43 @@ export default function TsvDialog(props: {
                     <InputLabel>{I18n.t('Format')}</InputLabel>
                     <Select
                         value={format}
-                        onChange={e => changeFormat(e.target.value as ExportFormat)}
+                        onChange={e => changeFormat(e.target.value)}
                     >
                         <MenuItem value="tsv">TSV</MenuItem>
                         <MenuItem value="csv">CSV (;)</MenuItem>
                         <MenuItem value="json">JSON</MenuItem>
                     </Select>
                 </FormControl>
-                <div>
+                <div
+                    className={`modbus-drop-zone${dragging ? ' modbus-drop-active' : ''}`}
+                    // capture phase: the editor must not get the file
+                    onDragOverCapture={e => {
+                        if (isFileDrag(e)) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.dataTransfer.dropEffect = 'copy';
+                            if (!dragging) {
+                                setDragging(true);
+                            }
+                        }
+                    }}
+                    onDragLeave={e => {
+                        if (!(e.relatedTarget instanceof Node) || !e.currentTarget.contains(e.relatedTarget)) {
+                            setDragging(false);
+                        }
+                    }}
+                    onDropCapture={e => {
+                        if (isFileDrag(e)) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setDragging(false);
+                            const file = e.dataTransfer.files?.[0];
+                            if (file) {
+                                readFile(file);
+                            }
+                        }
+                    }}
+                >
                     <AceEditor
                         mode={format === 'json' ? 'json' : 'text'}
                         theme={props.themeType === 'dark' ? 'clouds_midnight' : 'chrome'}
@@ -354,13 +411,20 @@ export default function TsvDialog(props: {
                     variant="outlined"
                     color="primary"
                     onClick={() => fileInputRef.current?.click()}
-                    startIcon={<FileUploadIcon />}
+                    startIcon={
+                        <IconUpload
+                            uploading={reading}
+                            ready={dragging}
+                        />
+                    }
+                    title={I18n.t('Or drop a file on the editor')}
                 >
                     {I18n.t('Load from file')}
                 </Button>
                 <Button
                     variant="outlined"
                     color="primary"
+                    className="modbus-btn modbus-btn-download"
                     onClick={downloadFile}
                     startIcon={<FileDownloadIcon />}
                 >
@@ -373,7 +437,7 @@ export default function TsvDialog(props: {
                         Utils.copyToClipboard(text);
                         setMessage(<span>{I18n.t('TSV was copied to clipboard')}</span>);
                     }}
-                    startIcon={<FileCopyIcon />}
+                    startIcon={<IconCopyToClipboard />}
                 >
                     {I18n.t('Copy to clipboard')}
                 </Button>

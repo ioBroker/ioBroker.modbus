@@ -241,5 +241,12 @@
     "Possibly: %s": "可能：%s",
     "Detected: %s": "已识别：%s",
     "Select": "选择",
-    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "未识别到已知设备（%s / %s 个请求有响应）。目前支持识别 %s 种设备。"
+    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "未识别到已知设备（%s / %s 个请求有响应）。目前支持识别 %s 种设备。",
+    "Instance is running": "实例正在运行",
+    "Instance is not running": "实例未运行",
+    "Connected to the device": "已连接到设备",
+    "Connecting to the device...": "正在连接到设备...",
+    "Connected masters: %s": "已连接的主站：%s",
+    "Waiting for masters": "正在等待主站",
+    "Or drop a file on the editor": "或将文件拖放到编辑器中"
 }

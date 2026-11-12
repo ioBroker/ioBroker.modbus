@@ -11,9 +11,9 @@ import {
     Checkbox,
 } from '@mui/material';
 
-import { Delete as DeleteIcon, Clear as ClearIcon } from '@mui/icons-material';
+import { Clear as ClearIcon } from '@mui/icons-material';
 
-import { I18n } from '@iobroker/gui-components';
+import { I18n, IconTrash } from '@iobroker/gui-components';
 import type { Modbus } from '@iobroker/modbus';
 
 export default function DeleteDialog(props: {
@@ -52,7 +52,7 @@ export default function DeleteDialog(props: {
                     <Button
                         variant="contained"
                         color="secondary"
-                        startIcon={<DeleteIcon />}
+                        startIcon={<IconTrash />}
                         onClick={() => {
                             props.action(disableWarnings);
                             props.onClose();

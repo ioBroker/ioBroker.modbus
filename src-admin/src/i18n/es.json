@@ -241,5 +241,12 @@
     "Possibly: %s": "Posiblemente: %s",
     "Detected: %s": "Detectado: %s",
     "Select": "Seleccionar",
-    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "No se detectó ningún dispositivo conocido (%s de %s solicitudes respondidas). Por ahora la detección existe para %s dispositivos."
+    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "No se detectó ningún dispositivo conocido (%s de %s solicitudes respondidas). Por ahora la detección existe para %s dispositivos.",
+    "Instance is running": "La instancia está en ejecución",
+    "Instance is not running": "La instancia no está en ejecución",
+    "Connected to the device": "Conectado al dispositivo",
+    "Connecting to the device...": "Conectando al dispositivo...",
+    "Connected masters: %s": "Maestros conectados: %s",
+    "Waiting for masters": "Esperando maestros",
+    "Or drop a file on the editor": "O arrastre un archivo al editor"
 }

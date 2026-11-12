@@ -28,11 +28,10 @@ import {
     Check as CheckIcon,
     Clear as ClearIcon,
     OpenInNew as OpenInNewIcon,
-    Refresh as RefreshIcon,
     TravelExplore as DetectIcon,
 } from '@mui/icons-material';
 
-import { I18n, type AdminConnection } from '@iobroker/gui-components';
+import { I18n, IconRefresh, IconResult, type AdminConnection } from '@iobroker/gui-components';
 import type { Modbus } from '@iobroker/modbus';
 
 import { parseAddress } from './Utils';
@@ -633,12 +632,20 @@ export default function TemplatesDialog(props: {
                 {error ? (
                     <Alert
                         severity="error"
+                        className="modbus-fade-in"
+                        icon={
+                            <IconResult
+                                type="error"
+                                replay={error}
+                            />
+                        }
                         sx={{ mb: 2 }}
                         action={
                             <Button
                                 color="inherit"
                                 size="small"
-                                startIcon={<RefreshIcon />}
+                                startIcon={<IconRefresh loading={loading} />}
+                                disabled={loading}
                                 onClick={() => loadIndex(true)}
                             >
                                 {I18n.t('Retry')}
@@ -719,6 +726,7 @@ export default function TemplatesDialog(props: {
                                 <Button
                                     size="small"
                                     variant="outlined"
+                                    className={`modbus-btn modbus-btn-detect${detecting ? ' modbus-detecting' : ''}`}
                                     startIcon={<DetectIcon />}
                                     disabled={!props.alive || detecting}
                                     onClick={() => void detectDevice()}
@@ -734,6 +742,13 @@ export default function TemplatesDialog(props: {
                 {detectError ? (
                     <Alert
                         severity="error"
+                        className="modbus-fade-in"
+                        icon={
+                            <IconResult
+                                type="error"
+                                replay={detectError}
+                            />
+                        }
                         sx={{ mb: 2 }}
                     >
                         {I18n.t('Device detection failed: %s', detectError)}
@@ -742,6 +757,12 @@ export default function TemplatesDialog(props: {
                 {detectResult ? (
                     <Alert
                         severity={detectResult.matches.length ? 'success' : 'info'}
+                        className="modbus-fade-in"
+                        icon={
+                            detectResult.matches.length ? (
+                                <IconResult type={detectResult.matches.some(m => !m.weak) ? 'success' : 'warning'} />
+                            ) : undefined
+                        }
                         sx={{ mb: 2 }}
                         onClose={() => setDetectResult(null)}
                     >
@@ -772,7 +793,10 @@ export default function TemplatesDialog(props: {
                 {loading ? <LinearProgress sx={{ mb: 2 }} /> : null}
 
                 {device ? (
-                    <>
+                    <div
+                        key={device.id}
+                        className="modbus-fade-in"
+                    >
                         {device.description ? (
                             <Typography
                                 variant="body2"
@@ -932,6 +956,12 @@ export default function TemplatesDialog(props: {
                         {converted.skipped ? (
                             <Alert
                                 severity="warning"
+                                icon={
+                                    <IconResult
+                                        type="warning"
+                                        replay={converted.skipped}
+                                    />
+                                }
                                 sx={{ mb: 1 }}
                             >
                                 {I18n.t(
@@ -941,7 +971,15 @@ export default function TemplatesDialog(props: {
                             </Alert>
                         ) : null}
                         {converted.complete && importTypes.length ? (
-                            <Alert severity={mode === 'replace' ? 'warning' : 'success'}>
+                            <Alert
+                                severity={mode === 'replace' ? 'warning' : 'success'}
+                                icon={
+                                    <IconResult
+                                        type={mode === 'replace' ? 'warning' : 'success'}
+                                        replay={`${mode}:${total}`}
+                                    />
+                                }
+                            >
                                 {importTypes.map(t => (
                                     <div key={t}>
                                         <b>{I18n.t(REGISTER_TYPE_TITLES[t])}</b>:{' '}
@@ -953,7 +991,7 @@ export default function TemplatesDialog(props: {
                                 ))}
                             </Alert>
                         ) : null}
-                    </>
+                    </div>
                 ) : null}
 
                 <Typography
@@ -979,7 +1017,15 @@ export default function TemplatesDialog(props: {
                     startIcon={<CheckIcon />}
                 >
                     {I18n.t('Import')}
-                    {total ? ` (${total})` : ''}
+                    {total ? (
+                        <span
+                            key={total}
+                            className="modbus-count"
+                            style={{ marginLeft: 4 }}
+                        >
+                            ({total})
+                        </span>
+                    ) : null}
                 </Button>
                 <Button
                     variant="contained"

@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-import './RegisterTable.css';
-
 import {
     Table,
     TableHead,
@@ -18,20 +16,19 @@ import {
 } from '@mui/material';
 
 import {
-    Delete as DeleteIcon,
     Add as AddIcon,
     ImportExport,
     CleaningServices,
     Sort as SortIcon,
     AccountTree as AccountTreeIcon,
-    ExpandMore as ExpandMoreIcon,
     LibraryBooks as LibraryBooksIcon,
-    ChevronRight as ChevronRightIcon,
 } from '@mui/icons-material';
 
 import {
     I18n,
-    IconExpert,
+    IconExpertMode,
+    IconFolder,
+    IconTrash,
     TextWithIcon,
     SelectWithIcon,
     type IobTheme,
@@ -41,8 +38,16 @@ import {
 import TsvDialog from './TsvDialog';
 import DeleteAllDialog from './DeleteAllDialog';
 import DeleteDialog from './DeleteDialog';
+import { PopOnChange, prefersReducedMotion } from './Animations';
 import type { RegisterField } from '../types';
 import type { Modbus } from '@iobroker/modbus';
+
+/** Duration of the CSS animation `modbusRowRemove` */
+const REMOVE_DURATION = 260;
+/** How long a new row keeps its class (`modbusRowNewGlow`) */
+const NEW_ROW_DURATION = 1600;
+/** Rows of an unfolded group are animated one after another, but at most this many with a delay */
+const UNFOLD_MAX_STAGGER = 20;
 
 const styles: Record<string, any> = {
     tableHeader: {
@@ -319,11 +324,19 @@ export default function RegisterTable(props: {
         open: boolean;
         action: ((disableWarnings: boolean) => void) | null;
         item: Modbus.Register | null;
+        /** index of the row: its trash can stays open while the dialog is shown */
+        index?: number;
     }>({
         open: false,
         item: null,
         action: null,
     });
+    // Animations: the row that is being deleted ('all' = all rows), the row that was just added,
+    // and the group of a slave ID that was just unfolded
+    const [removing, setRemoving] = useState<number | 'all' | null>(null);
+    const [newIndex, setNewIndex] = useState<number | null>(null);
+    const [unfolded, setUnfolded] = useState<number | null>(null);
+    const prevLength = useRef(props.data.length);
     // "Freeze order" (issue #249): render in insertion order so rows do not jump around while editing
     const [frozen, setFrozen] = useState(window.localStorage.getItem('Modbus.freezeOrder') === 'true');
     // Tree view (issue #249): group rows by device/slave id under collapsible headers (multiDeviceId only)
@@ -360,6 +373,47 @@ export default function RegisterTable(props: {
             }
         }
     });
+
+    // A row was added with "+": it slides in and is scrolled into view
+    useEffect(() => {
+        const length = props.data.length;
+        const added = length === prevLength.current + 1;
+        prevLength.current = length;
+        if (!added) {
+            setNewIndex(null);
+            return;
+        }
+        setNewIndex(length - 1);
+        window.requestAnimationFrame(() =>
+            containerRef.current
+                ?.querySelector(`tr[data-index="${length - 1}"]`)
+                ?.scrollIntoView({ block: 'nearest', behavior: prefersReducedMotion() ? 'auto' : 'smooth' }),
+        );
+        const timer = window.setTimeout(() => setNewIndex(null), NEW_ROW_DURATION);
+        return () => window.clearTimeout(timer);
+    }, [props.data.length]);
+
+    // The rows of an unfolded group drop out one after another; afterward they are normal rows again
+    useEffect(() => {
+        if (unfolded === null) {
+            return;
+        }
+        const timer = window.setTimeout(() => setUnfolded(null), UNFOLD_MAX_STAGGER * 18 + 300);
+        return () => window.clearTimeout(timer);
+    }, [unfolded]);
+
+    /** Deletes a row (or all rows) after it slid out */
+    const removeAnimated = (index: number | 'all', remove: () => void): void => {
+        if (prefersReducedMotion()) {
+            remove();
+            return;
+        }
+        setRemoving(index);
+        window.setTimeout(() => {
+            setRemoving(null);
+            remove();
+        }, REMOVE_DURATION);
+    };
 
     const sortedData = props.getSortedData(props.data, frozen ? '$index' : props.orderBy, frozen ? 'asc' : props.order);
 
@@ -412,7 +466,10 @@ export default function RegisterTable(props: {
     const topPad = startIndex * rowHeight;
     const bottomPad = (total - endIndex) * rowHeight;
 
-    const toggleGroup = (deviceId: number): void =>
+    const toggleGroup = (deviceId: number): void => {
+        if (collapsedGroups.has(deviceId)) {
+            setUnfolded(deviceId);
+        }
         setCollapsedGroups(prev => {
             const next = new Set(prev);
             if (next.has(deviceId)) {
@@ -422,6 +479,17 @@ export default function RegisterTable(props: {
             }
             return next;
         });
+    };
+    // position of each row in its group, for the delay of the unfold animation
+    const positionInGroup = new Map<number, number>();
+    if (unfolded !== null) {
+        let position = 0;
+        for (const it of renderItems) {
+            if (it.kind === 'row' && (parseInt(it.sortedItem.item.deviceId as string, 10) || 0) === unfolded) {
+                positionInGroup.set(it.sortedItem.$index, Math.min(position++, UNFOLD_MAX_STAGGER));
+            }
+        }
+    }
     const spacer = (height: number, key: string): React.JSX.Element | null =>
         height > 0 ? (
             <TableRow
@@ -448,18 +516,27 @@ export default function RegisterTable(props: {
         <div>
             <div>
                 <Tooltip title={I18n.t('Add line')}>
-                    <IconButton onClick={() => props.addItem()}>
+                    <IconButton
+                        className="modbus-btn modbus-btn-add"
+                        onClick={() => props.addItem()}
+                    >
                         <AddIcon />
                     </IconButton>
                 </Tooltip>
                 <Tooltip title={I18n.t('Edit or export data (TSV, CSV, JSON)')}>
-                    <IconButton onClick={() => setTsvDialogOpen(true)}>
+                    <IconButton
+                        className="modbus-btn modbus-btn-io"
+                        onClick={() => setTsvDialogOpen(true)}
+                    >
                         <ImportExport />
                     </IconButton>
                 </Tooltip>
                 {props.onOpenTemplates ? (
                     <Tooltip title={I18n.t('Load from template library')}>
-                        <IconButton onClick={() => props.onOpenTemplates?.()}>
+                        <IconButton
+                            className="modbus-btn modbus-btn-library"
+                            onClick={() => props.onOpenTemplates?.()}
+                        >
                             <LibraryBooksIcon />
                         </IconButton>
                     </Tooltip>
@@ -472,7 +549,7 @@ export default function RegisterTable(props: {
                             setExtendedMode(!extendedMode);
                         }}
                     >
-                        <IconExpert />
+                        <IconExpertMode active={extendedMode} />
                     </IconButton>
                 </Tooltip>
                 <Tooltip title={I18n.t('Freeze order while editing (do not re-sort)')}>
@@ -484,7 +561,12 @@ export default function RegisterTable(props: {
                             setFrozen(newFrozen);
                         }}
                     >
-                        <SortIcon />
+                        <PopOnChange
+                            value={frozen}
+                            className={frozen ? 'modbus-frozen' : 'modbus-pop'}
+                        >
+                            <SortIcon />
+                        </PopOnChange>
                     </IconButton>
                 </Tooltip>
                 {props.native.params.multiDeviceId ? (
@@ -497,20 +579,25 @@ export default function RegisterTable(props: {
                                 setTreeView(newTree);
                             }}
                         >
-                            <AccountTreeIcon />
+                            <PopOnChange value={treeView}>
+                                <AccountTreeIcon />
+                            </PopOnChange>
                         </IconButton>
                     </Tooltip>
                 ) : null}
                 {extendedMode && props.fields.some(f => f.sanitize) ? (
                     <Tooltip title={I18n.t('Toggle sanitize columns')}>
                         <IconButton
+                            className="modbus-btn modbus-btn-sanitize"
                             color={sanitizeMode ? 'primary' : 'inherit'}
                             onClick={() => {
                                 window.localStorage.setItem('Modbus.sanitizeMode', sanitizeMode ? 'false' : 'true');
                                 setSanitizeMode(!sanitizeMode);
                             }}
                         >
-                            <CleaningServices />
+                            <PopOnChange value={sanitizeMode}>
+                                <CleaningServices />
+                            </PopOnChange>
                         </IconButton>
                     </Tooltip>
                 ) : null}
@@ -614,12 +701,12 @@ export default function RegisterTable(props: {
                                             onClick={() =>
                                                 setDeleteAllDialog({
                                                     open: true,
-                                                    action: () => props.changeData([]),
+                                                    action: () => removeAnimated('all', () => props.changeData([])),
                                                 })
                                             }
-                                            disabled={!props.data.length}
+                                            disabled={!props.data.length || removing !== null}
                                         >
-                                            <DeleteIcon />
+                                            <IconTrash open={deleteAllDialog.open} />
                                         </IconButton>
                                     </div>
                                 </Tooltip>
@@ -639,7 +726,7 @@ export default function RegisterTable(props: {
                                             onClick={() => toggleGroup(renderItem.deviceId)}
                                         >
                                             <IconButton size="small">
-                                                {isCollapsed ? <ChevronRightIcon /> : <ExpandMoreIcon />}
+                                                <IconFolder open={!isCollapsed} />
                                             </IconButton>
                                             {I18n.t('Slave ID')} {renderItem.deviceId} ({renderItem.count})
                                         </TableCell>
@@ -693,10 +780,26 @@ export default function RegisterTable(props: {
                                 id = id.substring(0, id.length - 1);
                             }
                             const val = props.values[id]?.val;
+                            const unfoldPosition = positionInGroup.get(sortedItem.$index);
+                            let rowClass: string | undefined;
+                            if (removing === 'all' || removing === sortedItem.$index) {
+                                rowClass = 'modbus-row-removing';
+                            } else if (newIndex === sortedItem.$index) {
+                                rowClass = 'modbus-row-new';
+                            } else if (unfoldPosition !== undefined) {
+                                rowClass = 'modbus-row-unfold';
+                            }
                             return (
                                 <TableRow
                                     hover
                                     key={sortedItem.$index}
+                                    data-index={sortedItem.$index}
+                                    className={rowClass}
+                                    style={
+                                        unfoldPosition !== undefined
+                                            ? ({ '--modbus-row-i': unfoldPosition } as React.CSSProperties)
+                                            : undefined
+                                    }
                                     ref={visibleIndex === firstDataVisibleIndex ? firstRowRef : undefined}
                                 >
                                     {props.fields
@@ -733,14 +836,17 @@ export default function RegisterTable(props: {
                                             <div>
                                                 <IconButton
                                                     size="small"
+                                                    // the indexes change after the row is deleted, so wait for it
+                                                    disabled={removing !== null}
                                                     onClick={() => {
+                                                        const index = sortedItem.$index;
                                                         const lastTime =
                                                             window.sessionStorage.getItem('disableDeleteDialogs');
                                                         if (
                                                             lastTime &&
                                                             Date.now() - new Date(lastTime).getTime() < 1000 * 60 * 5
                                                         ) {
-                                                            props.deleteItem(sortedItem.$index);
+                                                            removeAnimated(index, () => props.deleteItem(index));
                                                             return;
                                                         }
                                                         setDeleteDialog({
@@ -752,13 +858,19 @@ export default function RegisterTable(props: {
                                                                         new Date().toISOString(),
                                                                     );
                                                                 }
-                                                                props.deleteItem(sortedItem.$index);
+                                                                removeAnimated(index, () => props.deleteItem(index));
                                                             },
                                                             item: sortedItem.item,
+                                                            index,
                                                         });
                                                     }}
                                                 >
-                                                    <DeleteIcon />
+                                                    <IconTrash
+                                                        open={
+                                                            deleteDialog.open &&
+                                                            deleteDialog.index === sortedItem.$index
+                                                        }
+                                                    />
                                                 </IconButton>
                                             </div>
                                         </Tooltip>

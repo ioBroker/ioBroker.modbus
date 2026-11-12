@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
-import { AppBar, Tabs, Tab, CssBaseline } from '@mui/material';
+import { AppBar, Tabs, Tab, CssBaseline, Tooltip, Box } from '@mui/material';
 
 import { AiOutlineFieldBinary as BinaryIcon } from 'react-icons/ai';
 import { TiSortNumerically as DigitsIcon } from 'react-icons/ti';
@@ -9,6 +9,8 @@ import { TiSortNumerically as DigitsIcon } from 'react-icons/ti';
 import {
     Loader,
     I18n,
+    IconConnectionState,
+    IconStatusLed,
     GenericApp,
     ScrollbarStyles,
     type IobTheme,
@@ -57,6 +59,8 @@ const styles: Record<string, any> = {
     }),
 };
 
+const tabIconStyle: React.CSSProperties = { width: 18, height: 18, marginRight: 4, display: 'inline-block' };
+
 const tabs: {
     name: string;
     title: string;
@@ -74,25 +78,45 @@ const tabs: {
     {
         name: 'discrete-inputs',
         title: 'Discrete inputs',
-        icon: <BinaryIcon style={{ width: 18, height: 18, marginRight: 4, display: 'inline-block' }} />,
+        icon: (
+            <BinaryIcon
+                className="modbus-tab-icon"
+                style={tabIconStyle}
+            />
+        ),
         tooltip: 'Binary inputs (read-only)',
     },
     {
         name: 'coils',
         title: 'Coils',
-        icon: <BinaryIcon style={{ width: 18, height: 18, marginRight: 4, display: 'inline-block' }} />,
+        icon: (
+            <BinaryIcon
+                className="modbus-tab-icon"
+                style={tabIconStyle}
+            />
+        ),
         tooltip: 'Binary inputs and outputs',
     },
     {
         name: 'input-registers',
         title: 'Input Registers',
-        icon: <DigitsIcon style={{ width: 18, height: 18, marginRight: 4, display: 'inline-block' }} />,
+        icon: (
+            <DigitsIcon
+                className="modbus-tab-icon"
+                style={tabIconStyle}
+            />
+        ),
         tooltip: 'Input registers (8-64 bit values, read-only)',
     },
     {
         name: 'holding-registers',
         title: 'Holding Registers',
-        icon: <DigitsIcon style={{ width: 18, height: 18, marginRight: 4, display: 'inline-block' }} />,
+        icon: (
+            <DigitsIcon
+                className="modbus-tab-icon"
+                style={tabIconStyle}
+            />
+        ),
         tooltip: 'Input/output registers (8-64 bit values)',
     },
 ];
@@ -113,6 +137,10 @@ interface AppState extends GenericAppState {
     moreLoaded: boolean;
     rooms: Record<string, ioBroker.EnumObject> | null;
     alive: boolean;
+    /** time of the last update of the alive state: every update lets the status LED pulse */
+    aliveTs: number;
+    /** info.connection: master - connected to the slave (boolean), slave - the connected masters (string) */
+    connection: boolean | string;
     systemConfig: ioBroker.SystemConfigObject | null;
     templatesDialog: boolean;
 }
@@ -155,6 +183,8 @@ export default class App extends GenericApp<GenericAppProps, AppState> {
             moreLoaded: false,
             rooms: null,
             alive: false,
+            aliveTs: 0,
+            connection: false,
             systemConfig: null,
             templatesDialog: false,
         };
@@ -221,15 +251,78 @@ export default class App extends GenericApp<GenericAppProps, AppState> {
 
         const systemConfig = await this.socket.getSystemConfig();
         const aliveState = await this.socket.getState(`system.adapter.modbus.${this.instance}.alive`);
-        this.setState({ alive: !!aliveState?.val, selectedTab, systemConfig });
+        const connectionState = await this.socket.getState(`modbus.${this.instance}.info.connection`);
+        this.setState({
+            alive: !!aliveState?.val,
+            aliveTs: aliveState?.ts || 0,
+            connection: (connectionState?.val as boolean | string) || false,
+            selectedTab,
+            systemConfig,
+        });
         await this.socket.subscribeState(`system.adapter.modbus.${this.instance}.alive`, this.onAliveChanged);
+        await this.socket.subscribeState(`modbus.${this.instance}.info.connection`, this.onConnectionChanged);
+    }
+
+    componentWillUnmount(): void {
+        this.socket.unsubscribeState(`system.adapter.modbus.${this.instance}.alive`, this.onAliveChanged);
+        this.socket.unsubscribeState(`modbus.${this.instance}.info.connection`, this.onConnectionChanged);
+        super.componentWillUnmount();
     }
 
     onAliveChanged = (_id: string, state: ioBroker.State | null | undefined): void => {
-        if (!!state?.val !== this.state.alive) {
-            this.setState({ alive: !!state?.val });
+        this.setState({ alive: !!state?.val, aliveTs: state?.ts || 0 });
+    };
+
+    onConnectionChanged = (_id: string, state: ioBroker.State | null | undefined): void => {
+        const connection = (state?.val as boolean | string) || false;
+        if (connection !== this.state.connection) {
+            this.setState({ connection });
         }
     };
+
+    /** Status of the instance and of the connection, shown on the right side of the tabs */
+    renderStatus(): React.JSX.Element {
+        const isSlave = this.state.native.params.slave === '1' || this.state.native.params.slave === 1;
+        const connected = !!this.state.connection;
+        let state: 'connected' | 'connecting' | 'disconnected';
+        let title: string;
+        if (!this.state.alive) {
+            state = 'disconnected';
+            title = I18n.t('Instance is not running');
+        } else if (connected) {
+            state = 'connected';
+            title =
+                isSlave && typeof this.state.connection === 'string'
+                    ? I18n.t('Connected masters: %s', this.state.connection)
+                    : I18n.t('Connected to the device');
+        } else {
+            // the master retries the connection, the slave waits for masters
+            state = 'connecting';
+            title = I18n.t(isSlave ? 'Waiting for masters' : 'Connecting to the device...');
+        }
+
+        return (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, px: 2, flexShrink: 0 }}>
+                <Tooltip title={I18n.t(this.state.alive ? 'Instance is running' : 'Instance is not running')}>
+                    <span style={{ display: 'inline-flex' }}>
+                        <IconStatusLed
+                            color={this.state.alive ? 'green' : 'grey'}
+                            beat={this.state.alive ? this.state.aliveTs : null}
+                            ariaLabel={I18n.t(this.state.alive ? 'Instance is running' : 'Instance is not running')}
+                        />
+                    </span>
+                </Tooltip>
+                <Tooltip title={title}>
+                    <span style={{ display: 'inline-flex' }}>
+                        <IconConnectionState
+                            state={state}
+                            ariaLabel={title}
+                        />
+                    </span>
+                </Tooltip>
+            </Box>
+        );
+    }
 
     renderConnection(): React.JSX.Element {
         if (!this.state.systemConfig) {
@@ -404,8 +497,12 @@ export default class App extends GenericApp<GenericAppProps, AppState> {
                             color: this.state.theme.palette.text.primary,
                         }}
                     >
-                        <AppBar position="static">
+                        <AppBar
+                            position="static"
+                            sx={{ flexDirection: 'row', alignItems: 'center' }}
+                        >
                             <Tabs
+                                sx={{ flexGrow: 1, minWidth: 0, '&.Mui-indicator': styles.indicator }}
                                 indicatorColor="secondary"
                                 value={this.state.selectedTab || tabs[0].name}
                                 onChange={(_e, value) => {
@@ -414,7 +511,6 @@ export default class App extends GenericApp<GenericAppProps, AppState> {
                                 }}
                                 variant="scrollable"
                                 scrollButtons="auto"
-                                sx={{ '&.Mui-indicator': styles.indicator }}
                             >
                                 {tabs.map(tab => (
                                     <Tab
@@ -436,9 +532,16 @@ export default class App extends GenericApp<GenericAppProps, AppState> {
                                     />
                                 ))}
                             </Tabs>
+                            {this.renderStatus()}
                         </AppBar>
                         <div style={this.isIFrame ? styles.tabContentIFrame : styles.tabContent}>
-                            {this.renderTab()}
+                            <div
+                                // a new key on every tab change plays the animation again
+                                key={this.state.selectedTab || tabs[0].name}
+                                className="modbus-tab-enter"
+                            >
+                                {this.renderTab()}
+                            </div>
                         </div>
                         {this.renderTemplatesDialog()}
                         {this.renderError()}

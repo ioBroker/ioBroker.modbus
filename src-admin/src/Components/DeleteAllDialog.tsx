@@ -1,9 +1,9 @@
 import React from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 
-import { Delete as DeleteIcon, Clear as ClearIcon } from '@mui/icons-material';
+import { Clear as ClearIcon } from '@mui/icons-material';
 
-import { I18n } from '@iobroker/gui-components';
+import { I18n, IconTrash } from '@iobroker/gui-components';
 
 export default function DeleteAllDialog(props: {
     open: boolean;
@@ -22,7 +22,7 @@ export default function DeleteAllDialog(props: {
                     <Button
                         variant="contained"
                         color="secondary"
-                        startIcon={<DeleteIcon />}
+                        startIcon={<IconTrash />}
                         onClick={() => {
                             props.action();
                             props.onClose();

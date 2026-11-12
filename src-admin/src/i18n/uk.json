@@ -241,5 +241,12 @@
     "Possibly: %s": "Можливо: %s",
     "Detected: %s": "Визначено: %s",
     "Select": "Вибрати",
-    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "Відомий пристрій не знайдено (відповідей: %s з %s). Визначення поки доступне для %s пристроїв."
+    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "Відомий пристрій не знайдено (відповідей: %s з %s). Визначення поки доступне для %s пристроїв.",
+    "Instance is running": "Екземпляр запущено",
+    "Instance is not running": "Екземпляр не запущено",
+    "Connected to the device": "Підключено до пристрою",
+    "Connecting to the device...": "Підключення до пристрою...",
+    "Connected masters: %s": "Підключені майстри: %s",
+    "Waiting for masters": "Очікування майстрів",
+    "Or drop a file on the editor": "Або перетягніть файл у редактор"
 }
