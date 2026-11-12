@@ -161,6 +161,8 @@
     "Max Valid": "Max prawidł.",
     "do not include address in ID": "Nie podawaj adresu w ID",
     "doNotIncludeAdrInId_help": "Nie dodawaj adresu w wygenerowanym identyfikatorze ioBroker. „10_Wejście10” kontra „Wejście10”.",
+    "Pad address in ID with zeros": "Uzupełniaj adres w ID zerami",
+    "padAddressInId_help": "Uzupełnia adres w wygenerowanym ID ioBroker zerami do 5 cyfr, aby ID były sortowane numerycznie: `00011_Input` zamiast `11_Input`. Zmiana tej opcji zmienia ID: stare stany są usuwane, więc sprawdź skrypty, aliasy i ustawienia historii, które z nich korzystają.",
     "doNotRoundAddressToWord_help": "Zwykle adresy cewek i wejść dyskretnych są ustawione na 16 bitów. Podobnie jak adresy od 3 do 20 zostaną wyrównane do 0 do 32.\nJeżeli ta opcja jest włączona, adresy nie zostaną wyrównane.",
     "doNotUseWriteMultipleRegisters_help": "Jeśli urządzenie slave nie obsługuje polecenia „zapisz wiele rejestrów”, możesz je aktywować, aby uzyskać ostrzeżenia, gdy zostanie zapisanych wiele rejestrów.",
     "formula": "formula",

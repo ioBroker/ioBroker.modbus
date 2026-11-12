@@ -161,6 +161,8 @@
     "Max Valid": "Máx válido",
     "do not include address in ID": "não inclua endereço no ID",
     "doNotIncludeAdrInId_help": "Não adicione endereço no ioBroker iD gerado. `10_Input10` vs `Input10`.",
+    "Pad address in ID with zeros": "Preencher endereço no ID com zeros",
+    "padAddressInId_help": "Preenche o endereço no ID do ioBroker gerado com zeros até 5 dígitos, para que os IDs sejam ordenados numericamente: `00011_Input` em vez de `11_Input`. Alterar esta opção altera os IDs: os estados antigos são excluídos, por isso verifique scripts, aliases e configurações de histórico que os utilizam.",
     "doNotRoundAddressToWord_help": "Normalmente, as bobinas e os endereços das entradas discretas são alinhados em 16 bits. Endereços semelhantes de 3 a 20 serão alinhados de 0 a 32.\nSe esta opção estiver ativa, os endereços não ficarão alinhados.",
     "doNotUseWriteMultipleRegisters_help": "Se o escravo não suportar o comando \"escrever múltiplos registros\", você pode ativá-lo para receber avisos quando os múltiplos registros serão gravados.",
     "formula": "formula",

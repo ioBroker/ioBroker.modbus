@@ -161,6 +161,8 @@
     "Max Valid": "Max valido",
     "do not include address in ID": "non includere l'indirizzo nell'ID",
     "doNotIncludeAdrInId_help": "Non aggiungere indirizzo nell'iD ioBroker generato. \"10_Ingresso10\" rispetto a \"Ingresso10\".",
+    "Pad address in ID with zeros": "Riempi l'indirizzo nell'ID con zeri",
+    "padAddressInId_help": "Riempie l'indirizzo nell'ID ioBroker generato con zeri fino a 5 cifre, in modo che gli ID siano ordinati numericamente: `00011_Input` invece di `11_Input`. Modificare questa opzione cambia gli ID: i vecchi stati vengono eliminati, quindi controlla script, alias e impostazioni della cronologia che li usano.",
     "doNotRoundAddressToWord_help": "Normalmente le bobine e gli indirizzi degli ingressi discreti sono allineati a 16 bit. Gli indirizzi simili da 3 a 20 verranno allineati da 0 a 32.\nSe questa opzione è attiva gli indirizzi non verranno allineati.",
     "doNotUseWriteMultipleRegisters_help": "Se lo slave non supporta il comando \"scrivi più registri\", puoi attivarlo per ricevere avvisi quando verranno scritti più registri.",
     "formula": "formula",

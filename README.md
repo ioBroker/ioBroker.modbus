@@ -356,6 +356,9 @@ There are some programs in folder `test` to test the TCP communication:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (@MMeinhardt1, @GermanBluefox) The option `padAddressInId` (pad the address in state IDs with zeros to 5 digits, issue #317) is now available in the admin UI under "Settings"
+
 ### 9.2.3 (2026-11-08)
 * (@MMeinhardt1) Updated `@iobroker/modbus` to 7.9.0: the new instance parameter `padAddressInId` pads the address in state IDs with zeros to 5 digits, so they sort numerically (issue #317). It is off by default and not yet available in the admin UI
 * (@GermanBluefox) Updated dependencies

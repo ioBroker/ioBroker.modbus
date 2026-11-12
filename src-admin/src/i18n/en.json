@@ -161,6 +161,8 @@
     "Max Valid": "Max Valid",
     "do not include address in ID": "Do not include address in ID",
     "doNotIncludeAdrInId_help": "Do not add address in the generated ioBroker iD. `10_Input10` vs `Input10`.",
+    "Pad address in ID with zeros": "Pad address in ID with zeros",
+    "padAddressInId_help": "Pads the address in the generated ioBroker ID with zeros to 5 digits, so the IDs sort numerically: `00011_Input` instead of `11_Input`. Changing this option changes the IDs: the old states are deleted, so check scripts, aliases and history settings that use them.",
     "doNotRoundAddressToWord_help": "Normally, the coils and the discrete inputs addresses are aligned to 16 bit. Like addresses from 3 to 20 will be aligned to 0 up 32.\nIf this option is active, the addresses will not be aligned.",
     "doNotUseWriteMultipleRegisters_help": "If slave does not support \"write multiple registers\" command, you can activate it to get warnings, when the multiple registers will be written.",
     "formula": "Formula",

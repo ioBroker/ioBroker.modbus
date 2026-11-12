@@ -71,6 +71,13 @@ const schema: ConfigItemPanel = {
             hidden: '!!data.showAliases',
             xs: 12,
         },
+        padAddressInId: {
+            type: 'checkbox',
+            label: 'Pad address in ID with zeros',
+            help: 'padAddressInId_help',
+            hidden: '!!data.doNotIncludeAdrInId',
+            xs: 12,
+        },
         preserveDotsInId: {
             type: 'checkbox',
             label: 'preserve dots in ID',

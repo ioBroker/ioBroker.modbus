@@ -161,6 +161,8 @@
     "Max Valid": "最大有效",
     "do not include address in ID": "在ID中不包含地址",
     "doNotIncludeAdrInId_help": "不要在生成的 ioBroker iD 中添加地址。 “10_Input10”与“Input10”。",
+    "Pad address in ID with zeros": "在 ID 中用零填充地址",
+    "padAddressInId_help": "在生成的 ioBroker ID 中用零将地址填充到 5 位，使 ID 按数字排序：`00011_Input` 而不是 `11_Input`。更改此选项会更改 ID：旧状态将被删除，因此请检查使用它们的脚本、别名和历史记录设置。",
     "doNotRoundAddressToWord_help": "通常，线圈和离散输入地址对齐为 16 位。从 3 到 20 的类似地址将与 0 到 32 对齐。\n如果此选项处于活动状态，则地址将不会对齐。",
     "doNotUseWriteMultipleRegisters_help": "如果从机不支持“写入多个寄存器”命令，您可以激活它以在多个寄存器将被写入时收到警告。",
     "formula": "formula",
