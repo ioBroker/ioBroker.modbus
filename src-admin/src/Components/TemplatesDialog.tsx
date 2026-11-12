@@ -34,6 +34,7 @@ import { I18n } from '@iobroker/gui-components';
 import type { Modbus } from '@iobroker/modbus';
 
 import { parseAddress } from './Utils';
+import { DEFAULT_OFFSETS, isBitType, rawToInstance, templateToRaw } from './templateAddress';
 
 /**
  * Index of https://github.com/ioBroker/modbus-templates, generated there by `scripts/templates.mjs build`.
@@ -53,6 +54,8 @@ export interface TemplateFile {
     registers: number;
     deviceIds?: number[];
     addressing?: AddressingMode;
+    /** coils and discrete inputs with alias addresses: "Use direct addresses by aliases" at the time of the export */
+    directAddresses?: boolean;
     warnings?: number;
 }
 
@@ -122,13 +125,6 @@ const COLUMNS: Record<Modbus.RegisterType, string[]> = {
 };
 const CHECKBOXES = ['poll', 'wp', 'cw', 'isScale', 'sanitize'];
 
-/** Offsets of the alias addresses as used in the templates (independent of the instance settings) */
-const DEFAULT_OFFSETS: Record<Modbus.RegisterType, number> = {
-    coils: 1,
-    disInputs: 10001,
-    inputRegs: 30001,
-    holdingRegs: 40001,
-};
 const OFFSET_PARAMS: Record<
     Modbus.RegisterType,
     'coilsOffset' | 'disInputsOffset' | 'inputRegsOffset' | 'holdingRegsOffset'
@@ -232,6 +228,8 @@ export function convertTemplateFile(
     file: TemplateFile,
     options: {
         addressing: AddressingMode;
+        /** bit order of the template (coils and discrete inputs with alias addresses) */
+        directAddresses: boolean;
         params: Modbus.ModbusAdapterConfig['params'];
         multiDeviceId: boolean;
         slaveId: number;
@@ -250,6 +248,8 @@ export function convertTemplateFile(
     const col = (name: string): number => header.indexOf(name);
 
     const showAliases = options.params.showAliases === true || (options.params.showAliases as unknown) === 'true';
+    const instanceDirect =
+        options.params.directAddresses === true || (options.params.directAddresses as unknown) === 'true';
     const instanceOffset =
         parseInt(options.params[OFFSET_PARAMS[regType]] as unknown as string, 10) || DEFAULT_OFFSETS[regType];
 
@@ -273,17 +273,23 @@ export function convertTemplateFile(
             }
         }
 
-        // address: template format -> raw -> format of this instance
-        let address = parseAddress((get('_address') || '').trim());
-        if (options.addressing === 'alias') {
-            address -= DEFAULT_OFFSETS[regType];
-        }
-        if (address < 0 || address > 65535) {
+        // address: template format -> raw (address on the wire) -> format of this instance
+        const raw = templateToRaw(
+            parseAddress((get('_address') || '').trim()),
+            regType,
+            options.addressing,
+            options.directAddresses,
+        );
+        if (Number.isNaN(raw)) {
             skipped++;
             continue;
         }
-        item._address = showAliases ? address + instanceOffset : address;
-        // "address" is calculated by the adapter from "_address" and the settings
+        item._address = rawToInstance(raw, regType, showAliases, instanceDirect, instanceOffset);
+        if (isBitType(regType)) {
+            // The bit order with aliases is ambiguous, so give the adapter the address on the wire directly
+            item.address = raw;
+        }
+        // for registers "address" is calculated by the adapter from "_address" and the settings
 
         if (regType === 'inputRegs' || regType === 'holdingRegs') {
             const type = String(item.type || '').trim();
@@ -368,6 +374,8 @@ export default function TemplatesDialog(props: {
     const [texts, setTexts] = useState<Record<string, string>>({});
     const [mode, setMode] = useState<ImportMode>('add');
     const [addressing, setAddressing] = useState<AddressingMode>(instanceShowAliases ? 'alias' : 'raw');
+    const instanceDirect = params.directAddresses === true || (params.directAddresses as unknown) === 'true';
+    const [directAddresses, setDirectAddresses] = useState<boolean>(instanceDirect);
     const [slaveId, setSlaveId] = useState(String(parseInt(params.deviceId as unknown as string, 10) || 1));
     const [enableMultiDeviceId, setEnableMultiDeviceId] = useState(true);
 
@@ -458,6 +466,10 @@ export default function TemplatesDialog(props: {
     const selectedFiles = device ? device.files.filter(f => selected.includes(f.path)) : [];
     const templateDeviceIds = [...new Set(selectedFiles.flatMap(f => f.deviceIds || []))].sort((a, b) => a - b);
     const unknownAddressing = selectedFiles.some(f => !f.addressing);
+    // bit order is only asked for coils/discrete inputs with alias addresses, where the template does not say it
+    const unknownDirect = selectedFiles.some(
+        f => isBitType(f.registerType) && (f.addressing || addressing) === 'alias' && f.directAddresses === undefined,
+    );
     const needsMultiDeviceId = !instanceMultiDeviceId && templateDeviceIds.length > 1;
     const multiDeviceId = instanceMultiDeviceId || (needsMultiDeviceId && enableMultiDeviceId);
     const slaveIdNumber = parseInt(slaveId, 10);
@@ -476,6 +488,7 @@ export default function TemplatesDialog(props: {
             }
             const parsed = convertTemplateFile(text, file, {
                 addressing: file.addressing || addressing,
+                directAddresses: file.directAddresses ?? directAddresses,
                 params,
                 multiDeviceId,
                 slaveId: slaveIdValid ? slaveIdNumber : 1,
@@ -485,7 +498,7 @@ export default function TemplatesDialog(props: {
         }
         return { registers: result, skipped, complete };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [texts, selected, device, addressing, multiDeviceId, slaveIdNumber, slaveIdValid, params]);
+    }, [texts, selected, device, addressing, directAddresses, multiDeviceId, slaveIdNumber, slaveIdValid, params]);
 
     const importTypes = REGISTER_TYPE_ORDER.filter(t => converted.registers[t]?.length);
     const total = importTypes.reduce((sum, t) => sum + (converted.registers[t]?.length || 0), 0);
@@ -720,6 +733,28 @@ export default function TemplatesDialog(props: {
                                             value="alias"
                                             control={<Radio size="small" />}
                                             label={I18n.t('With alias offset (30001, 40001, ...)')}
+                                        />
+                                    </RadioGroup>
+                                </FormControl>
+                            ) : null}
+                            {unknownDirect ? (
+                                <FormControl component="fieldset">
+                                    <FormLabel component="legend">
+                                        {I18n.t('Bit order in the template (coils, discrete inputs)')}
+                                    </FormLabel>
+                                    <RadioGroup
+                                        value={directAddresses ? 'direct' : 'reversed'}
+                                        onChange={e => setDirectAddresses(e.target.value === 'direct')}
+                                    >
+                                        <FormControlLabel
+                                            value="reversed"
+                                            control={<Radio size="small" />}
+                                            label={I18n.t('Not direct (alias 10001 = bit 15)')}
+                                        />
+                                        <FormControlLabel
+                                            value="direct"
+                                            control={<Radio size="small" />}
+                                            label={I18n.t('Direct addresses (alias 10001 = bit 0)')}
                                         />
                                     </RadioGroup>
                                 </FormControl>

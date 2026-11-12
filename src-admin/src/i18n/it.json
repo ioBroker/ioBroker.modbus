@@ -228,5 +228,8 @@
     "%s registers are skipped, because their address does not fit to the selected address format.": "%s registri vengono saltati, perché il loro indirizzo non corrisponde al formato scelto.",
     "%s existing registers will be removed": "%s registri esistenti verranno rimossi",
     "Your device is missing?": "Il tuo dispositivo manca?",
-    "Share your registers as template": "Condividi i tuoi registri come modello"
+    "Share your registers as template": "Condividi i tuoi registri come modello",
+    "Bit order in the template (coils, discrete inputs)": "Ordine dei bit nel modello (coils, ingressi discreti)",
+    "Not direct (alias 10001 = bit 15)": "Non diretto (alias 10001 = bit 15)",
+    "Direct addresses (alias 10001 = bit 0)": "Indirizzi diretti (alias 10001 = bit 0)"
 }
