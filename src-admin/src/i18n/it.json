@@ -233,5 +233,13 @@
     "Share your registers as template": "Condividi i tuoi registri come modello",
     "Bit order in the template (coils, discrete inputs)": "Ordine dei bit nel modello (coils, ingressi discreti)",
     "Not direct (alias 10001 = bit 15)": "Non diretto (alias 10001 = bit 15)",
-    "Direct addresses (alias 10001 = bit 0)": "Indirizzi diretti (alias 10001 = bit 0)"
+    "Direct addresses (alias 10001 = bit 0)": "Indirizzi diretti (alias 10001 = bit 0)",
+    "Detect device": "Rileva dispositivo",
+    "Reads a few registers from the device (read only). The instance must be connected.": "Legge alcuni registri dal dispositivo (sola lettura). L'istanza deve essere connessa.",
+    "The instance must be running": "L'istanza deve essere in esecuzione",
+    "Device detection failed: %s": "Rilevamento non riuscito: %s",
+    "Possibly: %s": "Possibile: %s",
+    "Detected: %s": "Rilevato: %s",
+    "Select": "Seleziona",
+    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "Nessun dispositivo noto rilevato (%s di %s richieste con risposta). Il rilevamento è disponibile finora per %s dispositivi."
 }

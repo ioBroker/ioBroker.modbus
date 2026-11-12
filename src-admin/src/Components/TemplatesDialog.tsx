@@ -21,6 +21,7 @@ import {
     RadioGroup,
     Select,
     TextField,
+    Tooltip,
     Typography,
 } from '@mui/material';
 import {
@@ -28,13 +29,21 @@ import {
     Clear as ClearIcon,
     OpenInNew as OpenInNewIcon,
     Refresh as RefreshIcon,
+    TravelExplore as DetectIcon,
 } from '@mui/icons-material';
 
-import { I18n } from '@iobroker/gui-components';
+import { I18n, type AdminConnection } from '@iobroker/gui-components';
 import type { Modbus } from '@iobroker/modbus';
 
 import { parseAddress } from './Utils';
 import { DEFAULT_OFFSETS, isBitType, rawToInstance, templateToRaw } from './templateAddress';
+import {
+    collectReads,
+    matchTemplates,
+    type DetectBlock,
+    type DetectMatch,
+    type DetectReadResult,
+} from './templateDetect';
 
 /**
  * Index of https://github.com/ioBroker/modbus-templates, generated there by `scripts/templates.mjs build`.
@@ -68,6 +77,8 @@ export interface TemplateDevice {
     description?: string;
     readme?: string;
     files: TemplateFile[];
+    /** registers that identify the device, see templateDetect.ts */
+    detect?: DetectBlock;
 }
 
 export interface TemplateIndex {
@@ -359,6 +370,11 @@ export default function TemplatesDialog(props: {
     native: Modbus.ModbusAdapterConfig;
     onImport: (result: TemplateImportResult) => void;
     onClose: () => void;
+    /** for the device detection: the running instance reads the registers */
+    socket?: AdminConnection;
+    adapterName?: string;
+    instance?: number;
+    alive?: boolean;
 }): React.JSX.Element {
     const params = props.native.params;
     const lang = I18n.getLanguage();
@@ -378,6 +394,13 @@ export default function TemplatesDialog(props: {
     const [directAddresses, setDirectAddresses] = useState<boolean>(instanceDirect);
     const [slaveId, setSlaveId] = useState(String(parseInt(params.deviceId as unknown as string, 10) || 1));
     const [enableMultiDeviceId, setEnableMultiDeviceId] = useState(true);
+    const [detecting, setDetecting] = useState(false);
+    const [detectResult, setDetectResult] = useState<{
+        matches: DetectMatch[];
+        answered: number;
+        total: number;
+    } | null>(null);
+    const [detectError, setDetectError] = useState('');
 
     const loadIndex = useCallback((force?: boolean): void => {
         if (indexCache && !force) {
@@ -474,6 +497,55 @@ export default function TemplatesDialog(props: {
     const multiDeviceId = instanceMultiDeviceId || (needsMultiDeviceId && enableMultiDeviceId);
     const slaveIdNumber = parseInt(slaveId, 10);
     const slaveIdValid = !Number.isNaN(slaveIdNumber) && slaveIdNumber >= 0 && slaveIdNumber <= 255;
+
+    const detectTemplates = (index?.templates || []).filter(t => t.detect?.probes?.length);
+    const canDetect = !!props.socket && !!props.adapterName && props.instance !== undefined && !!detectTemplates.length;
+
+    const selectTemplate = (id: string): void => {
+        const t = index?.templates.find(item => item.id === id);
+        if (t) {
+            setCategory(t.category);
+            setDeviceId(t.id);
+        }
+    };
+
+    const detectDevice = async (): Promise<void> => {
+        if (!canDetect) {
+            return;
+        }
+        setDetecting(true);
+        setDetectError('');
+        setDetectResult(null);
+        try {
+            const reads = collectReads(detectTemplates);
+            const answer: { results?: DetectReadResult[]; error?: string } | undefined = await props.socket!.sendTo(
+                `${props.adapterName}.${props.instance}`,
+                'readRegisters',
+                { reads, deviceId: instanceMultiDeviceId && slaveIdValid ? slaveIdNumber : undefined },
+            );
+            if (!answer || answer.error || !Array.isArray(answer.results)) {
+                setDetectError(answer?.error || 'no answer');
+                return;
+            }
+            const matches = matchTemplates(detectTemplates, reads, answer.results);
+            setDetectResult({
+                matches,
+                answered: answer.results.filter(r => r.registers).length,
+                total: reads.length,
+            });
+            // a single clear result is selected directly
+            const strong = matches.filter(m => !m.weak);
+            if (strong.length === 1 || (!strong.length && matches.length === 1)) {
+                selectTemplate((strong[0] || matches[0]).id);
+            }
+        } catch (e) {
+            setDetectError((e as Error).message || String(e));
+        } finally {
+            setDetecting(false);
+        }
+    };
+
+    const templateName = (id: string): string => index?.templates.find(t => t.id === id)?.name || id;
 
     // convert everything that is selected and loaded
     const converted = useMemo(() => {
@@ -635,7 +707,67 @@ export default function TemplatesDialog(props: {
                             {I18n.t(device.readme ? 'Documentation' : 'Show on GitHub')}
                         </Button>
                     ) : null}
+                    {canDetect ? (
+                        <Tooltip
+                            title={I18n.t(
+                                props.alive
+                                    ? 'Reads a few registers from the device (read only). The instance must be connected.'
+                                    : 'The instance must be running',
+                            )}
+                        >
+                            <span style={{ alignSelf: 'flex-end' }}>
+                                <Button
+                                    size="small"
+                                    variant="outlined"
+                                    startIcon={<DetectIcon />}
+                                    disabled={!props.alive || detecting}
+                                    onClick={() => void detectDevice()}
+                                >
+                                    {I18n.t('Detect device')}
+                                </Button>
+                            </span>
+                        </Tooltip>
+                    ) : null}
                 </Box>
+
+                {detecting ? <LinearProgress sx={{ mb: 2 }} /> : null}
+                {detectError ? (
+                    <Alert
+                        severity="error"
+                        sx={{ mb: 2 }}
+                    >
+                        {I18n.t('Device detection failed: %s', detectError)}
+                    </Alert>
+                ) : null}
+                {detectResult ? (
+                    <Alert
+                        severity={detectResult.matches.length ? 'success' : 'info'}
+                        sx={{ mb: 2 }}
+                        onClose={() => setDetectResult(null)}
+                    >
+                        {detectResult.matches.length
+                            ? detectResult.matches.map(m => (
+                                  <div key={m.id}>
+                                      {I18n.t(m.weak ? 'Possibly: %s' : 'Detected: %s', templateName(m.id))}
+                                      {m.id !== device?.id ? (
+                                          <Button
+                                              size="small"
+                                              sx={{ ml: 1 }}
+                                              onClick={() => selectTemplate(m.id)}
+                                          >
+                                              {I18n.t('Select')}
+                                          </Button>
+                                      ) : null}
+                                  </div>
+                              ))
+                            : I18n.t(
+                                  'No known device detected (%s of %s requests answered). Detection is available for %s devices so far.',
+                                  detectResult.answered,
+                                  detectResult.total,
+                                  detectTemplates.length,
+                              )}
+                    </Alert>
+                ) : null}
 
                 {loading ? <LinearProgress sx={{ mb: 2 }} /> : null}
 

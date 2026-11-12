@@ -233,5 +233,13 @@
     "Share your registers as template": "Deel uw registers als sjabloon",
     "Bit order in the template (coils, discrete inputs)": "Bitvolgorde in het sjabloon (coils, discrete ingangen)",
     "Not direct (alias 10001 = bit 15)": "Niet direct (alias 10001 = bit 15)",
-    "Direct addresses (alias 10001 = bit 0)": "Directe adressen (alias 10001 = bit 0)"
+    "Direct addresses (alias 10001 = bit 0)": "Directe adressen (alias 10001 = bit 0)",
+    "Detect device": "Apparaat herkennen",
+    "Reads a few registers from the device (read only). The instance must be connected.": "Leest enkele registers van het apparaat (alleen lezen). De instantie moet verbonden zijn.",
+    "The instance must be running": "De instantie moet actief zijn",
+    "Device detection failed: %s": "Apparaatherkenning mislukt: %s",
+    "Possibly: %s": "Mogelijk: %s",
+    "Detected: %s": "Herkend: %s",
+    "Select": "Selecteren",
+    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "Geen bekend apparaat herkend (%s van %s verzoeken beantwoord). Herkenning is tot nu toe beschikbaar voor %s apparaten."
 }

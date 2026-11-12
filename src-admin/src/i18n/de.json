@@ -233,5 +233,13 @@
     "Share your registers as template": "Teile deine Register als Vorlage",
     "Bit order in the template (coils, discrete inputs)": "Bit-Reihenfolge in der Vorlage (Coils, diskrete Eingänge)",
     "Not direct (alias 10001 = bit 15)": "Nicht direkt (Alias 10001 = Bit 15)",
-    "Direct addresses (alias 10001 = bit 0)": "Direkte Adressen (Alias 10001 = Bit 0)"
+    "Direct addresses (alias 10001 = bit 0)": "Direkte Adressen (Alias 10001 = Bit 0)",
+    "Detect device": "Gerät erkennen",
+    "Reads a few registers from the device (read only). The instance must be connected.": "Liest einige Register vom Gerät (nur lesend). Die Instanz muss verbunden sein.",
+    "The instance must be running": "Die Instanz muss laufen",
+    "Device detection failed: %s": "Geräteerkennung fehlgeschlagen: %s",
+    "Possibly: %s": "Möglich: %s",
+    "Detected: %s": "Erkannt: %s",
+    "Select": "Auswählen",
+    "No known device detected (%s of %s requests answered). Detection is available for %s devices so far.": "Kein bekanntes Gerät erkannt (%s von %s Abfragen beantwortet). Die Erkennung gibt es bisher für %s Geräte."
 }
