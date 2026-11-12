@@ -356,7 +356,7 @@ There are some programs in folder `test` to test the TCP communication:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 9.3.0 (2026-11-12)
 * (@GermanBluefox) Updated `@iobroker/modbus` to 7.10.0:
   - New option "Keep the connection on a timeout" (TCP, UDP and TCP-SSL master, issue #832): for gateways with several devices behind them, a device that does not answer does not close the connection for the others anymore. The connection is still re-established when no device answers
   - An error while processing a response fails only this request. Before, the master could stop polling (issue #831)
@@ -383,11 +383,6 @@ There are some programs in folder `test` to test the TCP communication:
 
 ### 9.2.0 (2026-09-25)
 - (@GermanBluefox) The adapter reports the resources it really occupies to js-controller 8, which keeps a per-host registry of them (`system.host.<name>.usedResources`): the serial port in RTU mode - as master and as slave - and the port a TCP slave or the proxy listens on. A master over TCP, UDP or SSL reports nothing, because the endpoint belongs to the device on the other side. Before a port is opened, the log names the other instance that has declared it, instead of only "Resource temporarily unavailable" or EADDRINUSE. The reporting itself lives in `@iobroker/modbus`, so it needs the next release of that package; an older js-controller is unaffected
-
-### 9.1.2 (2026-09-20)
-- (@GermanBluefox) Added explanations of timings in GUI
-- (@GermanBluefox) Corrected proxy mode with multiple DeviceIDs
-- (@GermanBluefox) Added better problem logging
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
