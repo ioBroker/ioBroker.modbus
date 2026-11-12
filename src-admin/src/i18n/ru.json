@@ -228,5 +228,8 @@
     "%s registers are skipped, because their address does not fit to the selected address format.": "Пропущено регистров: %s, их адрес не подходит к выбранному формату адресов.",
     "%s existing registers will be removed": "Будет удалено существующих регистров: %s",
     "Your device is missing?": "Вашего устройства нет?",
-    "Share your registers as template": "Поделитесь своими регистрами как шаблоном"
+    "Share your registers as template": "Поделитесь своими регистрами как шаблоном",
+    "Bit order in the template (coils, discrete inputs)": "Порядок битов в шаблоне (coils, дискретные входы)",
+    "Not direct (alias 10001 = bit 15)": "Не прямые (алиас 10001 = бит 15)",
+    "Direct addresses (alias 10001 = bit 0)": "Прямые адреса (алиас 10001 = бит 0)"
 }
