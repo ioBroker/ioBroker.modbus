@@ -25,6 +25,7 @@ import {
     Sort as SortIcon,
     AccountTree as AccountTreeIcon,
     ExpandMore as ExpandMoreIcon,
+    LibraryBooks as LibraryBooksIcon,
     ChevronRight as ChevronRightIcon,
 } from '@mui/icons-material';
 
@@ -303,6 +304,8 @@ export default function RegisterTable(props: {
     native: Modbus.ModbusAdapterConfig;
     instance: number;
     regName: string;
+    /** opens the dialog with the templates from github.com/ioBroker/modbus-templates */
+    onOpenTemplates?: () => void;
 }): React.JSX.Element {
     const [tsvDialogOpen, setTsvDialogOpen] = useState(false);
     const [editMode, setEditMode] = useState(parseInt(window.localStorage.getItem('Modbus.editMode') || '0', 10) || 0);
@@ -358,11 +361,7 @@ export default function RegisterTable(props: {
         }
     });
 
-    const sortedData = props.getSortedData(
-        props.data,
-        frozen ? '$index' : props.orderBy,
-        frozen ? 'asc' : props.order,
-    );
+    const sortedData = props.getSortedData(props.data, frozen ? '$index' : props.orderBy, frozen ? 'asc' : props.order);
 
     const visibleFieldCount = props.fields.filter(
         item =>
@@ -378,9 +377,9 @@ export default function RegisterTable(props: {
     const grouped = !!props.native.params.multiDeviceId && treeView;
     const renderItems: RenderItem[] = [];
     if (grouped) {
-        const deviceIds = Array.from(
-            new Set(sortedData.map(s => parseInt(s.item.deviceId as string, 10) || 0)),
-        ).sort((a, b) => a - b);
+        const deviceIds = Array.from(new Set(sortedData.map(s => parseInt(s.item.deviceId as string, 10) || 0))).sort(
+            (a, b) => a - b,
+        );
         deviceIds.forEach(deviceId => {
             const rowsOfDevice = sortedData.filter(s => (parseInt(s.item.deviceId as string, 10) || 0) === deviceId);
             renderItems.push({ kind: 'header', deviceId, count: rowsOfDevice.length });
@@ -458,6 +457,13 @@ export default function RegisterTable(props: {
                         <ImportExport />
                     </IconButton>
                 </Tooltip>
+                {props.onOpenTemplates ? (
+                    <Tooltip title={I18n.t('Load from template library')}>
+                        <IconButton onClick={() => props.onOpenTemplates?.()}>
+                            <LibraryBooksIcon />
+                        </IconButton>
+                    </Tooltip>
+                ) : null}
                 <Tooltip title={I18n.t('Toggle extended mode')}>
                     <IconButton
                         color={extendedMode ? 'primary' : 'inherit'}

@@ -23,6 +23,7 @@ import TabHoldingRegisters from './Tabs/HoldingRegisters';
 import TabDiscreteInputs from './Tabs/DiscreteInputs';
 import TabCoils from './Tabs/Coils';
 import TabConnection from './Tabs/Connection';
+import TemplatesDialog, { type TemplateImportResult } from './Components/TemplatesDialog';
 
 import enLang from './i18n/en.json';
 import deLang from './i18n/de.json';
@@ -113,7 +114,16 @@ interface AppState extends GenericAppState {
     rooms: Record<string, ioBroker.EnumObject> | null;
     alive: boolean;
     systemConfig: ioBroker.SystemConfigObject | null;
+    templatesDialog: boolean;
 }
+
+/** register type -> tab name */
+const TAB_OF_REGISTER_TYPE: Record<Modbus.RegisterType, string> = {
+    disInputs: 'discrete-inputs',
+    coils: 'coils',
+    inputRegs: 'input-registers',
+    holdingRegs: 'holding-registers',
+};
 
 export default class App extends GenericApp<GenericAppProps, AppState> {
     constructor(props: GenericAppProps) {
@@ -146,7 +156,46 @@ export default class App extends GenericApp<GenericAppProps, AppState> {
             rooms: null,
             alive: false,
             systemConfig: null,
+            templatesDialog: false,
         };
+    }
+
+    onOpenTemplates = (): void => this.setState({ templatesDialog: true });
+
+    onTemplateImport = (result: TemplateImportResult): void => {
+        const native: Modbus.ModbusAdapterConfig = JSON.parse(JSON.stringify(this.state.native));
+        const types = Object.keys(result.registers) as Modbus.RegisterType[];
+        for (const regType of types) {
+            native[regType] = result.registers[regType]!;
+        }
+        if (result.params) {
+            native.params = { ...native.params, ...result.params };
+        }
+        // show the imported registers, if the current tab got nothing
+        const tabs = types.map(t => TAB_OF_REGISTER_TYPE[t]);
+        const selectedTab = tabs.includes(this.state.selectedTab) ? this.state.selectedTab : tabs[0];
+        if (selectedTab) {
+            window.localStorage.setItem(`modbus.${this.instance}.selectedTab`, selectedTab);
+        }
+        this.setState({
+            native: native as unknown as ioBroker.AdapterConfig,
+            changed: this.getIsChanged(native as unknown as ioBroker.AdapterConfig),
+            templatesDialog: false,
+            selectedTab: selectedTab || this.state.selectedTab,
+        });
+    };
+
+    renderTemplatesDialog(): React.JSX.Element | null {
+        if (!this.state.templatesDialog) {
+            return null;
+        }
+        return (
+            <TemplatesDialog
+                native={this.state.native as Modbus.ModbusAdapterConfig}
+                onImport={this.onTemplateImport}
+                onClose={() => this.setState({ templatesDialog: false })}
+            />
+        );
     }
 
     // eslint-disable-next-line class-methods-use-this
@@ -237,6 +286,7 @@ export default class App extends GenericApp<GenericAppProps, AppState> {
                 }
                 rooms={this.state.rooms || {}}
                 themeType={this.state.themeType}
+                onOpenTemplates={this.onOpenTemplates}
             />
         );
     }
@@ -256,6 +306,7 @@ export default class App extends GenericApp<GenericAppProps, AppState> {
                 }
                 rooms={this.state.rooms || {}}
                 themeType={this.state.themeType}
+                onOpenTemplates={this.onOpenTemplates}
             />
         );
     }
@@ -275,6 +326,7 @@ export default class App extends GenericApp<GenericAppProps, AppState> {
                 }
                 rooms={this.state.rooms || {}}
                 themeType={this.state.themeType}
+                onOpenTemplates={this.onOpenTemplates}
             />
         );
     }
@@ -294,6 +346,7 @@ export default class App extends GenericApp<GenericAppProps, AppState> {
                 }
                 rooms={this.state.rooms || {}}
                 themeType={this.state.themeType}
+                onOpenTemplates={this.onOpenTemplates}
             />
         );
     }
@@ -383,6 +436,7 @@ export default class App extends GenericApp<GenericAppProps, AppState> {
                         <div style={this.isIFrame ? styles.tabContentIFrame : styles.tabContent}>
                             {this.renderTab()}
                         </div>
+                        {this.renderTemplatesDialog()}
                         {this.renderError()}
                         {this.renderSaveCloseButtons()}
                     </div>
