@@ -356,7 +356,7 @@ There are some programs in folder `test` to test the TCP communication:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 9.3.1 (2026-11-12)
 * (@GermanBluefox) Updated `@iobroker/modbus` to 7.10.1: cyclic write of holding registers works again, for polled and not polled registers (issue #771)
 
 ### 9.3.0 (2026-11-12)
@@ -383,9 +383,6 @@ There are some programs in folder `test` to test the TCP communication:
 
 ### 9.2.1 (2026-10-13)
 * (@GermanBluefox) Admin 7.6.20+ is required. The adapter is tested now also on Windows and macOS
-
-### 9.2.0 (2026-09-25)
-- (@GermanBluefox) The adapter reports the resources it really occupies to js-controller 8, which keeps a per-host registry of them (`system.host.<name>.usedResources`): the serial port in RTU mode - as master and as slave - and the port a TCP slave or the proxy listens on. A master over TCP, UDP or SSL reports nothing, because the endpoint belongs to the device on the other side. Before a port is opened, the log names the other instance that has declared it, instead of only "Resource temporarily unavailable" or EADDRINUSE. The reporting itself lives in `@iobroker/modbus`, so it needs the next release of that package; an older js-controller is unaffected
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
