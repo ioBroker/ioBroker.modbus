@@ -847,6 +847,8 @@ export default function TemplatesDialog(props: {
                                             <Checkbox
                                                 size="small"
                                                 checked={selected.includes(file.path)}
+                                                // a single file is always imported, there is nothing to choose
+                                                disabled={device.files.length === 1}
                                                 onChange={() =>
                                                     setSelected(
                                                         selected.includes(file.path)
