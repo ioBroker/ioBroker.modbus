@@ -356,6 +356,9 @@ There are some programs in folder `test` to test the TCP communication:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (@ipod86) Added the electrical measurement roles from the state roles list (`value.voltage`, `value.current`, `value.frequency`, `value.power.*`, `value.energy.*`) to the role select box
+
 ### 9.3.1 (2026-11-12)
 * (@GermanBluefox) Updated `@iobroker/modbus` to 7.10.1: cyclic write of holding registers works again, for polled and not polled registers (issue #771)
 
