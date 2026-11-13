@@ -21,5 +21,18 @@
     { "value": "level.blind", "title": "level.blind" },
     { "value": "level.temperature", "title": "level.temperature" },
     { "value": "level.interval", "title": "level.interval" },
-    { "value": "value.power.consumption", "title": "value.power.consumption" }
+    { "value": "value.power.consumption", "title": "value.power.consumption" },
+    { "value": "value.voltage", "title": "value.voltage" },
+    { "value": "value.current", "title": "value.current" },
+    { "value": "value.frequency", "title": "value.frequency" },
+    { "value": "value.power", "title": "value.power" },
+    { "value": "value.power.active", "title": "value.power.active" },
+    { "value": "value.power.reactive", "title": "value.power.reactive" },
+    { "value": "value.power.consumed", "title": "value.power.consumed" },
+    { "value": "value.power.produced", "title": "value.power.produced" },
+    { "value": "value.energy", "title": "value.energy" },
+    { "value": "value.energy.active", "title": "value.energy.active" },
+    { "value": "value.energy.reactive", "title": "value.energy.reactive" },
+    { "value": "value.energy.consumed", "title": "value.energy.consumed" },
+    { "value": "value.energy.produced", "title": "value.energy.produced" }
 ]
