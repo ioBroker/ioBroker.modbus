@@ -15,14 +15,35 @@ interface ReadResult {
     exceptionCode?: number;
 }
 
+/** Options of a read; `probe`: a timeout fails only this read and keeps the connection (@iobroker/modbus >= 7.11) */
+interface ReadOptions {
+    timeout?: number;
+    probe?: boolean;
+}
+
 /** The part of the Modbus client of the running master, that the detection uses (read only) */
 interface ReadClient {
-    readHoldingRegisters(unitId: number, start: number, quantity: number): Promise<{ register: number[] }>;
-    readInputRegisters(unitId: number, start: number, quantity: number): Promise<{ register: number[] }>;
+    readHoldingRegisters(
+        unitId: number,
+        start: number,
+        quantity: number,
+        options?: ReadOptions,
+    ): Promise<{ register: number[] }>;
+    readInputRegisters(
+        unitId: number,
+        start: number,
+        quantity: number,
+        options?: ReadOptions,
+    ): Promise<{ register: number[] }>;
 }
 
 const MAX_READS = 20;
 const MAX_DETECT_TIME = 30_000;
+/**
+ * Timeout of one detection read. Most reads hit registers of other device types, which some devices (often
+ * RTU) do not answer at all: with the configured timeout (5 s by default) the time limit would be over after a few.
+ */
+const MAX_DETECT_READ_TIMEOUT = 2_000;
 
 export class ModbusAdapter extends ModbusTemplate {
     public constructor(options: Partial<AdapterOptions> = {}) {
@@ -97,6 +118,12 @@ export class ModbusAdapter extends ModbusTemplate {
                 ? deviceId!
                 : parseInt(this.config.params.deviceId as unknown as string, 10) || 1;
 
+        const configuredTimeout = parseInt(this.config.params.timeout as unknown as string, 10);
+        const options: ReadOptions = {
+            probe: true,
+            timeout:
+                configuredTimeout > 0 ? Math.min(configuredTimeout, MAX_DETECT_READ_TIMEOUT) : MAX_DETECT_READ_TIMEOUT,
+        };
         const started = Date.now();
         const results: ReadResult[] = [];
         // one after another: the client queues the requests anyway, and a slow device should not get a burst
@@ -108,8 +135,8 @@ export class ModbusAdapter extends ModbusTemplate {
             try {
                 const response =
                     r.registerType === 'holdingRegs'
-                        ? await client.readHoldingRegisters(unitId, r.address, r.len)
-                        : await client.readInputRegisters(unitId, r.address, r.len);
+                        ? await client.readHoldingRegisters(unitId, r.address, r.len, options)
+                        : await client.readInputRegisters(unitId, r.address, r.len, options);
                 results.push({ registers: Array.from(response.register || []) });
             } catch (err) {
                 const e = err as { message?: string; exceptionCode?: number };
