@@ -358,7 +358,8 @@ There are some programs in folder `test` to test the TCP communication:
 -->
 ### **WORK IN PROGRESS**
 * (@GermanBluefox) Template library: a template with only one register file shows it checked and disabled
-* (@GermanBluefox) Device detection: each read waits at most 2 seconds, and a device that does not answer a read no longer closes the connection (needs `@iobroker/modbus` 7.11)
+* (@GermanBluefox) Updated `@iobroker/modbus` to 7.11.0
+* (@GermanBluefox) Device detection: each read waits at most 2 seconds, and a device that does not answer a read no longer closes the connection
 
 ### 9.3.2 (2026-11-13)
 * (@ipod86) Added the electrical measurement roles from the state roles list (`value.voltage`, `value.current`, `value.frequency`, `value.power.*`, `value.energy.*`) to the role select box
