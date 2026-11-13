@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "9.3.1",
+    "version": "9.3.2",
     "news": {
+      "9.3.2": {
+        "en": "Added the electrical measurement roles from the state roles list (`value.voltage`, `value.current`, `value.frequency`, `value.power.*`, `value.energy.*`) to the role select box",
+        "de": "Die Strommessrollen aus der Statusrollenliste (`value.voltage`, `value.current`, `value.frequency`, `value.power.*`, `value.energy.*`) zum Rollenauswahlfeld hinzugefügt",
+        "ru": "В поле выбора ролей добавлены роли электрических измерений из списка ролей состояния (`значение.напряжение`, `значение.ток`, `значение.частота`, `значение.энергии.*`)",
+        "pt": "Foram adicionadas as funções de medição elétrica da lista de funções estaduais (`value.voltage`, `value.current`, `value.frequency`, `value.power.*`) à caixa de seleção de funções",
+        "nl": "De elektrische meetrollen uit de lijst met statusrollen (`value.voltage`, `value.current`, `value.frequency`, `value.power.*`, `value.energy.*`) toegevoegd aan het rolkeuzevak",
+        "fr": "Ajout des rôles de mesure électrique depuis la liste des rôles des États (« value.voltage », « value.current », « value.frequency », « value.power.* », « value.energy.*`) dans la zone de sélection des rôles",
+        "it": "Aggiunti i ruoli di misura elettrica dall'elenco dei ruoli di stato (`value.voltage`, `value.current`, `value.frequency`, `value.power.*`, `value.energy.*`) alla casella di selezione dei ruoli",
+        "es": "Se han añadido las funciones de medición eléctrica de la lista de funciones estatales (`valor.tensión`, `valor.corriente`, `valor.frecuencia`, `valor.potencia.*`) al cuadro de selección de funciones",
+        "pl": "Dodano role pomiaru elektrycznego z listy ról stanu (`value.voltage`, `value.current`, `value.frequency „, `value.power.*`, `value.power.*`, `value.energy.*`) do pola wyboru roli",
+        "uk": "Додано ролі електричного вимірювання зі списку ролей стану (`значення.напруга`, `значення.струм`, `значення.частота`, `значення.потужність.*`, `значення.енергія.*`) до поля вибору ролі",
+        "zh-cn": "将状态角色列表（“value.voltage”、“value.current”、“value.frequency”、“value.power.*”、“value.energy.*”）中的电气测量角色添加到角色选择框中"
+      },
       "9.3.1": {
         "en": "Updated `@iobroker/modbus` to 7.10.1: cyclic write of holding registers works again, for polled and not polled registers (issue #771)",
         "de": "`@iobroker /modbus` auf 7.10.1 aktualisiert: zyklisches Schreiben von Halteregistern funktioniert wieder (Ausgabe #771)",
@@ -80,19 +93,6 @@
         "pl": "Adapter zgłasza rzeczywiście zajmowane zasoby do js-controller 8, który prowadzi ich rejestr dla każdego hosta (`system.host. <name>.usedResources`): port szeregowy w trybie RTU - jako master i jako slave - oraz port, na którym słucha podrzędnik TCP lub proxy. Master over TCP, UDP lub SSL nic nie zgłasza, ponieważ punkt końcowy należy do urządzenia po drugiej stronie. Przed otwarciem portu dziennik nazywa inną instancję, która go zadeklarowała, zamiast „Zasób tymczasowo niedostępny” lub EADDRINUSE. Sam raport żyje w „@iobroker /modbus”, więc potrzebuje następnego wydania tego pakietu; starszy kontroler js nie ma wpływu",
         "uk": "Адаптер повідомляє ресурси, які він дійсно займає, до js-controller 8, який зберігає їх реєстр для кожного хоста (`system.host. <name>.usedResources`): послідовний порт у режимі RTU - як головний і як підлеглий - і порт, який слухає підлеглий TCP або проксі. Майстер через TCP, UDP або SSL нічого не повідомляє, оскільки кінцева точка належить пристрою з іншого боку. Перед відкриттям порту журнал називає інший екземпляр, який його оголосив, замість лише «Ресурс тимчасово недоступний» або EADDRINUSE. Сама звітність знаходиться в `@iobroker /modbus`, тому вона потребує наступного випуску цього пакета; старий js-контролер не впливає",
         "zh-cn": "适配器将其实际占用的资源报告给 js-controller 8，后者保留了它们的每个主机的注册表（`system.host。<name>.usedResources`)：处于 RTU 模式的串行端口（作为主端口和从属端口）以及 TCP 从站或代理监听的端口。通过 TCP、UDP 或 SSL 的主服务器不报告任何内容，因为该端点属于另一端的设备。在打开端口之前，日志会命名已声明该端口的另一个实例，而不仅仅是 “资源暂时不可用” 或 EADDRINUSE。报告本身位于 '@iobroker /modbus `中，因此它需要该软件包的下一个版本；较旧的 js-controller 不受影响"
-      },
-      "9.1.2": {
-        "en": "Added explanations of timings in GUI\nCorrected proxy mode with multiple DeviceIDs\nAdded better problem logging",
-        "de": "Zeiterklärungen in GUI hinzugefügt\nProxymodus mit mehreren Geräte-IDs korrigiert\nBessere Problemmeldung hinzugefügt",
-        "ru": "Добавлены объяснения таймингов в графическом интерфейсе\nИсправлен режим прокси-сервера с несколькими идентификаторами устройств\nДобавлено улучшенное ведение журнала проблем",
-        "pt": "Mais explicações de horários na GUI\nModo proxy corrigido com vários DeviceIDs\nMelhor registro de problemas",
-        "nl": "Uitleg over de tijdstippen in de GUI toegevoegd\nProxy-modus gecorrigeerd met meerdere apparaat-ID's\nBetere probleemregistratie toegevoegd",
-        "fr": "Ajout de détails sur les horaires dans l'interface\nMode proxy corrigé avec plusieurs DeviceID\nAjout d'une meilleure journalisation",
-        "it": "Aggiunti i tempi nella GUI\nModo proxy corretto con più deviceID\nAggiunto un log migliore",
-        "es": "Se han añadido explicaciones de los tiempos en la GUI\nModo proxy corregido con varios DeviceID\nAñadió mejor registro de problemas",
-        "pl": "Dodano wyjaśnienia czasów w GUI\nPoprawiony tryb proxy z wieloma urządzeniami\nDodano lepsze rejestrowanie problemów",
-        "uk": "Додано пояснення таймінгу в графічному інтерфейсі\nВиправлений режим проксі з декількома ідентифікаторами пристроїв\nДодано кращу реєстрацію проблем",
-        "zh-cn": "在 GUI 中添加了对时机的解释\n更正了使用多个 deviceID 的代理模式\n添加了更好的问题日志"
       }
     },
     "titleLang": {

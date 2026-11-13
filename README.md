@@ -356,7 +356,7 @@ There are some programs in folder `test` to test the TCP communication:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 9.3.2 (2026-11-13)
 * (@ipod86) Added the electrical measurement roles from the state roles list (`value.voltage`, `value.current`, `value.frequency`, `value.power.*`, `value.energy.*`) to the role select box
 
 ### 9.3.1 (2026-11-12)
@@ -383,9 +383,6 @@ There are some programs in folder `test` to test the TCP communication:
 * (@GermanBluefox) New option "Ignore transaction ID of responses" for devices that do not echo the transaction ID
 * (@GermanBluefox) If a device returns fewer registers than requested, the whole block is discarded with a warning instead of storing the registers that fit
 * (@GermanBluefox) The debug check of the scale factor read block works with aliases
-
-### 9.2.1 (2026-10-13)
-* (@GermanBluefox) Admin 7.6.20+ is required. The adapter is tested now also on Windows and macOS
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
