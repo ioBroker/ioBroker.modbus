@@ -356,6 +356,9 @@ There are some programs in folder `test` to test the TCP communication:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (@LoPromise, @GermanBluefox) Settings for retries of reads and writes after a timeout or a lost connection (they take effect with the next version of `@iobroker/modbus`)
+
 ### 9.4.0 (2026-11-13)
 * (@GermanBluefox) Template library: a template with only one register file shows it checked and disabled
 * (@GermanBluefox) Updated `@iobroker/modbus` to 7.11.0
