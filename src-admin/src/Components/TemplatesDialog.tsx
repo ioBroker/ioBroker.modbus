@@ -64,6 +64,8 @@ export interface TemplateFile {
     addressing?: AddressingMode;
     /** coils and discrete inputs with alias addresses: "Use direct addresses by aliases" at the time of the export */
     directAddresses?: boolean;
+    /** e.g. registers of a newer firmware: not preselected */
+    optional?: boolean;
     warnings?: number;
 }
 
@@ -466,8 +468,15 @@ export default function TemplatesDialog(props: {
         }
     }, [index, category]);
 
-    // preselect all files of the device
-    useEffect(() => setSelected(device ? device.files.map(f => f.path) : []), [device]);
+    // preselect the files of the device, except the optional ones (unless all are optional)
+    useEffect(() => {
+        if (!device) {
+            setSelected([]);
+            return;
+        }
+        const required = device.files.filter(f => !f.optional);
+        setSelected((required.length ? required : device.files).map(f => f.path));
+    }, [device]);
 
     // load the selected files
     useEffect(() => {
@@ -610,6 +619,7 @@ export default function TemplatesDialog(props: {
             >
                 {I18n.t(REGISTER_TYPE_TITLES[file.registerType])}, {I18n.t('%s registers', file.registers)}
                 {file.deviceIds?.length ? `, ${I18n.t('Slave ID')} ${file.deviceIds.join(', ')}` : ''}
+                {file.optional ? `, ${I18n.t('optional')}` : ''}
             </Typography>
         </span>
     );

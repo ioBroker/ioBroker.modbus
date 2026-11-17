@@ -226,6 +226,7 @@
     "Files": "Dateien",
     "All": "Alle",
     "%s registers": "%s Register",
+    "optional": "optional",
     "Import mode": "Importmodus",
     "Add to existing registers": "Zu vorhandenen Registern hinzufügen",
     "Replace existing registers": "Vorhandene Register ersetzen",

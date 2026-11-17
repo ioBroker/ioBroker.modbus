@@ -226,6 +226,7 @@
     "Files": "Bestanden",
     "All": "Alle",
     "%s registers": "%s registers",
+    "optional": "optioneel",
     "Import mode": "Importmodus",
     "Add to existing registers": "Toevoegen aan bestaande registers",
     "Replace existing registers": "Bestaande registers vervangen",

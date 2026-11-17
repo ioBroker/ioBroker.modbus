@@ -226,6 +226,7 @@
     "Files": "Файлы",
     "All": "Все",
     "%s registers": "Регистров: %s",
+    "optional": "необязательно",
     "Import mode": "Режим импорта",
     "Add to existing registers": "Добавить к существующим регистрам",
     "Replace existing registers": "Заменить существующие регистры",

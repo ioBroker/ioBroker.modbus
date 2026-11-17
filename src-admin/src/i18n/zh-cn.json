@@ -226,6 +226,7 @@
     "Files": "文件",
     "All": "全部",
     "%s registers": "%s 个寄存器",
+    "optional": "可选",
     "Import mode": "导入模式",
     "Add to existing registers": "添加到现有寄存器",
     "Replace existing registers": "替换现有寄存器",

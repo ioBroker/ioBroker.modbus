@@ -226,6 +226,7 @@
     "Files": "Pliki",
     "All": "Wszystkie",
     "%s registers": "Rejestry: %s",
+    "optional": "opcjonalnie",
     "Import mode": "Tryb importu",
     "Add to existing registers": "Dodaj do istniejących rejestrów",
     "Replace existing registers": "Zastąp istniejące rejestry",

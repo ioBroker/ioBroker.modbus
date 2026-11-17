@@ -358,6 +358,7 @@ There are some programs in folder `test` to test the TCP communication:
 -->
 ### **WORK IN PROGRESS**
 * (@LoPromise, @GermanBluefox) Settings for retries of reads and writes after a timeout or a lost connection (they take effect with the next version of `@iobroker/modbus`)
+* (@GermanBluefox) Template library: files marked as optional in the template (e.g. registers of a newer firmware) are not preselected
 
 ### 9.4.0 (2026-11-13)
 * (@GermanBluefox) Template library: a template with only one register file shows it checked and disabled
