@@ -107,6 +107,15 @@ Delay between two read requests in milliseconds. Default 0.
 ### Write interval
 Delay between two write requests in milliseconds. Default 0.
 
+### Read retries, write retries, retry interval
+Only for a master. A block read or a write that fails with a timeout or a lost connection is sent again up to this
+number of times (0 = never, at most 3) before it fails. Each retry is logged at the info level as `[retry/k/N] ...`,
+the warning comes only after the last attempt. A Modbus exception or an invalid response is not repeated.
+
+With "Keep the connection on a timeout" a retry is sent on the open connection, otherwise the connection is
+re-established first. The polling cycle waits during the retries, so keep the number low if several devices share
+one RS485 bus. The retry interval is the delay before each retry in milliseconds (default 100).
+
 ### Update unchanged states
 Normally, if the value has not changed, it will not be written into ioBroker.
 This flag allows updating the value's timestamp by every cycle.
@@ -357,7 +366,8 @@ There are some programs in folder `test` to test the TCP communication:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (@LoPromise, @GermanBluefox) Settings for retries of reads and writes after a timeout or a lost connection (they take effect with the next version of `@iobroker/modbus`)
+* (@LoPromise, @GermanBluefox) Settings for retries of reads and writes after a timeout or a lost connection
+* (@GermanBluefox) Updated `@iobroker/modbus` to 7.12.0: pending requests are rejected at once when the connection closes; read and write retries
 * (@GermanBluefox) Template library: files marked as optional in the template (e.g. registers of a newer firmware) are not preselected
 
 ### 9.4.0 (2026-11-13)
