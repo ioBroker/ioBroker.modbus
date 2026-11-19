@@ -1,4 +1,8 @@
 # Older changes
+## 9.2.3 (2026-11-08)
+* (@MMeinhardt1) Updated `@iobroker/modbus` to 7.9.0: the new instance parameter `padAddressInId` pads the address in state IDs with zeros to 5 digits, so they sort numerically (issue #317). It is off by default and not yet available in the admin UI
+* (@GermanBluefox) Updated dependencies
+
 ## 9.2.2 (2026-10-23)
 * (@GermanBluefox) A response is taken only for the request it belongs to (issue #829): over TCP, SSL and UDP a response with another transaction ID is dropped, over RTU one from another unit. Before, a stale or duplicated answer - e.g. in the first poll cycle on a fresh connection - shifted every following response by one request, so the registers of another block were stored
 * (@GermanBluefox) New option "Ignore transaction ID of responses" for devices that do not echo the transaction ID

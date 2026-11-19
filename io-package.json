@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "modbus",
-    "version": "9.4.0",
+    "version": "9.5.0",
     "news": {
+      "9.5.0": {
+        "en": "Settings for retries of reads and writes after a timeout or a lost connection\nUpdated `@iobroker/modbus` to 7.12.0: pending requests are rejected at once when the connection closes; read and write retries\nTemplate library: files marked as optional in the template (e.g. registers of a newer firmware) are not preselected",
+        "de": "Einstellungen für Lese- und Schreibversuche nach Timeout oder Ausfall\n@iobroker /modbus `auf 7.12.0 aktualisiert: offene Anfragen werden sofort abgewiesen; Lese- und Schreibversuche\nVorlagenbibliothek: In der Vorlage als optional markierte Dateien (z. B. Register neuer Firmware)",
+        "ru": "Настройки повторных попыток чтения и записи после тайм-аута или потери соединения\nОбновлено «@iobroker /modbus» до версии 7.12.0: отложенные запросы сразу отклоняются при закрытии соединения; повторные попытки чтения и записи\nБиблиотека шаблонов: файлы, отмеченные в шаблоне как необязательные (например, регистры новой прошивки), предварительно не выбраны",
+        "pt": "Ajustes para novas leituras e gravações após perda de conexão\nAtualizado `@iobroker /modbus` para 7.12.0: solicitações pendentes são rejeitadas ao fechar; ler e gravar\nBiblioteca de modelos: arquivos opcionais (ex: registros de um novo firmware) não são pré-selecionados",
+        "nl": "Instellingen voor het opnieuw proberen om te lezen en te schrijven na een time-out of een verbroken verbinding\n`@iobroker /modbus` bijgewerkt naar 7.12.0: aanvragen die in behandeling zijn, worden onmiddellijk afgewezen wanneer de verbinding wordt verbroken; lees- en schrijfpogingen\nSjabloonbibliotheek: bestanden die in de sjabloon als optioneel zijn gemarkeerd (bijvoorbeeld registers van een nieuwere firmware) zijn niet vooraf geselecteerd",
+        "fr": "Paramètres de relecture et d'écriture après un délai ou une perte de connexion\nMise à jour de @iobroker /modbus à la version 7.12.0 : les demandes en attente sont rejetées dès la fin de la connexion ; relances\nBibliothèque de modèles : les fichiers facultatifs (par exemple, les registres d'un nouveau firmware) ne sont pas présélectionnés",
+        "it": "Impostazioni per i tentativi di lettura e scrittura dopo un timeout\nAggiornato `@iobroker /modbus` alla 7.12.0: le richieste in sospeso vengono respinte subito; riprova\nLibreria modelli: i file opzionali nel modello (ad es. registri del nuovo firmware) non sono preselezionati",
+        "es": "Ajustes para reintentos de lectura y escritura tras un tiempo de espera o pérdida de conexión\nActualizado `@iobroker /modbus` a 7.12.0: las solicitudes pendientes se rechazan de una vez cuando se cierra la conexión; reintentos de lectura y escritura\nBiblioteca de plantillas: los archivos marcados como opcionales en la plantilla (p. ej. registros de un firmware nuevo) no están preseleccionados",
+        "pl": "Ustawienia ponownych prób odczytu i zapisu po przekroczeniu czasu lub utracie połączenia\nZaktualizowano `@iobroker /modbus` do 7.12.0: oczekujące żądania są odrzucane natychmiast po zamknięciu połączenia; ponowne próby odczytu i zapisu\nBiblioteka szablonów: pliki oznaczone jako opcjonalne w szablonie (np. rejestry nowszego oprogramowania układowego) nie są wstępnie wybrane",
+        "uk": "Налаштування повторних спроб читання та запису після тайм-ауту або втрати зв'язку\nОновлено `@iobroker /modbus` до 7.12.0: відкладені запити відхиляються одразу при закритті з'єднання; повторні спроби читання та запису\nБібліотека шаблонів: файли, позначені як необов'язкові в шаблоні (наприклад, регістри новішої прошивки), не вибрані попередньо",
+        "zh-cn": "超时或连接断开后重试读写的设置\n将 '@iobroker /modbus `更新到 7.12.0：连接关闭时待处理的请求会立即被拒绝；读取和写入重试\n模板库：未预先选择模板中标记为可选的文件（例如较新固件的寄存器）"
+      },
       "9.4.0": {
         "en": "Template library: a template with only one register file shows it checked and disabled\nUpdated `@iobroker/modbus` to 7.11.0\nDevice detection: each read waits at most 2 seconds, and a device that does not answer a read no longer closes the connection",
         "de": "Vorlagenbibliothek: Eine Vorlage mit nur einer Registerdatei ist geprüft und deaktiviert\n@iobroker /modbus `auf 7.11.0 aktualisiert\nGeräteerkennung: Jeder Lesevorgang wartet maximal 2 Sekunden, und ein Gerät, das ihn nicht beantwortet",
@@ -80,19 +93,6 @@
         "pl": "Odpowiedź jest przyjmowana tylko dla żądania, do którego należy (problem #829): przez TCP, SSL i UDP odpowiedź z innym identyfikatorem transakcji jest usuwana, zamiast RTU jedna z innej jednostki. Wcześniej nieaktualna lub zduplikowana odpowiedź - np. w pierwszym cyklu ankiety na nowym połączeniu - przesuwała każdą kolejną odpowiedź o jedno żądanie, więc rejestry innego bloku były przechowywane\nNowa opcja „Ignoruj identyfikator transakcji odpowiedzi” dla urządzeń, które nie odzwierciedlają identyfikatora transakcji\nJeśli urządzenie zwraca mniej rejestrów niż żądano, cały blok zostanie odrzucony z ostrzeżeniem zamiast przechowywać rejestry, które pasują\nKontrola debugowania bloku odczytu współczynnika skali działa z aliasami",
         "uk": "Відповідь приймається лише на запит, якому він належить (випуск #829): через TCP, SSL та UDP відпадається відповідь з іншим ідентифікатором транзакції, над RTU одна з іншого блоку. Раніше несвіжа або дубльована відповідь - наприклад, у першому циклі опитування на новому з'єднанні - зміщувала кожну наступну відповідь на один запит, тому реєстри іншого блоку зберігалися\nНова опція «Ігнорувати ідентифікатор транзакції відповідей» для пристроїв, які не повторюють ідентифікатор транзакції\nЯкщо пристрій повертає менше регістрів, ніж було запитано, весь блок відкидається з попередженням замість зберігання відповідних регістрів\nПеревірка налагодження блоку читання коефіцієнта масштабу працює з псевдонімами",
         "zh-cn": "仅对它所属的请求作出响应（问题 #829）：通过 TCP、SSL 和 UDP，带有另一个交易 ID 的响应会被丢弃，通过来自另一个单位的 RTU。以前，过时或重复的答案（例如在新连接的第一个轮询周期中）会将接下来的每个响应转移到一个请求，因此存储了另一个区块的寄存器\n对于不回显交易 ID 的设备，新选项 “忽略响应的交易 ID”\n如果设备返回的寄存器少于请求的寄存器，则会丢弃整个块并发出警告，而不是存储适合的寄存器\n比例因子读取块的调试检查使用别名"
-      },
-      "9.2.1": {
-        "en": "Admin 7.6.20+ is required. The adapter is tested now also on Windows and macOS",
-        "de": "Admin 7.6.20+ ist nötig. Der Adapter ist nun auch für Windows und macOS getestet",
-        "ru": "Требуется администратор версии 7.6.20+. Адаптер теперь протестирован также на Windows и macOS",
-        "pt": "Requer o Admin 7.6.20+. O adaptador já foi testado em Windows e macOS",
-        "nl": "Admin 7.6.20+ is vereist. De adapter is nu ook getest op Windows en MacOS",
-        "fr": "Admin 7.6.20+ est requis. L'adaptateur est testé également sur Windows et macOS",
-        "it": "Serve Admin 7.6.20+. L'adattatore è testato anche su Windows e macOS",
-        "es": "Se necesita Admin 7.6.20+. El adaptador se prueba también en Windows y macOS",
-        "pl": "Wymagany jest Admin 7.6.20+. Adapter jest teraz testowany również w systemach Windows i macOS",
-        "uk": "Адміністратор 7.6.20+ обов'язковий. Адаптер зараз тестується також на Windows та macOS",
-        "zh-cn": "需要管理员 7.6.20+。该适配器现在也在 Windows 和 macOS 上进行了测试"
       }
     },
     "titleLang": {

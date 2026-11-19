@@ -365,7 +365,7 @@ There are some programs in folder `test` to test the TCP communication:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 9.5.0 (2026-11-19)
 * (@LoPromise, @GermanBluefox) Settings for retries of reads and writes after a timeout or a lost connection
 * (@GermanBluefox) Updated `@iobroker/modbus` to 7.12.0: pending requests are rejected at once when the connection closes; read and write retries
 * (@GermanBluefox) Template library: files marked as optional in the template (e.g. registers of a newer firmware) are not preselected
@@ -392,10 +392,6 @@ There are some programs in folder `test` to test the TCP communication:
 * (@GermanBluefox) Admin: a file can be dropped on the editor of the import/export dialog
 * (@GermanBluefox) Admin: import of TSV/CSV/JSON accepts an empty "Sanitize Action" and uses "Keep Last Valid" (issue #835)
 * (@GermanBluefox) Admin: the template library converts the scale factor references in formulas (`sf['40083']`) together with the addresses. Before, a template with scale factors did not work if its addresses were converted (alias template, or "Show aliases" in the instance)
-
-### 9.2.3 (2026-11-08)
-* (@MMeinhardt1) Updated `@iobroker/modbus` to 7.9.0: the new instance parameter `padAddressInId` pads the address in state IDs with zeros to 5 digits, so they sort numerically (issue #317). It is off by default and not yet available in the admin UI
-* (@GermanBluefox) Updated dependencies
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
