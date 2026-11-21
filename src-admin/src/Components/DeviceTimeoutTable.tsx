@@ -25,7 +25,8 @@ interface DeviceTimeoutTableProps {
 
 /** Collect all distinct device IDs actually used across the four register tables. */
 function collectDeviceIds(native: Modbus.ModbusAdapterConfig): number[] {
-    const defaultDeviceId = parseInt(native.params?.deviceId as string, 10) || 1;
+    const parsedDeviceId = parseInt(native.params?.deviceId as string, 10);
+    const defaultDeviceId = Number.isNaN(parsedDeviceId) ? 1 : parsedDeviceId;
     const ids = new Set<number>();
     const arrays: (Modbus.Register[] | undefined)[] = [
         native.disInputs,

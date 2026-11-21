@@ -353,8 +353,12 @@ function mergeRegisters(
     if (mode === 'replace') {
         return imported;
     }
+    const deviceIdOf = (r: Modbus.Register): number => {
+        const deviceId = parseInt(r.deviceId as string, 10);
+        return Number.isNaN(deviceId) ? 1 : deviceId;
+    };
     const key = (r: Modbus.Register): string =>
-        `${multiDeviceId ? parseInt(r.deviceId as string, 10) || 1 : ''}:${parseAddress(r._address)}:${String(r.name || '').toLowerCase()}`;
+        `${multiDeviceId ? deviceIdOf(r) : ''}:${parseAddress(r._address)}:${String(r.name || '').toLowerCase()}`;
     const result = existing.map(r => ({ ...r }));
     const positions = new Map(result.map((r, i) => [key(r), i]));
     for (const r of imported) {
@@ -401,7 +405,10 @@ export default function TemplatesDialog(props: {
     const [addressing, setAddressing] = useState<AddressingMode>(instanceShowAliases ? 'alias' : 'raw');
     const instanceDirect = params.directAddresses === true || (params.directAddresses as unknown) === 'true';
     const [directAddresses, setDirectAddresses] = useState<boolean>(instanceDirect);
-    const [slaveId, setSlaveId] = useState(String(parseInt(params.deviceId as unknown as string, 10) || 1));
+    const [slaveId, setSlaveId] = useState(() => {
+        const deviceId = parseInt(params.deviceId as unknown as string, 10);
+        return String(Number.isNaN(deviceId) ? 1 : deviceId);
+    });
     const [enableMultiDeviceId, setEnableMultiDeviceId] = useState(true);
     const [detecting, setDetecting] = useState(false);
     const [detectResult, setDetectResult] = useState<{
