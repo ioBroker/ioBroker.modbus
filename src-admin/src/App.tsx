@@ -123,8 +123,11 @@ const tabs: {
 
 function sort(data: Modbus.Register[]): void {
     data.sort((item1, item2) => {
-        item1.deviceId = parseInt(item1.deviceId as string, 10) || 1;
-        item2.deviceId = parseInt(item2.deviceId as string, 10) || 1;
+        // 0 is a valid device ID (issue #326): only a missing one becomes 1
+        const deviceId1 = parseInt(item1.deviceId as string, 10);
+        const deviceId2 = parseInt(item2.deviceId as string, 10);
+        item1.deviceId = Number.isNaN(deviceId1) ? 1 : deviceId1;
+        item2.deviceId = Number.isNaN(deviceId2) ? 1 : deviceId2;
         item1._address = parseInt(item1._address as string, 10) || 0;
         item2._address = parseInt(item2._address as string, 10) || 0;
         const sort1 = (item1.deviceId << 16) | item1._address;

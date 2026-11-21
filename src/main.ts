@@ -113,10 +113,13 @@ export class ModbusAdapter extends ModbusTemplate {
         if (!client || typeof client.readHoldingRegisters !== 'function' || !master?.connected) {
             return { error: 'Not connected to the device' };
         }
+        const configuredDeviceId = parseInt(this.config.params.deviceId as unknown as string, 10);
         const unitId =
             Number.isInteger(deviceId) && deviceId! >= 0 && deviceId! <= 255
                 ? deviceId!
-                : parseInt(this.config.params.deviceId as unknown as string, 10) || 1;
+                : Number.isNaN(configuredDeviceId)
+                  ? 1
+                  : configuredDeviceId;
 
         const configuredTimeout = parseInt(this.config.params.timeout as unknown as string, 10);
         const options: ReadOptions = {
