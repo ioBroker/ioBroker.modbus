@@ -365,7 +365,7 @@ There are some programs in folder `test` to test the TCP communication:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 9.5.1 (2026-11-28)
 * (@Schimi1983, @GermanBluefox) Updated `@iobroker/modbus` to 7.12.1: a coil or holding register that is not polled keeps the written value after a write. The state was acknowledged with `null`, and a cyclic write of such a register stopped after the first write
 
 ### 9.5.0 (2026-11-19)
@@ -383,18 +383,6 @@ There are some programs in folder `test` to test the TCP communication:
 
 ### 9.3.1 (2026-11-12)
 * (@GermanBluefox) Updated `@iobroker/modbus` to 7.10.1: cyclic write of holding registers works again, for polled and not polled registers (issue #771)
-
-### 9.3.0 (2026-11-12)
-* (@GermanBluefox) Updated `@iobroker/modbus` to 7.10.0:
-  - New option "Keep the connection on a timeout" (TCP, UDP and TCP-SSL master, issue #832): for gateways with several devices behind them, a device that does not answer does not close the connection for the others anymore. The connection is still re-established when no device answers
-  - An error while processing a response fails only this request. Before, the master could stop polling (issue #831)
-  - Characters that are forbidden in object IDs (e.g. `–` or `°` of a copied data sheet) are replaced by `_` in the state ID too, so the object and the state get the same ID (modbus-templates issue #58)
-* (@MMeinhardt1, @GermanBluefox) The option `padAddressInId` (pad the address in state IDs with zeros to 5 digits, issue #317) is now available in the admin UI under "Settings"
-* (@GermanBluefox) Admin: animated icons of `@iobroker/gui-components` (delete, expert mode, folders, copy, upload, refresh, results) and own animations: new rows slide in, deleted rows slide out, unfolded slave ID groups, tab changes, live values
-* (@GermanBluefox) Admin: the status of the instance and of the connection is shown next to the tabs
-* (@GermanBluefox) Admin: a file can be dropped on the editor of the import/export dialog
-* (@GermanBluefox) Admin: import of TSV/CSV/JSON accepts an empty "Sanitize Action" and uses "Keep Last Valid" (issue #835)
-* (@GermanBluefox) Admin: the template library converts the scale factor references in formulas (`sf['40083']`) together with the addresses. Before, a template with scale factors did not work if its addresses were converted (alias template, or "Show aliases" in the instance)
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
