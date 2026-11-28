@@ -365,6 +365,9 @@ There are some programs in folder `test` to test the TCP communication:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (@Schimi1983, @GermanBluefox) Updated `@iobroker/modbus` to 7.12.1: a coil or holding register that is not polled keeps the written value after a write. The state was acknowledged with `null`, and a cyclic write of such a register stopped after the first write
+
 ### 9.5.0 (2026-11-19)
 * (@LoPromise, @GermanBluefox) Settings for retries of reads and writes after a timeout or a lost connection
 * (@GermanBluefox) Updated `@iobroker/modbus` to 7.12.0: pending requests are rejected at once when the connection closes; read and write retries
